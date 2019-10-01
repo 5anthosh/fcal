@@ -7,10 +7,11 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "jest --config jestconfig.json --coverage",
+    "test": "jest --config jestconfig.json",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
+    "btest": "npm run build && jest --config jestconfig.json --coverage",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
@@ -28,7 +29,7 @@
   },
   "homepage": "https://github.com/5anthosh/fcal#readme",
   "devDependencies": {
-    "@types/big.js": "^4.0.5",
+    "@types/bignumber.js": "^5.0.0",
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
@@ -37,7 +38,5 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
-  "dependencies": {
-    "big.js": "^5.2.2"
-  }
+  "dependencies": {}
 }

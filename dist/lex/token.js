@@ -4,7 +4,7 @@ var TokenType;
 (function (TokenType) {
     TokenType[TokenType["PLUS"] = 0] = "PLUS";
     TokenType[TokenType["MINUS"] = 1] = "MINUS";
-    TokenType[TokenType["STAR"] = 2] = "STAR";
+    TokenType[TokenType["TIMES"] = 2] = "TIMES";
     TokenType[TokenType["MOD"] = 3] = "MOD";
     TokenType[TokenType["SLASH"] = 4] = "SLASH";
     TokenType[TokenType["Number"] = 5] = "Number";

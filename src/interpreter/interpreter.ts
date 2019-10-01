@@ -1,4 +1,4 @@
-import Big = require('big.js');
+import Big = require('bignumber.js');
 
 import { TokenType } from '../lex/token';
 import { Expr } from '../parser/expr';
@@ -16,19 +16,26 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): any {
-    const left = this.evaluate(expr.left) as Big.Big;
-    const right = this.evaluate(expr.right) as Big.Big;
+    const left = this.evaluate(expr.left) as Big.BigNumber;
+    const right = this.evaluate(expr.right) as Big.BigNumber;
     switch (expr.operator.type) {
       case TokenType.PLUS:
-        return left.add(right);
+        // console.log(`ADD ${left} ${right}`);
+        return left.plus(right);
       case TokenType.MINUS:
-        return left.add(right);
+        // console.log(`MINUX ${left} ${right}`);
+        return left.minus(right);
       case TokenType.TIMES:
-        return left.mul(right);
+        // console.log(`times ${left} ${right}`);
+        return left.multipliedBy(right);
       case TokenType.SLASH:
+        // console.log(`SLASH ${left} ${right}`);
+        if (right.eq(0)) {
+          return Infinity;
+        }
         return left.div(right);
       default:
-        return null;
+        return new Big.BigNumber(0);
     }
   }
 
@@ -41,9 +48,9 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitUnaryExpr(expr: Expr.Unary): any {
-    const right = this.evaluate(expr.right) as Big.Big;
-    if (expr.operator.type === TokenType.PLUS) {
-      return right.mul(-1);
+    const right = this.evaluate(expr.right) as Big.BigNumber;
+    if (expr.operator.type === TokenType.MINUS) {
+      return right.negated();
     }
     return right;
   }

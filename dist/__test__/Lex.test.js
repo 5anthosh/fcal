@@ -16,15 +16,15 @@ test('Test Lexer Basic arithmetic characters', () => {
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.PLUS, '+', null, 12, 13));
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.SLASH, '/', null, 13, 14));
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.SLASH, '/', null, 14, 15));
-    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.STAR, '*', null, 15, 16));
-    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.STAR, '*', null, 16, 17));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.TIMES, '*', null, 15, 16));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.TIMES, '*', null, 16, 17));
     expect(lexer.Next()).toEqual(token_1.Token.EOLToken(17));
 });
 test('Test Lexer Float', () => {
     const expression = '9343.234*134.181324';
     const lexer = new lex_1.Lexer(expression);
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '9343.234', type_1.Type.Number('9343.234'), 0, 8));
-    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.STAR, '*', null, 8, 9));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.TIMES, '*', null, 8, 9));
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '134.181324', type_1.Type.Number('134.181324'), 9, 19));
     expect(lexer.Next()).toEqual(token_1.Token.EOLToken(19));
 });

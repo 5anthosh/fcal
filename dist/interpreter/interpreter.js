@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Big = require("bignumber.js");
 const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
 class Interpreter {
@@ -15,15 +16,22 @@ class Interpreter {
         const right = this.evaluate(expr.right);
         switch (expr.operator.type) {
             case token_1.TokenType.PLUS:
-                return left.add(right);
+                // console.log(`ADD ${left} ${right}`);
+                return left.plus(right);
             case token_1.TokenType.MINUS:
-                return left.add(right);
-            case token_1.TokenType.STAR:
-                return left.mul(right);
+                // console.log(`MINUX ${left} ${right}`);
+                return left.minus(right);
+            case token_1.TokenType.TIMES:
+                // console.log(`times ${left} ${right}`);
+                return left.multipliedBy(right);
             case token_1.TokenType.SLASH:
+                // console.log(`SLASH ${left} ${right}`);
+                if (right.eq(0)) {
+                    return Infinity;
+                }
                 return left.div(right);
             default:
-                return null;
+                return new Big.BigNumber(0);
         }
     }
     visitGroupingExpr(expr) {
@@ -34,8 +42,8 @@ class Interpreter {
     }
     visitUnaryExpr(expr) {
         const right = this.evaluate(expr.right);
-        if (expr.operator.type === token_1.TokenType.PLUS) {
-            return right.mul(-1);
+        if (expr.operator.type === token_1.TokenType.MINUS) {
+            return right.negated();
         }
         return right;
     }

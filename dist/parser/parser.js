@@ -27,7 +27,7 @@ class Parser {
     }
     multiply() {
         let expr = this.unary();
-        while (this.match(token_1.TokenType.STAR, token_1.TokenType.SLASH)) {
+        while (this.match(token_1.TokenType.TIMES, token_1.TokenType.SLASH)) {
             const operator = this.previous();
             const right = this.multiply();
             expr = new expr_1.Expr.Binary(expr, operator, right);

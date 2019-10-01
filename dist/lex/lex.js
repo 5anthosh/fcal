@@ -30,8 +30,8 @@ class Lexer {
                 return this.createToken(token_1.TokenType.PLUS);
             case char_1.Char.MINUS:
                 return this.createToken(token_1.TokenType.MINUS);
-            case char_1.Char.STAR:
-                return this.createToken(token_1.TokenType.STAR);
+            case char_1.Char.TIMES:
+                return this.createToken(token_1.TokenType.TIMES);
             case char_1.Char.SLASH:
                 return this.createToken(token_1.TokenType.SLASH);
             case char_1.Char.OPEN_PARAN:

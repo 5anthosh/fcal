@@ -5,7 +5,7 @@ class Char {
 exports.Char = Char;
 Char.PLUS = '+';
 Char.MINUS = '-';
-Char.STAR = '*';
+Char.TIMES = '*';
 Char.MOD = 'mod';
 Char.SLASH = '/';
 Char.OPEN_PARAN = '(';

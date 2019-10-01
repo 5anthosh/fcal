@@ -29,8 +29,9 @@
   },
   "homepage": "https://github.com/5anthosh/fcal#readme",
   "devDependencies": {
-    "@types/bignumber.js": "^5.0.0",
+    "@types/decimal.js": "^7.4.0",
     "@types/jest": "^24.0.18",
+    "decimal.js": "^10.2.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",

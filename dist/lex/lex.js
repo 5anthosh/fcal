@@ -6,7 +6,7 @@ const lexError_1 = require("./lexError");
 const token_1 = require("./token");
 class Lexer {
     constructor(source) {
-        this.source = source;
+        this.source = source.replace(/[\s\t\n]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
@@ -38,6 +38,8 @@ class Lexer {
                 return this.createToken(token_1.TokenType.OPEN_PARAN);
             case char_1.Char.CLOSE_PARAN:
                 return this.createToken(token_1.TokenType.CLOSE_PARAN);
+            case char_1.Char.CAP:
+                return this.createToken(token_1.TokenType.CAP);
             default:
                 if (Lexer.isDigit(char)) {
                     return this.number();

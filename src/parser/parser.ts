@@ -43,7 +43,16 @@ export class Parser {
       const right = this.unary();
       return new Expr.Unary(operator, right);
     }
-    return this.term();
+    return this.exponent();
+  }
+  private exponent(): Expr {
+    let expr = this.term();
+    while (this.match(TokenType.CAP)) {
+      const operator = this.previous();
+      const right = this.unary();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+    return expr;
   }
   private term(): Expr {
     if (this.match(TokenType.Number)) {

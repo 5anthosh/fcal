@@ -40,7 +40,16 @@ class Parser {
             const right = this.unary();
             return new expr_1.Expr.Unary(operator, right);
         }
-        return this.term();
+        return this.exponent();
+    }
+    exponent() {
+        let expr = this.term();
+        while (this.match(token_1.TokenType.CAP)) {
+            const operator = this.previous();
+            const right = this.unary();
+            expr = new expr_1.Expr.Binary(expr, operator, right);
+        }
+        return expr;
     }
     term() {
         if (this.match(token_1.TokenType.Number)) {

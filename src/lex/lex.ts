@@ -14,7 +14,7 @@ export class Lexer {
   private start: number;
   private current: number;
   constructor(source: string) {
-    this.source = source;
+    this.source = source.replace(/[\s\t\n]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = [];
@@ -40,6 +40,8 @@ export class Lexer {
         return this.createToken(TokenType.OPEN_PARAN);
       case Char.CLOSE_PARAN:
         return this.createToken(TokenType.CLOSE_PARAN);
+      case Char.CAP:
+        return this.createToken(TokenType.CAP);
       default:
         if (Lexer.isDigit(char)) {
           return this.number();

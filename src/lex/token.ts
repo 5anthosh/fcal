@@ -8,9 +8,10 @@ export enum TokenType {
   OPEN_PARAN,
   CLOSE_PARAN,
   EOL,
+  CAP,
 }
 
-function PrintTT(enumNumber: number): string {
+export function PrintTT(enumNumber: number): string {
   return TokenType[enumNumber];
 }
 

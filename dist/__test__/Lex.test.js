@@ -55,4 +55,22 @@ test('Test Lexer Parenthesis', () => {
     expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.CLOSE_PARAN, ')', null, 17, 18));
     expect(lexer.Next()).toEqual(token_1.Token.EOLToken(18));
 });
+test('Test Lexer Power of', () => {
+    const expression = '   1.23^2.555^2.0^03 +1 ++-- \n\t\t\t\t\t\n    ';
+    const lexer = new lex_1.Lexer(expression);
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '1.23', type_1.Type.Number('1.23'), 3, 7));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.CAP, '^', null, 7, 8));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '2.555', type_1.Type.Number('2.555'), 8, 13));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.CAP, '^', null, 13, 14));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '2.0', type_1.Type.Number('2.0'), 14, 17));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.CAP, '^', null, 17, 18));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '03', type_1.Type.Number('03'), 18, 20));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.PLUS, '+', null, 21, 22));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.Number, '1', type_1.Type.Number('1'), 22, 23));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.PLUS, '+', null, 24, 25));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.PLUS, '+', null, 25, 26));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.MINUS, '-', null, 26, 27));
+    expect(lexer.Next()).toEqual(new token_1.Token(token_1.TokenType.MINUS, '-', null, 27, 28));
+    expect(lexer.Next()).toEqual(token_1.Token.EOLToken(28));
+});
 //# sourceMappingURL=Lex.test.js.map

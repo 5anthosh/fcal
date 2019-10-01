@@ -11,10 +11,12 @@ var TokenType;
     TokenType[TokenType["OPEN_PARAN"] = 6] = "OPEN_PARAN";
     TokenType[TokenType["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
     TokenType[TokenType["EOL"] = 8] = "EOL";
+    TokenType[TokenType["CAP"] = 9] = "CAP";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];
 }
+exports.PrintTT = PrintTT;
 class Token {
     constructor(type, lexeme, literal, start, end) {
         this.type = type;

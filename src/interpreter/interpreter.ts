@@ -1,5 +1,4 @@
-import Big = require('bignumber.js');
-
+import Big = require('decimal.js');
 import { TokenType } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
@@ -16,26 +15,33 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): any {
-    const left = this.evaluate(expr.left) as Big.BigNumber;
-    const right = this.evaluate(expr.right) as Big.BigNumber;
+    const left = this.evaluate(expr.left) as Big.Decimal;
+    const right = this.evaluate(expr.right) as Big.Decimal;
+    // console.log(`${PrintTT(expr.operator.type)} ${left} ${right}`);
     switch (expr.operator.type) {
       case TokenType.PLUS:
-        // console.log(`ADD ${left} ${right}`);
         return left.plus(right);
       case TokenType.MINUS:
-        // console.log(`MINUX ${left} ${right}`);
         return left.minus(right);
       case TokenType.TIMES:
-        // console.log(`times ${left} ${right}`);
-        return left.multipliedBy(right);
+        return left.mul(right);
       case TokenType.SLASH:
-        // console.log(`SLASH ${left} ${right}`);
-        if (right.eq(0)) {
-          return Infinity;
-        }
         return left.div(right);
+      case TokenType.CAP:
+        if (left.isNegative()) {
+          if (!right.isInteger()) {
+            // safe play with complex numbers
+            // -2^0.25 will handled like -(2^0.25)
+            // may support complex numbers in future
+            return left
+              .negated()
+              .pow(right)
+              .negated();
+          }
+        }
+        return left.pow(right);
       default:
-        return new Big.BigNumber(0);
+        return new Big.Decimal(0);
     }
   }
 
@@ -48,7 +54,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitUnaryExpr(expr: Expr.Unary): any {
-    const right = this.evaluate(expr.right) as Big.BigNumber;
+    const right = this.evaluate(expr.right) as Big.Decimal;
     if (expr.operator.type === TokenType.MINUS) {
       return right.negated();
     }

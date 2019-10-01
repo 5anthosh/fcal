@@ -10,4 +10,5 @@ Char.MOD = 'mod';
 Char.SLASH = '/';
 Char.OPEN_PARAN = '(';
 Char.CLOSE_PARAN = ')';
+Char.CAP = '^';
 //# sourceMappingURL=char.js.map

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Big = require("bignumber.js");
+const Big = require("decimal.js");
 const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
 class Interpreter {
@@ -14,24 +14,31 @@ class Interpreter {
     visitBinaryExpr(expr) {
         const left = this.evaluate(expr.left);
         const right = this.evaluate(expr.right);
+        // console.log(`${PrintTT(expr.operator.type)} ${left} ${right}`);
         switch (expr.operator.type) {
             case token_1.TokenType.PLUS:
-                // console.log(`ADD ${left} ${right}`);
                 return left.plus(right);
             case token_1.TokenType.MINUS:
-                // console.log(`MINUX ${left} ${right}`);
                 return left.minus(right);
             case token_1.TokenType.TIMES:
-                // console.log(`times ${left} ${right}`);
-                return left.multipliedBy(right);
+                return left.mul(right);
             case token_1.TokenType.SLASH:
-                // console.log(`SLASH ${left} ${right}`);
-                if (right.eq(0)) {
-                    return Infinity;
-                }
                 return left.div(right);
+            case token_1.TokenType.CAP:
+                if (left.isNegative()) {
+                    if (!right.isInteger()) {
+                        // safe play with complex numbers
+                        // -2^0.25 will handled like -(2^0.25)
+                        // may support complex numbers in future
+                        return left
+                            .negated()
+                            .pow(right)
+                            .negated();
+                    }
+                }
+                return left.pow(right);
             default:
-                return new Big.BigNumber(0);
+                return new Big.Decimal(0);
         }
     }
     visitGroupingExpr(expr) {

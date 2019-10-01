@@ -6,7 +6,8 @@ Formula engine
 
 - [x] Finish basic(+/-\*) operations
 - [x] write test for above
-- [ ] support power of (^) operator
-- [ ] support modulo (and test)
-- [ ] support various phrases for operation
-- [ ] support percentage operation
+- [x] power of (^) operator
+- [ ] modulo (and test)
+- [ ] various phrases for operation
+- [ ] percentage operation
+- [ ] complex numbers

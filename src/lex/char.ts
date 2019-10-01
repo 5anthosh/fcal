@@ -6,4 +6,5 @@ export class Char {
   public static SLASH = '/';
   public static OPEN_PARAN = '(';
   public static CLOSE_PARAN = ')';
+  public static CAP = '^';
 }

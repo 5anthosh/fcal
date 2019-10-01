@@ -5,47 +5,32 @@ export enum TokenType {
   MOD,
   SLASH,
   Number,
-  EOL
+  EOL,
 }
 
-function PrintTT(enumNumber: number): String {
+function PrintTT(enumNumber: number): string {
   return TokenType[enumNumber];
 }
 
-export class Char {
-  static PLUS = "+";
-  static MINUS = "-";
-  static STAR = "*";
-  static MOD = "mod";
-  static SLASH = "/";
-}
 export class Token {
-  type: TokenType;
-  lexeme: String;
-  Literal: any;
-  start: number;
-  end: number;
+  public static EOLToken(end: number): Token {
+    return new Token(TokenType.EOL, '', null, end, end);
+  }
+  public type: TokenType;
+  public lexeme: string;
+  public Literal: any;
+  public start: number;
+  public end: number;
 
-  constructor(
-    type: TokenType,
-    lexeme: String,
-    literal: any,
-    start: number,
-    end: number
-  ) {
+  constructor(type: TokenType, lexeme: string, literal: any, start: number, end: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.start = start;
     this.end = end;
     this.Literal = literal;
   }
-  toString(): String {
-    return `< ${PrintTT(this.type)} ${this.lexeme} ${this.Literal} (${
-      this.start
-    }, ${this.end})>`;
-  }
-  static EOLToken(end: number): Token {
-    return new Token(TokenType.EOL, "", null, end, end);
+  public toString(): string {
+    return `< ${PrintTT(this.type)} ${this.lexeme} ${this.Literal} (${this.start}, ${this.end})>`;
   }
 }
 

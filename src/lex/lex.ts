@@ -1,11 +1,15 @@
-import Big from "../../lib/big.js";
-import { TokenType, Token, Char } from "./token";
+import Big = require('big.js');
+import { Char } from './char';
+import { Token, TokenType } from './token';
 export class Lexer {
-  private source: String;
-  tokens: Token[];
+  private static isDigit(char: string): boolean {
+    return char >= '0' && char <= '9';
+  }
+  private tokens: Token[];
+  private source: string;
   private start: number;
   private current: number;
-  constructor(source: String) {
+  constructor(source: string) {
     this.source = source;
     this.start = 0;
     this.current = 0;
@@ -18,7 +22,7 @@ export class Lexer {
     return this.scan();
   }
   private scan(): Token {
-    let char = this.advance();
+    const char = this.advance();
     switch (char) {
       case Char.PLUS:
         return this.createToken(TokenType.PLUS, Char.PLUS);
@@ -35,18 +39,17 @@ export class Lexer {
         throw new LexerError(`Unexpected character ${char}`);
     }
   }
-  private static isDigit(char: String): boolean {
-    return char >= "0" && char <= "9";
-  }
   private isAtEnd(): boolean {
     return this.current >= this.source.length;
   }
-  private advance(): String {
+  private advance(): string {
     this.current++;
     return this.source.charAt(this.current - 1);
   }
-  private peek(n: number): String {
-    if (this.current + n >= this.source.length) return "\0";
+  private peek(n: number): string {
+    if (this.current + n >= this.source.length) {
+      return '\0';
+    }
     return this.source.charAt(this.current + n);
   }
   // private match(expected: String): boolean {
@@ -63,7 +66,7 @@ export class Lexer {
     while (Lexer.isDigit(this.peek(0))) {
       this.advance();
     }
-    if (this.peek(0) == "." && Lexer.isDigit(this.peek(1))) {
+    if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
       this.advance();
       while (Lexer.isDigit(this.peek(0))) {
         this.advance();
@@ -72,25 +75,12 @@ export class Lexer {
     return this.createToken(TokenType.Number, new Big(this.lexeme()));
   }
   private createToken(type: TokenType, literal: any): Token {
-    let token = new Token(
-      type,
-      this.lexeme(),
-      literal,
-      this.start,
-      this.current
-    );
+    const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);
     return token;
   }
-  private lexeme(): String {
+  private lexeme(): string {
     return this.source.substring(this.start, this.current);
-  }
-}
-
-export class LexerError extends Error {
-  constructor(message) {
-    super(message);
-    this.name = "LexerParingrror";
   }
 }

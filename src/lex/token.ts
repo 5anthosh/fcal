@@ -1,10 +1,12 @@
 export enum TokenType {
   PLUS,
   MINUS,
-  STAR,
+  TIMES,
   MOD,
   SLASH,
   Number,
+  OPEN_PARAN,
+  CLOSE_PARAN,
   EOL,
 }
 

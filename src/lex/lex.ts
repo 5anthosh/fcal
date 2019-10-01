@@ -6,6 +6,9 @@ export class Lexer {
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
   }
+  private static isSpace(char: string): boolean {
+    return char === '\n' || char === ' ';
+  }
   private tokens: Token[];
   private source: string;
   private start: number;
@@ -23,16 +26,20 @@ export class Lexer {
     return this.scan();
   }
   private scan(): Token {
-    const char = this.advance();
+    const char = this.space();
     switch (char) {
       case Char.PLUS:
-        return this.createToken(TokenType.PLUS, Char.PLUS);
+        return this.createToken(TokenType.PLUS);
       case Char.MINUS:
-        return this.createToken(TokenType.MINUS, Char.MINUS);
-      case Char.STAR:
-        return this.createToken(TokenType.STAR, Char.STAR);
+        return this.createToken(TokenType.MINUS);
+      case Char.TIMES:
+        return this.createToken(TokenType.TIMES);
       case Char.SLASH:
-        return this.createToken(TokenType.SLASH, Char.SLASH);
+        return this.createToken(TokenType.SLASH);
+      case Char.OPEN_PARAN:
+        return this.createToken(TokenType.OPEN_PARAN);
+      case Char.CLOSE_PARAN:
+        return this.createToken(TokenType.CLOSE_PARAN);
       default:
         if (Lexer.isDigit(char)) {
           return this.number();
@@ -73,9 +80,12 @@ export class Lexer {
         this.advance();
       }
     }
-    return this.createToken(TokenType.Number, Type.Number(this.lexeme()));
+    return this.createTokenWithLiteral(TokenType.Number, Type.Number(this.lexeme()));
   }
-  private createToken(type: TokenType, literal: any): Token {
+  private createToken(type: TokenType): Token {
+    return this.createTokenWithLiteral(type, null);
+  }
+  private createTokenWithLiteral(type: TokenType, literal: any): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);
@@ -83,5 +93,13 @@ export class Lexer {
   }
   private lexeme(): string {
     return this.source.substring(this.start, this.current);
+  }
+  private space(): string {
+    let char = this.advance();
+    while (Lexer.isSpace(char)) {
+      this.start = this.current;
+      char = this.advance();
+    }
+    return char;
   }
 }

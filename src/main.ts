@@ -1,20 +1,9 @@
-import { Lexer } from './lex/lex';
-import { TokenType } from './lex/token';
+import { Interpreter } from './interpreter/interpreter';
 
-function parser() {
-  const lexer = new Lexer('0+234/343/11234.1234123$');
-  while (true) {
-    try {
-      const token = lexer.Next();
-      if (token.type === TokenType.EOL) {
-        return;
-      }
-      console.log(token.toString());
-    } catch (err) {
-      console.log(err.message);
-      return;
-    }
-  }
+function main() {
+  const value = new Interpreter('(0+2+3)/1.333     + 2').evaluateExpression();
+  // tslint:disable-next-line:no-console
+  console.log(value.toString());
 }
 
-parser();
+main();

@@ -14,6 +14,9 @@ class Lexer {
     static isDigit(char) {
         return char >= '0' && char <= '9';
     }
+    static isSpace(char) {
+        return char === '\n' || char === ' ';
+    }
     Next() {
         if (this.isAtEnd()) {
             return token_1.Token.EOLToken(this.current);
@@ -21,16 +24,20 @@ class Lexer {
         return this.scan();
     }
     scan() {
-        const char = this.advance();
+        const char = this.space();
         switch (char) {
             case char_1.Char.PLUS:
-                return this.createToken(token_1.TokenType.PLUS, char_1.Char.PLUS);
+                return this.createToken(token_1.TokenType.PLUS);
             case char_1.Char.MINUS:
-                return this.createToken(token_1.TokenType.MINUS, char_1.Char.MINUS);
+                return this.createToken(token_1.TokenType.MINUS);
             case char_1.Char.STAR:
-                return this.createToken(token_1.TokenType.STAR, char_1.Char.STAR);
+                return this.createToken(token_1.TokenType.STAR);
             case char_1.Char.SLASH:
-                return this.createToken(token_1.TokenType.SLASH, char_1.Char.SLASH);
+                return this.createToken(token_1.TokenType.SLASH);
+            case char_1.Char.OPEN_PARAN:
+                return this.createToken(token_1.TokenType.OPEN_PARAN);
+            case char_1.Char.CLOSE_PARAN:
+                return this.createToken(token_1.TokenType.CLOSE_PARAN);
             default:
                 if (Lexer.isDigit(char)) {
                     return this.number();
@@ -71,9 +78,12 @@ class Lexer {
                 this.advance();
             }
         }
-        return this.createToken(token_1.TokenType.Number, type_1.Type.Number(this.lexeme()));
+        return this.createTokenWithLiteral(token_1.TokenType.Number, type_1.Type.Number(this.lexeme()));
     }
-    createToken(type, literal) {
+    createToken(type) {
+        return this.createTokenWithLiteral(type, null);
+    }
+    createTokenWithLiteral(type, literal) {
         const token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
         this.start = this.current;
         this.tokens.push(token);
@@ -81,6 +91,14 @@ class Lexer {
     }
     lexeme() {
         return this.source.substring(this.start, this.current);
+    }
+    space() {
+        let char = this.advance();
+        while (Lexer.isSpace(char)) {
+            this.start = this.current;
+            char = this.advance();
+        }
+        return char;
     }
 }
 exports.Lexer = Lexer;

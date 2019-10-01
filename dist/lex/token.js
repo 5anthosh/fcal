@@ -8,7 +8,9 @@ var TokenType;
     TokenType[TokenType["MOD"] = 3] = "MOD";
     TokenType[TokenType["SLASH"] = 4] = "SLASH";
     TokenType[TokenType["Number"] = 5] = "Number";
-    TokenType[TokenType["EOL"] = 6] = "EOL";
+    TokenType[TokenType["OPEN_PARAN"] = 6] = "OPEN_PARAN";
+    TokenType[TokenType["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
+    TokenType[TokenType["EOL"] = 8] = "EOL";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];

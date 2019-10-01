@@ -1,5 +1,6 @@
 import Big = require('big.js');
 import { Char } from './char';
+import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
 export class Lexer {
   private static isDigit(char: string): boolean {

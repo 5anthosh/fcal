@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Big = require("big.js");
+const type_1 = require("../type");
+const char_1 = require("./char");
+const lexError_1 = require("./lexError");
 const token_1 = require("./token");
 class Lexer {
     constructor(source) {
@@ -9,6 +11,9 @@ class Lexer {
         this.current = 0;
         this.tokens = [];
     }
+    static isDigit(char) {
+        return char >= '0' && char <= '9';
+    }
     Next() {
         if (this.isAtEnd()) {
             return token_1.Token.EOLToken(this.current);
@@ -16,25 +21,22 @@ class Lexer {
         return this.scan();
     }
     scan() {
-        let char = this.advance();
+        const char = this.advance();
         switch (char) {
-            case token_1.Char.PLUS:
-                return this.createToken(token_1.TokenType.PLUS, token_1.Char.PLUS);
-            case token_1.Char.MINUS:
-                return this.createToken(token_1.TokenType.MINUS, token_1.Char.MINUS);
-            case token_1.Char.STAR:
-                return this.createToken(token_1.TokenType.STAR, token_1.Char.STAR);
-            case token_1.Char.SLASH:
-                return this.createToken(token_1.TokenType.SLASH, token_1.Char.SLASH);
+            case char_1.Char.PLUS:
+                return this.createToken(token_1.TokenType.PLUS, char_1.Char.PLUS);
+            case char_1.Char.MINUS:
+                return this.createToken(token_1.TokenType.MINUS, char_1.Char.MINUS);
+            case char_1.Char.STAR:
+                return this.createToken(token_1.TokenType.STAR, char_1.Char.STAR);
+            case char_1.Char.SLASH:
+                return this.createToken(token_1.TokenType.SLASH, char_1.Char.SLASH);
             default:
                 if (Lexer.isDigit(char)) {
                     return this.number();
                 }
-                throw new LexerError(`Unexpected character ${char}`);
+                throw new lexError_1.LexerError(`Unexpected character ${char}`);
         }
-    }
-    static isDigit(char) {
-        return char >= '0' && char <= '9';
     }
     isAtEnd() {
         return this.current >= this.source.length;
@@ -44,8 +46,9 @@ class Lexer {
         return this.source.charAt(this.current - 1);
     }
     peek(n) {
-        if (this.current + n >= this.source.length)
+        if (this.current + n >= this.source.length) {
             return '\0';
+        }
         return this.source.charAt(this.current + n);
     }
     // private match(expected: String): boolean {
@@ -62,16 +65,16 @@ class Lexer {
         while (Lexer.isDigit(this.peek(0))) {
             this.advance();
         }
-        if (this.peek(0) == '.' && Lexer.isDigit(this.peek(1))) {
+        if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
             this.advance();
             while (Lexer.isDigit(this.peek(0))) {
                 this.advance();
             }
         }
-        return this.createToken(token_1.TokenType.Number, new Big(this.lexeme()));
+        return this.createToken(token_1.TokenType.Number, type_1.Type.Number(this.lexeme()));
     }
     createToken(type, literal) {
-        let token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
+        const token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
         this.start = this.current;
         this.tokens.push(token);
         return token;
@@ -81,11 +84,4 @@ class Lexer {
     }
 }
 exports.Lexer = Lexer;
-class LexerError extends Error {
-    constructor(message) {
-        super(message);
-        this.name = 'LexerParingrror';
-    }
-}
-exports.LexerError = LexerError;
 //# sourceMappingURL=lex.js.map

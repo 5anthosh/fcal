@@ -13,7 +13,8 @@
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint"
+    "preversion": "npm run lint",
+    "main": "npm run build && node dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/5anthosh/fcal#readme",
   "devDependencies": {
+    "@types/big.js": "^4.0.5",
     "@types/jest": "^24.0.18",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",

@@ -1,4 +1,4 @@
-import Big = require('big.js');
+import { Type } from '../type';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
@@ -73,7 +73,7 @@ export class Lexer {
         this.advance();
       }
     }
-    return this.createToken(TokenType.Number, new Big(this.lexeme()));
+    return this.createToken(TokenType.Number, Type.Number(this.lexeme()));
   }
   private createToken(type: TokenType, literal: any): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);

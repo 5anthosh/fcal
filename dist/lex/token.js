@@ -13,14 +13,6 @@ var TokenType;
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];
 }
-class Char {
-}
-exports.Char = Char;
-Char.PLUS = "+";
-Char.MINUS = "-";
-Char.STAR = "*";
-Char.MOD = "mod";
-Char.SLASH = "/";
 class Token {
     constructor(type, lexeme, literal, start, end) {
         this.type = type;
@@ -29,11 +21,11 @@ class Token {
         this.end = end;
         this.Literal = literal;
     }
+    static EOLToken(end) {
+        return new Token(TokenType.EOL, '', null, end, end);
+    }
     toString() {
         return `< ${PrintTT(this.type)} ${this.lexeme} ${this.Literal} (${this.start}, ${this.end})>`;
-    }
-    static EOLToken(end) {
-        return new Token(TokenType.EOL, "", null, end, end);
     }
 }
 exports.Token = Token;

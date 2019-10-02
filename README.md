@@ -9,6 +9,6 @@ Formula engine
 - [x] power of (^) operator
 - [x] modulo (and test)
 - [x] various phrases for operation
-- [x] units
+- [ ] units
 - [ ] percentage operation
 - [ ] complex numbers

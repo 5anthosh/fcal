@@ -5,14 +5,18 @@ const char_1 = require("./char");
 const lexError_1 = require("./lexError");
 const token_1 = require("./token");
 class Lexer {
-    constructor(source) {
+    constructor(source, phrases) {
         this.source = source.replace(/[\s\t\n]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
+        this.phrases = phrases;
     }
     static isDigit(char) {
         return char >= '0' && char <= '9';
+    }
+    static isAlpha(char) {
+        return !Lexer.isDigit(char) && !this.isSpace(char);
     }
     static isSpace(char) {
         return char === '\n' || char === ' ';
@@ -44,7 +48,7 @@ class Lexer {
                 if (Lexer.isDigit(char)) {
                     return this.number();
                 }
-                throw new lexError_1.LexerError(`Unexpected character ${char}`);
+                return this.string();
         }
     }
     isAtEnd() {
@@ -59,6 +63,19 @@ class Lexer {
             return '\0';
         }
         return this.source.charAt(this.current + n);
+    }
+    string() {
+        while (Lexer.isAlpha(this.peek(0))) {
+            this.advance();
+        }
+        const text = this.lexeme();
+        let type;
+        let ok;
+        [type, ok] = this.phrases.search(text);
+        if (ok) {
+            return this.createToken(type);
+        }
+        throw new lexError_1.LexerError(`Unexepected Identifier ${text}`);
     }
     // private match(expected: String): boolean {
     //   if (this.isAtEnd()) {

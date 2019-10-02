@@ -1,10 +1,16 @@
+import { Phrases } from '../phrase';
 import { Type } from '../type';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
+
 export class Lexer {
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
+  }
+
+  private static isAlpha(char: string): boolean {
+    return !Lexer.isDigit(char) && !this.isSpace(char);
   }
   private static isSpace(char: string): boolean {
     return char === '\n' || char === ' ';
@@ -13,11 +19,13 @@ export class Lexer {
   private source: string;
   private start: number;
   private current: number;
-  constructor(source: string) {
+  private phrases: Phrases;
+  constructor(source: string, phrases: Phrases) {
     this.source = source.replace(/[\s\t\n]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = [];
+    this.phrases = phrases;
   }
   public Next(): Token {
     if (this.isAtEnd()) {
@@ -46,7 +54,7 @@ export class Lexer {
         if (Lexer.isDigit(char)) {
           return this.number();
         }
-        throw new LexerError(`Unexpected character ${char}`);
+        return this.string();
     }
   }
   private isAtEnd(): boolean {
@@ -61,6 +69,19 @@ export class Lexer {
       return '\0';
     }
     return this.source.charAt(this.current + n);
+  }
+  private string(): Token {
+    while (Lexer.isAlpha(this.peek(0))) {
+      this.advance();
+    }
+    const text = this.lexeme();
+    let type: TokenType;
+    let ok: boolean;
+    [type, ok] = this.phrases.search(text);
+    if (ok) {
+      return this.createToken(type);
+    }
+    throw new LexerError(`Unexepected Identifier ${text}`);
   }
   // private match(expected: String): boolean {
   //   if (this.isAtEnd()) {

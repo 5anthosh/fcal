@@ -1,5 +1,6 @@
 import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
+import { Phrases } from '../phrase';
 import { Expr } from './expr';
 
 export class Parser {
@@ -7,9 +8,9 @@ export class Parser {
   private lexer: Lexer;
   private ntoken: number;
   private tokens: Token[];
-  constructor(source: string) {
+  constructor(source: string, phrases: Phrases) {
     this.source = source;
-    this.lexer = new Lexer(this.source);
+    this.lexer = new Lexer(this.source, phrases);
     this.ntoken = 0;
     this.tokens = [];
   }
@@ -30,9 +31,9 @@ export class Parser {
   }
   private multiply(): Expr {
     let expr = this.unary();
-    while (this.match(TokenType.TIMES, TokenType.SLASH)) {
+    while (this.match(TokenType.TIMES, TokenType.SLASH, TokenType.MOD)) {
       const operator = this.previous();
-      const right = this.multiply();
+      const right = this.unary();
       expr = new Expr.Binary(expr, operator, right);
     }
     return expr;

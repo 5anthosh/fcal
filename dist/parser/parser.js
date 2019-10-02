@@ -4,9 +4,9 @@ const lex_1 = require("../lex/lex");
 const token_1 = require("../lex/token");
 const expr_1 = require("./expr");
 class Parser {
-    constructor(source) {
+    constructor(source, phrases) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source);
+        this.lexer = new lex_1.Lexer(this.source, phrases);
         this.ntoken = 0;
         this.tokens = [];
     }
@@ -27,9 +27,9 @@ class Parser {
     }
     multiply() {
         let expr = this.unary();
-        while (this.match(token_1.TokenType.TIMES, token_1.TokenType.SLASH)) {
+        while (this.match(token_1.TokenType.TIMES, token_1.TokenType.SLASH, token_1.TokenType.MOD)) {
             const operator = this.previous();
-            const right = this.multiply();
+            const right = this.unary();
             expr = new expr_1.Expr.Binary(expr, operator, right);
         }
         return expr;

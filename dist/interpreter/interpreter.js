@@ -4,8 +4,8 @@ const Big = require("decimal.js");
 const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
 class Interpreter {
-    constructor(source) {
-        this.parser = new parser_1.Parser(source);
+    constructor(source, phrases) {
+        this.parser = new parser_1.Parser(source, phrases);
     }
     evaluateExpression() {
         const expr = this.parser.parse();
@@ -14,7 +14,7 @@ class Interpreter {
     visitBinaryExpr(expr) {
         const left = this.evaluate(expr.left);
         const right = this.evaluate(expr.right);
-        // console.log(`${PrintTT(expr.operator.type)} ${left} ${right}`);
+        console.log(`${token_1.PrintTT(expr.operator.type)} ${left} ${right}`);
         switch (expr.operator.type) {
             case token_1.TokenType.PLUS:
                 return left.plus(right);
@@ -24,6 +24,11 @@ class Interpreter {
                 return left.mul(right);
             case token_1.TokenType.SLASH:
                 return left.div(right);
+            case token_1.TokenType.MOD:
+                if (right.isZero()) {
+                    return new Big.Decimal('Infinity');
+                }
+                return left.mod(right);
             case token_1.TokenType.CAP:
                 if (left.isNegative()) {
                     if (!right.isInteger()) {

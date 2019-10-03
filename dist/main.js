@@ -1,23 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const lex_1 = require("./lex/lex");
-const fcal_1 = require("./parser/fcal");
-const type_1 = require("./type");
+// import { Lexer } from './lex/lex';
+const fcal_1 = require("./fcal");
+// import { Type } from './datetype';
 function main() {
-    const value = new fcal_1.Fcal('2*2*2').evaluate();
+    // const value = new Fcal('2*2*20000000000000').evaluate();
+    // // tslint:disable-next-line:no-console
+    // console.log(value.format());
+    const value1 = new fcal_1.Fcal('2^2%^2%^2 \n').evaluate();
     // tslint:disable-next-line:no-console
-    console.log(value.toString());
-    console.log(type_1.Type.Number('-4')
-        .negated()
-        .mod(type_1.Type.Number('0.23')));
-    const lex = new lex_1.Lexer('23 add 23 + 3 pow 2', fcal_1.Fcal.getdefaultphrases());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
-    console.log(lex.Next().toString());
+    console.debug(value1);
+    // console.log(new Type.Number('-4').negated().mod(new Type.Number('0.23')));
+    // const lex = new Lexer('20% of 100 of 500 of 1.23', Fcal.getdefaultphrases());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
+    // console.log(lex.Next().toString());
 }
 main();
 //# sourceMappingURL=main.js.map

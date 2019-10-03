@@ -11,4 +11,6 @@ Char.SLASH = '/';
 Char.OPEN_PARAN = '(';
 Char.CLOSE_PARAN = ')';
 Char.CAP = '^';
+Char.PERCENTAGE = '%';
+Char.NEWLINE = '\n';
 //# sourceMappingURL=char.js.map

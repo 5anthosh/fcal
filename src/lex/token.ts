@@ -1,3 +1,5 @@
+import { Type } from '../datetype';
+
 export enum TokenType {
   PLUS,
   MINUS,
@@ -7,7 +9,10 @@ export enum TokenType {
   Number,
   OPEN_PARAN,
   CLOSE_PARAN,
+  NEWLINE,
   EOL,
+  PERCENTAGE,
+  OF,
   CAP,
 }
 
@@ -21,11 +26,11 @@ export class Token {
   }
   public type: TokenType;
   public lexeme: string;
-  public Literal: any;
+  public Literal: Type;
   public start: number;
   public end: number;
 
-  constructor(type: TokenType, lexeme: string, literal: any, start: number, end: number) {
+  constructor(type: TokenType, lexeme: string, literal: Type, start: number, end: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.start = start;
@@ -33,7 +38,11 @@ export class Token {
     this.Literal = literal;
   }
   public toString(): string {
-    return `< ${PrintTT(this.type)} ${this.lexeme} ${this.Literal} (${this.start}, ${this.end})>`;
+    let literal = '';
+    if (this.Literal !== null) {
+      literal = this.Literal.format();
+    }
+    return `< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
   }
 }
 

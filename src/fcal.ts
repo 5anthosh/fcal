@@ -1,6 +1,6 @@
-import { Interpreter } from '../interpreter/interpreter';
-import { TokenType } from '../lex/token';
-import { Phrases } from '../phrase';
+import { Interpreter } from './interpreter/interpreter';
+import { TokenType } from './lex/token';
+import { Phrases } from './phrase';
 
 export class Fcal {
   public static getdefaultphrases(): Phrases {
@@ -11,6 +11,7 @@ export class Fcal {
     phrases.addPhrases(TokenType.SLASH, 'DIVIDE', 'DIVIDEBY');
     phrases.addPhrases(TokenType.CAP, 'POW');
     phrases.addPhrases(TokenType.MOD, 'mod');
+    phrases.addPhrases(TokenType.OF, 'of');
     return phrases;
   }
   private interpreter: Interpreter;

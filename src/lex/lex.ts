@@ -1,5 +1,5 @@
 import { Phrases } from '../phrase';
-import { Type } from '../type';
+import { Type } from '../datetype';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
@@ -10,10 +10,10 @@ export class Lexer {
   }
 
   private static isAlpha(char: string): boolean {
-    return !Lexer.isDigit(char) && !this.isSpace(char);
+    return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0';
   }
   private static isSpace(char: string): boolean {
-    return char === '\n' || char === ' ';
+    return char === '\t' || char === ' ';
   }
   private tokens: Token[];
   private source: string;
@@ -21,13 +21,14 @@ export class Lexer {
   private current: number;
   private phrases: Phrases;
   constructor(source: string, phrases: Phrases) {
-    this.source = source.replace(/[\s\t\n]+$/, '');
+    this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = [];
     this.phrases = phrases;
   }
   public Next(): Token {
+    console.log('<---------------Lexer Next TOken call');
     if (this.isAtEnd()) {
       return Token.EOLToken(this.current);
     }
@@ -50,6 +51,10 @@ export class Lexer {
         return this.createToken(TokenType.CLOSE_PARAN);
       case Char.CAP:
         return this.createToken(TokenType.CAP);
+      case Char.PERCENTAGE:
+        return this.createToken(TokenType.PERCENTAGE);
+      case Char.NEWLINE:
+        return this.createToken(TokenType.NEWLINE);
       default:
         if (Lexer.isDigit(char)) {
           return this.number();
@@ -103,12 +108,12 @@ export class Lexer {
         this.advance();
       }
     }
-    return this.createTokenWithLiteral(TokenType.Number, Type.Number(this.lexeme()));
+    return this.createTokenWithLiteral(TokenType.Number, new Type.BNumber(this.lexeme()));
   }
   private createToken(type: TokenType): Token {
     return this.createTokenWithLiteral(type, null);
   }
-  private createTokenWithLiteral(type: TokenType, literal: any): Token {
+  private createTokenWithLiteral(type: TokenType, literal: Type): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);

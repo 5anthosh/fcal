@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const type_1 = require("../type");
+const datetype_1 = require("../datetype");
 const char_1 = require("./char");
 const lexError_1 = require("./lexError");
 const token_1 = require("./token");
 class Lexer {
     constructor(source, phrases) {
-        this.source = source.replace(/[\s\t\n]+$/, '');
+        this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
@@ -16,12 +16,13 @@ class Lexer {
         return char >= '0' && char <= '9';
     }
     static isAlpha(char) {
-        return !Lexer.isDigit(char) && !this.isSpace(char);
+        return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0';
     }
     static isSpace(char) {
-        return char === '\n' || char === ' ';
+        return char === '\t' || char === ' ';
     }
     Next() {
+        console.log('<---------------Lexer Next TOken call');
         if (this.isAtEnd()) {
             return token_1.Token.EOLToken(this.current);
         }
@@ -44,6 +45,10 @@ class Lexer {
                 return this.createToken(token_1.TokenType.CLOSE_PARAN);
             case char_1.Char.CAP:
                 return this.createToken(token_1.TokenType.CAP);
+            case char_1.Char.PERCENTAGE:
+                return this.createToken(token_1.TokenType.PERCENTAGE);
+            case char_1.Char.NEWLINE:
+                return this.createToken(token_1.TokenType.NEWLINE);
             default:
                 if (Lexer.isDigit(char)) {
                     return this.number();
@@ -97,7 +102,7 @@ class Lexer {
                 this.advance();
             }
         }
-        return this.createTokenWithLiteral(token_1.TokenType.Number, type_1.Type.Number(this.lexeme()));
+        return this.createTokenWithLiteral(token_1.TokenType.Number, new datetype_1.Type.BNumber(this.lexeme()));
     }
     createToken(type) {
         return this.createTokenWithLiteral(type, null);

@@ -10,8 +10,11 @@ var TokenType;
     TokenType[TokenType["Number"] = 5] = "Number";
     TokenType[TokenType["OPEN_PARAN"] = 6] = "OPEN_PARAN";
     TokenType[TokenType["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
-    TokenType[TokenType["EOL"] = 8] = "EOL";
-    TokenType[TokenType["CAP"] = 9] = "CAP";
+    TokenType[TokenType["NEWLINE"] = 8] = "NEWLINE";
+    TokenType[TokenType["EOL"] = 9] = "EOL";
+    TokenType[TokenType["PERCENTAGE"] = 10] = "PERCENTAGE";
+    TokenType[TokenType["OF"] = 11] = "OF";
+    TokenType[TokenType["CAP"] = 12] = "CAP";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];
@@ -29,7 +32,11 @@ class Token {
         return new Token(TokenType.EOL, '', null, end, end);
     }
     toString() {
-        return `< ${PrintTT(this.type)} ${this.lexeme} ${this.Literal} (${this.start}, ${this.end})>`;
+        let literal = '';
+        if (this.Literal !== null) {
+            literal = this.Literal.format();
+        }
+        return `< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
     }
 }
 exports.Token = Token;

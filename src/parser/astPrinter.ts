@@ -1,10 +1,10 @@
+import colors from 'colors';
 import { Expr } from './expr';
-
 export class ASTPrinter implements Expr.IVisitor<string> {
-  private static tab: number = 3;
+  private static tab: number = 2;
   private static prefixchar = '+';
-  private static createPrefix(depth: number): string {
-    return `${this.prefixchar}${'-'.repeat(depth)} (${depth / 2})`;
+  private static createPrefix(depth: number, type: string): string {
+    return `${this.prefixchar}${'-'.repeat(depth * this.tab)} (${depth / this.tab})${colors.blue(type)}`;
   }
   private depth: number;
   constructor() {
@@ -15,28 +15,28 @@ export class ASTPrinter implements Expr.IVisitor<string> {
     const left = this.evaluate(expr.left);
     const right = this.evaluate(expr.right);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth)}EXPR BINARY  ${expr.operator} \n|\n${left}${right}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'BINARY')}  ${expr.operator} \n|\n${left}${right}`;
   }
   public visitGroupingExpr(expr: Expr.Grouping): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth)}EXPR Grouping \n|\n${expression}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'Grouping')} \n|\n${expression}`;
   }
   public visitLiteralExpr(expr: Expr.Literal): string {
-    return `${ASTPrinter.createPrefix(this.depth)}EXPR LITERAL ${expr.value.format()}\n|\n`;
+    return `${ASTPrinter.createPrefix(this.depth, 'LITERAL')} ${expr.value.format()}\n|\n`;
   }
   public visitUnaryExpr(expr: Expr.Unary): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.right);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth)}EXPR UNARY ${expr.operator} \n|\n${expression}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'UNARY')} ${expr.operator} \n|\n${expression}`;
   }
   public visitPercentageExpr(expr: Expr.Percentage): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth)}EXPR PERCENTAGE \n|\n${expression}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'PERCENTAGE')} \n|\n${expression}`;
   }
   public print(expr: Expr): string {
     return this.evaluate(expr);

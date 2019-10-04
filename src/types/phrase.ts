@@ -1,4 +1,4 @@
-import { TokenType } from './lex/token';
+import { TokenType } from '../lex/token';
 
 export class Phrase {
   public type: TokenType;

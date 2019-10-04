@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const datetype_1 = require("../datetype");
 const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
+const datetype_1 = require("../types/datetype");
 class Interpreter {
     constructor(source, phrases) {
         this.parser = new parser_1.Parser(source, phrases);
@@ -71,6 +71,7 @@ class Interpreter {
         throw new Error('Expecting numeric value in percentage');
     }
     evaluate(expr) {
+        console.log(expr.toString());
         const ast = expr.accept(this);
         return ast;
     }

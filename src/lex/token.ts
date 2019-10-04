@@ -1,5 +1,5 @@
-import { Type } from '../datetype';
-
+import colors from 'colors';
+import { Type } from '../types/datetype';
 export enum TokenType {
   PLUS,
   MINUS,
@@ -42,7 +42,7 @@ export class Token {
     if (this.Literal !== null) {
       literal = this.Literal.format();
     }
-    return `< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
+    return colors.cyan(`< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`);
   }
 }
 

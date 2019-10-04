@@ -1,5 +1,5 @@
-import { Type } from '../datetype';
-import { Phrases } from '../phrase';
+import { Type } from '../types/datetype';
+import { Phrases } from '../types/phrase';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';

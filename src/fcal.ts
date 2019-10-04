@@ -1,6 +1,6 @@
 import { Interpreter } from './interpreter/interpreter';
 import { TokenType } from './lex/token';
-import { Phrases } from './phrase';
+import { Phrases } from './types/phrase';
 
 export class Fcal {
   public static getdefaultphrases(): Phrases {

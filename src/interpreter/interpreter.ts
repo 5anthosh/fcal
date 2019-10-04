@@ -1,8 +1,8 @@
-import { Type } from '../datetype';
 import { TokenType } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
-import { Phrases } from '../phrase';
+import { Type } from '../types/datetype';
+import { Phrases } from '../types/phrase';
 
 export class Interpreter implements Expr.IVisitor<any> {
   private parser: Parser;
@@ -80,6 +80,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw new Error('Expecting numeric value in percentage');
   }
   private evaluate(expr: Expr): Type {
+    // console.log(expr.toString());
     const ast = expr.accept(this);
     return ast;
   }

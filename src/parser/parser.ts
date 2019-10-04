@@ -1,6 +1,6 @@
 import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
-import { Phrases } from '../phrase';
+import { Phrases } from '../types/phrase';
 import { Expr } from './expr';
 
 export class Parser {

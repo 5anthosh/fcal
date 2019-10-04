@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const datetype_1 = require("../../datetype");
 const fcal_1 = require("../../fcal");
 const interpreter_1 = require("../../interpreter/interpreter");
+const datetype_1 = require("../../types/datetype");
 test('Test simple arithmetic operation', () => {
     const expression = '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4 \n';
     expect(new interpreter_1.Interpreter(expression, fcal_1.Fcal.getdefaultphrases()).evaluateExpression()).toStrictEqual(new datetype_1.Type.BNumber('24.412934840534418202'));

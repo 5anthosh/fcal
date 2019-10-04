@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const datetype_1 = require("../datetype");
+const datetype_1 = require("../types/datetype");
 const char_1 = require("./char");
 const lexError_1 = require("./lexError");
 const token_1 = require("./token");

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const interpreter_1 = require("./interpreter/interpreter");
 const token_1 = require("./lex/token");
-const phrase_1 = require("./phrase");
+const phrase_1 = require("./types/phrase");
 class Fcal {
     constructor(source) {
         this.phrases = Fcal.getdefaultphrases();

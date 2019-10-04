@@ -1,4 +1,3 @@
-import format = require('accounting');
 import colors = require('colors');
 import Big = require('decimal.js');
 export abstract class Type {
@@ -31,10 +30,11 @@ export namespace Type {
       this.leftflag = false;
     }
     public format(): string {
-      if (this.number.isInteger()) {
-        return format.formatMoney(this.number.toString(), '').green;
-      }
-      return format.formatMoney(this.number.toString(), '', 16).green;
+      // if (this.number.isInteger()) {
+      //   return format.formatMoney(this.number.toString(), '').green;
+      // }
+      // return format.formatMoney(this.number.toString(), '', 16).green;
+      return this.number.toString().green;
     }
 
     public Add(value: Numberic): Numberic {
@@ -251,7 +251,7 @@ export namespace Type {
       return value.mul(this.number.div(Percentage.base));
     }
     public format(): string {
-      return `${colors.blue('% ') + format.formatMoney(this.number.toString(), '').green}`;
+      return `${colors.blue('% ') + this.number.toString().green}`;
     }
     public newNumeric(value: Big.Decimal): Numberic {
       return Percentage.New(value);

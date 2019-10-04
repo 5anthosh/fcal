@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const format = require("accounting");
-const Big = require("decimal.js");
 const colors = require("colors");
+const Big = require("decimal.js");
 class Type {
 }
 exports.Type = Type;
@@ -30,10 +29,11 @@ var TYPERANK;
             this.leftflag = false;
         }
         format() {
-            if (this.number.isInteger()) {
-                return format.formatMoney(this.number.toString(), '').green;
-            }
-            return format.formatMoney(this.number.toString(), '', 16).green;
+            // if (this.number.isInteger()) {
+            //   return format.formatMoney(this.number.toString(), '').green;
+            // }
+            // return format.formatMoney(this.number.toString(), '', 16).green;
+            return this.number.toString().green;
         }
         Add(value) {
             // check type to see which datatype operation
@@ -232,7 +232,7 @@ var TYPERANK;
             return value.mul(this.number.div(Percentage.base));
         }
         format() {
-            return `${colors.blue('% ') + format.formatMoney(this.number.toString(), '').green}`;
+            return `${colors.blue('% ') + this.number.toString().green}`;
         }
         newNumeric(value) {
             return Percentage.New(value);

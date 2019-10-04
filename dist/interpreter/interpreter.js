@@ -71,7 +71,7 @@ class Interpreter {
         throw new Error('Expecting numeric value in percentage');
     }
     evaluate(expr) {
-        console.log(expr.toString());
+        // console.log(expr.toString());
         const ast = expr.accept(this);
         return ast;
     }

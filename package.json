@@ -2,7 +2,7 @@
   "name": "fcal",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cmd/main.js",
   "directories": {
     "lib": "lib"
   },
@@ -15,7 +15,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
-    "main": "node dist/main.js"
+    "main": "node dist/cmd/main.js"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,7 @@
     "@types/accounting": "^0.4.1",
     "@types/decimal.js": "^7.4.0",
     "@types/jest": "^24.0.18",
+    "@types/node": "^12.7.11",
     "accounting": "^0.4.1",
     "colors": "^1.4.0",
     "decimal.js": "^10.2.0",

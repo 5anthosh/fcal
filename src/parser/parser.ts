@@ -8,12 +8,10 @@ export class Parser {
   private lexer: Lexer;
   private ntoken: number;
   private tokens: Token[];
-  private depth: number;
   constructor(source: string, phrases: Phrases) {
     this.source = source;
     this.lexer = new Lexer(this.source, phrases);
     this.ntoken = 0;
-    this.depth = 0;
     this.tokens = [];
   }
   public parse(): Expr {
@@ -34,11 +32,8 @@ export class Parser {
     let expr = this.addition();
     while (this.match(TokenType.OF)) {
       const operator = this.previous();
-      this.depth += 1;
-      expr.increaseDepth();
       const right = this.addition();
-      this.depth -= 1;
-      expr = new Expr.Binary(this.depth, expr, operator, right, expr.start, right.end);
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }
@@ -46,11 +41,8 @@ export class Parser {
     let expr = this.multiply();
     while (this.match(TokenType.PLUS, TokenType.MINUS)) {
       const operator = this.previous();
-      this.depth += 1;
-      expr.increaseDepth();
       const right = this.multiply();
-      this.depth -= 1;
-      expr = new Expr.Binary(this.depth, expr, operator, right, expr.start, right.end);
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }
@@ -59,11 +51,8 @@ export class Parser {
     let expr = this.unary();
     while (this.match(TokenType.TIMES, TokenType.SLASH, TokenType.MOD, TokenType.OF)) {
       const operator = this.previous();
-      this.depth += 1;
-      expr.increaseDepth();
       const right = this.unary();
-      this.depth -= 1;
-      expr = new Expr.Binary(this.depth, expr, operator, right, expr.start, right.end);
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }
@@ -71,10 +60,8 @@ export class Parser {
   private unary(): Expr {
     if (this.match(TokenType.PLUS, TokenType.MINUS)) {
       const operator = this.previous();
-      this.depth += 1;
       const right = this.unary();
-      this.depth -= 1;
-      return new Expr.Unary(this.depth, operator, right, operator.start, right.end);
+      return new Expr.Unary(operator, right, operator.start, right.end);
     }
     return this.exponent();
   }
@@ -82,11 +69,8 @@ export class Parser {
     let expr = this.percent();
     while (this.match(TokenType.CAP)) {
       const operator = this.previous();
-      this.depth += 1;
-      expr.increaseDepth();
       const right = this.unary();
-      this.depth -= 1;
-      expr = new Expr.Binary(this.depth, expr, operator, right, expr.start, right.end);
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }
@@ -94,21 +78,19 @@ export class Parser {
     let expr = this.term();
     if (this.match(TokenType.PERCENTAGE)) {
       const operator = this.previous();
-      expr = new Expr.Percentage(this.depth, expr, expr.start, operator.end);
+      expr = new Expr.Percentage(expr, expr.start, operator.end);
     }
     return expr;
   }
   private term(): Expr {
     if (this.match(TokenType.Number)) {
-      return new Expr.Literal(this.depth, this.previous().Literal, this.previous().start, this.previous().end);
+      return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
     }
     if (this.match(TokenType.OPEN_PARAN)) {
       const start = this.previous();
-      this.depth += 1;
       const expr = this.expression();
-      this.depth -= 1;
       this.consume(TokenType.CLOSE_PARAN, "Expect ')' after expression");
-      return new Expr.Grouping(this.depth, expr, start.start, expr.end);
+      return new Expr.Grouping(expr, start.start, this.previous().end);
     }
     throw new Error(`Expect expression but found ${this.peek().lexeme}`);
   }
@@ -147,7 +129,6 @@ export class Parser {
   }
   private getToken(): Token {
     const token = this.lexer.Next();
-    console.debug(`CONSUMED TOKEN ${token}`);
     if (token.type !== TokenType.EOL) {
       this.tokens.push(token);
     }

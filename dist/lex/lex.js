@@ -22,7 +22,6 @@ class Lexer {
         return char === '\t' || char === ' ';
     }
     Next() {
-        console.log('<---------------Lexer Next TOken call');
         if (this.isAtEnd()) {
             return token_1.Token.EOLToken(this.current);
         }

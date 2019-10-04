@@ -1,5 +1,5 @@
-import { Phrases } from '../phrase';
 import { Type } from '../datetype';
+import { Phrases } from '../phrase';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
@@ -28,7 +28,6 @@ export class Lexer {
     this.phrases = phrases;
   }
   public Next(): Token {
-    console.log('<---------------Lexer Next TOken call');
     if (this.isAtEnd()) {
       return Token.EOLToken(this.current);
     }

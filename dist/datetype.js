@@ -27,7 +27,6 @@ var TYPERANK;
                 this.number = new Big.Decimal(value);
             }
             this.leftflag = false;
-            console.log(`New Number creation ${this.number}`);
         }
         format() {
             if (this.number.isInteger()) {
@@ -237,7 +236,7 @@ var TYPERANK;
         newNumeric(value) {
             return Percentage.New(value);
         }
-        toString() {
+        print() {
             return this.format();
         }
     }

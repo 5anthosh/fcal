@@ -29,7 +29,6 @@ export namespace Type {
         this.number = new Big.Decimal(value);
       }
       this.leftflag = false;
-      console.log(`New Number creation ${this.number}`);
     }
     public format(): string {
       if (this.number.isInteger()) {
@@ -257,7 +256,7 @@ export namespace Type {
     public newNumeric(value: Big.Decimal): Numberic {
       return Percentage.New(value);
     }
-    public toString(): string {
+    public print(): string {
       return this.format();
     }
   }

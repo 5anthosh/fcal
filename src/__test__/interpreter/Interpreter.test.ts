@@ -1,6 +1,6 @@
-import { Interpreter } from '../../interpreter/interpreter';
-import { Fcal } from '../../fcal';
 import { Type } from '../../datetype';
+import { Fcal } from '../../fcal';
+import { Interpreter } from '../../interpreter/interpreter';
 test('Test simple arithmetic operation', () => {
   const expression =
     '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4 \n';

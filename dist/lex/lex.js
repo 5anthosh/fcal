@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const datetype_1 = require("../types/datetype");
+const datatype_1 = require("../types/datatype");
 const char_1 = require("./char");
 const lexError_1 = require("./lexError");
 const token_1 = require("./token");
@@ -16,7 +16,7 @@ class Lexer {
         return char >= '0' && char <= '9';
     }
     static isAlpha(char) {
-        return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0';
+        return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n';
     }
     static isSpace(char) {
         return char === '\t' || char === ' ';
@@ -79,7 +79,7 @@ class Lexer {
         if (ok) {
             return this.createToken(type);
         }
-        throw new lexError_1.LexerError(`Unexepected Identifier ${text}`);
+        throw new lexError_1.LexerError(`Unexpected Identifier ${text}`);
     }
     // private match(expected: String): boolean {
     //   if (this.isAtEnd()) {
@@ -101,7 +101,7 @@ class Lexer {
                 this.advance();
             }
         }
-        return this.createTokenWithLiteral(token_1.TokenType.Number, new datetype_1.Type.BNumber(this.lexeme()));
+        return this.createTokenWithLiteral(token_1.TokenType.Number, new datatype_1.Type.BNumber(this.lexeme()));
     }
     createToken(type) {
         return this.createTokenWithLiteral(type, null);

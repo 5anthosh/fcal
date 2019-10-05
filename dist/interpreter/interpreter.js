@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
-const datetype_1 = require("../types/datetype");
+const datatype_1 = require("../types/datatype");
 class Interpreter {
     constructor(source, phrases) {
         this.parser = new parser_1.Parser(source, phrases);
@@ -25,7 +25,7 @@ class Interpreter {
                 return left.divide(right);
             case token_1.TokenType.MOD:
                 if (right.isZero()) {
-                    return new datetype_1.Type.BNumber('Infinity');
+                    return new datatype_1.Type.BNumber('Infinity');
                 }
                 return left.modulo(right);
             case token_1.TokenType.CAP:
@@ -42,12 +42,12 @@ class Interpreter {
                 }
                 return left.power(right);
             case token_1.TokenType.OF:
-                left = new datetype_1.Type.Percentage(left.number);
+                left = new datatype_1.Type.Percentage(left.number);
                 const per = left;
                 right.number = per.percentageValue(right.number);
                 return right;
             default:
-                return datetype_1.Type.BNumber.ZERO;
+                return datatype_1.Type.BNumber.ZERO;
         }
     }
     visitGroupingExpr(expr) {
@@ -65,8 +65,8 @@ class Interpreter {
     }
     visitPercentageExpr(expr) {
         const value = this.evaluate(expr.expression);
-        if (value instanceof datetype_1.Type.Numberic) {
-            return datetype_1.Type.Percentage.New(value.number);
+        if (value instanceof datatype_1.Type.Numberic) {
+            return datatype_1.Type.Percentage.New(value.number);
         }
         throw new Error('Expecting numeric value in percentage');
     }

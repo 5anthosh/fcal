@@ -11,13 +11,10 @@ function main() {
     rl.prompt();
     rl.on('line', line => {
         if (line === '.exit') {
-            process.exit(0);
+            rl.close();
         }
         const fcal = new fcal_1.Fcal(line + '\n');
         console.log(fcal.evaluate().format());
-        if (line === 'right') {
-            rl.close();
-        }
         rl.prompt();
     }).on('close', () => {
         process.exit(0);

@@ -1,7 +1,7 @@
 import { TokenType } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
-import { Type } from '../types/datetype';
+import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 
 export class Interpreter implements Expr.IVisitor<any> {

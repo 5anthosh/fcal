@@ -12,7 +12,7 @@ class Fcal {
         const phrases = new phrase_1.Phrases();
         phrases.addPhrases(token_1.TokenType.PLUS, 'PLUS', 'AND', 'WITH', 'ADD');
         phrases.addPhrases(token_1.TokenType.MINUS, 'MINUS', 'SUBTRACT', 'WITHOUT');
-        phrases.addPhrases(token_1.TokenType.TIMES, 'TIMES', 'MULTIPLIEDBY', 'mul');
+        phrases.addPhrases(token_1.TokenType.TIMES, 'TIMES', 'x', 'MULTIPLIEDBY', 'mul');
         phrases.addPhrases(token_1.TokenType.SLASH, 'DIVIDE', 'DIVIDEBY');
         phrases.addPhrases(token_1.TokenType.CAP, 'POW');
         phrases.addPhrases(token_1.TokenType.MOD, 'mod');

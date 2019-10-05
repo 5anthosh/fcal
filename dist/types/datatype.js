@@ -232,7 +232,7 @@ var TYPERANK;
             return value.mul(this.number.div(Percentage.base));
         }
         format() {
-            return `${colors.blue('% ') + this.number.toString().green}`;
+            return `${colors.blue('% ').bold + this.number.toString().green}`;
         }
         newNumeric(value) {
             return Percentage.New(value);
@@ -252,4 +252,4 @@ var TYPERANK;
 //       return Type.BNumber.New(value);
 //   }
 // }
-//# sourceMappingURL=datetype.js.map
+//# sourceMappingURL=datatype.js.map

@@ -251,7 +251,7 @@ export namespace Type {
       return value.mul(this.number.div(Percentage.base));
     }
     public format(): string {
-      return `${colors.blue('% ') + this.number.toString().green}`;
+      return `${colors.blue('% ').bold + this.number.toString().green}`;
     }
     public newNumeric(value: Big.Decimal): Numberic {
       return Percentage.New(value);

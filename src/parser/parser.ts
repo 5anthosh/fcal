@@ -21,7 +21,7 @@ export class Parser {
 
   private expressionStmt(): Expr {
     const expr = this.expression();
-    this.consume(TokenType.NEWLINE, 'Expecting new Line ');
+    this.consume(TokenType.NEWLINE, 'Expecting new Line');
     return expr;
   }
   private expression(): Expr {

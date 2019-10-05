@@ -1,5 +1,5 @@
 import colors from 'colors';
-import { Type } from '../types/datetype';
+import { Type } from '../types/datatype';
 export enum TokenType {
   PLUS,
   MINUS,

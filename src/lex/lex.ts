@@ -1,4 +1,4 @@
-import { Type } from '../types/datetype';
+import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { Char } from './char';
 import { LexerError } from './lexError';
@@ -10,7 +10,7 @@ export class Lexer {
   }
 
   private static isAlpha(char: string): boolean {
-    return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0';
+    return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n';
   }
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
@@ -85,7 +85,7 @@ export class Lexer {
     if (ok) {
       return this.createToken(type);
     }
-    throw new LexerError(`Unexepected Identifier ${text}`);
+    throw new LexerError(`Unexpected Identifier ${text}`);
   }
   // private match(expected: String): boolean {
   //   if (this.isAtEnd()) {

@@ -16,7 +16,7 @@ class Parser {
     }
     expressionStmt() {
         const expr = this.expression();
-        this.consume(token_1.TokenType.NEWLINE, 'Expecting new Line ');
+        this.consume(token_1.TokenType.NEWLINE, 'Expecting new Line');
         return expr;
     }
     expression() {

@@ -1,5 +1,5 @@
 import { Token } from '../lex/token';
-import { Type } from '../types/datetype';
+import { Type } from '../types/datatype';
 import { ASTPrinter } from './astPrinter';
 
 export abstract class Expr extends ASTPrinter {

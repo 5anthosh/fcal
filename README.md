@@ -11,4 +11,5 @@ Formula engine
 - [x] various phrases for operation
 - [x] percentage operation
 - [ ] units
+- [ ] multiply in parenthesis
 - [ ] complex numbers

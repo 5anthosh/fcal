@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const interpreter_1 = require("./interpreter/interpreter");
-const token_1 = require("./lex/token");
-const phrase_1 = require("./types/phrase");
-class Fcal {
-    constructor(source) {
+var interpreter_1 = require("./interpreter/interpreter");
+var token_1 = require("./lex/token");
+var phrase_1 = require("./types/phrase");
+var Fcal = /** @class */ (function () {
+    function Fcal(source) {
         this.phrases = Fcal.getdefaultphrases();
         this.interpreter = new interpreter_1.Interpreter(source, this.phrases);
     }
-    static getdefaultphrases() {
-        const phrases = new phrase_1.Phrases();
+    Fcal.getdefaultphrases = function () {
+        var phrases = new phrase_1.Phrases();
         phrases.addPhrases(token_1.TokenType.PLUS, 'PLUS', 'AND', 'WITH', 'ADD');
         phrases.addPhrases(token_1.TokenType.MINUS, 'MINUS', 'SUBTRACT', 'WITHOUT');
         phrases.addPhrases(token_1.TokenType.TIMES, 'TIMES', 'x', 'MULTIPLIEDBY', 'mul');
@@ -18,10 +18,11 @@ class Fcal {
         phrases.addPhrases(token_1.TokenType.MOD, 'mod');
         phrases.addPhrases(token_1.TokenType.OF, 'of');
         return phrases;
-    }
-    evaluate() {
+    };
+    Fcal.prototype.evaluate = function () {
         return this.interpreter.evaluateExpression();
-    }
-}
+    };
+    return Fcal;
+}());
 exports.Fcal = Fcal;
 //# sourceMappingURL=fcal.js.map

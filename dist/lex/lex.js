@@ -1,34 +1,34 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const datatype_1 = require("../types/datatype");
-const char_1 = require("./char");
-const lexError_1 = require("./lexError");
-const token_1 = require("./token");
-class Lexer {
-    constructor(source, phrases) {
+var datatype_1 = require("../types/datatype");
+var char_1 = require("./char");
+var lexError_1 = require("./lexError");
+var token_1 = require("./token");
+var Lexer = /** @class */ (function () {
+    function Lexer(source, phrases) {
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
         this.phrases = phrases;
     }
-    static isDigit(char) {
+    Lexer.isDigit = function (char) {
         return char >= '0' && char <= '9';
-    }
-    static isAlpha(char) {
+    };
+    Lexer.isAlpha = function (char) {
         return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n';
-    }
-    static isSpace(char) {
+    };
+    Lexer.isSpace = function (char) {
         return char === '\t' || char === ' ';
-    }
-    Next() {
+    };
+    Lexer.prototype.Next = function () {
         if (this.isAtEnd()) {
             return token_1.Token.EOLToken(this.current);
         }
         return this.scan();
-    }
-    scan() {
-        const char = this.space();
+    };
+    Lexer.prototype.scan = function () {
+        var char = this.space();
         switch (char) {
             case char_1.Char.PLUS:
                 return this.createToken(token_1.TokenType.PLUS);
@@ -54,33 +54,34 @@ class Lexer {
                 }
                 return this.string();
         }
-    }
-    isAtEnd() {
+    };
+    Lexer.prototype.isAtEnd = function () {
         return this.current >= this.source.length;
-    }
-    advance() {
+    };
+    Lexer.prototype.advance = function () {
         this.current++;
         return this.source.charAt(this.current - 1);
-    }
-    peek(n) {
+    };
+    Lexer.prototype.peek = function (n) {
         if (this.current + n >= this.source.length) {
             return '\0';
         }
         return this.source.charAt(this.current + n);
-    }
-    string() {
+    };
+    Lexer.prototype.string = function () {
+        var _a;
         while (Lexer.isAlpha(this.peek(0))) {
             this.advance();
         }
-        const text = this.lexeme();
-        let type;
-        let ok;
-        [type, ok] = this.phrases.search(text);
+        var text = this.lexeme();
+        var type;
+        var ok;
+        _a = this.phrases.search(text), type = _a[0], ok = _a[1];
         if (ok) {
             return this.createToken(type);
         }
-        throw new lexError_1.LexerError(`Unexpected Identifier ${text}`);
-    }
+        throw new lexError_1.LexerError("Unexpected Identifier " + text);
+    };
     // private match(expected: String): boolean {
     //   if (this.isAtEnd()) {
     //     return false;
@@ -91,7 +92,7 @@ class Lexer {
     //   this.current++;
     //   return true;
     // }
-    number() {
+    Lexer.prototype.number = function () {
         while (Lexer.isDigit(this.peek(0))) {
             this.advance();
         }
@@ -102,27 +103,28 @@ class Lexer {
             }
         }
         return this.createTokenWithLiteral(token_1.TokenType.Number, new datatype_1.Type.BNumber(this.lexeme()));
-    }
-    createToken(type) {
+    };
+    Lexer.prototype.createToken = function (type) {
         return this.createTokenWithLiteral(type, null);
-    }
-    createTokenWithLiteral(type, literal) {
-        const token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
+    };
+    Lexer.prototype.createTokenWithLiteral = function (type, literal) {
+        var token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
         this.start = this.current;
         this.tokens.push(token);
         return token;
-    }
-    lexeme() {
+    };
+    Lexer.prototype.lexeme = function () {
         return this.source.substring(this.start, this.current);
-    }
-    space() {
-        let char = this.advance();
+    };
+    Lexer.prototype.space = function () {
+        var char = this.advance();
         while (Lexer.isSpace(char)) {
             this.start = this.current;
             char = this.advance();
         }
         return char;
-    }
-}
+    };
+    return Lexer;
+}());
 exports.Lexer = Lexer;
 //# sourceMappingURL=lex.js.map

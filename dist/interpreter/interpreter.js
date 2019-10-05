@@ -1,19 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const token_1 = require("../lex/token");
-const parser_1 = require("../parser/parser");
-const datatype_1 = require("../types/datatype");
-class Interpreter {
-    constructor(source, phrases) {
+var token_1 = require("../lex/token");
+var parser_1 = require("../parser/parser");
+var datatype_1 = require("../types/datatype");
+var Interpreter = /** @class */ (function () {
+    function Interpreter(source, phrases) {
         this.parser = new parser_1.Parser(source, phrases);
     }
-    evaluateExpression() {
+    Interpreter.prototype.evaluateExpression = function () {
         this.ast = this.parser.parse();
         return this.evaluate(this.ast);
-    }
-    visitBinaryExpr(expr) {
-        let left = this.evaluate(expr.left);
-        const right = this.evaluate(expr.right);
+    };
+    Interpreter.prototype.visitBinaryExpr = function (expr) {
+        var left = this.evaluate(expr.left);
+        var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
             case token_1.TokenType.PLUS:
                 return left.Add(right);
@@ -43,39 +43,40 @@ class Interpreter {
                 return left.power(right);
             case token_1.TokenType.OF:
                 left = new datatype_1.Type.Percentage(left.number);
-                const per = left;
+                var per = left;
                 right.number = per.percentageValue(right.number);
                 return right;
             default:
                 return datatype_1.Type.BNumber.ZERO;
         }
-    }
-    visitGroupingExpr(expr) {
+    };
+    Interpreter.prototype.visitGroupingExpr = function (expr) {
         return this.evaluate(expr.expression);
-    }
-    visitLiteralExpr(expr) {
+    };
+    Interpreter.prototype.visitLiteralExpr = function (expr) {
         return expr.value;
-    }
-    visitUnaryExpr(expr) {
-        const right = this.evaluate(expr.right);
+    };
+    Interpreter.prototype.visitUnaryExpr = function (expr) {
+        var right = this.evaluate(expr.right);
         if (expr.operator.type === token_1.TokenType.MINUS) {
             return right.negated();
         }
         return right;
-    }
-    visitPercentageExpr(expr) {
-        const value = this.evaluate(expr.expression);
+    };
+    Interpreter.prototype.visitPercentageExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.Percentage.New(value.number);
         }
         throw new Error('Expecting numeric value in percentage');
-    }
-    evaluate(expr) {
+    };
+    Interpreter.prototype.evaluate = function (expr) {
         // console.log(expr.toString());
-        const ast = expr.accept(this);
+        var ast = expr.accept(this);
         return ast;
-    }
-}
+    };
+    return Interpreter;
+}());
 exports.Interpreter = Interpreter;
 function setCharAt(str, replace, start, end) {
     if (start > str.length - 1 && end > str.length - 1) {

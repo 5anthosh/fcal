@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const colors_1 = __importDefault(require("colors"));
+var colors_1 = __importDefault(require("colors"));
 var TokenType;
 (function (TokenType) {
     TokenType[TokenType["PLUS"] = 0] = "PLUS";
@@ -24,25 +24,26 @@ function PrintTT(enumNumber) {
     return TokenType[enumNumber];
 }
 exports.PrintTT = PrintTT;
-class Token {
-    constructor(type, lexeme, literal, start, end) {
+var Token = /** @class */ (function () {
+    function Token(type, lexeme, literal, start, end) {
         this.type = type;
         this.lexeme = lexeme;
         this.start = start;
         this.end = end;
         this.Literal = literal;
     }
-    static EOLToken(end) {
+    Token.EOLToken = function (end) {
         return new Token(TokenType.EOL, '', null, end, end);
-    }
-    toString() {
-        let literal = '';
+    };
+    Token.prototype.toString = function () {
+        var literal = '';
         if (this.Literal !== null) {
             literal = this.Literal.format();
         }
-        return colors_1.default.cyan(`< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`);
-    }
-}
+        return colors_1.default.cyan("< " + PrintTT(this.type) + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>");
+    };
+    return Token;
+}());
 exports.Token = Token;
 // export default { TokenType, Token };
 //# sourceMappingURL=token.js.map

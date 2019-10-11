@@ -9,7 +9,7 @@ var Interpreter = /** @class */ (function () {
     }
     Interpreter.prototype.evaluateExpression = function () {
         this.ast = this.parser.parse();
-        console.log(this.ast.toString());
+        // console.log(this.ast.toString());
         return this.evaluate(this.ast);
     };
     Interpreter.prototype.visitUnitConvertionExpr = function (expr) {

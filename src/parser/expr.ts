@@ -1,7 +1,7 @@
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
-import { ASTPrinter } from './astPrinter';
 import { Unit } from '../types/units';
+import { ASTPrinter } from './astPrinter';
 
 export abstract class Expr extends ASTPrinter {
   public start: number;

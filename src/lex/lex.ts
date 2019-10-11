@@ -5,7 +5,7 @@ import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
 export class Lexer {
-  public static notAlpha: Array<string> = [
+  public static notAlpha: string[] = [
     Char.PLUS,
     Char.MINUS,
     Char.TIMES,

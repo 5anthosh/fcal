@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var defaultUnits_1 = require("../defaultUnits");
 var fcal_1 = require("../fcal");
 var lexError_1 = require("../lex/lexError");
 var datatype_1 = require("../types/datatype");
@@ -74,5 +75,39 @@ test('Lex error unexpected character', function () {
     expect(function () {
         new fcal_1.Fcal(expression).evaluate();
     }).toThrow(new lexError_1.LexerError('Unexpected Identifier "!"'));
+});
+test('Test Time units addition', function () {
+    var expression = '1 day + 23sec + 1hr \n';
+    var unit;
+    unit = defaultUnits_1.getdefaultTTypes().get('hr')[0];
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.Units('25.006388888888888889', unit));
+});
+test('Test Time units addition In operator', function () {
+    var expression = '1 day + 1day +  23sec + 1hr in sec \n';
+    var unit;
+    unit = defaultUnits_1.getdefaultTTypes().get('sec')[0];
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.Units('176423', unit));
+});
+test('Test Time units addition In operator', function () {
+    var expression = '1 day - 1day*23sec + 23sec + 1hr in sec \n';
+    var unit;
+    unit = defaultUnits_1.getdefaultTTypes().get('sec')[0];
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.Units('-1897177', unit));
+});
+test('Test invalid unit operations', function () {
+    var expression = '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day \n';
+    var unit;
+    unit = defaultUnits_1.getdefaultTTypes().get('day')[0];
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.Units('24.412934840534418202', unit));
+});
+test('Test Time units addition In operator', function () {
+    var expression = '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec\n';
+    var unit;
+    unit = defaultUnits_1.getdefaultTTypes().get('sec')[0];
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.Units('-1897177', unit));
+});
+test('test percentage of', function () {
+    var expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 \n';
+    expect(new fcal_1.Fcal(expression).evaluate()).toStrictEqual(new datatype_1.Type.BNumber('124916.110704'));
 });
 //# sourceMappingURL=fcal.test.js.map

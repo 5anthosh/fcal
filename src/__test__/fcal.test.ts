@@ -1,3 +1,4 @@
+import { getdefaultTTypes } from '../defaultUnits';
 import { Fcal } from '../fcal';
 import { LexerError } from '../lex/lexError';
 import { Type } from '../types/datatype';
@@ -90,4 +91,46 @@ test('Lex error unexpected character', () => {
   expect(() => {
     new Fcal(expression).evaluate();
   }).toThrow(new LexerError('Unexpected Identifier "!"'));
+});
+
+test('Test Time units addition', () => {
+  const expression = '1 day + 23sec + 1hr \n';
+  let unit;
+  [unit] = getdefaultTTypes().get('hr');
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.Units('25.006388888888888889', unit));
+});
+
+test('Test Time units addition In operator', () => {
+  const expression = '1 day + 1day +  23sec + 1hr in sec \n';
+  let unit;
+  [unit] = getdefaultTTypes().get('sec');
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.Units('176423', unit));
+});
+
+test('Test Time units addition In operator', () => {
+  const expression = '1 day - 1day*23sec + 23sec + 1hr in sec \n';
+  let unit;
+  [unit] = getdefaultTTypes().get('sec');
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.Units('-1897177', unit));
+});
+
+test('Test invalid unit operations', () => {
+  const expression =
+    '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day \n';
+  let unit;
+  [unit] = getdefaultTTypes().get('day');
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.Units('24.412934840534418202', unit));
+});
+
+test('Test Time units addition In operator', () => {
+  const expression =
+    '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec\n';
+  let unit;
+  [unit] = getdefaultTTypes().get('sec');
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.Units('-1897177', unit));
+});
+
+test('test percentage of with units', () => {
+  const expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 \n';
+  expect(new Fcal(expression).evaluate()).toStrictEqual(new Type.BNumber('124916.110704'));
 });

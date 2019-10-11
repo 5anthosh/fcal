@@ -15,6 +15,7 @@
 > formula evaluation engine
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal#readme)
+
 📝 [TODO](https://github.com/5anthosh/fcal/blob/master/TODO.md)
 
 ## Basic Arithmetic operation
@@ -33,6 +34,17 @@
 
 For general percentage operations like adding or subtracting percent of value, you can do
 `12 + 24%`, `1230 - 23.23%`
+
+## Units
+
+you can convert one unit into another. Fcal will automatically convert units to perform operations if it's needed during conversion.
+
+```sh
+23day in sec 23
+min + 34sec + 1day + 10% of 100 day
+```
+
+you can supported units in [Units](https://github.com/5anthosh/fcal/blob/master/UNITS.md)
 
 ## Install
 

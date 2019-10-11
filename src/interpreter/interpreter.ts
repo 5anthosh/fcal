@@ -97,7 +97,9 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw new Error('Expecting numeric value in percentage');
   }
   private evaluate(expr: Expr): Type {
+    // console.log(expr.toString());
     const ast = expr.accept(this);
+    // console.log(ast.format());
     return ast;
   }
 }

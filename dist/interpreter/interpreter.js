@@ -86,7 +86,9 @@ var Interpreter = /** @class */ (function () {
         throw new Error('Expecting numeric value in percentage');
     };
     Interpreter.prototype.evaluate = function (expr) {
+        // console.log(expr.toString());
         var ast = expr.accept(this);
+        // console.log(ast.format());
         return ast;
     };
     return Interpreter;

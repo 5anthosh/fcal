@@ -83,6 +83,9 @@ export namespace Type {
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
+          if (this.TYPERANK === value.TYPERANK) {
+            return this.newNumeric(this.div(value).number);
+          }
           return value.newNumeric(this.div(value).number);
         }
         return this.div(value);
@@ -100,6 +103,9 @@ export namespace Type {
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
+          if (this.TYPERANK === value.TYPERANK) {
+            return this.newNumeric(this.pow(value).number);
+          }
           return value.newNumeric(this.pow(value).number);
         }
         return this.pow(value);
@@ -117,6 +123,9 @@ export namespace Type {
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
+          if (this.TYPERANK === value.TYPERANK) {
+            return this.newNumeric(this.mod(value).number);
+          }
           return value.newNumeric(this.mod(value).number);
         }
         return this.mod(value);
@@ -325,7 +334,7 @@ export namespace Type {
         }
         return right.newNumeric(this.convert(right.unit.ratio).mul(right.number));
       }
-      return this.newNumeric(this.number.plus(value.number));
+      return this.newNumeric(this.number.mul(value.number));
     }
     public div(value: Numberic): Numberic {
       let left: Numberic;
@@ -339,11 +348,14 @@ export namespace Type {
       }
       if (value instanceof Units) {
         const left1: Units = left as Units;
-        const right2: Units = right as Units;
-        if (left1.unit.unitType === right2.unit.unitType) {
-          return left1.newNumeric(left1.number.div(right2.number));
+        const right1: Units = right as Units;
+        if (left1.unit.unitType === right1.unit.unitType) {
+          return left1.newNumeric(left1.number.div(right1.number));
         }
-        return left1.newNumeric(left1.number.div(right2.convert(left1.unit.ratio)));
+        if (left1.unit.id !== right1.unit.id) {
+          return left1.newNumeric(left1.number.div(right.number));
+        }
+        return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio)));
       }
       return this.newNumeric(left.number.div(right.number));
     }
@@ -359,17 +371,24 @@ export namespace Type {
       }
       if (value instanceof Units) {
         const left1: Units = left as Units;
-        const right2: Units = right as Units;
-        if (left1.unit.unitType === right2.unit.unitType) {
-          return left1.newNumeric(left1.number.pow(right2.number));
+        const right1: Units = right as Units;
+        if (left1.unit.unitType === right1.unit.unitType) {
+          return left1.newNumeric(left1.number.pow(right1.number));
         }
-        return left1.newNumeric(left1.number.pow(right2.convert(left1.unit.ratio)));
+
+        if (left1.unit.id !== right1.unit.id) {
+          return left1.newNumeric(left1.number.pow(right.number));
+        }
+
+        return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio)));
       }
+
       return this.newNumeric(left.number.pow(right.number));
     }
     public mod(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
+
       if (this.leftflag) {
         left = this;
         right = value;
@@ -377,18 +396,26 @@ export namespace Type {
         right = this;
         left = value;
       }
+
       if (value instanceof Units) {
         const left1: Units = left as Units;
-        const right2: Units = right as Units;
-        if (left1.unit.unitType === right2.unit.unitType) {
-          return left1.newNumeric(left1.number.mod(right2.number));
+        const right1: Units = right as Units;
+
+        if (left1.unit.id !== right1.unit.id) {
+          return left1.newNumeric(left1.number.mod(right1.number));
         }
-        return left1.newNumeric(left1.number.mod(right2.convert(left1.unit.ratio)));
+
+        if (left1.unit.unitType === right1.unit.unitType) {
+          return left1.newNumeric(left1.number.mod(right1.number));
+        }
+
+        return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio)));
       }
+
       return this.newNumeric(left.number.mod(right.number));
     }
     public convert(ration: Big.Decimal): Big.Decimal {
-      return this.number.mul(ration).div(this.unit.ratio);
+      return this.number.div(ration).mul(this.unit.ratio);
     }
     public format(): string {
       return `${this.number.toString().green} ${colors.blue(this.unit.unitType).bold}`;

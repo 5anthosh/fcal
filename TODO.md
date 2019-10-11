@@ -6,7 +6,7 @@
 - [x] modulo (and test)
 - [x] various phrases for operation
 - [x] percentage operation
-- [ ] units
+- [x] units
 - [ ] variables
 - [ ] functions
 - [ ] multiply in parenthesis

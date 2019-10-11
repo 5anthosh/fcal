@@ -7,5 +7,6 @@
 - [x] various phrases for operation
 - [x] percentage operation
 - [ ] units
+- [ ] functions
 - [ ] multiply in parenthesis
 - [ ] complex numbers

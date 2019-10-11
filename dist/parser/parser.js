@@ -11,13 +11,18 @@ var Parser = /** @class */ (function () {
         this.tokens = [];
     }
     Parser.prototype.parse = function () {
-        var expr = this.expressionStmt();
+        var expr = this.Stmt();
         return expr;
     };
-    Parser.prototype.expressionStmt = function () {
+    Parser.prototype.Stmt = function () {
         var expr = this.expression();
-        this.consume(token_1.TokenType.NEWLINE, 'Expecting new Line');
-        return expr;
+        if (this.match(token_1.TokenType.NEWLINE)) {
+            return expr;
+        }
+        if (this.peek().type === token_1.TokenType.EOL) {
+            throw new Error('Expecting new Line');
+        }
+        throw new Error("Unexpected token " + this.peek().lexeme);
     };
     Parser.prototype.expression = function () {
         return this.percentage();

@@ -15,14 +15,19 @@ export class Parser {
     this.tokens = [];
   }
   public parse(): Expr {
-    const expr = this.expressionStmt();
+    const expr = this.Stmt();
     return expr;
   }
 
-  private expressionStmt(): Expr {
+  private Stmt(): Expr {
     const expr = this.expression();
-    this.consume(TokenType.NEWLINE, 'Expecting new Line');
-    return expr;
+    if (this.match(TokenType.NEWLINE)) {
+      return expr;
+    }
+    if (this.peek().type === TokenType.EOL) {
+      throw new Error('Expecting new Line');
+    }
+    throw new Error(`Unexpected token ${this.peek().lexeme}`);
   }
   private expression(): Expr {
     return this.percentage();

@@ -44,7 +44,7 @@ you can convert one unit into another. Fcal will automatically convert units to 
 100min + 34sec + 1day + 10% of 100 day
 ```
 
-you can supported units in [Units](https://github.com/5anthosh/fcal/blob/master/UNITS.md)
+you can find supported units here [Units](https://github.com/5anthosh/fcal/blob/master/UNITS.md)
 
 ## Install
 

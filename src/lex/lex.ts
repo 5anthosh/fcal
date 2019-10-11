@@ -1,31 +1,45 @@
-import { Type } from '../types/datatype';
+import { Type as any } from '../types/datatype';
 import { Phrases } from '../types/phrase';
+import { TType } from '../types/units';
 import { Char } from './char';
 import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
-
 export class Lexer {
+  public static notAlpha: Array<string> = [
+    Char.PLUS,
+    Char.MINUS,
+    Char.TIMES,
+    Char.SLASH,
+    Char.OPEN_PARAN,
+    Char.CLOSE_PARAN,
+    Char.CAP,
+    Char.PERCENTAGE,
+  ];
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
   }
 
   private static isAlpha(char: string): boolean {
-    return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n';
+    return (
+      !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n' && !Lexer.notAlpha.includes(char)
+    );
   }
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
   }
+  public ttypes: TType.TTypes;
   private tokens: Token[];
   private source: string;
   private start: number;
   private current: number;
   private phrases: Phrases;
-  constructor(source: string, phrases: Phrases) {
+  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = [];
     this.phrases = phrases;
+    this.ttypes = ttypes;
   }
   public Next(): Token {
     if (this.isAtEnd()) {
@@ -85,7 +99,13 @@ export class Lexer {
     if (ok) {
       return this.createToken(type);
     }
-    throw new LexerError(`Unexpected Identifier ${text}`);
+
+    [, ok] = this.ttypes.get(text);
+    if (ok) {
+      return this.createTokenWithLiteral(TokenType.UNIT, text);
+    }
+
+    throw new LexerError(`Unexpected Identifier "${text}"`);
   }
   // private match(expected: String): boolean {
   //   if (this.isAtEnd()) {
@@ -107,12 +127,12 @@ export class Lexer {
         this.advance();
       }
     }
-    return this.createTokenWithLiteral(TokenType.Number, new Type.BNumber(this.lexeme()));
+    return this.createTokenWithLiteral(TokenType.Number, new any.BNumber(this.lexeme()));
   }
   private createToken(type: TokenType): Token {
     return this.createTokenWithLiteral(type, null);
   }
-  private createTokenWithLiteral(type: TokenType, literal: Type): Token {
+  private createTokenWithLiteral(type: TokenType, literal: any): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);

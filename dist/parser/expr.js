@@ -84,6 +84,20 @@ exports.Expr = Expr;
         return Percentage;
     }(Expr));
     Expr.Percentage = Percentage;
+    var UnitExpr = /** @class */ (function (_super) {
+        __extends(UnitExpr, _super);
+        function UnitExpr(expression, unit, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.unit = unit;
+            _this.expression = expression;
+            return _this;
+        }
+        UnitExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitExpr(this);
+        };
+        return UnitExpr;
+    }(Expr));
+    Expr.UnitExpr = UnitExpr;
     var Unary = /** @class */ (function (_super) {
         __extends(Unary, _super);
         function Unary(operator, right, start, end) {

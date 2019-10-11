@@ -4,12 +4,20 @@ var token_1 = require("../lex/token");
 var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases) {
-        this.parser = new parser_1.Parser(source, phrases);
+    function Interpreter(source, phrases, ttypes) {
+        this.parser = new parser_1.Parser(source, phrases, ttypes);
     }
     Interpreter.prototype.evaluateExpression = function () {
         this.ast = this.parser.parse();
+        console.log(this.ast.toString());
         return this.evaluate(this.ast);
+    };
+    Interpreter.prototype.visitUnitExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
+        if (value instanceof datatype_1.Type.Numberic) {
+            return datatype_1.Type.Units.New(value.number, expr.unit);
+        }
+        throw new Error('Expecting numeric value before unit');
     };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         var left = this.evaluate(expr.left);
@@ -71,7 +79,6 @@ var Interpreter = /** @class */ (function () {
         throw new Error('Expecting numeric value in percentage');
     };
     Interpreter.prototype.evaluate = function (expr) {
-        // console.log(expr.toString());
         var ast = expr.accept(this);
         return ast;
     };

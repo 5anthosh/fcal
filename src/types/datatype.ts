@@ -1,5 +1,6 @@
 import colors = require('colors');
 import Big = require('decimal.js');
+import { Unit } from './units';
 export abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
@@ -8,11 +9,13 @@ export abstract class Type {
 
 export enum DATATYPE {
   NUMBER,
+  UNIT,
   PERCENTAGE,
 }
 export enum TYPERANK {
   PERCENTAGE,
   NUMBER,
+  UNIT,
 }
 
 // tslint:disable-next-line:no-namespace
@@ -260,13 +263,126 @@ export namespace Type {
       return this.format();
     }
   }
-}
+  export class Units extends Numberic {
+    public static New(value: string | Big.Decimal, unit: Unit): Units {
+      return new Units(value, unit);
+    }
+    public TYPE: DATATYPE;
+    public TYPERANK: TYPERANK;
+    public unit: Unit;
+    constructor(value: string | Big.Decimal, unit: Unit) {
+      super(value);
+      this.unit = unit;
+      this.TYPE = DATATYPE.UNIT;
+      this.TYPERANK = TYPERANK.UNIT;
+    }
 
-// function createNumericBasedOnType(type: DATATYPE, value: Big.Decimal | string): Type.Numberic {
-//   switch (type) {
-//     case DATATYPE.PERCENTAGE:
-//       return Type.Percentage.New(value);
-//     default:
-//       return Type.BNumber.New(value);
-//   }
-// }
+    public newNumeric(value: Big.Decimal): Numberic {
+      return new Units(value, this.unit);
+    }
+    public isZero(): boolean {
+      return this.number.isZero();
+    }
+    public isNegative(): boolean {
+      return this.number.isNegative();
+    }
+    public isInteger(): boolean {
+      return this.number.isInteger();
+    }
+    public negated(): Numberic {
+      return this.newNumeric(this.number.negated());
+    }
+    public plus(value: Numberic): Numberic {
+      if (value instanceof Units) {
+        const right = value as Units;
+        if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+          return this.newNumeric(this.number.add(right.number));
+        }
+        if (this.unit.id !== right.unit.id) {
+          return right.newNumeric(this.number.add(right.number));
+        }
+        return right.newNumeric(this.convert(right.unit.ratio).add(right.number));
+      }
+      return this.newNumeric(this.number.plus(value.number));
+    }
+    public mul(value: Numberic): Numberic {
+      if (value instanceof Units) {
+        const right = value as Units;
+        if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+          return this.newNumeric(this.number.mul(right.number));
+        }
+        if (this.unit.id !== right.unit.id) {
+          return right.newNumeric(this.number.mul(right.number));
+        }
+        return right.newNumeric(this.convert(right.unit.ratio).mul(right.number));
+      }
+      return this.newNumeric(this.number.plus(value.number));
+    }
+    public div(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      if (this.leftflag) {
+        left = this;
+        right = value;
+      } else {
+        right = this;
+        left = value;
+      }
+      if (value instanceof Units) {
+        const left1: Units = left as Units;
+        const right2: Units = right as Units;
+        if (left1.unit.unitType === right2.unit.unitType) {
+          return left1.newNumeric(left1.number.div(right2.number));
+        }
+        return left1.newNumeric(left1.number.div(right2.convert(left1.unit.ratio)));
+      }
+      return this.newNumeric(left.number.div(right.number));
+    }
+    public pow(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      if (this.leftflag) {
+        left = this;
+        right = value;
+      } else {
+        right = this;
+        left = value;
+      }
+      if (value instanceof Units) {
+        const left1: Units = left as Units;
+        const right2: Units = right as Units;
+        if (left1.unit.unitType === right2.unit.unitType) {
+          return left1.newNumeric(left1.number.pow(right2.number));
+        }
+        return left1.newNumeric(left1.number.pow(right2.convert(left1.unit.ratio)));
+      }
+      return this.newNumeric(left.number.pow(right.number));
+    }
+    public mod(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      if (this.leftflag) {
+        left = this;
+        right = value;
+      } else {
+        right = this;
+        left = value;
+      }
+      if (value instanceof Units) {
+        const left1: Units = left as Units;
+        const right2: Units = right as Units;
+        if (left1.unit.unitType === right2.unit.unitType) {
+          return left1.newNumeric(left1.number.mod(right2.number));
+        }
+        return left1.newNumeric(left1.number.mod(right2.convert(left1.unit.ratio)));
+      }
+      return this.newNumeric(left.number.mod(right.number));
+    }
+    public convert(ration: Big.Decimal): Big.Decimal {
+      return this.number.mul(ration).div(this.unit.ratio);
+    }
+    public format(): string {
+      return `${this.number.toString().green} ${colors.blue(this.unit.unitType).bold}`;
+    }
+  }
+}

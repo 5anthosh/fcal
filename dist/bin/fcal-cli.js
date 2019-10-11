@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var colors = require("colors");
 var readline = require("readline");
 var fcal_1 = require("../fcal");
 function main() {
@@ -14,11 +15,19 @@ function main() {
             rl.close();
         }
         var fcal = new fcal_1.Fcal(line + '\n');
-        console.log(fcal.evaluate().format());
+        try {
+            var value = fcal.evaluate();
+            // tslint:disable-next-line:no-console
+            console.log(value.format());
+        }
+        catch (error) {
+            // tslint:disable-next-line:no-console
+            console.error(colors.red("Error " + error.message));
+        }
         rl.prompt();
     }).on('close', function () {
         process.exit(0);
     });
 }
 main();
-//# sourceMappingURL=main.js.map
+//# sourceMappingURL=fcal-cli.js.map

@@ -5,18 +5,19 @@ var char_1 = require("./char");
 var lexError_1 = require("./lexError");
 var token_1 = require("./token");
 var Lexer = /** @class */ (function () {
-    function Lexer(source, phrases) {
+    function Lexer(source, phrases, ttypes) {
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
         this.phrases = phrases;
+        this.ttypes = ttypes;
     }
     Lexer.isDigit = function (char) {
         return char >= '0' && char <= '9';
     };
     Lexer.isAlpha = function (char) {
-        return !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n';
+        return (!Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n' && !Lexer.notAlpha.includes(char));
     };
     Lexer.isSpace = function (char) {
         return char === '\t' || char === ' ';
@@ -69,7 +70,7 @@ var Lexer = /** @class */ (function () {
         return this.source.charAt(this.current + n);
     };
     Lexer.prototype.string = function () {
-        var _a;
+        var _a, _b;
         while (Lexer.isAlpha(this.peek(0))) {
             this.advance();
         }
@@ -80,7 +81,11 @@ var Lexer = /** @class */ (function () {
         if (ok) {
             return this.createToken(type);
         }
-        throw new lexError_1.LexerError("Unexpected Identifier " + text);
+        _b = this.ttypes.get(text), ok = _b[1];
+        if (ok) {
+            return this.createTokenWithLiteral(token_1.TokenType.UNIT, text);
+        }
+        throw new lexError_1.LexerError("Unexpected Identifier \"" + text + "\"");
     };
     // private match(expected: String): boolean {
     //   if (this.isAtEnd()) {
@@ -124,6 +129,16 @@ var Lexer = /** @class */ (function () {
         }
         return char;
     };
+    Lexer.notAlpha = [
+        char_1.Char.PLUS,
+        char_1.Char.MINUS,
+        char_1.Char.TIMES,
+        char_1.Char.SLASH,
+        char_1.Char.OPEN_PARAN,
+        char_1.Char.CLOSE_PARAN,
+        char_1.Char.CAP,
+        char_1.Char.PERCENTAGE,
+    ];
     return Lexer;
 }());
 exports.Lexer = Lexer;

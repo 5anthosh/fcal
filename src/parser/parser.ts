@@ -2,15 +2,15 @@ import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
 import { Phrases } from '../types/phrase';
 import { Expr } from './expr';
-
+import { TType } from '../types/units';
 export class Parser {
   public source: string;
   private lexer: Lexer;
   private ntoken: number;
   private tokens: Token[];
-  constructor(source: string, phrases: Phrases) {
+  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
     this.source = source;
-    this.lexer = new Lexer(this.source, phrases);
+    this.lexer = new Lexer(this.source, phrases, ttypes);
     this.ntoken = 0;
     this.tokens = [];
   }
@@ -66,7 +66,7 @@ export class Parser {
     return this.exponent();
   }
   private exponent(): Expr {
-    let expr = this.percent();
+    let expr = this.suffix();
     while (this.match(TokenType.CAP)) {
       const operator = this.previous();
       const right = this.unary();
@@ -74,14 +74,29 @@ export class Parser {
     }
     return expr;
   }
-  private percent(): Expr {
-    let expr = this.term();
+  // private unitConvert(): Expr {
+  //   const expr = this.suffix();
+  //   if (this.match(TokenType.IN)) {
+  //     this.consume(TokenType.UNIT, 'Expecting unit after in');
+  //     const unit = this.previous();
+  //     const unit2 = this.add
+  //   }
+  // }
+  private suffix(): Expr {
+    const expr = this.term();
     if (this.match(TokenType.PERCENTAGE)) {
       const operator = this.previous();
-      expr = new Expr.Percentage(expr, expr.start, operator.end);
+      return new Expr.Percentage(expr, expr.start, operator.end);
+    }
+    if (this.match(TokenType.UNIT)) {
+      const unit = this.previous();
+      let unit2;
+      [unit2] = this.lexer.ttypes.get(unit.lexeme);
+      return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
     }
     return expr;
   }
+
   private term(): Expr {
     if (this.match(TokenType.Number)) {
       return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);

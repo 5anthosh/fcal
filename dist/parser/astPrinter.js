@@ -11,6 +11,12 @@ var ASTPrinter = /** @class */ (function () {
     ASTPrinter.createPrefix = function (depth, type) {
         return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + colors_1.default.blue(type);
     };
+    ASTPrinter.prototype.visitUnitExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'UNIT') + " " + expr.unit.unitType + " \n|\n" + expression;
+    };
     ASTPrinter.prototype.visitBinaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
         var left = this.evaluate(expr.left);

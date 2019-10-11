@@ -3,17 +3,27 @@ import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
+import { TType } from '../types/units';
 
 export class Interpreter implements Expr.IVisitor<any> {
   private parser: Parser;
   private ast: Expr;
-  constructor(source: string, phrases: Phrases) {
-    this.parser = new Parser(source, phrases);
+  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
+    this.parser = new Parser(source, phrases, ttypes);
   }
 
   public evaluateExpression(): Type {
     this.ast = this.parser.parse();
+    console.log(this.ast.toString());
     return this.evaluate(this.ast);
+  }
+
+  public visitUnitExpr(expr: Expr.UnitExpr) {
+    const value = this.evaluate(expr.expression);
+    if (value instanceof Type.Numberic) {
+      return Type.Units.New((value as Type.Numberic).number, expr.unit);
+    }
+    throw new Error('Expecting numeric value before unit');
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
@@ -80,7 +90,6 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw new Error('Expecting numeric value in percentage');
   }
   private evaluate(expr: Expr): Type {
-    // console.log(expr.toString());
     const ast = expr.accept(this);
     return ast;
   }

@@ -10,6 +10,12 @@ export class ASTPrinter implements Expr.IVisitor<string> {
   constructor() {
     this.depth = 0;
   }
+  public visitUnitExpr(expr: Expr.UnitExpr): string {
+    this.depth += ASTPrinter.tab;
+    const expression = this.evaluate(expr.expression);
+    this.depth -= ASTPrinter.tab;
+    return `${ASTPrinter.createPrefix(this.depth, 'UNIT')} ${expr.unit.unitType} \n|\n${expression}`;
+  }
   public visitBinaryExpr(expr: Expr.Binary): string {
     this.depth += ASTPrinter.tab;
     const left = this.evaluate(expr.left);

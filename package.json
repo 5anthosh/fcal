@@ -15,7 +15,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
-    "main": "node dist/cmd/main.js"
+    "main": "node dist/bin/fcal-cli.js"
   },
   "repository": {
     "type": "git",

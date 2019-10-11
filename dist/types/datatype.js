@@ -24,12 +24,14 @@ exports.Type = Type;
 var DATATYPE;
 (function (DATATYPE) {
     DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
-    DATATYPE[DATATYPE["PERCENTAGE"] = 1] = "PERCENTAGE";
+    DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
+    DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
 })(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
 var TYPERANK;
 (function (TYPERANK) {
     TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
     TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
+    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
 })(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
 // tslint:disable-next-line:no-namespace
 (function (Type) {
@@ -268,14 +270,131 @@ var TYPERANK;
         return Percentage;
     }(Numberic));
     Type.Percentage = Percentage;
+    var Units = /** @class */ (function (_super) {
+        __extends(Units, _super);
+        function Units(value, unit) {
+            var _this = _super.call(this, value) || this;
+            _this.unit = unit;
+            _this.TYPE = DATATYPE.UNIT;
+            _this.TYPERANK = TYPERANK.UNIT;
+            return _this;
+        }
+        Units.New = function (value, unit) {
+            return new Units(value, unit);
+        };
+        Units.prototype.newNumeric = function (value) {
+            return new Units(value, this.unit);
+        };
+        Units.prototype.isZero = function () {
+            return this.number.isZero();
+        };
+        Units.prototype.isNegative = function () {
+            return this.number.isNegative();
+        };
+        Units.prototype.isInteger = function () {
+            return this.number.isInteger();
+        };
+        Units.prototype.negated = function () {
+            return this.newNumeric(this.number.negated());
+        };
+        Units.prototype.plus = function (value) {
+            if (value instanceof Units) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.newNumeric(this.number.add(right.number));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.newNumeric(this.number.add(right.number));
+                }
+                return right.newNumeric(this.convert(right.unit.ratio).add(right.number));
+            }
+            return this.newNumeric(this.number.plus(value.number));
+        };
+        Units.prototype.mul = function (value) {
+            if (value instanceof Units) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.newNumeric(this.number.mul(right.number));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.newNumeric(this.number.mul(right.number));
+                }
+                return right.newNumeric(this.convert(right.unit.ratio).mul(right.number));
+            }
+            return this.newNumeric(this.number.plus(value.number));
+        };
+        Units.prototype.div = function (value) {
+            var left;
+            var right;
+            if (this.leftflag) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof Units) {
+                var left1 = left;
+                var right2 = right;
+                if (left1.unit.unitType === right2.unit.unitType) {
+                    return left1.newNumeric(left1.number.div(right2.number));
+                }
+                return left1.newNumeric(left1.number.div(right2.convert(left1.unit.ratio)));
+            }
+            return this.newNumeric(left.number.div(right.number));
+        };
+        Units.prototype.pow = function (value) {
+            var left;
+            var right;
+            if (this.leftflag) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof Units) {
+                var left1 = left;
+                var right2 = right;
+                if (left1.unit.unitType === right2.unit.unitType) {
+                    return left1.newNumeric(left1.number.pow(right2.number));
+                }
+                return left1.newNumeric(left1.number.pow(right2.convert(left1.unit.ratio)));
+            }
+            return this.newNumeric(left.number.pow(right.number));
+        };
+        Units.prototype.mod = function (value) {
+            var left;
+            var right;
+            if (this.leftflag) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof Units) {
+                var left1 = left;
+                var right2 = right;
+                if (left1.unit.unitType === right2.unit.unitType) {
+                    return left1.newNumeric(left1.number.mod(right2.number));
+                }
+                return left1.newNumeric(left1.number.mod(right2.convert(left1.unit.ratio)));
+            }
+            return this.newNumeric(left.number.mod(right.number));
+        };
+        Units.prototype.convert = function (ration) {
+            return this.number.mul(ration).div(this.unit.ratio);
+        };
+        Units.prototype.format = function () {
+            return this.number.toString().green + " " + colors.blue(this.unit.unitType).bold;
+        };
+        return Units;
+    }(Numberic));
+    Type.Units = Units;
 })(Type = exports.Type || (exports.Type = {}));
 exports.Type = Type;
-// function createNumericBasedOnType(type: DATATYPE, value: Big.Decimal | string): Type.Numberic {
-//   switch (type) {
-//     case DATATYPE.PERCENTAGE:
-//       return Type.Percentage.New(value);
-//     default:
-//       return Type.BNumber.New(value);
-//   }
-// }
 //# sourceMappingURL=datatype.js.map

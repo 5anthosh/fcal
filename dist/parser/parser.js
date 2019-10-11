@@ -4,9 +4,9 @@ var lex_1 = require("../lex/lex");
 var token_1 = require("../lex/token");
 var expr_1 = require("./expr");
 var Parser = /** @class */ (function () {
-    function Parser(source, phrases) {
+    function Parser(source, phrases, ttypes) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases);
+        this.lexer = new lex_1.Lexer(this.source, phrases, ttypes);
         this.ntoken = 0;
         this.tokens = [];
     }
@@ -70,7 +70,13 @@ var Parser = /** @class */ (function () {
         var expr = this.term();
         if (this.match(token_1.TokenType.PERCENTAGE)) {
             var operator = this.previous();
-            expr = new expr_1.Expr.Percentage(expr, expr.start, operator.end);
+            return new expr_1.Expr.Percentage(expr, expr.start, operator.end);
+        }
+        if (this.match(token_1.TokenType.UNIT)) {
+            var unit = this.previous();
+            var unit2 = void 0;
+            unit2 = this.lexer.ttypes.get(unit.lexeme)[0];
+            return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
         }
         return expr;
     };

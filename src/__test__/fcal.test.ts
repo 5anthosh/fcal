@@ -1,7 +1,6 @@
 import { Fcal } from '../fcal';
 import { LexerError } from '../lex/lexError';
 import { Type } from '../types/datatype';
-
 test('Test simple arithmetic operation', () => {
   const expression =
     '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4 \n';
@@ -90,5 +89,5 @@ test('Lex error unexpected character', () => {
   const expression = '123x123!\n';
   expect(() => {
     new Fcal(expression).evaluate();
-  }).toThrow(new LexerError('Unexpected Identifier !'));
+  }).toThrow(new LexerError('Unexpected Identifier "!"'));
 });

@@ -18,7 +18,8 @@ var TokenType;
     TokenType[TokenType["EOL"] = 9] = "EOL";
     TokenType[TokenType["PERCENTAGE"] = 10] = "PERCENTAGE";
     TokenType[TokenType["OF"] = 11] = "OF";
-    TokenType[TokenType["CAP"] = 12] = "CAP";
+    TokenType[TokenType["UNIT"] = 12] = "UNIT";
+    TokenType[TokenType["CAP"] = 13] = "CAP";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];

@@ -1,5 +1,4 @@
 import colors from 'colors';
-import { Type } from '../types/datatype';
 export enum TokenType {
   PLUS,
   MINUS,
@@ -11,8 +10,10 @@ export enum TokenType {
   CLOSE_PARAN,
   NEWLINE,
   EOL,
+  IN,
   PERCENTAGE,
   OF,
+  UNIT,
   CAP,
 }
 
@@ -26,11 +27,11 @@ export class Token {
   }
   public type: TokenType;
   public lexeme: string;
-  public Literal: Type;
+  public Literal: any;
   public start: number;
   public end: number;
 
-  constructor(type: TokenType, lexeme: string, literal: Type, start: number, end: number) {
+  constructor(type: TokenType, lexeme: string, literal: any, start: number, end: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.start = start;

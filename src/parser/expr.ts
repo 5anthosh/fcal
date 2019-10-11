@@ -1,6 +1,7 @@
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
 import { ASTPrinter } from './astPrinter';
+import { Unit } from '../types/units';
 
 export abstract class Expr extends ASTPrinter {
   public start: number;
@@ -72,6 +73,21 @@ export namespace Expr {
     }
   }
 
+  export class UnitExpr extends Expr {
+    public start: any;
+    public end: any;
+    public expression: Expr;
+    public unit: Unit;
+    constructor(expression: Expr, unit: Unit, start: number, end: number) {
+      super(start, end);
+      this.unit = unit;
+      this.expression = expression;
+    }
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitUnitExpr(this);
+    }
+  }
+
   export class Unary extends Expr {
     public start: any;
     public end: any;
@@ -93,5 +109,6 @@ export namespace Expr {
     visitLiteralExpr(expr: Expr.Literal): T;
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
+    visitUnitExpr(expr: Expr.UnitExpr): T;
   }
 }

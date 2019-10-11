@@ -16,6 +16,36 @@ var Phrase = /** @class */ (function () {
         this.type = type;
         this.phrases = phrases;
     }
+    Phrase.prototype.add = function () {
+        var _a;
+        var phrases = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            phrases[_i] = arguments[_i];
+        }
+        for (var _b = 0, phrases_1 = phrases; _b < phrases_1.length; _b++) {
+            var phrase = phrases_1[_b];
+            if (this.check(phrase)) {
+                throw new Error(phrase + " already exists");
+            }
+        }
+        (_a = this.phrases).push.apply(_a, phrases);
+    };
+    Phrase.prototype.check = function () {
+        var phrase = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            phrase[_i] = arguments[_i];
+        }
+        for (var _a = 0, _b = this.phrases; _a < _b.length; _a++) {
+            var phrase1 = _b[_a];
+            for (var _c = 0, phrase_1 = phrase; _c < phrase_1.length; _c++) {
+                var phrase2 = phrase_1[_c];
+                if (phrase2 === phrase1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
     return Phrase;
 }());
 exports.Phrase = Phrase;
@@ -57,6 +87,9 @@ var Phrases = /** @class */ (function () {
             phrases[_i - 1] = arguments[_i];
         }
         phrases = phrases.map(function (x) { return x.toUpperCase(); });
+        if (this.checkPhrase.apply(this, phrases)) {
+            throw new Error("phrases already exits");
+        }
         for (var _b = 0, _c = this.phrases; _b < _c.length; _b++) {
             var phrase = _c[_b];
             if (phrase.type === type) {
@@ -64,6 +97,19 @@ var Phrases = /** @class */ (function () {
             }
         }
         this.add(new (Phrase.bind.apply(Phrase, __spreadArrays([void 0, type], phrases)))());
+    };
+    Phrases.prototype.checkPhrase = function () {
+        var phrase = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            phrase[_i] = arguments[_i];
+        }
+        for (var _a = 0, _b = this.phrases; _a < _b.length; _a++) {
+            var phrase1 = _b[_a];
+            if (phrase1.check.apply(phrase1, phrase)) {
+                return true;
+            }
+        }
+        return false;
     };
     return Phrases;
 }());

@@ -73,6 +73,6 @@ test('Lex error unexpected character', function () {
     var expression = '123x123!\n';
     expect(function () {
         new fcal_1.Fcal(expression).evaluate();
-    }).toThrow(new lexError_1.LexerError('Unexpected Identifier !'));
+    }).toThrow(new lexError_1.LexerError('Unexpected Identifier "!"'));
 });
 //# sourceMappingURL=fcal.test.js.map

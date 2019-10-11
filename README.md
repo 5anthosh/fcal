@@ -40,8 +40,8 @@ For general percentage operations like adding or subtracting percent of value, y
 you can convert one unit into another. Fcal will automatically convert units to perform operations if it's needed during conversion.
 
 ```sh
-23day in sec 23
-min + 34sec + 1day + 10% of 100 day
+23day in sec
+100min + 34sec + 1day + 10% of 100 day
 ```
 
 you can supported units in [Units](https://github.com/5anthosh/fcal/blob/master/UNITS.md)

@@ -98,6 +98,20 @@ exports.Expr = Expr;
         return UnitExpr;
     }(Expr));
     Expr.UnitExpr = UnitExpr;
+    var UnitConvertionExpr = /** @class */ (function (_super) {
+        __extends(UnitConvertionExpr, _super);
+        function UnitConvertionExpr(expression, unit, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.unit = unit;
+            _this.expression = expression;
+            return _this;
+        }
+        UnitConvertionExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitConvertionExpr(this);
+        };
+        return UnitConvertionExpr;
+    }(Expr));
+    Expr.UnitConvertionExpr = UnitConvertionExpr;
     var Unary = /** @class */ (function (_super) {
         __extends(Unary, _super);
         function Unary(operator, right, start, end) {

@@ -87,7 +87,20 @@ export namespace Expr {
       return visitor.visitUnitExpr(this);
     }
   }
-
+  export class UnitConvertionExpr extends Expr {
+    public start: any;
+    public end: any;
+    public expression: Expr;
+    public unit: Unit;
+    constructor(expression: Expr, unit: Unit, start: number, end: number) {
+      super(start, end);
+      this.unit = unit;
+      this.expression = expression;
+    }
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitUnitConvertionExpr(this);
+    }
+  }
   export class Unary extends Expr {
     public start: any;
     public end: any;
@@ -110,5 +123,6 @@ export namespace Expr {
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
+    visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): T;
   }
 }

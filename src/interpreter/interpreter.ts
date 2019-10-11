@@ -18,6 +18,13 @@ export class Interpreter implements Expr.IVisitor<any> {
     return this.evaluate(this.ast);
   }
 
+  public visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): Type {
+    const value = this.evaluate(expr.expression);
+    if (value instanceof Type.Numberic) {
+      return Type.Units.convertToUnit(value as Type.Numberic, expr.unit);
+    }
+    throw new Error('Expecting numeric value before in');
+  }
   public visitUnitExpr(expr: Expr.UnitExpr) {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {

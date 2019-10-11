@@ -267,6 +267,15 @@ export namespace Type {
     public static New(value: string | Big.Decimal, unit: Unit): Units {
       return new Units(value, unit);
     }
+    public static convertToUnit(value: Numberic, unit: Unit): Units {
+      if (value instanceof Units) {
+        const value2 = value as Units;
+        if (value2.unit.id === unit.id) {
+          return Units.New(value2.convert(unit.ratio), unit);
+        }
+      }
+      return Units.New(value.number, unit);
+    }
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
     public unit: Unit;

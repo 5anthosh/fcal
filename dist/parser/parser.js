@@ -58,7 +58,7 @@ var Parser = /** @class */ (function () {
         return this.exponent();
     };
     Parser.prototype.exponent = function () {
-        var expr = this.percent();
+        var expr = this.unitConvert();
         while (this.match(token_1.TokenType.CAP)) {
             var operator = this.previous();
             var right = this.unary();
@@ -66,7 +66,18 @@ var Parser = /** @class */ (function () {
         }
         return expr;
     };
-    Parser.prototype.percent = function () {
+    Parser.prototype.unitConvert = function () {
+        var expr = this.suffix();
+        if (this.match(token_1.TokenType.IN)) {
+            this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
+            var unit = this.previous();
+            var unit2 = void 0;
+            unit2 = this.lexer.ttypes.get(unit.lexeme)[0];
+            return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+        }
+        return expr;
+    };
+    Parser.prototype.suffix = function () {
         var expr = this.term();
         if (this.match(token_1.TokenType.PERCENTAGE)) {
             var operator = this.previous();

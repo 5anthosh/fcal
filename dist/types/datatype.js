@@ -282,6 +282,15 @@ var TYPERANK;
         Units.New = function (value, unit) {
             return new Units(value, unit);
         };
+        Units.convertToUnit = function (value, unit) {
+            if (value instanceof Units) {
+                var value2 = value;
+                if (value2.unit.id === unit.id) {
+                    return Units.New(value2.convert(unit.ratio), unit);
+                }
+            }
+            return Units.New(value.number, unit);
+        };
         Units.prototype.newNumeric = function (value) {
             return new Units(value, this.unit);
         };

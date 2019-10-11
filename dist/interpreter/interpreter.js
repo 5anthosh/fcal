@@ -12,6 +12,13 @@ var Interpreter = /** @class */ (function () {
         console.log(this.ast.toString());
         return this.evaluate(this.ast);
     };
+    Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
+        if (value instanceof datatype_1.Type.Numberic) {
+            return datatype_1.Type.Units.convertToUnit(value, expr.unit);
+        }
+        throw new Error('Expecting numeric value before in');
+    };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {

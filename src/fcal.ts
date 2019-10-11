@@ -14,6 +14,7 @@ export class Fcal {
     phrases.addPhrases(TokenType.CAP, 'POW');
     phrases.addPhrases(TokenType.MOD, 'mod');
     phrases.addPhrases(TokenType.OF, 'of');
+    phrases.addPhrases(TokenType.IN, 'in');
     return phrases;
   }
   public static getdefaultTTypes(): TType.TTypes {

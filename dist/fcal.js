@@ -20,6 +20,7 @@ var Fcal = /** @class */ (function () {
         phrases.addPhrases(token_1.TokenType.CAP, 'POW');
         phrases.addPhrases(token_1.TokenType.MOD, 'mod');
         phrases.addPhrases(token_1.TokenType.OF, 'of');
+        phrases.addPhrases(token_1.TokenType.IN, 'in');
         return phrases;
     };
     Fcal.getdefaultTTypes = function () {

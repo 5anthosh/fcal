@@ -17,6 +17,12 @@ var ASTPrinter = /** @class */ (function () {
         this.depth -= ASTPrinter.tab;
         return ASTPrinter.createPrefix(this.depth, 'UNIT') + " " + expr.unit.unitType + " \n|\n" + expression;
     };
+    ASTPrinter.prototype.visitUnitConvertionExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
+    };
     ASTPrinter.prototype.visitBinaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
         var left = this.evaluate(expr.left);

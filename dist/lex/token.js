@@ -16,10 +16,11 @@ var TokenType;
     TokenType[TokenType["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
     TokenType[TokenType["NEWLINE"] = 8] = "NEWLINE";
     TokenType[TokenType["EOL"] = 9] = "EOL";
-    TokenType[TokenType["PERCENTAGE"] = 10] = "PERCENTAGE";
-    TokenType[TokenType["OF"] = 11] = "OF";
-    TokenType[TokenType["UNIT"] = 12] = "UNIT";
-    TokenType[TokenType["CAP"] = 13] = "CAP";
+    TokenType[TokenType["IN"] = 10] = "IN";
+    TokenType[TokenType["PERCENTAGE"] = 11] = "PERCENTAGE";
+    TokenType[TokenType["OF"] = 12] = "OF";
+    TokenType[TokenType["UNIT"] = 13] = "UNIT";
+    TokenType[TokenType["CAP"] = 14] = "CAP";
 })(TokenType = exports.TokenType || (exports.TokenType = {}));
 function PrintTT(enumNumber) {
     return TokenType[enumNumber];

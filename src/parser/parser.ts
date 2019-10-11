@@ -1,8 +1,8 @@
 import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
 import { Phrases } from '../types/phrase';
-import { Expr } from './expr';
 import { TType } from '../types/units';
+import { Expr } from './expr';
 export class Parser {
   public source: string;
   private lexer: Lexer;
@@ -66,7 +66,7 @@ export class Parser {
     return this.exponent();
   }
   private exponent(): Expr {
-    let expr = this.suffix();
+    let expr = this.unitConvert();
     while (this.match(TokenType.CAP)) {
       const operator = this.previous();
       const right = this.unary();
@@ -74,14 +74,17 @@ export class Parser {
     }
     return expr;
   }
-  // private unitConvert(): Expr {
-  //   const expr = this.suffix();
-  //   if (this.match(TokenType.IN)) {
-  //     this.consume(TokenType.UNIT, 'Expecting unit after in');
-  //     const unit = this.previous();
-  //     const unit2 = this.add
-  //   }
-  // }
+  private unitConvert(): Expr {
+    const expr = this.suffix();
+    if (this.match(TokenType.IN)) {
+      this.consume(TokenType.UNIT, 'Expecting unit after in');
+      const unit = this.previous();
+      let unit2;
+      [unit2] = this.lexer.ttypes.get(unit.lexeme);
+      return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+    }
+    return expr;
+  }
   private suffix(): Expr {
     const expr = this.term();
     if (this.match(TokenType.PERCENTAGE)) {

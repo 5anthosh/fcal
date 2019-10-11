@@ -14,7 +14,7 @@ export class Interpreter implements Expr.IVisitor<any> {
 
   public evaluateExpression(): Type {
     this.ast = this.parser.parse();
-    console.log(this.ast.toString());
+    // console.log(this.ast.toString());
     return this.evaluate(this.ast);
   }
 

@@ -16,10 +16,36 @@
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal#readme)
 
+## Basic Arithmetic operation
+
+| Operation      | Operator | Phrases                     | Example                         |
+| -------------- | -------- | --------------------------- | ------------------------------- |
+| Addition       | +        | PLUS, AND, WITH, ADD        | `1 + 24`, `1 plus 3 plus 5`     |
+| Subtraction    | -        | MINUS, SUBTRACT, WITHOUT    | `0.234 - 3.14`, `23 without 10` |
+| Multiplication | \*       | TIMES, x, MULTIPLIEDBY, MUL | `1234 * 100`, `6665.01 MUL 001` |
+| Division       | /        | DIVIDE, DIVIDEBY            | `(1+23)/(0.01)`                 |
+| Power          | ^        | POW                         | `2 ^ 2 ^ 2 pow 23`              |
+| Modulus        | mod      |                             | `134 mod 13`                    |
+| Percentage     | of       |                             | `25% of 1024`, `10 of 234`      |
+
+### Percentage operation
+
+For general percentage operations like adding or subtracting percent of value, you can do
+`12 + 24%`, `1230 - 23.23%`
+
 ## Install
 
 ```sh
 npm install
+```
+
+## Run Fcal
+
+```sh
+npm run main
+
+fcal > (-2)^2.5
+-5.6568542494923801952
 ```
 
 ## Run tests

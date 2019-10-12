@@ -43,7 +43,7 @@ You can declare variables using `=` or `:` operator, you can also reassign them
 
 ```sh
 radius : 20
-PIxradius^2
+PI*radius^2
 ```
 
 ## Units

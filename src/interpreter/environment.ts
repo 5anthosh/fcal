@@ -1,4 +1,4 @@
-import { Type } from './types/datatype';
+import { Type } from '../types/datatype';
 
 export class Environment {
   private values: object;

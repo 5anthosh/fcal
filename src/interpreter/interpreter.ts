@@ -4,17 +4,45 @@ import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { TType } from '../types/units';
-import { Environment } from '../environment';
+import { Environment } from './environment';
+import { FcalFunction, FcalFunctions } from './function';
 
 export class Interpreter implements Expr.IVisitor<any> {
   private parser: Parser;
   private ast: Expr;
   private environment: Environment;
-  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes, environment: Environment) {
+  private funcations: FcalFunctions;
+  constructor(
+    source: string,
+    phrases: Phrases,
+    ttypes: TType.TTypes,
+    environment: Environment,
+    functions: FcalFunctions,
+  ) {
     this.parser = new Parser(source, phrases, ttypes);
     this.environment = environment;
+    this.funcations = functions;
   }
 
+  public visitCallExpr(expr: Expr.Call): Type {
+    const name = expr.name;
+    let call: FcalFunction;
+    let ok: boolean;
+    [call, ok] = this.funcations.get(name);
+    if (ok) {
+      if (call.arbity !== -1) {
+        if (call.arbity !== expr.argument.length) {
+          throw new Error(`Expected ${call.arbity} but got ${expr.argument.length}`);
+        }
+      }
+      const argument = Array<Type>();
+      for (const param of expr.argument) {
+        argument.push(this.evaluate(param));
+      }
+      return call.call(this.environment, ...argument);
+    }
+    throw Error(`${name} is not callable`);
+  }
   public visitAssignExpr(expr: Expr.Assign): Type {
     const value = this.evaluate(expr.value);
     this.environment.set(expr.name, value);

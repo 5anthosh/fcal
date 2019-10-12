@@ -14,6 +14,7 @@ export class Lexer {
     Char.CAP,
     Char.PERCENTAGE,
     Char.EQUAL,
+    Char.COMMA,
     Char.DOUBLE_COLON,
   ];
   private static isDigit(char: string): boolean {
@@ -61,6 +62,8 @@ export class Lexer {
         return this.createToken(TokenType.SLASH);
       case Char.EQUAL:
         return this.createToken(TokenType.EQUAL);
+      case Char.COMMA:
+        return this.createToken(TokenType.COMMA);
       case Char.DOUBLE_COLON:
         return this.createToken(TokenType.EQUAL);
       case Char.OPEN_PARAN:
@@ -112,16 +115,6 @@ export class Lexer {
 
     return this.createToken(TokenType.NAME);
   }
-  // private match(expected: String): boolean {
-  //   if (this.isAtEnd()) {
-  //     return false;
-  //   }
-  //   if (this.source.charAt(this.current) != expected) {
-  //     return false;
-  //   }
-  //   this.current++;
-  //   return true;
-  // }
   private number(): Token {
     while (Lexer.isDigit(this.peek(0))) {
       this.advance();

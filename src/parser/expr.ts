@@ -68,6 +68,18 @@ export namespace Expr {
       return visitor.visitVariableExpr(this);
     }
   }
+  export class Call extends Expr {
+    public name: string;
+    public argument: Expr[];
+    constructor(name: string, argument: Expr[], start: number, end: number) {
+      super(start, end);
+      this.name = name;
+      this.argument = argument;
+    }
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitCallExpr(this);
+    }
+  }
 
   export class Literal extends Expr {
     public value: Type;
@@ -138,5 +150,6 @@ export namespace Expr {
     visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): T;
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
+    visitCallExpr(expr: Expr.Call): T;
   }
 }

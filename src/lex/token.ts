@@ -13,6 +13,7 @@ export enum TokenType {
   IN,
   NAME,
   EQUAL,
+  COMMA,
   PERCENTAGE,
   OF,
   UNIT,

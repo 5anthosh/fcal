@@ -10,5 +10,6 @@ export class Char {
   public static PERCENTAGE = '%';
   public static EQUAL = '=';
   public static DOUBLE_COLON = ':';
+  public static COMMA = ',';
   public static NEWLINE = '\n';
 }

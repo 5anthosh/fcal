@@ -1,10 +1,12 @@
 import { getdefaultTTypes } from './defaultUnits';
-import { Environment } from './environment';
+import { Environment } from './interpreter/environment';
+import { FcalFunctions } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { TokenType } from './lex/token';
+import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { TType } from './types/units';
-import { Type } from './types/datatype';
+import { getDefaultFunction } from './defaultFunctions';
 
 export class Fcal {
   public static getdefaultphrases(): Phrases {
@@ -22,14 +24,17 @@ export class Fcal {
   private phrases: Phrases;
   private ttypes: TType.TTypes;
   private environment: Environment;
+  private functions: FcalFunctions;
   constructor() {
     this.phrases = Fcal.getdefaultphrases();
     this.ttypes = getdefaultTTypes();
     this.environment = new Environment();
-    this.defaultValues();
+    this.getDefaultValues();
+    this.functions = new FcalFunctions();
+    this.setDefaultFunctions();
   }
   public evaluate(source: string): any {
-    return new Interpreter(source, this.phrases, this.ttypes, this.environment).evaluateExpression();
+    return new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
   }
   public setValues(values: object) {
     for (const key in values) {
@@ -39,7 +44,15 @@ export class Fcal {
       }
     }
   }
-  private defaultValues() {
+  public setFunctions(functions: FcalFunctions) {
+    for (const func of functions.functions) {
+      this.functions.add(func);
+    }
+  }
+  private getDefaultValues() {
     this.setValues({ PI: Type.BNumber.New('3.141592653589793238462643383279502884197169399375105') });
+  }
+  private setDefaultFunctions() {
+    this.setFunctions(getDefaultFunction());
   }
 }

@@ -102,7 +102,7 @@ export class Parser {
     return expr;
   }
   private suffix(): Expr {
-    const expr = this.term();
+    const expr = this.call();
     if (this.match(TokenType.PERCENTAGE)) {
       const operator = this.previous();
       return new Expr.Percentage(expr, expr.start, operator.end);
@@ -115,7 +115,24 @@ export class Parser {
     }
     return expr;
   }
-
+  private call(): Expr {
+    const expr = this.term();
+    if (this.match(TokenType.OPEN_PARAN)) {
+      if (expr instanceof Expr.Variable) {
+        const argument = Array<Expr>();
+        do {
+          if (argument.length >= 255) {
+            throw new Error('Cannot have more than 255 arguments');
+          }
+          argument.push(this.expression());
+        } while (this.match(TokenType.COMMA));
+        this.consume(TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
+        return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
+      }
+      throw new Error('Not callable');
+    }
+    return expr;
+  }
   private term(): Expr {
     if (this.match(TokenType.Number)) {
       return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);

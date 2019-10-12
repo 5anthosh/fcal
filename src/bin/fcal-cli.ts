@@ -21,7 +21,7 @@ function main() {
       console.log(value.format());
     } catch (error) {
       // tslint:disable-next-line:no-console
-      console.error(colors.red(`Error ${error.message}`));
+      console.error(colors.red(`Error ${error.stack}`));
     }
     rl.prompt();
   }).on('close', () => {

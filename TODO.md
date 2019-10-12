@@ -7,7 +7,8 @@
 - [x] various phrases for operation
 - [x] percentage operation
 - [x] units
-- [ ] variables
+- [x] variables
+- [ ] allow digits in variable names
 - [ ] functions
 - [ ] multiply in parenthesis
 - [ ] complex numbers

@@ -134,3 +134,22 @@ test('test percentage of with units', () => {
   const expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 \n';
   expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('124916.110704'));
 });
+
+test('test percentage sub variable', () => {
+  const expression = '-(fone)% - ftwo - fthree \n';
+  const fcal = new Fcal();
+  expect(fcal.evaluate('fone : 234 \n')).toStrictEqual(new Type.BNumber('234'));
+  expect(fcal.evaluate('ftwo : 1000 \n')).toStrictEqual(new Type.BNumber('1000'));
+  expect(fcal.evaluate('fthree = 0.25% \n')).toStrictEqual(new Type.Percentage('0.25'));
+  expect(fcal.evaluate(expression)).toStrictEqual(new Type.BNumber('1336.65'));
+  expect(fcal.evaluate('ftwo = (1000+23)% \n')).toStrictEqual(new Type.Percentage('1023'));
+  const expression1 = '-fone% - ftwo - fthree \n';
+  expect(fcal.evaluate(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
+});
+
+test('test PI area of the circle', () => {
+  const expression = 'PI*radius^2 \n';
+  const fcal = new Fcal();
+  expect(fcal.evaluate('radius: 20 \n')).toStrictEqual(new Type.BNumber('20'));
+  expect(fcal.evaluate(expression)).toStrictEqual(new Type.BNumber('1256.6370614359172954'));
+});

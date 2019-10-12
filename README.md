@@ -35,6 +35,17 @@
 For general percentage operations like adding or subtracting percent of value, you can do
 `12 + 24%`, `1230 - 23.23%`
 
+## Variables
+
+You can declare variables using `=` or `:` operator, you can also reassign them
+
+> please note that you can not use variable name which is used in for phrases in operation and units
+
+```sh
+radius : 20
+PIxradius^2
+```
+
 ## Units
 
 you can convert one unit into another. Fcal will automatically convert units to perform operations if it's needed during conversion.

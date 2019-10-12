@@ -12,7 +12,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   private environment: Environment;
   constructor(source: string, phrases: Phrases, ttypes: TType.TTypes, environment: Environment) {
     this.parser = new Parser(source, phrases, ttypes);
-    this.environment = environment;   
+    this.environment = environment;
   }
 
   public visitAssignExpr(expr: Expr.Assign): Type {

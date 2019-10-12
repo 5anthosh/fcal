@@ -10,6 +10,15 @@ export class ASTPrinter implements Expr.IVisitor<string> {
   constructor() {
     this.depth = 0;
   }
+  public visitAssignExpr(expr: Expr.Assign): string {
+    this.depth += ASTPrinter.tab;
+    const value = this.evaluate(expr.value);
+    this.depth -= ASTPrinter.tab;
+    return `${ASTPrinter.createPrefix(this.depth, 'ASSIGN')} \n|\n${value}`;
+  }
+  public visitVariableExpr(expr: Expr.Variable): string {
+    return `${ASTPrinter.createPrefix(this.depth, 'VARIABLE')} ${expr.name}\n|\n`;
+  }
   public visitUnitExpr(expr: Expr.UnitExpr): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);

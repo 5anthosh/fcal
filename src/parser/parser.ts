@@ -20,7 +20,7 @@ export class Parser {
   }
 
   private Stmt(): Expr {
-    const expr = this.expression();
+    const expr = this.assignment();
     if (this.match(TokenType.NEWLINE)) {
       return expr;
     }
@@ -28,6 +28,17 @@ export class Parser {
       throw new Error('Expecting new Line');
     }
     throw new Error(`Unexpected token ${this.peek().lexeme}`);
+  }
+  private assignment(): Expr {
+    const expr = this.expression();
+    if (this.match(TokenType.EQUAL)) {
+      const expres = this.expression();
+      if (expr instanceof Expr.Variable) {
+        const name = (expr as Expr.Variable).name;
+        return new Expr.Assign(name, expres, expr.start, expres.end);
+      }
+    }
+    return expr;
   }
   private expression(): Expr {
     return this.percentage();
@@ -114,6 +125,9 @@ export class Parser {
       const expr = this.expression();
       this.consume(TokenType.CLOSE_PARAN, "Expect ')' after expression");
       return new Expr.Grouping(expr, start.start, this.previous().end);
+    }
+    if (this.match(TokenType.NAME)) {
+      return new Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
     }
     throw new Error(`Expect expression but found ${this.peek().lexeme}`);
   }

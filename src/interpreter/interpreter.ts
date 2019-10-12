@@ -4,14 +4,25 @@ import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { TType } from '../types/units';
+import { Environment } from '../environment';
 
 export class Interpreter implements Expr.IVisitor<any> {
   private parser: Parser;
   private ast: Expr;
-  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
+  private environment: Environment;
+  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes, environment: Environment) {
     this.parser = new Parser(source, phrases, ttypes);
+    this.environment = environment;   
   }
 
+  public visitAssignExpr(expr: Expr.Assign): Type {
+    const value = this.evaluate(expr.value);
+    this.environment.set(expr.name, value);
+    return value;
+  }
+  public visitVariableExpr(expr: Expr.Variable): Type {
+    return this.environment.get(expr.name);
+  }
   public evaluateExpression(): Type {
     this.ast = this.parser.parse();
     // console.log(this.ast.toString());

@@ -1,0 +1,30 @@
+import { Phrases } from '../types/phrase';
+import { TType } from '../types/units';
+import { Expr } from './expr';
+export declare class Parser {
+    source: string;
+    private lexer;
+    private ntoken;
+    private tokens;
+    constructor(source: string, phrases: Phrases, ttypes: TType.TTypes);
+    parse(): Expr;
+    private Stmt;
+    private expression;
+    private percentage;
+    private addition;
+    private multiply;
+    private unary;
+    private exponent;
+    private unitConvert;
+    private suffix;
+    private term;
+    private match;
+    private consume;
+    private check;
+    private isAtEnd;
+    private nextToken;
+    private getToken;
+    private previous;
+    private peek;
+    private incr;
+}

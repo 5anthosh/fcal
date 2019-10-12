@@ -8,5 +8,7 @@ export class Char {
   public static CLOSE_PARAN = ')';
   public static CAP = '^';
   public static PERCENTAGE = '%';
+  public static EQUAL = '=';
+  public static DOUBLE_COLON = ':';
   public static NEWLINE = '\n';
 }

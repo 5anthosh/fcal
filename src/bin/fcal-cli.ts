@@ -4,6 +4,7 @@ import { Fcal } from '../fcal';
 import { Type } from '../types/datatype';
 
 function main() {
+  const fcal = new Fcal();
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -14,9 +15,8 @@ function main() {
     if (line === '.exit') {
       rl.close();
     }
-    const fcal = new Fcal(line + '\n');
     try {
-      const value = fcal.evaluate() as Type.Numberic;
+      const value = fcal.evaluate(line + '\n') as Type.Numberic;
       // tslint:disable-next-line:no-console
       console.log(value.format());
     } catch (error) {

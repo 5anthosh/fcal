@@ -11,6 +11,8 @@ export enum TokenType {
   NEWLINE,
   EOL,
   IN,
+  NAME,
+  EQUAL,
   PERCENTAGE,
   OF,
   UNIT,

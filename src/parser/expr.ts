@@ -35,8 +35,6 @@ export namespace Expr {
   }
 
   export class Grouping extends Expr {
-    public start: any;
-    public end: any;
     public expression: Expr;
     constructor(expression: Expr, start: number, end: number) {
       super(start, end);
@@ -47,9 +45,31 @@ export namespace Expr {
     }
   }
 
+  export class Assign extends Expr {
+    public name: string;
+    public value: Expr;
+    constructor(name: string, value: Expr, start: number, end: number) {
+      super(start, end);
+      this.name = name;
+      this.value = value;
+    }
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitAssignExpr(this);
+    }
+  }
+
+  export class Variable extends Expr {
+    public name: string;
+    constructor(name: string, start: number, end: number) {
+      super(start, end);
+      this.name = name;
+    }
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitVariableExpr(this);
+    }
+  }
+
   export class Literal extends Expr {
-    public start: any;
-    public end: any;
     public value: Type;
     constructor(value: Type, start: number, end: number) {
       super(start, end);
@@ -61,8 +81,6 @@ export namespace Expr {
   }
 
   export class Percentage extends Expr {
-    public start: any;
-    public end: any;
     public expression: Expr;
     constructor(expression: Expr, start: number, end: number) {
       super(start, end);
@@ -74,8 +92,6 @@ export namespace Expr {
   }
 
   export class UnitExpr extends Expr {
-    public start: any;
-    public end: any;
     public expression: Expr;
     public unit: Unit;
     constructor(expression: Expr, unit: Unit, start: number, end: number) {
@@ -88,8 +104,6 @@ export namespace Expr {
     }
   }
   export class UnitConvertionExpr extends Expr {
-    public start: any;
-    public end: any;
     public expression: Expr;
     public unit: Unit;
     constructor(expression: Expr, unit: Unit, start: number, end: number) {
@@ -102,8 +116,6 @@ export namespace Expr {
     }
   }
   export class Unary extends Expr {
-    public start: any;
-    public end: any;
     public operator: Token;
     public right: Expr;
     constructor(operator: Token, right: Expr, start: number, end: number) {
@@ -124,5 +136,7 @@ export namespace Expr {
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
     visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): T;
+    visitAssignExpr(expr: Expr.Assign): T;
+    visitVariableExpr(expr: Expr.Variable): T;
   }
 }

@@ -2,7 +2,7 @@
   "name": "fcal",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/cmd/main.js",
+  "main": "fcal.js",
   "directories": {
     "lib": "lib"
   },
@@ -15,7 +15,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
-    "main": "node dist/bin/fcal-cli.js"
+    "main": "node lib/bin/fcal-cli.js"
   },
   "repository": {
     "type": "git",
@@ -29,13 +29,10 @@
   },
   "homepage": "https://github.com/5anthosh/fcal#readme",
   "devDependencies": {
-    "@types/accounting": "^0.4.1",
-    "@types/decimal.js": "^7.4.0",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.11",
     "accounting": "^0.4.1",
     "colors": "^1.4.0",
-    "decimal.js": "^10.2.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",
@@ -43,5 +40,11 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
-  "dependencies": {}
+  "files": [
+    "lib /**/ * "
+  ],
+  "dependencies": {
+    "@types/accounting": "^0.4.1",
+    "decimal.js": "^10.2.0"
+  }
 }

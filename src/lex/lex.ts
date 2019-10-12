@@ -2,7 +2,6 @@ import { Type as any } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { TType } from '../types/units';
 import { Char } from './char';
-import { LexerError } from './lexError';
 import { Token, TokenType } from './token';
 export class Lexer {
   public static notAlpha: string[] = [
@@ -14,6 +13,8 @@ export class Lexer {
     Char.CLOSE_PARAN,
     Char.CAP,
     Char.PERCENTAGE,
+    Char.EQUAL,
+    Char.DOUBLE_COLON,
   ];
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
@@ -58,6 +59,10 @@ export class Lexer {
         return this.createToken(TokenType.TIMES);
       case Char.SLASH:
         return this.createToken(TokenType.SLASH);
+      case Char.EQUAL:
+        return this.createToken(TokenType.EQUAL);
+      case Char.DOUBLE_COLON:
+        return this.createToken(TokenType.EQUAL);
       case Char.OPEN_PARAN:
         return this.createToken(TokenType.OPEN_PARAN);
       case Char.CLOSE_PARAN:
@@ -105,7 +110,7 @@ export class Lexer {
       return this.createTokenWithLiteral(TokenType.UNIT, text);
     }
 
-    throw new LexerError(`Unexpected Identifier "${text}"`);
+    return this.createToken(TokenType.NAME);
   }
   // private match(expected: String): boolean {
   //   if (this.isAtEnd()) {

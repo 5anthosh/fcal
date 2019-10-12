@@ -42,7 +42,7 @@ You can declare variables using `=` or `:` operator, you can also reassign them
 > please note that you can not use variable name which is used in for phrases in operation and units
 
 ```sh
-radius : 20
+radius : 20cm
 PI*radius^2
 ```
 

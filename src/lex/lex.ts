@@ -94,7 +94,7 @@ export class Lexer {
     return this.source.charAt(this.current + n);
   }
   private string(): Token {
-    while (Lexer.isAlpha(this.peek(0))) {
+    while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
       this.advance();
     }
     const text = this.lexeme();

@@ -20,12 +20,12 @@ test('Test Power result in imaginary number', () => {
 
 test('Test phrases', () => {
   const expression =
-    '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS1) + 1.000 / 1.000 + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) pow 3 ^ -4 \n';
+    '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS 1) + 1.000 / 1.000 + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) pow 3 ^ -4 \n';
   expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('24.412934840534418202'));
 });
 
 test('test modulo', () => {
-  const expression = '- (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) + 4 mod 5mod45   mod 1 \n';
+  const expression = '- (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) + 4 mod 5 mod 45   mod 1 \n';
   expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('2.0'));
 });
 
@@ -60,7 +60,7 @@ test('test percentage power and modulo', () => {
   const expression1 = '3% mod 500 + (0.23 mod 79%)% mod 7 \n';
   expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.BNumber('15.003381'));
   const expression2 =
-    '- (-1%) + (+1%) + 1.000% / 1.000% + 1% x (1%) * (0.2%) x (5%) x (-1%) x (--1%) + 4% mod 5%mod45%   mod 1% \n';
+    '- (-1%) + (+1%) + 1.000% / 1.000% + 1% x (1%) * (0.2%) x (5%) x (-1%) x (--1%) + 4% mod 5% mod 45%   mod 1% \n';
   expect(new Fcal().evaluate(expression2)).toStrictEqual(new Type.Percentage('2'));
 });
 
@@ -75,19 +75,19 @@ test('test new line', () => {
     new Fcal().evaluate(expression);
   }).toThrowError(new Error('Expecting new Line'));
 
-  const expression1 = '1234+12341324123x34 \t \n $';
+  const expression1 = '1234+12341324123 x 34 \t \n $';
   expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
 });
 
 test('Parser error Expect expression', () => {
-  const expression = 'x123$\n';
+  const expression = 'x 123$\n';
   expect(() => {
     new Fcal().evaluate(expression);
   }).toThrowError(new Error('Expect expression but found x'));
 });
 
 test('Lex error unexpected token', () => {
-  const expression = '123x123!\n';
+  const expression = '123 x 123!\n';
   expect(() => {
     new Fcal().evaluate(expression);
   }).toThrow(new LexerError('Unexpected token !'));
@@ -136,14 +136,14 @@ test('test percentage of with units', () => {
 });
 
 test('test percentage sub variable', () => {
-  const expression = '-(fone)% - ftwo - fthree \n';
+  const expression = '-(f1)% - f2 - f3 \n';
   const fcal = new Fcal();
-  expect(fcal.evaluate('fone : 234 \n')).toStrictEqual(new Type.BNumber('234'));
-  expect(fcal.evaluate('ftwo : 1000 \n')).toStrictEqual(new Type.BNumber('1000'));
-  expect(fcal.evaluate('fthree = 0.25% \n')).toStrictEqual(new Type.Percentage('0.25'));
+  expect(fcal.evaluate('f1 : 234 \n')).toStrictEqual(new Type.BNumber('234'));
+  expect(fcal.evaluate('f2 : 1000 \n')).toStrictEqual(new Type.BNumber('1000'));
+  expect(fcal.evaluate('f3 = 0.25% \n')).toStrictEqual(new Type.Percentage('0.25'));
   expect(fcal.evaluate(expression)).toStrictEqual(new Type.BNumber('1336.65'));
-  expect(fcal.evaluate('ftwo = (1000+23)% \n')).toStrictEqual(new Type.Percentage('1023'));
-  const expression1 = '-fone% - ftwo - fthree \n';
+  expect(fcal.evaluate('f2 = (1000+23)% \n')).toStrictEqual(new Type.Percentage('1023'));
+  const expression1 = '-f1% - f2 - f3 \n';
   expect(fcal.evaluate(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
 });
 

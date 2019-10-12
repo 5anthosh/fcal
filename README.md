@@ -48,8 +48,8 @@ PI*radius^2
 
 ## Functions
 
-You can use default functions
-[Functions](https://github.com/5anthosh/fcal/blob/master/FUNCTIONS.md)
+You can use default 
+[functions](https://github.com/5anthosh/fcal/blob/master/FUNCTIONS.md)
 
 ```sh
 abs(-23) + log(123)

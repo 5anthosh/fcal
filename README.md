@@ -39,7 +39,7 @@ For general percentage operations like adding or subtracting percent of value, y
 
 You can declare variables using `=` or `:` operator, you can also reassign them
 
-> please note that you can not use variable name which is used in for phrases in operation and units
+> please note that you can't use variable names which is being used  for phrases in operations and units
 
 ```sh
 radius : 20cm

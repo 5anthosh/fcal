@@ -29,7 +29,7 @@ export class Fcal {
     this.phrases = Fcal.getdefaultphrases();
     this.ttypes = getdefaultTTypes();
     this.environment = new Environment();
-    this.getDefaultValues();
+    this.setDefaultValues();
     this.functions = new FcalFunctions();
     this.setDefaultFunctions();
   }
@@ -49,7 +49,7 @@ export class Fcal {
       this.functions.add(func);
     }
   }
-  private getDefaultValues() {
+  private setDefaultValues() {
     this.setValues({ PI: Type.BNumber.New('3.141592653589793238462643383279502884197169399375105') });
   }
   private setDefaultFunctions() {

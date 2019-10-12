@@ -9,6 +9,7 @@
 - [x] units
 - [x] variables
 - [x] allow digits in variable names
-- [ ] functions
+- [x] functions
+- [ ] tests for functions
 - [ ] multiply in parenthesis
 - [ ] complex numbers

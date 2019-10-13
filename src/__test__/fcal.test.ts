@@ -178,3 +178,13 @@ test('Default functions', () => {
     expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('49.390359524782034541', unit));
   }
 });
+
+test('test Expression', () => {
+  const expression = 'PI*radius^2 \n';
+  const fcal = new Fcal();
+  fcal.setValues({ radius: new Type.BNumber('20') });
+  const expr = fcal.expression(expression);
+  const expr1 = fcal.expression('radius \n');
+  expect(expr1.evaluate()).toStrictEqual(new Type.BNumber('20'));
+  expect(expr.evaluate()).toStrictEqual(new Type.BNumber('1256.6370614359172954'));
+});

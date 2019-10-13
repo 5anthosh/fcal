@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import colors = require('colors');
 import readline = require('readline');
 import { Fcal } from '../fcal';

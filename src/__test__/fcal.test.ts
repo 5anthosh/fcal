@@ -1,6 +1,5 @@
 import { getdefaultTTypes } from '../defaultUnits';
 import { Fcal } from '../fcal';
-import { LexerError } from '../lex/lexError';
 import { Type } from '../types/datatype';
 test('Test simple arithmetic operation', () => {
   const expression =
@@ -90,28 +89,37 @@ test('Lex error unexpected token', () => {
   const expression = '123 x 123!\n';
   expect(() => {
     new Fcal().evaluate(expression);
-  }).toThrow(new LexerError('Unexpected token !'));
+  }).toThrow(new Error('Unexpected token !'));
 });
 
 test('Test Time units addition', () => {
   const expression = '1 day + 23sec + 1hr \n';
   let unit;
   [unit] = getdefaultTTypes().get('hr');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('25.006388888888888889', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('25.006388888888888889', unit));
+  }
 });
 
 test('Test Time units addition In operator', () => {
   const expression = '1 day + 1day +  23sec + 1hr in sec \n';
   let unit;
   [unit] = getdefaultTTypes().get('sec');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('176423', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('176423', unit));
+  }
 });
 
 test('Test Time units addition In operator', () => {
   const expression = '1 day - 1day*23sec + 23sec + 1hr in sec \n';
   let unit;
   [unit] = getdefaultTTypes().get('sec');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('-1897177', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('-1897177', unit));
+  }
 });
 
 test('Test invalid unit operations', () => {
@@ -119,7 +127,10 @@ test('Test invalid unit operations', () => {
     '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day \n';
   let unit;
   [unit] = getdefaultTTypes().get('day');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('24.412934840534418202', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('24.412934840534418202', unit));
+  }
 });
 
 test('Test Time units addition In operator', () => {
@@ -127,7 +138,10 @@ test('Test Time units addition In operator', () => {
     '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec\n';
   let unit;
   [unit] = getdefaultTTypes().get('sec');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('-1897177', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('-1897177', unit));
+  }
 });
 
 test('test percentage of with units', () => {
@@ -159,5 +173,8 @@ test('Default functions', () => {
     'abs(-23) + log(123) - ln(0.23) * sqrt(12) / cbrt(60) ^ round(1.2344) mod ceil(2.7) + floor(23.6 cm)  \n';
   let unit;
   [unit] = getdefaultTTypes().get('cm');
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('49.390359524782034541', unit));
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('49.390359524782034541', unit));
+  }
 });

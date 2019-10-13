@@ -1,7 +1,7 @@
 {
   "name": "fcal",
   "version": "1.0.0",
-  "description": "",
+  "description": "Formula evaluation engine",
   "main": "fcal.js",
   "directories": {
     "lib": "lib"
@@ -13,6 +13,8 @@
     "lint": "tslint -p tsconfig.json",
     "btest": "npm run build && jest --config jestconfig.json --coverage",
     "prepare": "npm run build",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
     "main": "node lib/bin/fcal-cli.js"
@@ -31,8 +33,6 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.11",
-    "accounting": "^0.4.1",
-    "colors": "^1.4.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.1.0",
@@ -41,10 +41,11 @@
     "typescript": "^3.6.3"
   },
   "files": [
-    "lib /**/ * "
+    "lib /**/* "
   ],
   "dependencies": {
-    "@types/accounting": "^0.4.1",
+    "accounting": "^0.4.1",
+    "colors": "^1.4.0",
     "decimal.js": "^10.2.0"
   }
 }

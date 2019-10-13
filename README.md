@@ -48,7 +48,7 @@ PI*radius^2
 
 ## Functions
 
-You can use default 
+You can use default
 [functions](https://github.com/5anthosh/fcal/blob/master/FUNCTIONS.md)
 
 ```sh
@@ -70,6 +70,7 @@ you can find supported units here [Units](https://github.com/5anthosh/fcal/blob/
 
 ```sh
 npm install
+npm run build
 ```
 
 ## Run Fcal

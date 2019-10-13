@@ -124,12 +124,14 @@ export class Parser {
     if (this.match(TokenType.OPEN_PARAN)) {
       if (expr instanceof Expr.Variable) {
         const argument = Array<Expr>();
-        do {
-          if (argument.length >= 255) {
-            throw new Error('Cannot have more than 255 arguments');
-          }
-          argument.push(this.expression());
-        } while (this.match(TokenType.COMMA));
+        if (this.peek().type !== TokenType.CLOSE_PARAN) {
+          do {
+            if (argument.length >= 255) {
+              throw new Error('Cannot have more than 255 arguments');
+            }
+            argument.push(this.expression());
+          } while (this.match(TokenType.COMMA));
+        }
         this.consume(TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
         return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
       }

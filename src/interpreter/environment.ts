@@ -1,7 +1,7 @@
 import { Type } from '../types/datatype';
 
 export class Environment {
-  private values: { [index: string]: Type };
+  public values: { [index: string]: Type };
   constructor() {
     this.values = {};
   }

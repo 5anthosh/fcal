@@ -37,6 +37,12 @@ export class Fcal {
     return new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
   }
   public expression(source: string): Expression {
+    const env = new Environment();
+    env.values = Object.assign({}, this.environment.values);
+    return new Expression(new Interpreter(source, this.phrases, this.ttypes, env, this.functions));
+  }
+
+  public expressionWithContext(source: string): Expression {
     return new Expression(new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions));
   }
   public setValues(values: { [index: string]: Type }) {

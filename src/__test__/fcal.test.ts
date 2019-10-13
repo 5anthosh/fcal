@@ -185,6 +185,7 @@ test('test Expression', () => {
   fcal.setValues({ radius: new Type.BNumber('20') });
   const expr = fcal.expression(expression);
   const expr1 = fcal.expression('radius \n');
-  expect(expr1.evaluate()).toStrictEqual(new Type.BNumber('20'));
+  expr1.setValues({ radius: new Type.BNumber('21') });
+  expect(expr1.evaluate()).toStrictEqual(new Type.BNumber('21'));
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber('1256.6370614359172954'));
 });

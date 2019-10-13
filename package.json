@@ -2,7 +2,8 @@
   "name": "fcal",
   "version": "1.0.0",
   "description": "Formula evaluation engine",
-  "main": "fcal.js",
+  "main": "lib/fcal.js",
+  "types": "lib/fcal.d.ts",
   "directories": {
     "lib": "lib"
   },

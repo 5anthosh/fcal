@@ -49,7 +49,7 @@ export namespace TType {
       }
       return false;
     }
-    public get(phrase: string): [Unit, boolean] {
+    public get(phrase: string): [Unit | null, boolean] {
       for (const ttype of this.ttypes) {
         for (const phrase2 of ttype.phrases) {
           if (phrase === phrase2) {

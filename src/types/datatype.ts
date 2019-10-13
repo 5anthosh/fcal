@@ -298,7 +298,6 @@ export namespace Type {
     }
 
     public newNumeric(value: Big.Decimal): Numberic {
-      1;
       return new Units(value, this.unit);
     }
     public isZero(): boolean {

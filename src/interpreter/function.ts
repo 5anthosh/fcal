@@ -33,7 +33,7 @@ export class FcalFunctions {
     }
     this.functions.push(fcalFunction);
   }
-  public get(name: string): [FcalFunction, boolean] {
+  public get(name: string): [FcalFunction | null, boolean] {
     for (const func of this.functions) {
       if (func.name === name) {
         return [func, true];

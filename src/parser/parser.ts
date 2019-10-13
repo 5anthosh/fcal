@@ -97,7 +97,9 @@ export class Parser {
       const unit = this.previous();
       let unit2;
       [unit2] = this.lexer.ttypes.get(unit.lexeme);
-      return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+      if (unit2 != null) {
+        return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+      }
     }
     return expr;
   }
@@ -111,7 +113,9 @@ export class Parser {
       const unit = this.previous();
       let unit2;
       [unit2] = this.lexer.ttypes.get(unit.lexeme);
-      return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
+      if (unit2 != null) {
+        return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
+      }
     }
     return expr;
   }

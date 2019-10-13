@@ -2,8 +2,9 @@
   "name": "fcal",
   "version": "1.0.0",
   "description": "Formula evaluation engine",
-  "main": "lib/fcal.js",
-  "types": "lib/fcal.d.ts",
+  "bin": {
+    "fcal": "lib/bin/fcal-cli.js"
+  },
   "directories": {
     "lib": "lib"
   },
@@ -24,7 +25,7 @@
     "type": "git",
     "url": "git+https://github.com/5anthosh/fcal.git"
   },
-  "keywords": [],
+  "keywords": ["formula", "interpreter"],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -39,10 +40,10 @@
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3" 
   },
   "files": [
-    "lib /**/* "
+    "lib"
   ],
   "dependencies": {
     "accounting": "^0.4.1",

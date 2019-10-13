@@ -1,3 +1,4 @@
+import { getDefaultFunction } from './defaultFunctions';
 import { getdefaultTTypes } from './defaultUnits';
 import { Environment } from './interpreter/environment';
 import { FcalFunctions } from './interpreter/function';
@@ -6,7 +7,6 @@ import { TokenType } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { TType } from './types/units';
-import { getDefaultFunction } from './defaultFunctions';
 
 export class Fcal {
   public static getdefaultphrases(): Phrases {
@@ -33,10 +33,13 @@ export class Fcal {
     this.functions = new FcalFunctions();
     this.setDefaultFunctions();
   }
-  public evaluate(source: string): any {
+  public evaluate(source: string): Type {
     return new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
   }
-  public setValues(values: object) {
+  public expression(source: string): Expression {
+    return new Expression(new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions));
+  }
+  public setValues(values: { [index: string]: Type }) {
     for (const key in values) {
       if (values.hasOwnProperty(key)) {
         const element = values[key];
@@ -54,5 +57,18 @@ export class Fcal {
   }
   private setDefaultFunctions() {
     this.setFunctions(getDefaultFunction());
+  }
+}
+
+export class Expression {
+  private interpreter: Interpreter;
+  constructor(interpeter: Interpreter) {
+    this.interpreter = interpeter;
+  }
+  public evaluate(): Type {
+    return this.interpreter.evaluateExpression();
+  }
+  public setValues(values: { [index: string]: Type }) {
+    this.interpreter.setValues(values);
   }
 }

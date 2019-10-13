@@ -27,10 +27,10 @@ export class Interpreter implements Expr.IVisitor<any> {
   public visitCallExpr(expr: Expr.Call): Type {
     // console.log(`VISIT CALL EXPR ${expr.name}`);
     const name = expr.name;
-    let call: FcalFunction;
+    let call: FcalFunction | null;
     let ok: boolean;
     [call, ok] = this.funcations.get(name);
-    if (ok) {
+    if (ok && call != null) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
           throw new Error(`Expected ${call.arbity} but got ${expr.argument.length}`);
@@ -140,6 +140,14 @@ export class Interpreter implements Expr.IVisitor<any> {
       return Type.Percentage.New((value as Type.Numberic).number);
     }
     throw new Error('Expecting numeric value in percentage');
+  }
+  public setValues(values: { [index: string]: Type }) {
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        const element = values[key];
+        this.environment.set(key, element);
+      }
+    }
   }
   private evaluate(expr: Expr): Type {
     // console.log(expr.toString());

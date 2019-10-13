@@ -25,6 +25,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitCallExpr(expr: Expr.Call): Type {
+    // console.log(`VISIT CALL EXPR ${expr.name}`);
     const name = expr.name;
     let call: FcalFunction;
     let ok: boolean;
@@ -44,11 +45,13 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw Error(`${name} is not callable`);
   }
   public visitAssignExpr(expr: Expr.Assign): Type {
+    // console.log('VISIT ASSIGN');
     const value = this.evaluate(expr.value);
     this.environment.set(expr.name, value);
     return value;
   }
   public visitVariableExpr(expr: Expr.Variable): Type {
+    // console.log('VISIT VARIABLE');
     return this.environment.get(expr.name);
   }
   public evaluateExpression(): Type {
@@ -73,7 +76,9 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
+    // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} LEFT`);
     let left = this.evaluate(expr.left) as Type.BNumber;
+    // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} RIGHT`);
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
       case TokenType.PLUS:
@@ -121,6 +126,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitUnaryExpr(expr: Expr.Unary): Type.BNumber {
+    // console.log('VISIT UNARY');
     const right = this.evaluate(expr.right) as Type.BNumber;
     if (expr.operator.type === TokenType.MINUS) {
       return right.negated();

@@ -153,3 +153,11 @@ test('test PI area of the circle', () => {
   expect(fcal.evaluate('radius: 20 \n')).toStrictEqual(new Type.BNumber('20'));
   expect(fcal.evaluate(expression)).toStrictEqual(new Type.BNumber('1256.6370614359172954'));
 });
+
+test('Default functions', () => {
+  const expression =
+    'abs(-23) + log(123) - ln(0.23) * sqrt(12) / cbrt(60) ^ round(1.2344) mod ceil(2.7) + floor(23.6 cm)  \n';
+  let unit;
+  [unit] = getdefaultTTypes().get('cm');
+  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.Units('49.390359524782034541', unit));
+});

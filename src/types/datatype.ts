@@ -77,6 +77,7 @@ export namespace Type {
     }
 
     public divide(value: Numberic): Numberic {
+      // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.leftflag = true;
@@ -97,6 +98,7 @@ export namespace Type {
     }
 
     public power(value: Numberic): Numberic {
+      // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.leftflag = true;
@@ -296,6 +298,7 @@ export namespace Type {
     }
 
     public newNumeric(value: Big.Decimal): Numberic {
+      1;
       return new Units(value, this.unit);
     }
     public isZero(): boolean {

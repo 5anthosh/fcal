@@ -6,7 +6,7 @@
   "types": "lib/fcal.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc",
+    "build": "tsc && browserify -p tinyify lib/fcal.js -o  fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "btest": "npm run build && jest --config jestconfig.json --coverage",
@@ -33,14 +33,18 @@
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.11",
+    "browserify": "^16.5.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
+    "tinyify": "^2.5.1",
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
-  "files": ["lib/**/*"],
+  "files": [
+    "lib/**/*"
+  ],
   "dependencies": {
     "decimal.js": "^10.2.0"
   }

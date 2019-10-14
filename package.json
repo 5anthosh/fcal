@@ -1,6 +1,6 @@
 {
   "name": "fcal",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Formula evaluation engine",
   "bin": {
     "fcal": "lib/bin/fcal-cli.js"
@@ -27,7 +27,7 @@
   },
   "keywords": ["formula", "interpreter"],
   "author": "Santhosh Kumar",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/5anthosh/fcal/issues"
   },

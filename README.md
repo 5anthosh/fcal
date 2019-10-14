@@ -54,7 +54,7 @@ var value = fcal.evaluate('27% of 230 cm');
 console.log(value.print()); // 62.1 cm
 ```
 
-You can perform general percentage operation with `+` , '-'
+You can perform general percentage operation with `+` , `-`
 
 ```js
 var value = fcal.evaluate('1024 m + 6.1%');
@@ -63,7 +63,7 @@ console.log(value.print()); // 1086.464 m
 
 ### Using expression
 
-You can change state of expression , reevaluate it
+You can change state of expression , re evaluate it
 
 ```js
 const { Fcal } = require('fcal');
@@ -85,7 +85,7 @@ console.log(exp.evaluate().print()); // 314.15926535897932385
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/5anthosh/fcal/issues).
 
-To constribute
+To contribute
 
 ```sh
 $ git clone https://github.com/5anthosh/fcal

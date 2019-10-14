@@ -25,7 +25,10 @@
     "type": "git",
     "url": "git+https://github.com/5anthosh/fcal.git"
   },
-  "keywords": ["formula", "interpreter"],
+  "keywords": [
+    "formula",
+    "interpreter"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
@@ -40,13 +43,12 @@
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.6.3" 
+    "typescript": "^3.6.3"
   },
   "files": [
     "lib"
   ],
   "dependencies": {
-    "accounting": "^0.4.1",
     "colors": "^1.4.0",
     "decimal.js": "^10.2.0"
   }

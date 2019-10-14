@@ -65,6 +65,7 @@ class Fcal {
     this.setValues({
       E: Type.BNumber.New('2.718281828459045235360287'),
       PI: Type.BNumber.New('3.141592653589793238462645'),
+      PI2: Type.BNumber.New('6.28318530718'),
     });
   }
   private setDefaultFunctions() {

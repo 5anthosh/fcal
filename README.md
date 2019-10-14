@@ -47,7 +47,21 @@ var value = fcal.evaluate('102 day in min + abs(-34 day) in sec');
 console.log(value.print()); // 11750400 second(s)
 ```
 
-## Using expression
+### Percentage
+
+```js
+var value = fcal.evaluate('27% of 230 cm');
+console.log(value.print()); // 62.1 cm
+```
+
+You can perform general percentage operation with `+` , '-'
+
+```js
+var value = fcal.evaluate('1024 m + 6.1%');
+console.log(value.print()); // 1086.464 m
+```
+
+### Using expression
 
 You can change state of expression , reevaluate it
 

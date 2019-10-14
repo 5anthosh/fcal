@@ -11,7 +11,11 @@ export class Environment {
     }
     throw new Error(`Undefined variable ${key}`);
   }
-  public set(key: string, value: Type) {
-    this.values[key] = value;
+  public set(key: string, value: Type | number) {
+    if (value instanceof Type) {
+      this.values[key] = value;
+      return;
+    }
+    this.values[key] = Type.BNumber.New(value);
   }
 }

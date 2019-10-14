@@ -14,93 +14,88 @@
 
 > formula evaluation engine
 
-### 🏠 [Homepage](https://github.com/5anthosh/fcal#readme)
+### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 
-📝 [TODO](https://github.com/5anthosh/fcal/blob/master/TODO.md)
+You can perform basic arithmetic, percentage operations with precision.
 
-## Basic Arithmetic operation
+## Features
 
-| Operation      | Operator | Phrases                     | Example                         |
-| -------------- | -------- | --------------------------- | ------------------------------- |
-| Addition       | +        | PLUS, AND, WITH, ADD        | `1 + 24`, `1 plus 3 plus 5`     |
-| Subtraction    | -        | MINUS, SUBTRACT, WITHOUT    | `0.234 - 3.14`, `23 without 10` |
-| Multiplication | \*       | TIMES, x, MULTIPLIEDBY, MUL | `1234 * 100`, `6665.01 MUL 001` |
-| Division       | /        | DIVIDE, DIVIDEBY            | `(1+23)/(0.01)`                 |
-| Power          | ^        | POW                         | `2 ^ 2 ^ 2 pow 23`              |
-| Modulus        | mod      |                             | `134 mod 13`                    |
-| Percentage     | of       |                             | `25% of 1024`, `10 of 234`      |
-
-### Percentage operation
-
-For general percentage operations like adding or subtracting percent of value, you can do
-`12 + 24%`, `1230 - 23.23%`
-
-## Variables
-
-You can declare variables using `=` or `:` operator, you can also reassign them
-
-> please note that you can't use variable names which is being used for phrases in operations and units
-
-```sh
-radius : 20cm
-PI*radius^2
-```
-
-## Functions
-
-You can use default
-[functions](https://github.com/5anthosh/fcal/blob/master/FUNCTIONS.md)
-
-```sh
-abs(-23) + log(123)
-```
-
-## Units
-
-you can convert one unit into another. Fcal will automatically convert units to perform operations if it's needed during conversion.
-
-```sh
-23day in sec
-100min + 34sec + 1day + 10% of 100 day
-```
-
-you can find supported units here [Units](https://github.com/5anthosh/fcal/blob/master/UNITS.md)
+- Units
+- Variables
+- Functions
 
 ## Install
 
-```sh
-npm install
-npm run build
-```
-
-## Run Fcal
+With npm
 
 ```sh
-npm run main
-
-fcal > (-2)^2.5
--5.6568542494923801952
+$ npm install --save fcal
 ```
 
-## Run tests
+```js
+const { Fcal } = require('fcal');
+```
+
+## Use
+
+```js
+const { Fcal } = require('fcal');
+
+const fcal = new Fcal();
+var value = fcal.evaluate('102 day in min + abs(-34 day) in sec');
+
+console.log(value.print()); // 11750400 second(s)
+```
+
+## Using expression
+
+You can change state of expression , reevaluate it
+
+```js
+const { Fcal } = require('fcal');
+
+const exp = new Fcal().expression('PI*radius^2 ');
+
+exp.setValues({ radius: 8 });
+
+console.log(exp.evaluate().print()); // 201.06192982974676726
+
+exp.setValues({ radius: 10 });
+
+console.log(exp.evaluate().print()); // 314.15926535897932385
+```
+
+## 🤝 Contributing
+
+📝 [TODO](https://github.com/5anthosh/fcal/blob/master/TODO.md)
+
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/5anthosh/fcal/issues).
+
+To constribute
+
+```sh
+$ git clone https://github.com/5anthosh/fcal
+```
+
+```sh
+$ npm install
+```
+
+### Run tests
 
 ```sh
 npm run test
 ```
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
 
 ## Author
 
 👤 **Santhosh Kumar**
 
 - Github: [@5anthosh](https://github.com/5anthosh)
-
-## 🤝 Contributing
-
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/5anthosh/fcal/issues).
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
 
 ## 📝 License
 

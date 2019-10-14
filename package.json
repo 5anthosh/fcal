@@ -2,12 +2,8 @@
   "name": "fcal",
   "version": "0.1.0",
   "description": "Formula evaluation engine",
-  "bin": {
-    "fcal": "lib/bin/fcal-cli.js"
-  },
-  "directories": {
-    "lib": "lib"
-  },
+  "main": "lib/fcal.js",
+  "types": "lib/fcal.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
@@ -18,14 +14,16 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
     "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "main": "node lib/bin/fcal-cli.js"
+    "preversion": "npm run lint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/5anthosh/fcal.git"
   },
-  "keywords": ["formula", "interpreter"],
+  "keywords": [
+    "formula",
+    "interpreter"
+  ],
   "author": "Santhosh Kumar",
   "license": "MIT",
   "bugs": {
@@ -42,11 +40,8 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   },
-  "files": [
-    "lib"
-  ],
+  "files": ["lib/**/*"],
   "dependencies": {
-    "colors": "^1.4.0",
     "decimal.js": "^10.2.0"
   }
 }

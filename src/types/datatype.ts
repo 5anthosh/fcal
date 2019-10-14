@@ -1,10 +1,9 @@
-import colors = require('colors');
 import Big = require('decimal.js');
 import { Unit } from './units';
 export abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
-  public abstract format(): string;
+  public abstract print(): string;
 }
 
 export enum DATATYPE {
@@ -23,7 +22,7 @@ export namespace Type {
   export abstract class Numberic extends Type {
     public number: Big.Decimal;
     public leftflag: boolean;
-    constructor(value: string | Big.Decimal) {
+    constructor(value: string | Big.Decimal | number) {
       super();
       if (value instanceof Big.Decimal) {
         this.number = value;
@@ -32,12 +31,12 @@ export namespace Type {
       }
       this.leftflag = false;
     }
-    public format(): string {
+    public print(): string {
       // if (this.number.isInteger()) {
       //   return format.formatMoney(this.number.toString(), '').green;
       // }
       // return format.formatMoney(this.number.toString(), '', 16).green;
-      return this.number.toString().green;
+      return this.number.toString();
     }
 
     public Add(value: Numberic): Numberic {
@@ -151,12 +150,12 @@ export namespace Type {
   }
   export class BNumber extends Numberic {
     public static ZERO = BNumber.New(new Big.Decimal(0));
-    public static New(value: string | Big.Decimal) {
+    public static New(value: string | Big.Decimal | number) {
       return new BNumber(value);
     }
     public TYPERANK: TYPERANK;
     public TYPE: DATATYPE;
-    constructor(value: string | Big.Decimal) {
+    constructor(value: string | Big.Decimal | number) {
       super(value);
       this.TYPE = DATATYPE.NUMBER;
       this.TYPERANK = TYPERANK.NUMBER;
@@ -264,14 +263,11 @@ export namespace Type {
     public percentageValue(value: Big.Decimal): Big.Decimal {
       return value.mul(this.number.div(Percentage.base));
     }
-    public format(): string {
-      return `${colors.blue('% ').bold + this.number.toString().green}`;
+    public print(): string {
+      return `% ${this.number.toString()}`;
     }
     public newNumeric(value: Big.Decimal): Numberic {
       return Percentage.New(value);
-    }
-    public print(): string {
-      return this.format();
     }
   }
   export class Units extends Numberic {
@@ -419,8 +415,8 @@ export namespace Type {
     public convert(ration: Big.Decimal): Big.Decimal {
       return this.number.div(ration).mul(this.unit.ratio);
     }
-    public format(): string {
-      return `${this.number.toString().green} ${colors.blue(this.unit.unitType).bold}`;
+    public print(): string {
+      return `${this.number.toString()} ${this.unit.unitType}`;
     }
   }
 }

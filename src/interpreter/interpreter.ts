@@ -22,10 +22,11 @@ export class Interpreter implements Expr.IVisitor<any> {
     this.parser = new Parser(source, phrases, ttypes);
     this.environment = environment;
     this.funcations = functions;
+    this.ast = this.parser.parse();
   }
 
   public visitCallExpr(expr: Expr.Call): Type {
-    // console.log(`VISIT CALL EXPR ${expr.name}`);
+    // console.log(`VISIT CALL EXP ${expr.name}`);
     const name = expr.name;
     let call: FcalFunction | null;
     let ok: boolean;
@@ -55,7 +56,6 @@ export class Interpreter implements Expr.IVisitor<any> {
     return this.environment.get(expr.name);
   }
   public evaluateExpression(): Type {
-    this.ast = this.parser.parse();
     // console.log(this.ast.toString());
     return this.evaluate(this.ast);
   }
@@ -141,7 +141,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     }
     throw new Error('Expecting numeric value in percentage');
   }
-  public setValues(values: { [index: string]: Type }) {
+  public setValues(values: { [index: string]: Type | number }) {
     for (const key in values) {
       if (values.hasOwnProperty(key)) {
         const element = values[key];

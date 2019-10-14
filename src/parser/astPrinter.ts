@@ -1,10 +1,9 @@
-import colors from 'colors';
 import { Expr } from './expr';
 export class ASTPrinter implements Expr.IVisitor<string> {
   private static tab: number = 2;
   private static prefixchar = '+';
   private static createPrefix(depth: number, type: string): string {
-    return `${this.prefixchar}${'-'.repeat(depth * this.tab)} (${depth / this.tab})${colors.blue(type)}`;
+    return `${this.prefixchar}${'-'.repeat(depth * this.tab)} (${depth / this.tab})${type}`;
   }
   private depth: number;
   constructor() {
@@ -50,7 +49,7 @@ export class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'Grouping')} \n|\n${expression}`;
   }
   public visitLiteralExpr(expr: Expr.Literal): string {
-    return `${ASTPrinter.createPrefix(this.depth, 'LITERAL')} ${expr.value.format()}\n|\n`;
+    return `${ASTPrinter.createPrefix(this.depth, 'LITERAL')} ${expr.value.print()}\n|\n`;
   }
   public visitUnaryExpr(expr: Expr.Unary): string {
     this.depth += ASTPrinter.tab;

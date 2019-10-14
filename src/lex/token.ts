@@ -1,4 +1,3 @@
-import colors from 'colors';
 export enum TokenType {
   PLUS,
   MINUS,
@@ -46,7 +45,7 @@ export class Token {
     if (this.Literal !== null) {
       literal = this.Literal.format();
     }
-    return colors.cyan(`< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`);
+    return `< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
   }
 }
 

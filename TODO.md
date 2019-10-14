@@ -1,15 +1,17 @@
 # TODO
 
-- [x] Finish basic(+/-\*) operations
-- [x] write test for above
-- [x] power of (^) operator
-- [x] modulo (and test)
-- [x] various phrases for operation
-- [x] percentage operation
-- [x] units
-- [x] variables
-- [x] allow digits in variable names
-- [x] functions
-- [ ] tests for functions
+- [ ] infinity
+- [ ] add phrases for plural units
 - [ ] multiply in parenthesis
 - [ ] complex numbers
+- [x] tests for functions
+- [x] functions
+- [x] allow digits in variable names
+- [x] variables
+- [x] units
+- [x] percentage operation
+- [x] various phrases for operation
+- [x] modulo (and test)
+- [x] power of (^) operator
+- [x] write test for above
+- [x] Finish basic(+/-\*) operations

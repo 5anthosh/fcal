@@ -34,7 +34,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (ok && call != null) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
-          throw new Error(`Expected ${call.arbity} but got ${expr.argument.length}`);
+          throw new Error(`function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`);
         }
       }
       const argument = Array<Type>();

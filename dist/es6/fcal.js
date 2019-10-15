@@ -259,7 +259,7 @@ class Fcal {
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     }
     /**
-     * create a variable or reassign a variable
+     * create a new variable with value or assign value to variable
      * @param values
      */
     setValues(values) {
@@ -271,7 +271,7 @@ class Fcal {
         }
     }
     /**
-     * Set new Functions
+     * register new fcal Functions
      * @param functions
      */
     setFunctions(functions) {
@@ -298,7 +298,7 @@ function prefixNewLIne(source) {
     return source + '\n';
 }
 /**
- * Expression takes AST created from  interpreter and
+ * Expression takes AST created from Parser and
  * evaluate AST with its state
  */
 class Expression {
@@ -312,7 +312,7 @@ class Expression {
         return this.interpreter.evaluateExpression();
     }
     /**
-     * Change state of expression
+     * Change state of variables
      * @param values
      */
     setValues(values) {
@@ -375,6 +375,8 @@ class FcalFunction {
     call(environment, ...argument) {
         const value = this.function(environment, ...argument);
         if (value === null) {
+            // if function does not return no value then
+            // Assign basic 0 number
             return datatype_1.Type.BNumber.New('0');
         }
         return value;
@@ -400,7 +402,7 @@ class FcalFunctions {
         this.functions.push(fcalFunction);
     }
     /**
-     * Get function implemention from function name
+     * Get function implemention by its function name
      * @param name function name
      */
     get(name) {

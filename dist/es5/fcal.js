@@ -339,7 +339,7 @@ var Fcal = /** @class */ (function () {
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     };
     /**
-     * create a variable or reassign a variable
+     * create a new variable with value or assign value to variable
      * @param values
      */
     Fcal.prototype.setValues = function (values) {
@@ -351,7 +351,7 @@ var Fcal = /** @class */ (function () {
         }
     };
     /**
-     * Set new Functions
+     * register new fcal Functions
      * @param functions
      */
     Fcal.prototype.setFunctions = function (functions) {
@@ -380,7 +380,7 @@ function prefixNewLIne(source) {
     return source + '\n';
 }
 /**
- * Expression takes AST created from  interpreter and
+ * Expression takes AST created from Parser and
  * evaluate AST with its state
  */
 var Expression = /** @class */ (function () {
@@ -394,7 +394,7 @@ var Expression = /** @class */ (function () {
         return this.interpreter.evaluateExpression();
     };
     /**
-     * Change state of expression
+     * Change state of variables
      * @param values
      */
     Expression.prototype.setValues = function (values) {
@@ -470,6 +470,8 @@ var FcalFunction = /** @class */ (function () {
         }
         var value = this.function.apply(this, __spreadArrays([environment], argument));
         if (value === null) {
+            // if function does not return no value then
+            // Assign basic 0 number
             return datatype_1.Type.BNumber.New('0');
         }
         return value;
@@ -496,7 +498,7 @@ var FcalFunctions = /** @class */ (function () {
         this.functions.push(fcalFunction);
     };
     /**
-     * Get function implemention from function name
+     * Get function implemention by its function name
      * @param name function name
      */
     FcalFunctions.prototype.get = function (name) {

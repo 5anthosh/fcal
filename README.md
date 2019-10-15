@@ -36,7 +36,7 @@ the library is the single JavaScript file fcal.js (or minified, fcal.min.js).
 <script src="path/to/fcal.js"></script>
 ```
 
-With npm
+With [npm](https://www.npmjs.com/)
 
 ```sh
 $ npm install --save fcal

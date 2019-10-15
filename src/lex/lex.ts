@@ -1,6 +1,6 @@
 import { Type as any } from '../types/datatype';
 import { Phrases } from '../types/phrase';
-import { TType } from '../types/units';
+import { Unit } from '../types/units';
 import { Char } from './char';
 import { Token, TokenType } from './token';
 export class Lexer {
@@ -29,19 +29,19 @@ export class Lexer {
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
   }
-  public ttypes: TType.TTypes;
+  public units: Unit.Units;
   private tokens: Token[];
   private source: string;
   private start: number;
   private current: number;
   private phrases: Phrases;
-  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
+  constructor(source: string, phrases: Phrases, untis: Unit.Units) {
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = [];
     this.phrases = phrases;
-    this.ttypes = ttypes;
+    this.units = untis;
   }
   public Next(): Token {
     if (this.isAtEnd()) {
@@ -108,7 +108,7 @@ export class Lexer {
       return this.createToken(type);
     }
 
-    [, ok] = this.ttypes.get(text);
+    [, ok] = this.units.get(text);
     if (ok) {
       return this.createTokenWithLiteral(TokenType.UNIT, text);
     }

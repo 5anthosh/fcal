@@ -1,16 +1,16 @@
 import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
 import { Phrases } from '../types/phrase';
-import { TType } from '../types/units';
+import { Unit } from '../types/units';
 import { Expr } from './expr';
 export class Parser {
   public source: string;
   private lexer: Lexer;
   private ntoken: number;
   private tokens: Token[];
-  constructor(source: string, phrases: Phrases, ttypes: TType.TTypes) {
+  constructor(source: string, phrases: Phrases, units: Unit.Units) {
     this.source = source;
-    this.lexer = new Lexer(this.source, phrases, ttypes);
+    this.lexer = new Lexer(this.source, phrases, units);
     this.ntoken = 0;
     this.tokens = [];
   }
@@ -96,7 +96,7 @@ export class Parser {
       this.consume(TokenType.UNIT, 'Expecting unit after in');
       const unit = this.previous();
       let unit2;
-      [unit2] = this.lexer.ttypes.get(unit.lexeme);
+      [unit2] = this.lexer.units.get(unit.lexeme);
       if (unit2 != null) {
         return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
       }
@@ -112,7 +112,7 @@ export class Parser {
     if (this.match(TokenType.UNIT)) {
       const unit = this.previous();
       let unit2;
-      [unit2] = this.lexer.ttypes.get(unit.lexeme);
+      [unit2] = this.lexer.units.get(unit.lexeme);
       if (unit2 != null) {
         return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
       }

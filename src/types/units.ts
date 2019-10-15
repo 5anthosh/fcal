@@ -1,6 +1,6 @@
 import Big = require('decimal.js');
 
-export class Unit {
+export class UnitMeta {
   public id: string;
   public ratio: Big.Decimal;
   public unitType: string;
@@ -11,35 +11,35 @@ export class Unit {
   }
 }
 
-export class TType {
+export class Unit {
   public phrases: string[];
-  public unit: Unit;
+  public unit: UnitMeta;
   constructor(id: string, ratio: Big.Decimal, unitType: string, ...phrases: string[]) {
-    this.unit = new Unit(id, ratio, unitType);
+    this.unit = new UnitMeta(id, ratio, unitType);
     this.phrases = phrases;
   }
 }
 
 // tslint:disable-next-line:no-namespace
-export namespace TType {
+export namespace Unit {
   /**
    * Represents various Term types
    */
 
-  export class TTypes {
-    public ttypes: TType[];
+  export class Units {
+    public units: Unit[];
     constructor() {
-      this.ttypes = [];
+      this.units = [];
     }
-    public Add(ttype: TType) {
-      if (this.check(...ttype.phrases)) {
+    public Add(unit: Unit) {
+      if (this.check(...unit.phrases)) {
         throw new Error('phrase already exits');
       }
-      this.ttypes.push(ttype);
+      this.units.push(unit);
     }
     public check(...phrases: string[]): boolean {
-      for (const ttype of this.ttypes) {
-        for (const phrase of ttype.phrases) {
+      for (const unit of this.units) {
+        for (const phrase of unit.phrases) {
           for (const phrase2 of phrases) {
             if (phrase === phrase2) {
               return true;
@@ -49,11 +49,11 @@ export namespace TType {
       }
       return false;
     }
-    public get(phrase: string): [Unit | null, boolean] {
-      for (const ttype of this.ttypes) {
-        for (const phrase2 of ttype.phrases) {
+    public get(phrase: string): [UnitMeta | null, boolean] {
+      for (const unit of this.units) {
+        for (const phrase2 of unit.phrases) {
           if (phrase === phrase2) {
-            return [ttype.unit, true];
+            return [unit.unit, true];
           }
         }
       }

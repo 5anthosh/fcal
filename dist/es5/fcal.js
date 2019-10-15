@@ -233,42 +233,44 @@ exports.getDefaultFunction = getDefaultFunction;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
 var units_1 = require("./types/units");
-function getdefaultTTypes() {
-    var ttypes = new units_1.TType.TTypes();
-    setDistanceTTypes(ttypes);
-    setSpeedTTypes(ttypes);
-    setTimeTTypes(ttypes);
-    return ttypes;
+function getdefaultUnits() {
+    var units = new units_1.Unit.Units();
+    setDistanceUnits(units);
+    setSpeedUnits(units);
+    setTimeUnits(units);
+    return units;
 }
-exports.getdefaultTTypes = getdefaultTTypes;
-function setDistanceTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(1), 'cm', 'cm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(100), 'm', 'm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(0.1), 'mm', 'mm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(100000), 'km', 'km'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(2.54), 'inch', 'inch'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(30.48), 'foot/feet', 'ft'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(91.44), 'yard', 'yd', 'yard'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(160934.4), 'mile', 'mi'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', 'nmi'));
+exports.getdefaultUnits = getdefaultUnits;
+function setDistanceUnits(units) {
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', 'cm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', 'm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', 'mm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', 'km'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', 'inch'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', 'ft'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', 'yd', 'yard'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', 'mi'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', 'nmi'));
 }
-function setSpeedTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1), 'km/h', 'kmh', 'kmph', 'khm', 'kph'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.609344), 'miles/h', 'mph'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(3.6), 'm/s', 'mps'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.097), 'ft/s', 'fps'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.852), 'kt', 'kts', 'knots'));
+function setSpeedUnits(units) {
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1), 'km/h', 'kmh', 'kmph', 'khm', 'kph'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.609344), 'miles/h', 'mph'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(3.6), 'm/s', 'mps'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.097), 'ft/s', 'fps'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', 'kts', 'knots'));
 }
-function setTimeTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(1), 'second(s)', 'sec', 'second'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
+function setTimeUnits(units) {
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', 'sec', 'second'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
 }
 
 },{"./types/units":15,"decimal.js":16}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var decimal_js_1 = require("decimal.js");
+exports.Decimal = decimal_js_1.Decimal;
 var defaultFunctions_1 = require("./defaultFunctions");
 var defaultUnits_1 = require("./defaultUnits");
 var environment_1 = require("./interpreter/environment");
@@ -281,11 +283,11 @@ var datatype_1 = require("./types/datatype");
 exports.Type = datatype_1.Type;
 var phrase_1 = require("./types/phrase");
 var units_1 = require("./types/units");
-exports.TType = units_1.TType;
+exports.Unit = units_1.Unit;
 var Fcal = /** @class */ (function () {
     function Fcal() {
         this.phrases = Fcal.getdefaultphrases();
-        this.ttypes = defaultUnits_1.getdefaultTTypes();
+        this.units = defaultUnits_1.getdefaultUnits();
         this.environment = new environment_1.Environment();
         this.setDefaultValues();
         this.functions = new function_1.FcalFunctions();
@@ -305,17 +307,17 @@ var Fcal = /** @class */ (function () {
     };
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
-        return new interpreter_1.Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
+        return new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
     };
     Fcal.prototype.expression = function (source) {
         var env = new environment_1.Environment();
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.ttypes, env, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, env, this.functions));
     };
     Fcal.prototype.expressionWithContext = function (source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     };
     Fcal.prototype.setValues = function (values) {
         for (var key in values) {
@@ -364,7 +366,7 @@ var Expression = /** @class */ (function () {
 }());
 exports.Expression = Expression;
 
-},{"./defaultFunctions":1,"./defaultUnits":2,"./interpreter/environment":4,"./interpreter/function":5,"./interpreter/interpreter":6,"./lex/token":9,"./types/datatype":13,"./types/phrase":14,"./types/units":15}],4:[function(require,module,exports){
+},{"./defaultFunctions":1,"./defaultUnits":2,"./interpreter/environment":4,"./interpreter/function":5,"./interpreter/interpreter":6,"./lex/token":9,"./types/datatype":13,"./types/phrase":14,"./types/units":15,"decimal.js":16}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var datatype_1 = require("../types/datatype");
@@ -465,8 +467,8 @@ var token_1 = require("../lex/token");
 var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, ttypes, environment, functions) {
-        this.parser = new parser_1.Parser(source, phrases, ttypes);
+    function Interpreter(source, phrases, units, environment, functions) {
+        this.parser = new parser_1.Parser(source, phrases, units);
         this.environment = environment;
         this.funcations = functions;
         this.ast = this.parser.parse();
@@ -510,14 +512,14 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.Units.convertToUnit(value, expr.unit);
+            return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit);
         }
         throw new Error('Expecting numeric value before in');
     };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.Units.New(value.number, expr.unit);
+            return datatype_1.Type.UnitNumber.New(value.number, expr.unit);
         }
         throw new Error('Expecting numeric value before unit');
     };
@@ -638,13 +640,13 @@ var datatype_1 = require("../types/datatype");
 var char_1 = require("./char");
 var token_1 = require("./token");
 var Lexer = /** @class */ (function () {
-    function Lexer(source, phrases, ttypes) {
+    function Lexer(source, phrases, untis) {
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
         this.phrases = phrases;
-        this.ttypes = ttypes;
+        this.units = untis;
     }
     Lexer.isDigit = function (char) {
         return char >= '0' && char <= '9';
@@ -720,7 +722,7 @@ var Lexer = /** @class */ (function () {
         if (ok) {
             return this.createToken(type);
         }
-        _b = this.ttypes.get(text), ok = _b[1];
+        _b = this.units.get(text), ok = _b[1];
         if (ok) {
             return this.createTokenWithLiteral(token_1.TokenType.UNIT, text);
         }
@@ -1081,9 +1083,9 @@ var lex_1 = require("../lex/lex");
 var token_1 = require("../lex/token");
 var expr_1 = require("./expr");
 var Parser = /** @class */ (function () {
-    function Parser(source, phrases, ttypes) {
+    function Parser(source, phrases, units) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases, ttypes);
+        this.lexer = new lex_1.Lexer(this.source, phrases, units);
         this.ntoken = 0;
         this.tokens = [];
     }
@@ -1165,7 +1167,7 @@ var Parser = /** @class */ (function () {
             this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
             var unit = this.previous();
             var unit2 = void 0;
-            unit2 = this.lexer.ttypes.get(unit.lexeme)[0];
+            unit2 = this.lexer.units.get(unit.lexeme)[0];
             if (unit2 != null) {
                 return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1181,7 +1183,7 @@ var Parser = /** @class */ (function () {
         if (this.match(token_1.TokenType.UNIT)) {
             var unit = this.previous();
             var unit2 = void 0;
-            unit2 = this.lexer.ttypes.get(unit.lexeme)[0];
+            unit2 = this.lexer.units.get(unit.lexeme)[0];
             if (unit2 != null) {
                 return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1560,44 +1562,44 @@ var TYPERANK;
         return Percentage;
     }(Numberic));
     Type.Percentage = Percentage;
-    var Units = /** @class */ (function (_super) {
-        __extends(Units, _super);
-        function Units(value, unit) {
+    var UnitNumber = /** @class */ (function (_super) {
+        __extends(UnitNumber, _super);
+        function UnitNumber(value, unit) {
             var _this = _super.call(this, value) || this;
             _this.unit = unit;
             _this.TYPE = DATATYPE.UNIT;
             _this.TYPERANK = TYPERANK.UNIT;
             return _this;
         }
-        Units.New = function (value, unit) {
-            return new Units(value, unit);
+        UnitNumber.New = function (value, unit) {
+            return new UnitNumber(value, unit);
         };
-        Units.convertToUnit = function (value, unit) {
-            if (value instanceof Units) {
+        UnitNumber.convertToUnit = function (value, unit) {
+            if (value instanceof UnitNumber) {
                 var value2 = value;
                 if (value2.unit.id === unit.id) {
-                    return Units.New(value2.convert(unit.ratio), unit);
+                    return UnitNumber.New(value2.convert(unit.ratio), unit);
                 }
             }
-            return Units.New(value.number, unit);
+            return UnitNumber.New(value.number, unit);
         };
-        Units.prototype.newNumeric = function (value) {
-            return new Units(value, this.unit);
+        UnitNumber.prototype.newNumeric = function (value) {
+            return new UnitNumber(value, this.unit);
         };
-        Units.prototype.isZero = function () {
+        UnitNumber.prototype.isZero = function () {
             return this.number.isZero();
         };
-        Units.prototype.isNegative = function () {
+        UnitNumber.prototype.isNegative = function () {
             return this.number.isNegative();
         };
-        Units.prototype.isInteger = function () {
+        UnitNumber.prototype.isInteger = function () {
             return this.number.isInteger();
         };
-        Units.prototype.negated = function () {
+        UnitNumber.prototype.negated = function () {
             return this.newNumeric(this.number.negated());
         };
-        Units.prototype.plus = function (value) {
-            if (value instanceof Units) {
+        UnitNumber.prototype.plus = function (value) {
+            if (value instanceof UnitNumber) {
                 var right = value;
                 if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
                     return this.newNumeric(this.number.add(right.number));
@@ -1609,8 +1611,8 @@ var TYPERANK;
             }
             return this.newNumeric(this.number.plus(value.number));
         };
-        Units.prototype.mul = function (value) {
-            if (value instanceof Units) {
+        UnitNumber.prototype.mul = function (value) {
+            if (value instanceof UnitNumber) {
                 var right = value;
                 if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
                     return this.newNumeric(this.number.mul(right.number));
@@ -1622,7 +1624,7 @@ var TYPERANK;
             }
             return this.newNumeric(this.number.mul(value.number));
         };
-        Units.prototype.div = function (value) {
+        UnitNumber.prototype.div = function (value) {
             var left;
             var right;
             if (this.leftflag) {
@@ -1633,7 +1635,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.unitType === right1.unit.unitType) {
@@ -1646,7 +1648,7 @@ var TYPERANK;
             }
             return this.newNumeric(left.number.div(right.number));
         };
-        Units.prototype.pow = function (value) {
+        UnitNumber.prototype.pow = function (value) {
             var left;
             var right;
             if (this.leftflag) {
@@ -1657,7 +1659,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.unitType === right1.unit.unitType) {
@@ -1670,7 +1672,7 @@ var TYPERANK;
             }
             return this.newNumeric(left.number.pow(right.number));
         };
-        Units.prototype.mod = function (value) {
+        UnitNumber.prototype.mod = function (value) {
             var left;
             var right;
             if (this.leftflag) {
@@ -1681,7 +1683,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id !== right1.unit.id) {
@@ -1694,15 +1696,15 @@ var TYPERANK;
             }
             return this.newNumeric(left.number.mod(right.number));
         };
-        Units.prototype.convert = function (ration) {
+        UnitNumber.prototype.convert = function (ration) {
             return this.number.div(ration).mul(this.unit.ratio);
         };
-        Units.prototype.print = function () {
+        UnitNumber.prototype.print = function () {
             return this.number.toString() + " " + this.unit.unitType;
         };
-        return Units;
+        return UnitNumber;
     }(Numberic));
-    Type.Units = Units;
+    Type.UnitNumber = UnitNumber;
 })(Type = exports.Type || (exports.Type = {}));
 exports.Type = Type;
 
@@ -1827,50 +1829,50 @@ exports.Phrases = Phrases;
 },{}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Unit = /** @class */ (function () {
-    function Unit(id, ratio, unitType) {
+var UnitMeta = /** @class */ (function () {
+    function UnitMeta(id, ratio, unitType) {
         this.id = id;
         this.ratio = ratio;
         this.unitType = unitType;
     }
-    return Unit;
+    return UnitMeta;
 }());
-exports.Unit = Unit;
-var TType = /** @class */ (function () {
-    function TType(id, ratio, unitType) {
+exports.UnitMeta = UnitMeta;
+var Unit = /** @class */ (function () {
+    function Unit(id, ratio, unitType) {
         var phrases = [];
         for (var _i = 3; _i < arguments.length; _i++) {
             phrases[_i - 3] = arguments[_i];
         }
-        this.unit = new Unit(id, ratio, unitType);
+        this.unit = new UnitMeta(id, ratio, unitType);
         this.phrases = phrases;
     }
-    return TType;
+    return Unit;
 }());
-exports.TType = TType;
+exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
-(function (TType) {
+(function (Unit) {
     /**
      * Represents various Term types
      */
-    var TTypes = /** @class */ (function () {
-        function TTypes() {
-            this.ttypes = [];
+    var Units = /** @class */ (function () {
+        function Units() {
+            this.units = [];
         }
-        TTypes.prototype.Add = function (ttype) {
-            if (this.check.apply(this, ttype.phrases)) {
+        Units.prototype.Add = function (unit) {
+            if (this.check.apply(this, unit.phrases)) {
                 throw new Error('phrase already exits');
             }
-            this.ttypes.push(ttype);
+            this.units.push(unit);
         };
-        TTypes.prototype.check = function () {
+        Units.prototype.check = function () {
             var phrases = [];
             for (var _i = 0; _i < arguments.length; _i++) {
                 phrases[_i] = arguments[_i];
             }
-            for (var _a = 0, _b = this.ttypes; _a < _b.length; _a++) {
-                var ttype = _b[_a];
-                for (var _c = 0, _d = ttype.phrases; _c < _d.length; _c++) {
+            for (var _a = 0, _b = this.units; _a < _b.length; _a++) {
+                var unit = _b[_a];
+                for (var _c = 0, _d = unit.phrases; _c < _d.length; _c++) {
                     var phrase = _d[_c];
                     for (var _e = 0, phrases_1 = phrases; _e < phrases_1.length; _e++) {
                         var phrase2 = phrases_1[_e];
@@ -1882,23 +1884,23 @@ exports.TType = TType;
             }
             return false;
         };
-        TTypes.prototype.get = function (phrase) {
-            for (var _i = 0, _a = this.ttypes; _i < _a.length; _i++) {
-                var ttype = _a[_i];
-                for (var _b = 0, _c = ttype.phrases; _b < _c.length; _b++) {
+        Units.prototype.get = function (phrase) {
+            for (var _i = 0, _a = this.units; _i < _a.length; _i++) {
+                var unit = _a[_i];
+                for (var _b = 0, _c = unit.phrases; _b < _c.length; _b++) {
                     var phrase2 = _c[_b];
                     if (phrase === phrase2) {
-                        return [ttype.unit, true];
+                        return [unit.unit, true];
                     }
                 }
             }
             return [null, false];
         };
-        return TTypes;
+        return Units;
     }());
-    TType.TTypes = TTypes;
-})(TType = exports.TType || (exports.TType = {}));
-exports.TType = TType;
+    Unit.Units = Units;
+})(Unit = exports.Unit || (exports.Unit = {}));
+exports.Unit = Unit;
 
 },{}],16:[function(require,module,exports){
 ;(function (globalScope) {

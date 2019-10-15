@@ -153,42 +153,44 @@ exports.getDefaultFunction = getDefaultFunction;
 Object.defineProperty(exports, "__esModule", { value: true });
 const Big = require("decimal.js");
 const units_1 = require("./types/units");
-function getdefaultTTypes() {
-    const ttypes = new units_1.TType.TTypes();
-    setDistanceTTypes(ttypes);
-    setSpeedTTypes(ttypes);
-    setTimeTTypes(ttypes);
-    return ttypes;
+function getdefaultUnits() {
+    const units = new units_1.Unit.Units();
+    setDistanceUnits(units);
+    setSpeedUnits(units);
+    setTimeUnits(units);
+    return units;
 }
-exports.getdefaultTTypes = getdefaultTTypes;
-function setDistanceTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(1), 'cm', 'cm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(100), 'm', 'm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(0.1), 'mm', 'mm'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(100000), 'km', 'km'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(2.54), 'inch', 'inch'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(30.48), 'foot/feet', 'ft'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(91.44), 'yard', 'yd', 'yard'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(160934.4), 'mile', 'mi'));
-    ttypes.Add(new units_1.TType('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', 'nmi'));
+exports.getdefaultUnits = getdefaultUnits;
+function setDistanceUnits(units) {
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', 'cm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', 'm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', 'mm'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', 'km'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', 'inch'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', 'ft'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', 'yd', 'yard'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', 'mi'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', 'nmi'));
 }
-function setSpeedTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1), 'km/h', 'kmh', 'kmph', 'khm', 'kph'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.609344), 'miles/h', 'mph'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(3.6), 'm/s', 'mps'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.097), 'ft/s', 'fps'));
-    ttypes.Add(new units_1.TType('SPEED', new Big.Decimal(1.852), 'kt', 'kts', 'knots'));
+function setSpeedUnits(units) {
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1), 'km/h', 'kmh', 'kmph', 'khm', 'kph'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.609344), 'miles/h', 'mph'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(3.6), 'm/s', 'mps'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.097), 'ft/s', 'fps'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', 'kts', 'knots'));
 }
-function setTimeTTypes(ttypes) {
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(1), 'second(s)', 'sec', 'second'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
-    ttypes.Add(new units_1.TType('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
+function setTimeUnits(units) {
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', 'sec', 'second'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
 }
 
 },{"./types/units":15,"decimal.js":16}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const decimal_js_1 = require("decimal.js");
+exports.Decimal = decimal_js_1.Decimal;
 const defaultFunctions_1 = require("./defaultFunctions");
 const defaultUnits_1 = require("./defaultUnits");
 const environment_1 = require("./interpreter/environment");
@@ -201,11 +203,11 @@ const datatype_1 = require("./types/datatype");
 exports.Type = datatype_1.Type;
 const phrase_1 = require("./types/phrase");
 const units_1 = require("./types/units");
-exports.TType = units_1.TType;
+exports.Unit = units_1.Unit;
 class Fcal {
     constructor() {
         this.phrases = Fcal.getdefaultphrases();
-        this.ttypes = defaultUnits_1.getdefaultTTypes();
+        this.units = defaultUnits_1.getdefaultUnits();
         this.environment = new environment_1.Environment();
         this.setDefaultValues();
         this.functions = new function_1.FcalFunctions();
@@ -225,17 +227,17 @@ class Fcal {
     }
     evaluate(source) {
         source = prefixNewLIne(source);
-        return new interpreter_1.Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
+        return new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
     }
     expression(source) {
         const env = new environment_1.Environment();
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.ttypes, env, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, env, this.functions));
     }
     expressionWithContext(source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     }
     setValues(values) {
         for (const key in values) {
@@ -281,7 +283,7 @@ class Expression {
 }
 exports.Expression = Expression;
 
-},{"./defaultFunctions":1,"./defaultUnits":2,"./interpreter/environment":4,"./interpreter/function":5,"./interpreter/interpreter":6,"./lex/token":9,"./types/datatype":13,"./types/phrase":14,"./types/units":15}],4:[function(require,module,exports){
+},{"./defaultFunctions":1,"./defaultUnits":2,"./interpreter/environment":4,"./interpreter/function":5,"./interpreter/interpreter":6,"./lex/token":9,"./types/datatype":13,"./types/phrase":14,"./types/units":15,"decimal.js":16}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const datatype_1 = require("../types/datatype");
@@ -359,8 +361,8 @@ const token_1 = require("../lex/token");
 const parser_1 = require("../parser/parser");
 const datatype_1 = require("../types/datatype");
 class Interpreter {
-    constructor(source, phrases, ttypes, environment, functions) {
-        this.parser = new parser_1.Parser(source, phrases, ttypes);
+    constructor(source, phrases, units, environment, functions) {
+        this.parser = new parser_1.Parser(source, phrases, units);
         this.environment = environment;
         this.funcations = functions;
         this.ast = this.parser.parse();
@@ -402,14 +404,14 @@ class Interpreter {
     visitUnitConvertionExpr(expr) {
         const value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.Units.convertToUnit(value, expr.unit);
+            return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit);
         }
         throw new Error('Expecting numeric value before in');
     }
     visitUnitExpr(expr) {
         const value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.Units.New(value.number, expr.unit);
+            return datatype_1.Type.UnitNumber.New(value.number, expr.unit);
         }
         throw new Error('Expecting numeric value before unit');
     }
@@ -526,13 +528,13 @@ const datatype_1 = require("../types/datatype");
 const char_1 = require("./char");
 const token_1 = require("./token");
 class Lexer {
-    constructor(source, phrases, ttypes) {
+    constructor(source, phrases, untis) {
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = [];
         this.phrases = phrases;
-        this.ttypes = ttypes;
+        this.units = untis;
     }
     static isDigit(char) {
         return char >= '0' && char <= '9';
@@ -607,7 +609,7 @@ class Lexer {
         if (ok) {
             return this.createToken(type);
         }
-        [, ok] = this.ttypes.get(text);
+        [, ok] = this.units.get(text);
         if (ok) {
             return this.createTokenWithLiteral(token_1.TokenType.UNIT, text);
         }
@@ -918,9 +920,9 @@ const lex_1 = require("../lex/lex");
 const token_1 = require("../lex/token");
 const expr_1 = require("./expr");
 class Parser {
-    constructor(source, phrases, ttypes) {
+    constructor(source, phrases, units) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases, ttypes);
+        this.lexer = new lex_1.Lexer(this.source, phrases, units);
         this.ntoken = 0;
         this.tokens = [];
     }
@@ -1002,7 +1004,7 @@ class Parser {
             this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
             const unit = this.previous();
             let unit2;
-            [unit2] = this.lexer.ttypes.get(unit.lexeme);
+            [unit2] = this.lexer.units.get(unit.lexeme);
             if (unit2 != null) {
                 return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1018,7 +1020,7 @@ class Parser {
         if (this.match(token_1.TokenType.UNIT)) {
             const unit = this.previous();
             let unit2;
-            [unit2] = this.lexer.ttypes.get(unit.lexeme);
+            [unit2] = this.lexer.units.get(unit.lexeme);
             if (unit2 != null) {
                 return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1366,7 +1368,7 @@ var TYPERANK;
     }
     Percentage.base = new Big.Decimal(100);
     Type.Percentage = Percentage;
-    class Units extends Numberic {
+    class UnitNumber extends Numberic {
         constructor(value, unit) {
             super(value);
             this.unit = unit;
@@ -1374,19 +1376,19 @@ var TYPERANK;
             this.TYPERANK = TYPERANK.UNIT;
         }
         static New(value, unit) {
-            return new Units(value, unit);
+            return new UnitNumber(value, unit);
         }
         static convertToUnit(value, unit) {
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const value2 = value;
                 if (value2.unit.id === unit.id) {
-                    return Units.New(value2.convert(unit.ratio), unit);
+                    return UnitNumber.New(value2.convert(unit.ratio), unit);
                 }
             }
-            return Units.New(value.number, unit);
+            return UnitNumber.New(value.number, unit);
         }
         newNumeric(value) {
-            return new Units(value, this.unit);
+            return new UnitNumber(value, this.unit);
         }
         isZero() {
             return this.number.isZero();
@@ -1401,7 +1403,7 @@ var TYPERANK;
             return this.newNumeric(this.number.negated());
         }
         plus(value) {
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const right = value;
                 if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
                     return this.newNumeric(this.number.add(right.number));
@@ -1414,7 +1416,7 @@ var TYPERANK;
             return this.newNumeric(this.number.plus(value.number));
         }
         mul(value) {
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const right = value;
                 if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
                     return this.newNumeric(this.number.mul(right.number));
@@ -1437,7 +1439,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const left1 = left;
                 const right1 = right;
                 if (left1.unit.unitType === right1.unit.unitType) {
@@ -1461,7 +1463,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const left1 = left;
                 const right1 = right;
                 if (left1.unit.unitType === right1.unit.unitType) {
@@ -1485,7 +1487,7 @@ var TYPERANK;
                 right = this;
                 left = value;
             }
-            if (value instanceof Units) {
+            if (value instanceof UnitNumber) {
                 const left1 = left;
                 const right1 = right;
                 if (left1.unit.id !== right1.unit.id) {
@@ -1505,7 +1507,7 @@ var TYPERANK;
             return `${this.number.toString()} ${this.unit.unitType}`;
         }
     }
-    Type.Units = Units;
+    Type.UnitNumber = UnitNumber;
 })(Type = exports.Type || (exports.Type = {}));
 
 },{"decimal.js":16}],14:[function(require,module,exports){
@@ -1586,39 +1588,39 @@ exports.Phrases = Phrases;
 },{}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Unit {
+class UnitMeta {
     constructor(id, ratio, unitType) {
         this.id = id;
         this.ratio = ratio;
         this.unitType = unitType;
     }
 }
-exports.Unit = Unit;
-class TType {
+exports.UnitMeta = UnitMeta;
+class Unit {
     constructor(id, ratio, unitType, ...phrases) {
-        this.unit = new Unit(id, ratio, unitType);
+        this.unit = new UnitMeta(id, ratio, unitType);
         this.phrases = phrases;
     }
 }
-exports.TType = TType;
+exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
-(function (TType) {
+(function (Unit) {
     /**
      * Represents various Term types
      */
-    class TTypes {
+    class Units {
         constructor() {
-            this.ttypes = [];
+            this.units = [];
         }
-        Add(ttype) {
-            if (this.check(...ttype.phrases)) {
+        Add(unit) {
+            if (this.check(...unit.phrases)) {
                 throw new Error('phrase already exits');
             }
-            this.ttypes.push(ttype);
+            this.units.push(unit);
         }
         check(...phrases) {
-            for (const ttype of this.ttypes) {
-                for (const phrase of ttype.phrases) {
+            for (const unit of this.units) {
+                for (const phrase of unit.phrases) {
                     for (const phrase2 of phrases) {
                         if (phrase === phrase2) {
                             return true;
@@ -1629,18 +1631,18 @@ exports.TType = TType;
             return false;
         }
         get(phrase) {
-            for (const ttype of this.ttypes) {
-                for (const phrase2 of ttype.phrases) {
+            for (const unit of this.units) {
+                for (const phrase2 of unit.phrases) {
                     if (phrase === phrase2) {
-                        return [ttype.unit, true];
+                        return [unit.unit, true];
                     }
                 }
             }
             return [null, false];
         }
     }
-    TType.TTypes = TTypes;
-})(TType = exports.TType || (exports.TType = {}));
+    Unit.Units = Units;
+})(Unit = exports.Unit || (exports.Unit = {}));
 
 },{}],16:[function(require,module,exports){
 ;(function (globalScope) {

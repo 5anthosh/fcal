@@ -1,6 +1,6 @@
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
-import { Unit } from '../types/units';
+import { UnitMeta } from '../types/units';
 import { ASTPrinter } from './astPrinter';
 
 export abstract class Expr extends ASTPrinter {
@@ -105,8 +105,8 @@ export namespace Expr {
 
   export class UnitExpr extends Expr {
     public expression: Expr;
-    public unit: Unit;
-    constructor(expression: Expr, unit: Unit, start: number, end: number) {
+    public unit: UnitMeta;
+    constructor(expression: Expr, unit: UnitMeta, start: number, end: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
@@ -117,8 +117,8 @@ export namespace Expr {
   }
   export class UnitConvertionExpr extends Expr {
     public expression: Expr;
-    public unit: Unit;
-    constructor(expression: Expr, unit: Unit, start: number, end: number) {
+    public unit: UnitMeta;
+    constructor(expression: Expr, unit: UnitMeta, start: number, end: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;

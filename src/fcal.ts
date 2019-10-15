@@ -1,12 +1,13 @@
+import { Decimal } from 'decimal.js';
 import { getDefaultFunction } from './defaultFunctions';
-import { getdefaultTTypes } from './defaultUnits';
+import { getdefaultUnits } from './defaultUnits';
 import { Environment } from './interpreter/environment';
 import { FcalFunctions } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { TokenType } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
-import { TType } from './types/units';
+import { Unit } from './types/units';
 
 class Fcal {
   public static getdefaultphrases(): Phrases {
@@ -22,12 +23,12 @@ class Fcal {
     return phrases;
   }
   private phrases: Phrases;
-  private ttypes: TType.TTypes;
+  private units: Unit.Units;
   private environment: Environment;
   private functions: FcalFunctions;
   constructor() {
     this.phrases = Fcal.getdefaultphrases();
-    this.ttypes = getdefaultTTypes();
+    this.units = getdefaultUnits();
     this.environment = new Environment();
     this.setDefaultValues();
     this.functions = new FcalFunctions();
@@ -35,18 +36,18 @@ class Fcal {
   }
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
-    return new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions).evaluateExpression();
+    return new Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
   }
   public expression(source: string): Expression {
     const env = new Environment();
     env.values = Object.assign({}, this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, this.phrases, this.ttypes, env, this.functions));
+    return new Expression(new Interpreter(source, this.phrases, this.units, env, this.functions));
   }
 
   public expressionWithContext(source: string): Expression {
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, this.phrases, this.ttypes, this.environment, this.functions));
+    return new Expression(new Interpreter(source, this.phrases, this.units, this.environment, this.functions));
   }
   public setValues(values: { [index: string]: Type | number }) {
     for (const key in values) {
@@ -93,4 +94,4 @@ class Expression {
   }
 }
 
-export { Fcal, Expression, FcalFunctions, Environment, TType, Type };
+export { Fcal, Expression, FcalFunctions, Environment, Unit, Type, Decimal };

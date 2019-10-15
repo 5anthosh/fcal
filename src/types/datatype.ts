@@ -1,5 +1,5 @@
 import Big = require('decimal.js');
-import { Unit } from './units';
+import { UnitMeta } from './units';
 export abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
@@ -270,23 +270,23 @@ export namespace Type {
       return Percentage.New(value);
     }
   }
-  export class Units extends Numberic {
-    public static New(value: string | Big.Decimal, unit: Unit): Units {
-      return new Units(value, unit);
+  export class UnitNumber extends Numberic {
+    public static New(value: string | Big.Decimal, unit: UnitMeta): UnitNumber {
+      return new UnitNumber(value, unit);
     }
-    public static convertToUnit(value: Numberic, unit: Unit): Units {
-      if (value instanceof Units) {
-        const value2 = value as Units;
+    public static convertToUnit(value: Numberic, unit: UnitMeta): UnitNumber {
+      if (value instanceof UnitNumber) {
+        const value2 = value as UnitNumber;
         if (value2.unit.id === unit.id) {
-          return Units.New(value2.convert(unit.ratio), unit);
+          return UnitNumber.New(value2.convert(unit.ratio), unit);
         }
       }
-      return Units.New(value.number, unit);
+      return UnitNumber.New(value.number, unit);
     }
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
-    public unit: Unit;
-    constructor(value: string | Big.Decimal, unit: Unit) {
+    public unit: UnitMeta;
+    constructor(value: string | Big.Decimal, unit: UnitMeta) {
       super(value);
       this.unit = unit;
       this.TYPE = DATATYPE.UNIT;
@@ -294,7 +294,7 @@ export namespace Type {
     }
 
     public newNumeric(value: Big.Decimal): Numberic {
-      return new Units(value, this.unit);
+      return new UnitNumber(value, this.unit);
     }
     public isZero(): boolean {
       return this.number.isZero();
@@ -309,8 +309,8 @@ export namespace Type {
       return this.newNumeric(this.number.negated());
     }
     public plus(value: Numberic): Numberic {
-      if (value instanceof Units) {
-        const right = value as Units;
+      if (value instanceof UnitNumber) {
+        const right = value as UnitNumber;
         if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
           return this.newNumeric(this.number.add(right.number));
         }
@@ -322,8 +322,8 @@ export namespace Type {
       return this.newNumeric(this.number.plus(value.number));
     }
     public mul(value: Numberic): Numberic {
-      if (value instanceof Units) {
-        const right = value as Units;
+      if (value instanceof UnitNumber) {
+        const right = value as UnitNumber;
         if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
           return this.newNumeric(this.number.mul(right.number));
         }
@@ -344,9 +344,9 @@ export namespace Type {
         right = this;
         left = value;
       }
-      if (value instanceof Units) {
-        const left1: Units = left as Units;
-        const right1: Units = right as Units;
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.unitType === right1.unit.unitType) {
           return left1.newNumeric(left1.number.div(right1.number));
         }
@@ -367,9 +367,9 @@ export namespace Type {
         right = this;
         left = value;
       }
-      if (value instanceof Units) {
-        const left1: Units = left as Units;
-        const right1: Units = right as Units;
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.unitType === right1.unit.unitType) {
           return left1.newNumeric(left1.number.pow(right1.number));
         }
@@ -395,9 +395,9 @@ export namespace Type {
         left = value;
       }
 
-      if (value instanceof Units) {
-        const left1: Units = left as Units;
-        const right1: Units = right as Units;
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
 
         if (left1.unit.id !== right1.unit.id) {
           return left1.newNumeric(left1.number.mod(right1.number));

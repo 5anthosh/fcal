@@ -3,7 +3,7 @@ import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
-import { TType } from '../types/units';
+import { Unit } from '../types/units';
 import { Environment } from './environment';
 import { FcalFunction, FcalFunctions } from './function';
 
@@ -15,11 +15,11 @@ export class Interpreter implements Expr.IVisitor<any> {
   constructor(
     source: string,
     phrases: Phrases,
-    ttypes: TType.TTypes,
+    units: Unit.Units,
     environment: Environment,
     functions: FcalFunctions,
   ) {
-    this.parser = new Parser(source, phrases, ttypes);
+    this.parser = new Parser(source, phrases, units);
     this.environment = environment;
     this.funcations = functions;
     this.ast = this.parser.parse();
@@ -63,14 +63,14 @@ export class Interpreter implements Expr.IVisitor<any> {
   public visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.Units.convertToUnit(value as Type.Numberic, expr.unit);
+      return Type.UnitNumber.convertToUnit(value as Type.Numberic, expr.unit);
     }
     throw new Error('Expecting numeric value before in');
   }
   public visitUnitExpr(expr: Expr.UnitExpr) {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.Units.New((value as Type.Numberic).number, expr.unit);
+      return Type.UnitNumber.New((value as Type.Numberic).number, expr.unit);
     }
     throw new Error('Expecting numeric value before unit');
   }

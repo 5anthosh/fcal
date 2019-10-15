@@ -196,6 +196,7 @@ const defaultUnits_1 = require("./defaultUnits");
 const environment_1 = require("./interpreter/environment");
 exports.Environment = environment_1.Environment;
 const function_1 = require("./interpreter/function");
+exports.FcalFunction = function_1.FcalFunction;
 exports.FcalFunctions = function_1.FcalFunctions;
 const interpreter_1 = require("./interpreter/interpreter");
 const token_1 = require("./lex/token");
@@ -204,6 +205,11 @@ exports.Type = datatype_1.Type;
 const phrase_1 = require("./types/phrase");
 const units_1 = require("./types/units");
 exports.Unit = units_1.Unit;
+/**
+ * Formula evaluation engine.
+ * It evaluates various arithmetic operations, percentage operations,
+ * variables and functions with units
+ */
 class Fcal {
     constructor() {
         this.phrases = Fcal.getdefaultphrases();
@@ -225,20 +231,37 @@ class Fcal {
         phrases.addPhrases(token_1.TokenType.IN, 'in');
         return phrases;
     }
+    /**
+     * Evaluates given expression
+     * @param source expression
+     * @returns result of expression
+     */
     evaluate(source) {
         source = prefixNewLIne(source);
         return new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
     }
+    /**
+     * Create new  @class Expression with copy of Fcal.Environment
+     * @param source expression
+     */
     expression(source) {
         const env = new environment_1.Environment();
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, env, this.functions));
     }
-    expressionWithContext(source) {
+    /**
+     * Create new  @class Expression in sync with Fcal.Environment
+     * @param source
+     */
+    expressionSync(source) {
         source = prefixNewLIne(source);
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     }
+    /**
+     * create a variable or reassign a variable
+     * @param values
+     */
     setValues(values) {
         for (const key in values) {
             if (values.hasOwnProperty(key)) {
@@ -247,6 +270,10 @@ class Fcal {
             }
         }
     }
+    /**
+     * Set new Functions
+     * @param functions
+     */
     setFunctions(functions) {
         for (const func of functions.functions) {
             this.functions.add(func);
@@ -270,13 +297,24 @@ function prefixNewLIne(source) {
     }
     return source + '\n';
 }
+/**
+ * Expression takes AST created from  interpreter and
+ * evaluate AST with its state
+ */
 class Expression {
     constructor(interpeter) {
         this.interpreter = interpeter;
     }
+    /**
+     * Evaluate AST
+     */
     evaluate() {
         return this.interpreter.evaluateExpression();
     }
+    /**
+     * Change state of expression
+     * @param values
+     */
     setValues(values) {
         this.interpreter.setValues(values);
     }
@@ -287,16 +325,30 @@ exports.Expression = Expression;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const datatype_1 = require("../types/datatype");
+/**
+ * Represents runtime variable environment
+ * It represents state of fcal
+ */
 class Environment {
     constructor() {
         this.values = {};
     }
+    /**
+     * Get the value of variable
+     * @param key variable name
+     * @throws Error if variable is not available
+     */
     get(key) {
         if (this.values.hasOwnProperty(key)) {
             return this.values[key];
         }
         throw new Error(`Undefined variable ${key}`);
     }
+    /**
+     * create or assign a variable with value
+     * @param key variable name
+     * @param value value
+     */
     set(key, value) {
         if (value instanceof datatype_1.Type) {
             this.values[key] = value;
@@ -311,11 +363,15 @@ exports.Environment = Environment;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const datatype_1 = require("../types/datatype");
+/**
+ * FcalFunction represents function in fcal
+ */
 class FcalFunction {
     constructor(name, arbity) {
         this.arbity = arbity;
         this.name = name;
     }
+    // evaluate function
     call(environment, ...argument) {
         const value = this.function(environment, ...argument);
         if (value === null) {
@@ -325,16 +381,28 @@ class FcalFunction {
     }
 }
 exports.FcalFunction = FcalFunction;
+/**
+ * List of fcal functions
+ */
 class FcalFunctions {
     constructor() {
         this.functions = Array();
     }
+    /**
+     * Add new fcal function
+     * @param fcalFunction
+     * @throws Error if function name is already exists
+     */
     add(fcalFunction) {
         if (this.check(fcalFunction.name)) {
             throw new Error(`${fcalFunction.name} is already registered`);
         }
         this.functions.push(fcalFunction);
     }
+    /**
+     * Get function implemention from function name
+     * @param name function name
+     */
     get(name) {
         for (const func of this.functions) {
             if (func.name === name) {
@@ -343,6 +411,10 @@ class FcalFunctions {
         }
         return [null, false];
     }
+    /**
+     * check if function is available
+     * @param name function name
+     */
     check(name) {
         for (const funcs of this.functions) {
             if (funcs.name === name) {
@@ -1132,6 +1204,9 @@ var TYPERANK;
     TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
     TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
 })(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
+/**
+ * Represents a type of variable or value
+ */
 // tslint:disable-next-line:no-namespace
 (function (Type) {
     class Numberic extends Type {
@@ -1248,6 +1323,9 @@ var TYPERANK;
         }
     }
     Type.Numberic = Numberic;
+    /**
+     * Basic Number type
+     */
     class BNumber extends Numberic {
         constructor(value) {
             super(value);
@@ -1296,6 +1374,9 @@ var TYPERANK;
     }
     BNumber.ZERO = BNumber.New(new Big.Decimal(0));
     Type.BNumber = BNumber;
+    /**
+     * Percentage type
+     */
     class Percentage extends Numberic {
         constructor(value) {
             super(value);
@@ -1368,6 +1449,9 @@ var TYPERANK;
     }
     Percentage.base = new Big.Decimal(100);
     Type.Percentage = Percentage;
+    /**
+     * Number with unit
+     */
     class UnitNumber extends Numberic {
         constructor(value, unit) {
             super(value);
@@ -1596,6 +1680,9 @@ class UnitMeta {
     }
 }
 exports.UnitMeta = UnitMeta;
+/**
+ * Represents unit with info
+ */
 class Unit {
     constructor(id, ratio, unitType, ...phrases) {
         this.unit = new UnitMeta(id, ratio, unitType);
@@ -1606,18 +1693,27 @@ exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
 (function (Unit) {
     /**
-     * Represents various Term types
+     * List of units
      */
     class Units {
         constructor() {
             this.units = [];
         }
+        /**
+         * Add a new unit
+         * @param unit
+         * @throws Error if phrases already exists
+         */
         Add(unit) {
             if (this.check(...unit.phrases)) {
-                throw new Error('phrase already exits');
+                throw new Error('phrase already exists');
             }
             this.units.push(unit);
         }
+        /**
+         * check if unit already exists
+         * @param phrases
+         */
         check(...phrases) {
             for (const unit of this.units) {
                 for (const phrase of unit.phrases) {
@@ -1630,6 +1726,10 @@ exports.Unit = Unit;
             }
             return false;
         }
+        /**
+         * get the unit by its phrase
+         * @param phrase
+         */
         get(phrase) {
             for (const unit of this.units) {
                 for (const phrase2 of unit.phrases) {

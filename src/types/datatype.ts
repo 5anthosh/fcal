@@ -17,6 +17,9 @@ export enum TYPERANK {
   UNIT,
 }
 
+/**
+ * Represents a type of variable or value
+ */
 // tslint:disable-next-line:no-namespace
 export namespace Type {
   export abstract class Numberic extends Type {
@@ -148,6 +151,9 @@ export namespace Type {
     public abstract pow(value: Numberic): Numberic;
     public abstract mod(value: Numberic): Numberic;
   }
+  /**
+   * Basic Number type
+   */
   export class BNumber extends Numberic {
     public static ZERO = BNumber.New(new Big.Decimal(0));
     public static New(value: string | Big.Decimal | number) {
@@ -197,6 +203,9 @@ export namespace Type {
       return BNumber.New(value);
     }
   }
+  /**
+   * Percentage type
+   */
   export class Percentage extends Numberic {
     public static New(value: string | Big.Decimal): Percentage {
       return new Percentage(value);
@@ -270,6 +279,9 @@ export namespace Type {
       return Percentage.New(value);
     }
   }
+  /**
+   * Number with unit
+   */
   export class UnitNumber extends Numberic {
     public static New(value: string | Big.Decimal, unit: UnitMeta): UnitNumber {
       return new UnitNumber(value, unit);

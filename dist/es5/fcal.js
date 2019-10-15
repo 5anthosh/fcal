@@ -276,6 +276,7 @@ var defaultUnits_1 = require("./defaultUnits");
 var environment_1 = require("./interpreter/environment");
 exports.Environment = environment_1.Environment;
 var function_1 = require("./interpreter/function");
+exports.FcalFunction = function_1.FcalFunction;
 exports.FcalFunctions = function_1.FcalFunctions;
 var interpreter_1 = require("./interpreter/interpreter");
 var token_1 = require("./lex/token");
@@ -284,6 +285,11 @@ exports.Type = datatype_1.Type;
 var phrase_1 = require("./types/phrase");
 var units_1 = require("./types/units");
 exports.Unit = units_1.Unit;
+/**
+ * Formula evaluation engine.
+ * It evaluates various arithmetic operations, percentage operations,
+ * variables and functions with units
+ */
 var Fcal = /** @class */ (function () {
     function Fcal() {
         this.phrases = Fcal.getdefaultphrases();
@@ -305,20 +311,37 @@ var Fcal = /** @class */ (function () {
         phrases.addPhrases(token_1.TokenType.IN, 'in');
         return phrases;
     };
+    /**
+     * Evaluates given expression
+     * @param source expression
+     * @returns result of expression
+     */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
         return new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
     };
+    /**
+     * Create new  @class Expression with copy of Fcal.Environment
+     * @param source expression
+     */
     Fcal.prototype.expression = function (source) {
         var env = new environment_1.Environment();
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, env, this.functions));
     };
-    Fcal.prototype.expressionWithContext = function (source) {
+    /**
+     * Create new  @class Expression in sync with Fcal.Environment
+     * @param source
+     */
+    Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
         return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
     };
+    /**
+     * create a variable or reassign a variable
+     * @param values
+     */
     Fcal.prototype.setValues = function (values) {
         for (var key in values) {
             if (values.hasOwnProperty(key)) {
@@ -327,6 +350,10 @@ var Fcal = /** @class */ (function () {
             }
         }
     };
+    /**
+     * Set new Functions
+     * @param functions
+     */
     Fcal.prototype.setFunctions = function (functions) {
         for (var _i = 0, _a = functions.functions; _i < _a.length; _i++) {
             var func = _a[_i];
@@ -352,13 +379,24 @@ function prefixNewLIne(source) {
     }
     return source + '\n';
 }
+/**
+ * Expression takes AST created from  interpreter and
+ * evaluate AST with its state
+ */
 var Expression = /** @class */ (function () {
     function Expression(interpeter) {
         this.interpreter = interpeter;
     }
+    /**
+     * Evaluate AST
+     */
     Expression.prototype.evaluate = function () {
         return this.interpreter.evaluateExpression();
     };
+    /**
+     * Change state of expression
+     * @param values
+     */
     Expression.prototype.setValues = function (values) {
         this.interpreter.setValues(values);
     };
@@ -370,16 +408,30 @@ exports.Expression = Expression;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var datatype_1 = require("../types/datatype");
+/**
+ * Represents runtime variable environment
+ * It represents state of fcal
+ */
 var Environment = /** @class */ (function () {
     function Environment() {
         this.values = {};
     }
+    /**
+     * Get the value of variable
+     * @param key variable name
+     * @throws Error if variable is not available
+     */
     Environment.prototype.get = function (key) {
         if (this.values.hasOwnProperty(key)) {
             return this.values[key];
         }
         throw new Error("Undefined variable " + key);
     };
+    /**
+     * create or assign a variable with value
+     * @param key variable name
+     * @param value value
+     */
     Environment.prototype.set = function (key, value) {
         if (value instanceof datatype_1.Type) {
             this.values[key] = value;
@@ -402,11 +454,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var datatype_1 = require("../types/datatype");
+/**
+ * FcalFunction represents function in fcal
+ */
 var FcalFunction = /** @class */ (function () {
     function FcalFunction(name, arbity) {
         this.arbity = arbity;
         this.name = name;
     }
+    // evaluate function
     FcalFunction.prototype.call = function (environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -421,16 +477,28 @@ var FcalFunction = /** @class */ (function () {
     return FcalFunction;
 }());
 exports.FcalFunction = FcalFunction;
+/**
+ * List of fcal functions
+ */
 var FcalFunctions = /** @class */ (function () {
     function FcalFunctions() {
         this.functions = Array();
     }
+    /**
+     * Add new fcal function
+     * @param fcalFunction
+     * @throws Error if function name is already exists
+     */
     FcalFunctions.prototype.add = function (fcalFunction) {
         if (this.check(fcalFunction.name)) {
             throw new Error(fcalFunction.name + " is already registered");
         }
         this.functions.push(fcalFunction);
     };
+    /**
+     * Get function implemention from function name
+     * @param name function name
+     */
     FcalFunctions.prototype.get = function (name) {
         for (var _i = 0, _a = this.functions; _i < _a.length; _i++) {
             var func = _a[_i];
@@ -440,6 +508,10 @@ var FcalFunctions = /** @class */ (function () {
         }
         return [null, false];
     };
+    /**
+     * check if function is available
+     * @param name function name
+     */
     FcalFunctions.prototype.check = function (name) {
         for (var _i = 0, _a = this.functions; _i < _a.length; _i++) {
             var funcs = _a[_i];
@@ -1317,6 +1389,9 @@ var TYPERANK;
     TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
     TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
 })(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
+/**
+ * Represents a type of variable or value
+ */
 // tslint:disable-next-line:no-namespace
 (function (Type) {
     var Numberic = /** @class */ (function (_super) {
@@ -1436,6 +1511,9 @@ var TYPERANK;
         return Numberic;
     }(Type));
     Type.Numberic = Numberic;
+    /**
+     * Basic Number type
+     */
     var BNumber = /** @class */ (function (_super) {
         __extends(BNumber, _super);
         function BNumber(value) {
@@ -1487,6 +1565,9 @@ var TYPERANK;
         return BNumber;
     }(Numberic));
     Type.BNumber = BNumber;
+    /**
+     * Percentage type
+     */
     var Percentage = /** @class */ (function (_super) {
         __extends(Percentage, _super);
         function Percentage(value) {
@@ -1562,6 +1643,9 @@ var TYPERANK;
         return Percentage;
     }(Numberic));
     Type.Percentage = Percentage;
+    /**
+     * Number with unit
+     */
     var UnitNumber = /** @class */ (function (_super) {
         __extends(UnitNumber, _super);
         function UnitNumber(value, unit) {
@@ -1838,6 +1922,9 @@ var UnitMeta = /** @class */ (function () {
     return UnitMeta;
 }());
 exports.UnitMeta = UnitMeta;
+/**
+ * Represents unit with info
+ */
 var Unit = /** @class */ (function () {
     function Unit(id, ratio, unitType) {
         var phrases = [];
@@ -1853,18 +1940,27 @@ exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
 (function (Unit) {
     /**
-     * Represents various Term types
+     * List of units
      */
     var Units = /** @class */ (function () {
         function Units() {
             this.units = [];
         }
+        /**
+         * Add a new unit
+         * @param unit
+         * @throws Error if phrases already exists
+         */
         Units.prototype.Add = function (unit) {
             if (this.check.apply(this, unit.phrases)) {
-                throw new Error('phrase already exits');
+                throw new Error('phrase already exists');
             }
             this.units.push(unit);
         };
+        /**
+         * check if unit already exists
+         * @param phrases
+         */
         Units.prototype.check = function () {
             var phrases = [];
             for (var _i = 0; _i < arguments.length; _i++) {
@@ -1884,6 +1980,10 @@ exports.Unit = Unit;
             }
             return false;
         };
+        /**
+         * get the unit by its phrase
+         * @param phrase
+         */
         Units.prototype.get = function (phrase) {
             for (var _i = 0, _a = this.units; _i < _a.length; _i++) {
                 var unit = _a[_i];

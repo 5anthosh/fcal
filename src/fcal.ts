@@ -2,13 +2,18 @@ import { Decimal } from 'decimal.js';
 import { getDefaultFunction } from './defaultFunctions';
 import { getdefaultUnits } from './defaultUnits';
 import { Environment } from './interpreter/environment';
-import { FcalFunctions } from './interpreter/function';
+import { FcalFunction, FcalFunctions } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { TokenType } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { Unit } from './types/units';
 
+/**
+ * Formula evaluation engine.
+ * It evaluates various arithmetic operations, percentage operations,
+ * variables and functions with units
+ */
 class Fcal {
   public static getdefaultphrases(): Phrases {
     const phrases = new Phrases();
@@ -34,21 +39,37 @@ class Fcal {
     this.functions = new FcalFunctions();
     this.setDefaultFunctions();
   }
+  /**
+   * Evaluates given expression
+   * @param source expression
+   * @returns result of expression
+   */
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
     return new Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
   }
+  /**
+   * Create new  @class Expression with copy of Fcal.Environment
+   * @param source expression
+   */
   public expression(source: string): Expression {
     const env = new Environment();
     env.values = Object.assign({}, this.environment.values);
     source = prefixNewLIne(source);
     return new Expression(new Interpreter(source, this.phrases, this.units, env, this.functions));
   }
-
-  public expressionWithContext(source: string): Expression {
+  /**
+   * Create new  @class Expression in sync with Fcal.Environment
+   * @param source
+   */
+  public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
     return new Expression(new Interpreter(source, this.phrases, this.units, this.environment, this.functions));
   }
+  /**
+   * create a new variable with value or assign value to variable
+   * @param values
+   */
   public setValues(values: { [index: string]: Type | number }) {
     for (const key in values) {
       if (values.hasOwnProperty(key)) {
@@ -57,6 +78,10 @@ class Fcal {
       }
     }
   }
+  /**
+   * register new fcal Functions
+   * @param functions
+   */
   public setFunctions(functions: FcalFunctions) {
     for (const func of functions.functions) {
       this.functions.add(func);
@@ -80,18 +105,28 @@ function prefixNewLIne(source: string): string {
   }
   return source + '\n';
 }
-
+/**
+ * Expression takes AST created from Parser and
+ * evaluate AST with its state
+ */
 class Expression {
   private interpreter: Interpreter;
   constructor(interpeter: Interpreter) {
     this.interpreter = interpeter;
   }
+  /**
+   * Evaluate AST
+   */
   public evaluate(): Type {
     return this.interpreter.evaluateExpression();
   }
+  /**
+   * Change state of variables
+   * @param values
+   */
   public setValues(values: { [index: string]: Type | number }) {
     this.interpreter.setValues(values);
   }
 }
 
-export { Fcal, Expression, FcalFunctions, Environment, Unit, Type, Decimal };
+export { Fcal, Expression, FcalFunctions, FcalFunction, Environment, Unit, Type, Decimal };

@@ -11,6 +11,9 @@ export class UnitMeta {
   }
 }
 
+/**
+ * Represents unit with info
+ */
 export class Unit {
   public phrases: string[];
   public unit: UnitMeta;
@@ -23,20 +26,28 @@ export class Unit {
 // tslint:disable-next-line:no-namespace
 export namespace Unit {
   /**
-   * Represents various Term types
+   * List of units
    */
-
   export class Units {
     public units: Unit[];
     constructor() {
       this.units = [];
     }
+    /**
+     * Add a new unit
+     * @param unit
+     * @throws Error if phrases already exists
+     */
     public Add(unit: Unit) {
       if (this.check(...unit.phrases)) {
-        throw new Error('phrase already exits');
+        throw new Error('phrase already exists');
       }
       this.units.push(unit);
     }
+    /**
+     * check if unit already exists
+     * @param phrases
+     */
     public check(...phrases: string[]): boolean {
       for (const unit of this.units) {
         for (const phrase of unit.phrases) {
@@ -49,6 +60,10 @@ export namespace Unit {
       }
       return false;
     }
+    /**
+     * get the unit by its phrase
+     * @param phrase
+     */
     public get(phrase: string): [UnitMeta | null, boolean] {
       for (const unit of this.units) {
         for (const phrase2 of unit.phrases) {

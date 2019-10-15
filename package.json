@@ -7,7 +7,8 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "tsc",
-    "browser": "browserify lib/fcal.js --standalone fcal -o  fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  fcal.min.js",
+    "browser": "tsc && browserify lib/fcal.js --standalone fcal -o  dist/es6/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/es6/fcal.min.js  && npm run browser5",
+    "browser5": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/es5/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/es5/fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "btest": "npm run build && jest --config jestconfig.json --coverage",

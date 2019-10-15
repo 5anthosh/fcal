@@ -481,7 +481,7 @@ var Interpreter = /** @class */ (function () {
         if (ok && call != null) {
             if (call.arbity !== -1) {
                 if (call.arbity !== expr.argument.length) {
-                    throw new Error("Expected " + call.arbity + " but got " + expr.argument.length);
+                    throw new Error("function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
                 }
             }
             var argument = Array();
@@ -1196,7 +1196,7 @@ var Parser = /** @class */ (function () {
                 if (this.peek().type !== token_1.TokenType.CLOSE_PARAN) {
                     do {
                         if (argument.length >= 255) {
-                            throw new Error('Cannot have more than 255 arguments');
+                            throw new Error(expr.name + " function cannot have more than 255 arguments");
                         }
                         argument.push(this.expression());
                     } while (this.match(token_1.TokenType.COMMA));
@@ -1204,7 +1204,7 @@ var Parser = /** @class */ (function () {
                 this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
             }
-            throw new Error('Not callable');
+            throw new Error("Not callable");
         }
         return expr;
     };

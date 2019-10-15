@@ -1,14 +1,13 @@
 {
   "name": "fcal",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Formula evaluation engine",
   "main": "lib/fcal.js",
   "types": "lib/fcal.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc",
-    "browser": "tsc && browserify lib/fcal.js --standalone fcal -o  dist/es6/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/es6/fcal.min.js  && npm run browser5",
-    "browser5": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/es5/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/es5/fcal.min.js",
+    "build": "npm run browser && tsc",
+    "browser": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "btest": "npm run build && jest --config jestconfig.json --coverage",
@@ -41,7 +40,7 @@
     "typescript": "^3.6.3"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*", "dist/**/*"
   ],
   "dependencies": {
     "decimal.js": "^10.2.0"

@@ -28,6 +28,14 @@ You can perform basic arithmetic, percentage operations with precision.
 
 ## Install
 
+Browser:
+
+the library is the single JavaScript file fcal.js (or minified, fcal.min.js).
+
+```html
+<script src="path/to/fcal.js"></script>
+```
+
 With npm
 
 ```sh

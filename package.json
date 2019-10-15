@@ -6,7 +6,8 @@
   "types": "lib/fcal.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
-    "build": "tsc && browserify lib/fcal.js --standalone fcal -o  fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  fcal.min.js",
+    "build": "tsc",
+    "browser": "browserify lib/fcal.js --standalone fcal -o  fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "btest": "npm run build && jest --config jestconfig.json --coverage",

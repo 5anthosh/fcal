@@ -1,6 +1,6 @@
 {
   "name": "fcal",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Formula evaluation engine",
   "main": "lib/fcal.js",
   "types": "lib/fcal.d.ts",
@@ -22,10 +22,6 @@
     "type": "git",
     "url": "git+https://github.com/5anthosh/fcal.git"
   },
-  "keywords": [
-    "formula",
-    "interpreter"
-  ],
   "author": "Santhosh Kumar",
   "license": "MIT",
   "bugs": {
@@ -49,5 +45,10 @@
   ],
   "dependencies": {
     "decimal.js": "^10.2.0"
-  }
+  },
+  "keywords": [
+    "formula",
+    "interpreter",
+    "math"
+  ]
 }

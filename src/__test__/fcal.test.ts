@@ -1,5 +1,7 @@
 import { getdefaultUnits } from '../defaultUnits';
 import { Fcal } from '../fcal';
+import { Environment } from '../interpreter/environment';
+import { FcalFunction, FcalFunctions } from '../interpreter/function';
 import { Type } from '../types/datatype';
 test('Test simple arithmetic operation', () => {
   const expression =
@@ -82,14 +84,14 @@ test('Parser error Expect expression', () => {
   const expression = 'x 123$';
   expect(() => {
     new Fcal().evaluate(expression);
-  }).toThrowError(new Error('Expect expression but found x'));
+  }).toThrowError(new Error('FcalError [0, 1]: Expect expression but found x'));
 });
 
 test('Lex error unexpected token', () => {
   const expression = '123 x 123!';
   expect(() => {
     new Fcal().evaluate(expression);
-  }).toThrow(new Error('Unexpected token !'));
+  }).toThrow(new Error('FcalError [9, 10]: Unexpected token !'));
 });
 
 test('Test Time units addition', () => {
@@ -177,6 +179,15 @@ test('Default functions', () => {
   if (unit != null) {
     expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('49.390359524782034541', unit));
   }
+
+  const trigno =
+    'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
+  let unit2;
+  [unit2] = getdefaultUnits().get('cm');
+  expect(unit2).not.toEqual(null);
+  if (unit2 != null) {
+    expect(new Fcal().evaluate(trigno)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
+  }
 });
 
 test('test Expression', () => {
@@ -190,6 +201,64 @@ test('test Expression', () => {
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber('1256.6370614359172954'));
 });
 
+test('test Expression Sync', () => {
+  const expression = 'PI2*radius';
+  const fcal = new Fcal();
+  fcal.setValues({ radius: new Type.BNumber('20') });
+  const expr = fcal.expressionSync(expression);
+  const expr1 = fcal.expression('radius \n');
+  fcal.setValues({ radius: new Type.BNumber('21') });
+  expect(expr1.evaluate()).toStrictEqual(new Type.BNumber('20'));
+  expect(expr.evaluate()).toStrictEqual(new Type.BNumber('131.94689145078'));
+});
+
+test('test undefined variable', () => {
+  const expression = '34 * PIy ^ 2';
+  const fcal = new Fcal();
+  const expr = fcal.expression(expression);
+  expect(() => {
+    expr.evaluate();
+  }).toThrowError(new Error('FcalError: Undefined variable PIy'));
+});
+
+test('test function already registered', () => {
+  const fcal = new Fcal();
+  const functions = new FcalFunctions();
+  functions.add(
+    // tslint:disable-next-line: only-arrow-functions variable-name
+    new FcalFunction('asdfasdf123', 1, function(_environment: Environment, ...argument: Type[]): Type {
+      const value = argument[0] as Type.Numberic;
+      return value.newNumeric(value.number.sinh());
+    }),
+  );
+  expect(() => {
+    fcal.setFunctions(functions);
+  }).not.toThrowError(new Error('FcalError: asdfasdf123 is already registered'));
+
+  expect(fcal.evaluate('asdfasdf123(45) %')).toStrictEqual(new Type.Percentage('17467135528742547674'));
+});
+
+test('test function already registered', () => {
+  const fcal = new Fcal();
+  const functions = new FcalFunctions();
+  functions.add(
+    // tslint:disable-next-line: only-arrow-functions variable-name
+    new FcalFunction('abs', 1, function(_environment: Environment, ...argument: Type[]): Type {
+      const value = argument[0] as Type.Numberic;
+      return value.newNumeric(value.number.abs());
+    }),
+  );
+  expect(() => {
+    fcal.setFunctions(functions);
+  }).toThrowError(new Error('FcalError: abs is already registered'));
+});
+
+test('test not callable', () => {
+  const fcal = new Fcal();
+  expect(() => {
+    fcal.evaluate('23*PI(45)*23%');
+  }).toThrowError(new Error('FcalError [3, 9]: PI is not callable'));
+});
 test('test set Values decimal', () => {
   const expression = 'l * b';
   const fcal = new Fcal();
@@ -207,15 +276,15 @@ test('Test invalide number literal', () => {
   const expression = '1E + 23';
   expect(() => {
     new Fcal().evaluate(expression);
-  }).toThrowError(new Error("Expecting number after E but got ' '"));
+  }).toThrowError(new Error("FcalError [0, 2]: Expecting number after E but got ' '"));
 
   const expression1 = '1.23e';
   expect(() => {
     new Fcal().evaluate(expression1);
-  }).toThrowError(new Error("Expecting number after e but got '\n'"));
+  }).toThrowError(new Error("FcalError [0, 5]: Expecting number after e but got '\n'"));
 
   const expression2 = '23.45E+*34';
   expect(() => {
     new Fcal().evaluate(expression2);
-  }).toThrowError(new Error("Expecting number after + but got '*'"));
+  }).toThrowError(new Error("FcalError [0, 7]: Expecting number after + but got '*'"));
 });

@@ -1,234 +1,267 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError = /** @class */ (function (_super) {
+    __extends(FcalError, _super);
+    function FcalError(start, end, message) {
+        var _this = _super.call(this, message) || this;
+        _this.start = start;
+        _this.end = end;
+        if (start === -1) {
+            _this.name = 'FcalError';
+        }
+        else {
+            _this.name = "FcalError [" + start + ", " + end + "]";
+        }
+        _this.message = _this.name + ": " + message;
+        return _this;
+    }
+    FcalError.throw = function (start, message) {
+        throw FcalError.Error(start, message);
+    };
+    FcalError.throwWithEnd = function (start, end, message) {
+        throw FcalError.ErrorWithEnd(start, end, message);
+    };
+    FcalError.throwWithoutCtx = function (message) {
+        FcalError.throw(-1, message);
+    };
+    FcalError.Error = function (start, message) {
+        return new FcalError(start, start, message);
+    };
+    FcalError.ErrorWithEnd = function (start, end, message) {
+        return new FcalError(start, end, message);
+    };
+    FcalError.ErrorWithoutCtx = function (message) {
+        return FcalError.Error(-1, message);
+    };
+    return FcalError;
+}(Error));
+exports.FcalError = FcalError;
+
+},{}],2:[function(require,module,exports){
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var function_1 = require("./interpreter/function");
 function getDefaultFunction() {
     var functions = new function_1.FcalFunctions();
-    var abs = new function_1.FcalFunction('abs', 1);
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    abs.function = function (_environment) {
+    new function_1.FcalFunction('abs', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.abs());
-    };
-    functions.add(abs);
-    var sqrt = new function_1.FcalFunction('sqrt', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    sqrt.function = function (_environment) {
+    new function_1.FcalFunction('sqrt', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.sqrt());
-    };
-    functions.add(sqrt);
-    var cbrt = new function_1.FcalFunction('cbrt', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    cbrt.function = function (_environment) {
+    new function_1.FcalFunction('cbrt', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.cbrt());
-    };
-    functions.add(cbrt);
-    var log = new function_1.FcalFunction('log', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    log.function = function (_environment) {
+    new function_1.FcalFunction('log', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.log());
-    };
-    functions.add(log);
-    var ln = new function_1.FcalFunction('ln', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    ln.function = function (_environment) {
+    new function_1.FcalFunction('ln', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.ln());
-    };
-    functions.add(ln);
-    var round = new function_1.FcalFunction('round', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    round.function = function (_environment) {
+    new function_1.FcalFunction('round', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.round());
-    };
-    functions.add(round);
-    var floor = new function_1.FcalFunction('floor', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    floor.function = function (_environment) {
+    new function_1.FcalFunction('floor', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.floor());
-    };
-    functions.add(floor);
-    var ceil = new function_1.FcalFunction('ceil', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    ceil.function = function (_environment) {
+    new function_1.FcalFunction('ceil', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.ceil());
-    };
-    functions.add(ceil);
-    var cosine = new function_1.FcalFunction('cos', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    cosine.function = function (_environment) {
+    new function_1.FcalFunction('cos', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.cosine());
-    };
-    functions.add(cosine);
-    var inverseCosine = new function_1.FcalFunction('acos', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseCosine.function = function (_environment) {
+    new function_1.FcalFunction('acos', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseCosine());
-    };
-    functions.add(inverseCosine);
-    var hyperbolicCosine = new function_1.FcalFunction('cosh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    hyperbolicCosine.function = function (_environment) {
+    new function_1.FcalFunction('cosh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicCosine());
-    };
-    functions.add(hyperbolicCosine);
-    var inverseHyperbolicCosine = new function_1.FcalFunction('acosh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseHyperbolicCosine.function = function (_environment) {
+    new function_1.FcalFunction('acosh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicCosine());
-    };
-    functions.add(inverseHyperbolicCosine);
-    var sine = new function_1.FcalFunction('sin', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    sine.function = function (_environment) {
+    new function_1.FcalFunction('sin', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.sine());
-    };
-    functions.add(sine);
-    var inverseSine = new function_1.FcalFunction('asin', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseSine.function = function (_environment) {
+    new function_1.FcalFunction('asin', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseSine());
-    };
-    functions.add(inverseSine);
-    var hyperbolicSine = new function_1.FcalFunction('sinh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    hyperbolicSine.function = function (_environment) {
+    new function_1.FcalFunction('sinh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicSine());
-    };
-    functions.add(hyperbolicSine);
-    var inverseHyperbolicSine = new function_1.FcalFunction('asinh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseHyperbolicSine.function = function (_environment) {
+    new function_1.FcalFunction('asinh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicSine());
-    };
-    functions.add(inverseHyperbolicSine);
-    var tangent = new function_1.FcalFunction('tan', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    tangent.function = function (_environment) {
+    new function_1.FcalFunction('tan', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.tangent());
-    };
-    functions.add(tangent);
-    var inverseTangent = new function_1.FcalFunction('atan', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseTangent.function = function (_environment) {
+    new function_1.FcalFunction('atan', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseTangent());
-    };
-    functions.add(inverseTangent);
-    var hyperbolicTangent = new function_1.FcalFunction('tanh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    hyperbolicTangent.function = function (_environment) {
+    new function_1.FcalFunction('tanh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicTangent());
-    };
-    functions.add(hyperbolicTangent);
-    var inverseHyperbolicTangent = new function_1.FcalFunction('atanh', 1);
+    }));
+    functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    inverseHyperbolicTangent.function = function (_environment) {
+    new function_1.FcalFunction('atanh', 1, function (_environment) {
         var argument = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             argument[_i - 1] = arguments[_i];
         }
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicTangent());
-    };
-    functions.add(inverseHyperbolicTangent);
+    }));
     return functions;
 }
 exports.getDefaultFunction = getDefaultFunction;
 
-},{"./interpreter/function":5}],2:[function(require,module,exports){
+},{"./interpreter/function":6}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
@@ -266,7 +299,7 @@ function setTimeUnits(units) {
     units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
 }
 
-},{"./types/units":15,"decimal.js":16}],3:[function(require,module,exports){
+},{"./types/units":16,"decimal.js":17}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require("decimal.js");
@@ -404,9 +437,10 @@ var Expression = /** @class */ (function () {
 }());
 exports.Expression = Expression;
 
-},{"./defaultFunctions":1,"./defaultUnits":2,"./interpreter/environment":4,"./interpreter/function":5,"./interpreter/interpreter":6,"./lex/token":9,"./types/datatype":13,"./types/phrase":14,"./types/units":15,"decimal.js":16}],4:[function(require,module,exports){
+},{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./lex/token":10,"./types/datatype":14,"./types/phrase":15,"./types/units":16,"decimal.js":17}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
 /**
  * Represents runtime variable environment
@@ -425,7 +459,7 @@ var Environment = /** @class */ (function () {
         if (this.values.hasOwnProperty(key)) {
             return this.values[key];
         }
-        throw new Error("Undefined variable " + key);
+        throw FcalError_1.FcalError.ErrorWithoutCtx("Undefined variable " + key);
     };
     /**
      * create or assign a variable with value
@@ -443,7 +477,7 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"../types/datatype":13}],5:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":14}],6:[function(require,module,exports){
 "use strict";
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -453,13 +487,15 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
 /**
  * FcalFunction represents function in fcal
  */
 var FcalFunction = /** @class */ (function () {
-    function FcalFunction(name, arbity) {
+    function FcalFunction(name, arbity, func) {
         this.arbity = arbity;
+        this.function = func;
         this.name = name;
     }
     // evaluate function
@@ -493,7 +529,7 @@ var FcalFunctions = /** @class */ (function () {
      */
     FcalFunctions.prototype.add = function (fcalFunction) {
         if (this.check(fcalFunction.name)) {
-            throw new Error(fcalFunction.name + " is already registered");
+            FcalError_1.FcalError.throwWithoutCtx(fcalFunction.name + " is already registered");
         }
         this.functions.push(fcalFunction);
     };
@@ -527,7 +563,7 @@ var FcalFunctions = /** @class */ (function () {
 }());
 exports.FcalFunctions = FcalFunctions;
 
-},{"../types/datatype":13}],6:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":14}],7:[function(require,module,exports){
 "use strict";
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -537,6 +573,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var token_1 = require("../lex/token");
 var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
@@ -557,7 +594,7 @@ var Interpreter = /** @class */ (function () {
         if (ok && call != null) {
             if (call.arbity !== -1) {
                 if (call.arbity !== expr.argument.length) {
-                    throw new Error("function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
+                    FcalError_1.FcalError.throwWithEnd(expr.start, expr.end, "function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
                 }
             }
             var argument = Array();
@@ -567,7 +604,7 @@ var Interpreter = /** @class */ (function () {
             }
             return call.call.apply(call, __spreadArrays([this.environment], argument));
         }
-        throw Error(name + " is not callable");
+        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, name + " is not callable");
     };
     Interpreter.prototype.visitAssignExpr = function (expr) {
         // console.log('VISIT ASSIGN');
@@ -588,14 +625,14 @@ var Interpreter = /** @class */ (function () {
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit);
         }
-        throw new Error('Expecting numeric value before in');
+        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before in');
     };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.UnitNumber.New(value.number, expr.unit);
         }
-        throw new Error('Expecting numeric value before unit');
+        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
     };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} LEFT`);
@@ -657,7 +694,7 @@ var Interpreter = /** @class */ (function () {
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.Percentage.New(value.number);
         }
-        throw new Error('Expecting numeric value in percentage');
+        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
     };
     Interpreter.prototype.setValues = function (values) {
         for (var key in values) {
@@ -684,7 +721,7 @@ function setCharAt(str, replace, start, end) {
 }
 exports.setCharAt = setCharAt;
 
-},{"../lex/token":9,"../parser/parser":12,"../types/datatype":13}],7:[function(require,module,exports){
+},{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":14}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Char = /** @class */ (function () {
@@ -707,9 +744,10 @@ var Char = /** @class */ (function () {
 }());
 exports.Char = Char;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
 var char_1 = require("./char");
 var token_1 = require("./token");
@@ -820,7 +858,7 @@ var Lexer = /** @class */ (function () {
                 this.advance();
             }
             if (!Lexer.isDigit(this.peek(0))) {
-                throw Error("Expecting number after " + c + " but got " + this.peek(0));
+                FcalError_1.FcalError.throwWithEnd(this.start, this.current, "Expecting number after " + c + " but got '" + this.peek(0) + "'");
             }
             while (Lexer.isDigit(this.peek(0))) {
                 this.advance();
@@ -865,7 +903,7 @@ var Lexer = /** @class */ (function () {
 }());
 exports.Lexer = Lexer;
 
-},{"../types/datatype":13,"./char":7,"./token":9}],9:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":14,"./char":8,"./token":10}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TokenType;
@@ -916,7 +954,7 @@ var Token = /** @class */ (function () {
 exports.Token = Token;
 // export default { TokenType, Token };
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ASTPrinter = /** @class */ (function () {
@@ -991,7 +1029,7 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1164,9 +1202,10 @@ exports.Expr = Expr;
 })(Expr = exports.Expr || (exports.Expr = {}));
 exports.Expr = Expr;
 
-},{"./astPrinter":10}],12:[function(require,module,exports){
+},{"./astPrinter":11}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var lex_1 = require("../lex/lex");
 var token_1 = require("../lex/token");
 var expr_1 = require("./expr");
@@ -1187,9 +1226,9 @@ var Parser = /** @class */ (function () {
             return expr;
         }
         if (this.peek().type === token_1.TokenType.EOL) {
-            throw new Error('Expecting new Line');
+            FcalError_1.FcalError.throw(this.peek().end, 'Expecting new Line');
         }
-        throw new Error("Unexpected token " + this.peek().lexeme);
+        throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Unexpected token " + this.peek().lexeme);
     };
     Parser.prototype.assignment = function () {
         var expr = this.expression();
@@ -1286,7 +1325,7 @@ var Parser = /** @class */ (function () {
                 if (this.peek().type !== token_1.TokenType.CLOSE_PARAN) {
                     do {
                         if (argument.length >= 255) {
-                            throw new Error(expr.name + " function cannot have more than 255 arguments");
+                            FcalError_1.FcalError.throwWithEnd(expr.start, this.peek().end, expr.name + " function cannot have more than 255 arguments");
                         }
                         argument.push(this.expression());
                     } while (this.match(token_1.TokenType.COMMA));
@@ -1294,7 +1333,7 @@ var Parser = /** @class */ (function () {
                 this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
             }
-            throw new Error("Not callable");
+            FcalError_1.FcalError.throwWithEnd(expr.start, this.previous().end, "Not callable");
         }
         return expr;
     };
@@ -1311,7 +1350,7 @@ var Parser = /** @class */ (function () {
         if (this.match(token_1.TokenType.NAME)) {
             return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
         }
-        throw new Error("Expect expression but found " + this.peek().lexeme);
+        throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Expect expression but found " + this.peek().lexeme);
     };
     Parser.prototype.match = function () {
         var types = [];
@@ -1332,7 +1371,7 @@ var Parser = /** @class */ (function () {
             this.incr();
             return;
         }
-        throw new Error(message);
+        FcalError_1.FcalError.throwWithEnd(this.peek().start, this.peek().end, message);
     };
     Parser.prototype.check = function (type) {
         if (this.isAtEnd()) {
@@ -1370,7 +1409,7 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"../lex/lex":8,"../lex/token":9,"./expr":11}],13:[function(require,module,exports){
+},{"../FcalError":1,"../lex/lex":9,"../lex/token":10,"./expr":12}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1808,7 +1847,7 @@ var TYPERANK;
 })(Type = exports.Type || (exports.Type = {}));
 exports.Type = Type;
 
-},{"decimal.js":16}],14:[function(require,module,exports){
+},{"decimal.js":17}],15:[function(require,module,exports){
 "use strict";
 var __spreadArrays = (this && this.__spreadArrays) || function () {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
@@ -1818,6 +1857,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
     return r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var Phrase = /** @class */ (function () {
     function Phrase(type) {
         var phrases = [];
@@ -1836,7 +1876,7 @@ var Phrase = /** @class */ (function () {
         for (var _b = 0, phrases_1 = phrases; _b < phrases_1.length; _b++) {
             var phrase = phrases_1[_b];
             if (this.check(phrase)) {
-                throw new Error(phrase + " already exists");
+                FcalError_1.FcalError.throwWithoutCtx(phrase + " already exists");
             }
         }
         (_a = this.phrases).push.apply(_a, phrases);
@@ -1899,7 +1939,7 @@ var Phrases = /** @class */ (function () {
         }
         phrases = phrases.map(function (x) { return x.toUpperCase(); });
         if (this.checkPhrase.apply(this, phrases)) {
-            throw new Error("phrases already exits");
+            FcalError_1.FcalError.throwWithoutCtx("phrases already exits");
         }
         for (var _b = 0, _c = this.phrases; _b < _c.length; _b++) {
             var phrase = _c[_b];
@@ -1926,9 +1966,10 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{}],15:[function(require,module,exports){
+},{"../FcalError":1}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("../FcalError");
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
@@ -1969,7 +2010,7 @@ exports.Unit = Unit;
          */
         Units.prototype.Add = function (unit) {
             if (this.check.apply(this, unit.phrases)) {
-                throw new Error('phrase already exists');
+                FcalError_1.FcalError.throwWithoutCtx('phrase already exists');
             }
             this.units.push(unit);
         };
@@ -2018,7 +2059,7 @@ exports.Unit = Unit;
 })(Unit = exports.Unit || (exports.Unit = {}));
 exports.Unit = Unit;
 
-},{}],16:[function(require,module,exports){
+},{"../FcalError":1}],17:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -6897,5 +6938,5 @@ exports.Unit = Unit;
   }
 })(this);
 
-},{}]},{},[3])(3)
+},{}]},{},[4])(4)
 });

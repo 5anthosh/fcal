@@ -1,16 +1,10 @@
-<h1 align="center">Welcome to fcal 👋</h1>
-<p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/5anthosh/fcal#readme" target="_blank">
-    <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
-  </a>
-  <a href="https://github.com/5anthosh/fcal/graphs/commit-activity" target="_blank">
-    <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" />
-  </a>
-  <a href="https://github.com/5anthosh/fcal/blob/master/LICENSE" target="_blank">
-    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
-  </a>
-</p>
+# Welcome to fcal 👋
+
+[![version](https://img.shields.io/badge/version-0.1.3-blue.svg?cacheSeconds=2592000)](https://github.com/5anthosh/fcal#readme)
+[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/5anthosh/fcal/wiki)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/5anthosh/fcal/graphs/commit-activity)
+[![fcal](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
 
 > formula evaluation engine
 
@@ -33,7 +27,7 @@ You can perform basic arithmetic, percentage operations with precision.
 the library is the single JavaScript file fcal.js (or minified, fcal.min.js).
 
 ```html
-<script src="https://unpkg.com/fcal/dist/fcal.min.js"></script>
+<script src=https://cdn.jsdelivr.net/npm/fcal/dist/fcal.js"></script>
 ```
 
 ### With [NPM](https://www.npmjs.com/)
@@ -78,15 +72,15 @@ You can change state of expression , re evaluate it
 ```js
 const { Fcal } = require('fcal');
 
-const exp = new Fcal().expression('PI*radius^2 ');
+const exp = new Fcal().expression('PI * radius cm ^ 2');
 
 exp.setValues({ radius: 8 });
 
-console.log(exp.evaluate().print()); // 201.06192982974676726
+console.log(exp.evaluate().print()); // 201.06192982974676726 cm
 
 exp.setValues({ radius: 10 });
 
-console.log(exp.evaluate().print()); // 314.15926535897932385
+console.log(exp.evaluate().print()); // 314.15926535897932385 cm
 ```
 
 ## 🤝 Contributing

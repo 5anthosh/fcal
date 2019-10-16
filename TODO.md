@@ -1,9 +1,14 @@
 # TODO
 
-- [ ] Expontial in numbers
-- [ ] Better error reporting
+_V 0.2.0_
+
+- [x] Expontial in numbers
+- [x] Better error reporting
 - [ ] add bias to allow units like temperature
 - [ ] add phrases for plural units
+
+_v 0.3.0_
+
 - [ ] infinity
 - [ ] multiply in parenthesis
 - [ ] complex numbers

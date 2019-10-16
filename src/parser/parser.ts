@@ -1,3 +1,4 @@
+import { FcalError } from '../FcalError';
 import { Lexer } from '../lex/lex';
 import { Token, TokenType } from '../lex/token';
 import { Phrases } from '../types/phrase';
@@ -25,9 +26,9 @@ export class Parser {
       return expr;
     }
     if (this.peek().type === TokenType.EOL) {
-      throw new Error('Expecting new Line');
+      FcalError.throw(this.peek().end, 'Expecting new Line');
     }
-    throw new Error(`Unexpected token ${this.peek().lexeme}`);
+    throw FcalError.ErrorWithEnd(this.peek().start, this.peek().end, `Unexpected token ${this.peek().lexeme}`);
   }
   private assignment(): Expr {
     const expr = this.expression();
@@ -127,7 +128,11 @@ export class Parser {
         if (this.peek().type !== TokenType.CLOSE_PARAN) {
           do {
             if (argument.length >= 255) {
-              throw new Error(`${expr.name} function cannot have more than 255 arguments`);
+              FcalError.throwWithEnd(
+                expr.start,
+                this.peek().end,
+                `${expr.name} function cannot have more than 255 arguments`,
+              );
             }
             argument.push(this.expression());
           } while (this.match(TokenType.COMMA));
@@ -135,7 +140,7 @@ export class Parser {
         this.consume(TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
         return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
       }
-      throw new Error(`Not callable`);
+      FcalError.throwWithEnd(expr.start, this.previous().end, `Not callable`);
     }
     return expr;
   }
@@ -152,7 +157,11 @@ export class Parser {
     if (this.match(TokenType.NAME)) {
       return new Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
     }
-    throw new Error(`Expect expression but found ${this.peek().lexeme}`);
+    throw FcalError.ErrorWithEnd(
+      this.peek().start,
+      this.peek().end,
+      `Expect expression but found ${this.peek().lexeme}`,
+    );
   }
 
   private match(...types: TokenType[]): boolean {
@@ -169,7 +178,7 @@ export class Parser {
       this.incr();
       return;
     }
-    throw new Error(message);
+    FcalError.throwWithEnd(this.peek().start, this.peek().end, message);
   }
   private check(type: TokenType): boolean {
     if (this.isAtEnd()) {

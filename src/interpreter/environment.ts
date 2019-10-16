@@ -1,3 +1,4 @@
+import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 
 /**
@@ -20,7 +21,7 @@ export class Environment {
     if (this.values.hasOwnProperty(key)) {
       return this.values[key];
     }
-    throw new Error(`Undefined variable ${key}`);
+    throw FcalError.ErrorWithoutCtx(`Undefined variable ${key}`);
   }
   /**
    * create or assign a variable with value

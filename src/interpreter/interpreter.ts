@@ -1,3 +1,4 @@
+import { FcalError } from '../FcalError';
 import { TokenType } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
@@ -12,13 +13,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   private ast: Expr;
   private environment: Environment;
   private funcations: FcalFunctions;
-  constructor(
-    source: string,
-    phrases: Phrases,
-    units: Unit.Units,
-    environment: Environment,
-    functions: FcalFunctions,
-  ) {
+  constructor(source: string, phrases: Phrases, units: Unit.Units, environment: Environment, functions: FcalFunctions) {
     this.parser = new Parser(source, phrases, units);
     this.environment = environment;
     this.funcations = functions;
@@ -34,7 +29,11 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (ok && call != null) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
-          throw new Error(`function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`);
+          FcalError.throwWithEnd(
+            expr.start,
+            expr.end,
+            `function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`,
+          );
         }
       }
       const argument = Array<Type>();
@@ -43,7 +42,7 @@ export class Interpreter implements Expr.IVisitor<any> {
       }
       return call.call(this.environment, ...argument);
     }
-    throw Error(`${name} is not callable`);
+    throw FcalError.ErrorWithEnd(expr.start, expr.end, `${name} is not callable`);
   }
   public visitAssignExpr(expr: Expr.Assign): Type {
     // console.log('VISIT ASSIGN');
@@ -65,14 +64,14 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (value instanceof Type.Numberic) {
       return Type.UnitNumber.convertToUnit(value as Type.Numberic, expr.unit);
     }
-    throw new Error('Expecting numeric value before in');
+    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before in');
   }
-  public visitUnitExpr(expr: Expr.UnitExpr) {
+  public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
       return Type.UnitNumber.New((value as Type.Numberic).number, expr.unit);
     }
-    throw new Error('Expecting numeric value before unit');
+    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
@@ -139,7 +138,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (value instanceof Type.Numberic) {
       return Type.Percentage.New((value as Type.Numberic).number);
     }
-    throw new Error('Expecting numeric value in percentage');
+    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
   }
   public setValues(values: { [index: string]: Type | number }) {
     for (const key in values) {

@@ -10,7 +10,7 @@
     "browser": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "btest": "npm run build && jest --config jestconfig.json --coverage",
+    "ctest": "jest --config jestconfig.json --coverage",
     "prepare": "npm run build",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
@@ -40,7 +40,8 @@
     "typescript": "^3.6.3"
   },
   "files": [
-    "lib/**/*", "dist/**/*"
+    "lib/**/*",
+    "dist/**/*"
   ],
   "dependencies": {
     "decimal.js": "^10.2.0"

@@ -8,7 +8,7 @@
 | ------------------- | ------------------- | ------- |
 | centimeter          | cm                  | cm      |
 | meter               | m                   | m       |
-| millimeter          | mm                  | m       |
+| millimeter          | mm                  | mm      |
 | kilometer           | km                  | km      |
 | inch                | inch                | inch    |
 | feet                | foot/feet           | ft      |

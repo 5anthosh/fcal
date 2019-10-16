@@ -1,4 +1,5 @@
 import Big = require('decimal.js');
+import { FcalError } from '../FcalError';
 
 export class UnitMeta {
   public id: string;
@@ -40,7 +41,7 @@ export namespace Unit {
      */
     public Add(unit: Unit) {
       if (this.check(...unit.phrases)) {
-        throw new Error('phrase already exists');
+        FcalError.throwWithoutCtx('phrase already exists');
       }
       this.units.push(unit);
     }

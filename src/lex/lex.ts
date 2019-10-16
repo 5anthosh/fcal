@@ -1,3 +1,4 @@
+import { FcalError } from '../FcalError';
 import { Type as any } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
@@ -133,7 +134,7 @@ export class Lexer {
         this.advance();
       }
       if (!Lexer.isDigit(this.peek(0))) {
-        throw Error(`Expecting number after ${c} but got '${this.peek(0)}'`);
+        FcalError.throwWithEnd(this.start, this.current, `Expecting number after ${c} but got '${this.peek(0)}'`);
       }
       while (Lexer.isDigit(this.peek(0))) {
         this.advance();

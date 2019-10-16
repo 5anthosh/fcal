@@ -39,7 +39,7 @@
     /* Enable strict checking of function types. */
     "strictBindCallApply": true,
     /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
-    "strictPropertyInitialization": false,
+    "strictPropertyInitialization": true,
     /* Enable strict checking of property initialization in classes. */
     "noImplicitThis": true,
     /* Raise error on 'this' expressions with an implied 'any' type. */

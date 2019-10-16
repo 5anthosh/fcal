@@ -1,9 +1,12 @@
+import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 import { Environment } from './environment';
 
 export interface ICallable {
   call(environment: Environment, ...argument: Type[]): Type;
 }
+
+type FcalFunctionFmt = (environment: Environment, ...argument: Type[]) => Type;
 
 /**
  * FcalFunction represents function in fcal
@@ -14,9 +17,10 @@ export class FcalFunction implements ICallable {
   // name of the function
   public name: string;
   // function implemention
-  public function: (environment: Environment, ...argument: Type[]) => Type;
-  constructor(name: string, arbity: number) {
+  public function: FcalFunctionFmt;
+  constructor(name: string, arbity: number, func: FcalFunctionFmt) {
     this.arbity = arbity;
+    this.function = func;
     this.name = name;
   }
   // evaluate function
@@ -45,7 +49,7 @@ export class FcalFunctions {
    */
   public add(fcalFunction: FcalFunction) {
     if (this.check(fcalFunction.name)) {
-      throw new Error(`${fcalFunction.name} is already registered`);
+      FcalError.throwWithoutCtx(`${fcalFunction.name} is already registered`);
     }
     this.functions.push(fcalFunction);
   }

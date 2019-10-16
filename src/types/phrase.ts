@@ -1,3 +1,4 @@
+import { FcalError } from '../FcalError';
 import { TokenType } from '../lex/token';
 export class Phrase {
   public type: TokenType;
@@ -9,7 +10,7 @@ export class Phrase {
   public add(...phrases: string[]) {
     for (const phrase of phrases) {
       if (this.check(phrase)) {
-        throw new Error(`${phrase} already exists`);
+        FcalError.throwWithoutCtx(`${phrase} already exists`);
       }
     }
     this.phrases.push(...phrases);
@@ -54,7 +55,7 @@ export class Phrases {
   public addPhrases(type: TokenType, ...phrases: string[]) {
     phrases = phrases.map(x => x.toUpperCase());
     if (this.checkPhrase(...phrases)) {
-      throw new Error(`phrases already exits`);
+      FcalError.throwWithoutCtx(`phrases already exits`);
     }
     for (const phrase of this.phrases) {
       if (phrase.type === type) {

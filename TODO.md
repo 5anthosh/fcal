@@ -2,8 +2,6 @@
 
 _V 0.2.0_
 
-- [x] Expontial in numbers
-- [x] Better error reporting
 - [ ] add bias to allow units like temperature
 - [ ] add phrases for plural units
 
@@ -12,6 +10,10 @@ _v 0.3.0_
 - [ ] infinity
 - [ ] multiply in parenthesis
 - [ ] complex numbers
+
+**🎉 Finished**
+- [x] Better error reporting
+- [x] Expontial in numbers
 - [x] tests for functions
 - [x] functions
 - [x] allow digits in variable names

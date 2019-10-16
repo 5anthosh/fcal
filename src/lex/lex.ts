@@ -125,6 +125,20 @@ export class Lexer {
         this.advance();
       }
     }
+    if (this.peek(0) === 'E' || this.peek(0) === 'e') {
+      let c = this.peek(0);
+      this.advance();
+      if (this.peek(0) === '+' || this.peek(0) === '-') {
+        c = this.peek(0);
+        this.advance();
+      }
+      if (!Lexer.isDigit(this.peek(0))) {
+        throw Error(`Expecting number after ${c} but got '${this.peek(0)}'`);
+      }
+      while (Lexer.isDigit(this.peek(0))) {
+        this.advance();
+      }
+    }
     return this.createTokenWithLiteral(TokenType.Number, new any.BNumber(this.lexeme()));
   }
   private createToken(type: TokenType): Token {

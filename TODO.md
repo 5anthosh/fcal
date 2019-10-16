@@ -1,7 +1,10 @@
 # TODO
 
-- [ ] infinity
+- [ ] Expontial in numbers
+- [ ] Better error reporting
+- [ ] add bias to allow units like temperature
 - [ ] add phrases for plural units
+- [ ] infinity
 - [ ] multiply in parenthesis
 - [ ] complex numbers
 - [x] tests for functions

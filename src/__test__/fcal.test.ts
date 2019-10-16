@@ -197,3 +197,25 @@ test('test set Values decimal', () => {
   expr.setValues({ l: 10, b: 20 });
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber(200));
 });
+
+test('Test E in number literal', () => {
+  const expression = '1E-8 + 1e+3 * 1.23e00 + 1.223E23';
+  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('1.223e+23'));
+});
+
+test('Test invalide number literal', () => {
+  const expression = '1E + 23';
+  expect(() => {
+    new Fcal().evaluate(expression);
+  }).toThrowError(new Error("Expecting number after E but got ' '"));
+
+  const expression1 = '1.23e';
+  expect(() => {
+    new Fcal().evaluate(expression1);
+  }).toThrowError(new Error("Expecting number after e but got '\n'"));
+
+  const expression2 = '23.45E+*34';
+  expect(() => {
+    new Fcal().evaluate(expression2);
+  }).toThrowError(new Error("Expecting number after + but got '*'"));
+});

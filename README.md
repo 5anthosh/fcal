@@ -8,6 +8,10 @@
 
 > formula evaluation engine
 
+<div align="center">
+  <img src="../assets/example.svg" />
+</div>
+
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 
 You can perform basic arithmetic, percentage operations with precision.

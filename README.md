@@ -102,7 +102,7 @@ $ npm install
 ### Run tests
 
 ```sh
-npm run test
+npm test
 ```
 
 ## Show your support

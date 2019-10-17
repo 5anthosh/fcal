@@ -23,7 +23,7 @@ export class UnitMeta {
 export class Unit {
   public phrases: string[];
   public unit: UnitMeta;
-  constructor(id: string, ratio: Big.Decimal, unitType: string, ...phrases: string[]) {
+  constructor(id: string, ratio: Big.Decimal, unitType: string, phrases: string[]) {
     this.unit = new UnitMeta(id, ratio, unitType);
     this.phrases = phrases;
   }
@@ -49,7 +49,7 @@ export namespace Unit {
      * @throws Error if phrases already exists
      */
     public Add(unit: Unit) {
-      if (this.check(...unit.phrases)) {
+      if (this.check(unit.phrases)) {
         FcalError.throwWithoutCtx('phrase already exists');
       }
       this.units.push(unit);
@@ -58,7 +58,7 @@ export namespace Unit {
      * check if unit already exists
      * @param phrases
      */
-    public check(...phrases: string[]): boolean {
+    public check(phrases: string[]): boolean {
       for (const unit of this.units) {
         for (const phrase of unit.phrases) {
           for (const phrase2 of phrases) {

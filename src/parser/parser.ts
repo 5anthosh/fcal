@@ -22,7 +22,7 @@ export class Parser {
 
   private Stmt(): Expr {
     const expr = this.assignment();
-    if (this.match(TokenType.NEWLINE)) {
+    if (this.match([TokenType.NEWLINE])) {
       return expr;
     }
     if (this.peek().type === TokenType.EOL) {
@@ -32,7 +32,7 @@ export class Parser {
   }
   private assignment(): Expr {
     const expr = this.expression();
-    if (this.match(TokenType.EQUAL)) {
+    if (this.match([TokenType.EQUAL])) {
       const expres = this.expression();
       if (expr instanceof Expr.Variable) {
         const name = (expr as Expr.Variable).name;
@@ -47,7 +47,7 @@ export class Parser {
 
   private percentage(): Expr {
     let expr = this.addition();
-    while (this.match(TokenType.OF)) {
+    while (this.match([TokenType.OF])) {
       const operator = this.previous();
       const right = this.addition();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -56,7 +56,7 @@ export class Parser {
   }
   private addition(): Expr {
     let expr = this.multiply();
-    while (this.match(TokenType.PLUS, TokenType.MINUS)) {
+    while (this.match([TokenType.PLUS, TokenType.MINUS])) {
       const operator = this.previous();
       const right = this.multiply();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -66,7 +66,7 @@ export class Parser {
 
   private multiply(): Expr {
     let expr = this.unary();
-    while (this.match(TokenType.TIMES, TokenType.SLASH, TokenType.MOD, TokenType.OF)) {
+    while (this.match([TokenType.TIMES, TokenType.SLASH, TokenType.MOD, TokenType.OF])) {
       const operator = this.previous();
       const right = this.unary();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -75,7 +75,7 @@ export class Parser {
   }
 
   private unary(): Expr {
-    if (this.match(TokenType.PLUS, TokenType.MINUS)) {
+    if (this.match([TokenType.PLUS, TokenType.MINUS])) {
       const operator = this.previous();
       const right = this.unary();
       return new Expr.Unary(operator, right, operator.start, right.end);
@@ -84,7 +84,7 @@ export class Parser {
   }
   private exponent(): Expr {
     let expr = this.unitConvert();
-    while (this.match(TokenType.CAP)) {
+    while (this.match([TokenType.CAP])) {
       const operator = this.previous();
       const right = this.unary();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -93,7 +93,7 @@ export class Parser {
   }
   private unitConvert(): Expr {
     const expr = this.suffix();
-    if (this.match(TokenType.IN)) {
+    if (this.match([TokenType.IN])) {
       this.consume(TokenType.UNIT, 'Expecting unit after in');
       const unit = this.previous();
       let unit2;
@@ -106,11 +106,11 @@ export class Parser {
   }
   private suffix(): Expr {
     const expr = this.call();
-    if (this.match(TokenType.PERCENTAGE)) {
+    if (this.match([TokenType.PERCENTAGE])) {
       const operator = this.previous();
       return new Expr.Percentage(expr, expr.start, operator.end);
     }
-    if (this.match(TokenType.UNIT)) {
+    if (this.match([TokenType.UNIT])) {
       const unit = this.previous();
       let unit2;
       [unit2] = this.lexer.units.get(unit.lexeme);
@@ -122,7 +122,7 @@ export class Parser {
   }
   private call(): Expr {
     const expr = this.term();
-    if (this.match(TokenType.OPEN_PARAN)) {
+    if (this.match([TokenType.OPEN_PARAN])) {
       if (expr instanceof Expr.Variable) {
         const argument = Array<Expr>();
         if (this.peek().type !== TokenType.CLOSE_PARAN) {
@@ -135,7 +135,7 @@ export class Parser {
               );
             }
             argument.push(this.expression());
-          } while (this.match(TokenType.COMMA));
+          } while (this.match([TokenType.COMMA]));
         }
         this.consume(TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
         return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
@@ -145,16 +145,16 @@ export class Parser {
     return expr;
   }
   private term(): Expr {
-    if (this.match(TokenType.Number)) {
+    if (this.match([TokenType.Number])) {
       return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
     }
-    if (this.match(TokenType.OPEN_PARAN)) {
+    if (this.match([TokenType.OPEN_PARAN])) {
       const start = this.previous();
       const expr = this.expression();
       this.consume(TokenType.CLOSE_PARAN, "Expect ')' after expression");
       return new Expr.Grouping(expr, start.start, this.previous().end);
     }
-    if (this.match(TokenType.NAME)) {
+    if (this.match([TokenType.NAME])) {
       return new Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
     }
     throw FcalError.ErrorWithEnd(
@@ -164,7 +164,7 @@ export class Parser {
     );
   }
 
-  private match(...types: TokenType[]): boolean {
+  private match(types: TokenType[]): boolean {
     for (const type of types) {
       if (this.check(type)) {
         this.incr();

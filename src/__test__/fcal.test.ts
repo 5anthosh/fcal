@@ -221,13 +221,13 @@ test('test undefined variable', () => {
   }).toThrowError(new Error('FcalError: Undefined variable PIy'));
 });
 
-test('test function already registered', () => {
+test('test register new function', () => {
   const fcal = new Fcal();
   const functions = new FcalFunctions();
   functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new FcalFunction('asdfasdf123', 1, function(_environment: Environment, ...argument: Type[]): Type {
-      const value = argument[0] as Type.Numberic;
+    new FcalFunction('asdfasdf123', 1, function(_environment: Environment, param: Type[]): Type {
+      const value = param[0] as Type.Numberic;
       return value.newNumeric(value.number.sinh());
     }),
   );
@@ -243,8 +243,8 @@ test('test function already registered', () => {
   const functions = new FcalFunctions();
   functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new FcalFunction('abs', 1, function(_environment: Environment, ...argument: Type[]): Type {
-      const value = argument[0] as Type.Numberic;
+    new FcalFunction('abs', 1, function(_environment: Environment, param: Type[]): Type {
+      const value = param[0] as Type.Numberic;
       return value.newNumeric(value.number.abs());
     }),
   );

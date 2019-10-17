@@ -3,10 +3,10 @@ import { Type } from '../types/datatype';
 import { Environment } from './environment';
 
 export interface ICallable {
-  call(environment: Environment, ...argument: Type[]): Type;
+  call(environment: Environment, argument: Type[]): Type;
 }
 
-type FcalFunctionFmt = (environment: Environment, ...argument: Type[]) => Type;
+type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type;
 
 /**
  * FcalFunction represents function in fcal
@@ -24,8 +24,8 @@ export class FcalFunction implements ICallable {
     this.name = name;
   }
   // evaluate function
-  public call(environment: Environment, ...argument: Type[]): Type {
-    const value = this.function(environment, ...argument);
+  public call(environment: Environment, argument: Type[]): Type {
+    const value = this.function(environment, argument);
     if (value === null) {
       // if function does not return no value then
       // Assign basic 0 number

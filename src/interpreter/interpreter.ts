@@ -40,7 +40,7 @@ export class Interpreter implements Expr.IVisitor<any> {
       for (const param of expr.argument) {
         argument.push(this.evaluate(param));
       }
-      return call.call(this.environment, ...argument);
+      return call.call(this.environment, argument);
     }
     throw FcalError.ErrorWithEnd(expr.start, expr.end, `${name} is not callable`);
   }

@@ -59,201 +59,121 @@ function getDefaultFunction() {
     var functions = new function_1.FcalFunctions();
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('abs', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('abs', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.abs());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sqrt', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('sqrt', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.sqrt());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cbrt', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('cbrt', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.cbrt());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('log', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('log', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.log());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('ln', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('ln', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.ln());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('round', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('round', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.round());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('floor', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('floor', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.floor());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('ceil', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('ceil', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.ceil());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cos', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('cos', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.cosine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('acos', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('acos', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseCosine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cosh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('cosh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicCosine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('acosh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('acosh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicCosine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sin', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('sin', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.sine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('asin', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('asin', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseSine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sinh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('sinh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicSine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('asinh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('asinh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicSine());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('tan', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('tan', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.tangent());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('atan', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('atan', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseTangent());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('tanh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('tanh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicTangent());
     }));
     functions.add(
     // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('atanh', 1, function (_environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
+    new function_1.FcalFunction('atanh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicTangent());
     }));
@@ -276,33 +196,33 @@ function getdefaultUnits() {
 }
 exports.getdefaultUnits = getdefaultUnits;
 function setDistanceUnits(units) {
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', 'cm'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', 'm'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', 'mm'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', 'km'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', 'inch'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', 'ft'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', 'yd', 'yard'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', 'mi'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', 'nmi'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', ['cm']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', ['m']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', ['mm']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', ['km']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', ['inch']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', ['ft']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', ['yd', 'yard']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', ['mi']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
 }
 function setSpeedUnits(units) {
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1), 'km/h', 'kmh', 'kmph', 'khm', 'kph'));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.609344), 'miles/h', 'mph'));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(3.6), 'm/s', 'mps'));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.097), 'ft/s', 'fps'));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', 'kts', 'knots'));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1), 'km/h', ['kmh', 'kmph', 'khm', 'kph']));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.609344), 'miles/h', ['mph']));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(3.6), 'm/s', ['mps']));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.097), 'ft/s', ['fps']));
+    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
 }
 function setTimeUnits(units) {
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', 'sec', 'second'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second']));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', ['min', 'minute']));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', ['hr', 'hour']));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', ['day', 'day']));
 }
 function setTemperatureUnits(units) {
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), 'K', 'K', 'kelvin'));
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal('0.5555555555555555555555555'), '°F', '°F', 'F').setBias(new Big.Decimal('255.3722222222222')));
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), '°C', '°C', 'C').setBias(new Big.Decimal(273.15)));
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), 'K', ['K', 'kelvin']));
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal('0.5555555555555555555555555'), '°F', ['°F', 'F']).setBias(new Big.Decimal('255.3722222222222')));
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
 }
 
 },{"./types/units":16,"decimal.js":17}],4:[function(require,module,exports){
@@ -340,14 +260,14 @@ var Fcal = /** @class */ (function () {
     }
     Fcal.getdefaultphrases = function () {
         var phrases = new phrase_1.Phrases();
-        phrases.addPhrases(token_1.TokenType.PLUS, 'PLUS', 'AND', 'WITH', 'ADD');
-        phrases.addPhrases(token_1.TokenType.MINUS, 'MINUS', 'SUBTRACT', 'WITHOUT');
-        phrases.addPhrases(token_1.TokenType.TIMES, 'TIMES', 'x', 'MULTIPLIEDBY', 'mul');
-        phrases.addPhrases(token_1.TokenType.SLASH, 'DIVIDE', 'DIVIDEBY');
-        phrases.addPhrases(token_1.TokenType.CAP, 'POW');
-        phrases.addPhrases(token_1.TokenType.MOD, 'mod');
-        phrases.addPhrases(token_1.TokenType.OF, 'of', 'as');
-        phrases.addPhrases(token_1.TokenType.IN, 'in');
+        phrases.addPhrases(token_1.TokenType.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+        phrases.addPhrases(token_1.TokenType.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
+        phrases.addPhrases(token_1.TokenType.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
+        phrases.addPhrases(token_1.TokenType.SLASH, ['DIVIDE', 'DIVIDEBY']);
+        phrases.addPhrases(token_1.TokenType.CAP, ['POW']);
+        phrases.addPhrases(token_1.TokenType.MOD, ['mod']);
+        phrases.addPhrases(token_1.TokenType.OF, ['of']);
+        phrases.addPhrases(token_1.TokenType.IN, ['in', 'as']);
         return phrases;
     };
     /**
@@ -485,13 +405,6 @@ exports.Environment = Environment;
 
 },{"../FcalError":1,"../types/datatype":14}],6:[function(require,module,exports){
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
@@ -505,12 +418,8 @@ var FcalFunction = /** @class */ (function () {
         this.name = name;
     }
     // evaluate function
-    FcalFunction.prototype.call = function (environment) {
-        var argument = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            argument[_i - 1] = arguments[_i];
-        }
-        var value = this.function.apply(this, __spreadArrays([environment], argument));
+    FcalFunction.prototype.call = function (environment, argument) {
+        var value = this.function(environment, argument);
         if (value === null) {
             // if function does not return no value then
             // Assign basic 0 number
@@ -571,13 +480,6 @@ exports.FcalFunctions = FcalFunctions;
 
 },{"../FcalError":1,"../types/datatype":14}],7:[function(require,module,exports){
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var token_1 = require("../lex/token");
@@ -608,7 +510,7 @@ var Interpreter = /** @class */ (function () {
                 var param = _b[_i];
                 argument.push(this.evaluate(param));
             }
-            return call.call.apply(call, __spreadArrays([this.environment], argument));
+            return call.call(this.environment, argument);
         }
         throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, name + " is not callable");
     };
@@ -1228,7 +1130,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.Stmt = function () {
         var expr = this.assignment();
-        if (this.match(token_1.TokenType.NEWLINE)) {
+        if (this.match([token_1.TokenType.NEWLINE])) {
             return expr;
         }
         if (this.peek().type === token_1.TokenType.EOL) {
@@ -1238,7 +1140,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.assignment = function () {
         var expr = this.expression();
-        if (this.match(token_1.TokenType.EQUAL)) {
+        if (this.match([token_1.TokenType.EQUAL])) {
             var expres = this.expression();
             if (expr instanceof expr_1.Expr.Variable) {
                 var name_1 = expr.name;
@@ -1252,7 +1154,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.percentage = function () {
         var expr = this.addition();
-        while (this.match(token_1.TokenType.OF)) {
+        while (this.match([token_1.TokenType.OF])) {
             var operator = this.previous();
             var right = this.addition();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1261,7 +1163,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.addition = function () {
         var expr = this.multiply();
-        while (this.match(token_1.TokenType.PLUS, token_1.TokenType.MINUS)) {
+        while (this.match([token_1.TokenType.PLUS, token_1.TokenType.MINUS])) {
             var operator = this.previous();
             var right = this.multiply();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1270,7 +1172,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.multiply = function () {
         var expr = this.unary();
-        while (this.match(token_1.TokenType.TIMES, token_1.TokenType.SLASH, token_1.TokenType.MOD, token_1.TokenType.OF)) {
+        while (this.match([token_1.TokenType.TIMES, token_1.TokenType.SLASH, token_1.TokenType.MOD, token_1.TokenType.OF])) {
             var operator = this.previous();
             var right = this.unary();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1278,7 +1180,7 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.unary = function () {
-        if (this.match(token_1.TokenType.PLUS, token_1.TokenType.MINUS)) {
+        if (this.match([token_1.TokenType.PLUS, token_1.TokenType.MINUS])) {
             var operator = this.previous();
             var right = this.unary();
             return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
@@ -1287,7 +1189,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.exponent = function () {
         var expr = this.unitConvert();
-        while (this.match(token_1.TokenType.CAP)) {
+        while (this.match([token_1.TokenType.CAP])) {
             var operator = this.previous();
             var right = this.unary();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1296,7 +1198,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.unitConvert = function () {
         var expr = this.suffix();
-        if (this.match(token_1.TokenType.IN)) {
+        if (this.match([token_1.TokenType.IN])) {
             this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
             var unit = this.previous();
             var unit2 = void 0;
@@ -1309,11 +1211,11 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.suffix = function () {
         var expr = this.call();
-        if (this.match(token_1.TokenType.PERCENTAGE)) {
+        if (this.match([token_1.TokenType.PERCENTAGE])) {
             var operator = this.previous();
             return new expr_1.Expr.Percentage(expr, expr.start, operator.end);
         }
-        if (this.match(token_1.TokenType.UNIT)) {
+        if (this.match([token_1.TokenType.UNIT])) {
             var unit = this.previous();
             var unit2 = void 0;
             unit2 = this.lexer.units.get(unit.lexeme)[0];
@@ -1325,7 +1227,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.call = function () {
         var expr = this.term();
-        if (this.match(token_1.TokenType.OPEN_PARAN)) {
+        if (this.match([token_1.TokenType.OPEN_PARAN])) {
             if (expr instanceof expr_1.Expr.Variable) {
                 var argument = Array();
                 if (this.peek().type !== token_1.TokenType.CLOSE_PARAN) {
@@ -1334,7 +1236,7 @@ var Parser = /** @class */ (function () {
                             FcalError_1.FcalError.throwWithEnd(expr.start, this.peek().end, expr.name + " function cannot have more than 255 arguments");
                         }
                         argument.push(this.expression());
-                    } while (this.match(token_1.TokenType.COMMA));
+                    } while (this.match([token_1.TokenType.COMMA]));
                 }
                 this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
@@ -1344,27 +1246,23 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.term = function () {
-        if (this.match(token_1.TokenType.Number)) {
+        if (this.match([token_1.TokenType.Number])) {
             return new expr_1.Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
         }
-        if (this.match(token_1.TokenType.OPEN_PARAN)) {
+        if (this.match([token_1.TokenType.OPEN_PARAN])) {
             var start = this.previous();
             var expr = this.expression();
             this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after expression");
             return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
         }
-        if (this.match(token_1.TokenType.NAME)) {
+        if (this.match([token_1.TokenType.NAME])) {
             return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
         }
         throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Expect expression but found " + this.peek().lexeme);
     };
-    Parser.prototype.match = function () {
-        var types = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            types[_i] = arguments[_i];
-        }
-        for (var _a = 0, types_1 = types; _a < types_1.length; _a++) {
-            var type = types_1[_a];
+    Parser.prototype.match = function (types) {
+        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
+            var type = types_1[_i];
             if (this.check(type)) {
                 this.incr();
                 return true;
@@ -1859,47 +1757,28 @@ exports.Type = Type;
 
 },{"decimal.js":17}],15:[function(require,module,exports){
 "use strict";
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var Phrase = /** @class */ (function () {
-    function Phrase(type) {
-        var phrases = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            phrases[_i - 1] = arguments[_i];
-        }
+    function Phrase(type, phrases) {
         this.type = type;
         this.phrases = phrases;
     }
-    Phrase.prototype.add = function () {
+    Phrase.prototype.add = function (phrases) {
         var _a;
-        var phrases = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            phrases[_i] = arguments[_i];
-        }
-        for (var _b = 0, phrases_1 = phrases; _b < phrases_1.length; _b++) {
-            var phrase = phrases_1[_b];
-            if (this.check(phrase)) {
+        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
+            var phrase = phrases_1[_i];
+            if (this.check([phrase])) {
                 FcalError_1.FcalError.throwWithoutCtx(phrase + " already exists");
             }
         }
         (_a = this.phrases).push.apply(_a, phrases);
     };
-    Phrase.prototype.check = function () {
-        var phrase = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            phrase[_i] = arguments[_i];
-        }
-        for (var _a = 0, _b = this.phrases; _a < _b.length; _a++) {
-            var phrase1 = _b[_a];
-            for (var _c = 0, phrase_1 = phrase; _c < phrase_1.length; _c++) {
-                var phrase2 = phrase_1[_c];
+    Phrase.prototype.check = function (phrase) {
+        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
+            var phrase1 = _a[_i];
+            for (var _b = 0, phrase_1 = phrase; _b < phrase_1.length; _b++) {
+                var phrase2 = phrase_1[_b];
                 if (phrase2 === phrase1) {
                     return true;
                 }
@@ -1914,13 +1793,8 @@ var Phrases = /** @class */ (function () {
     function Phrases() {
         this.phrases = [];
     }
-    Phrases.prototype.add = function () {
-        var _a;
-        var phrases = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            phrases[_i] = arguments[_i];
-        }
-        (_a = this.phrases).push.apply(_a, phrases);
+    Phrases.prototype.add = function (phrases) {
+        this.phrases.push(phrases);
     };
     Phrases.prototype.getPhrases = function (key) {
         for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
@@ -1941,32 +1815,24 @@ var Phrases = /** @class */ (function () {
         }
         return [0, false];
     };
-    Phrases.prototype.addPhrases = function (type) {
+    Phrases.prototype.addPhrases = function (type, phrases) {
         var _a;
-        var phrases = [];
-        for (var _i = 1; _i < arguments.length; _i++) {
-            phrases[_i - 1] = arguments[_i];
-        }
         phrases = phrases.map(function (x) { return x.toUpperCase(); });
-        if (this.checkPhrase.apply(this, phrases)) {
+        if (this.checkPhrase(phrases)) {
             FcalError_1.FcalError.throwWithoutCtx("phrases already exits");
         }
-        for (var _b = 0, _c = this.phrases; _b < _c.length; _b++) {
-            var phrase = _c[_b];
+        for (var _i = 0, _b = this.phrases; _i < _b.length; _i++) {
+            var phrase = _b[_i];
             if (phrase.type === type) {
                 (_a = phrase.phrases).push.apply(_a, phrases);
             }
         }
-        this.add(new (Phrase.bind.apply(Phrase, __spreadArrays([void 0, type], phrases)))());
+        this.add(new Phrase(type, phrases));
     };
-    Phrases.prototype.checkPhrase = function () {
-        var phrase = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            phrase[_i] = arguments[_i];
-        }
-        for (var _a = 0, _b = this.phrases; _a < _b.length; _a++) {
-            var phrase1 = _b[_a];
-            if (phrase1.check.apply(phrase1, phrase)) {
+    Phrases.prototype.checkPhrase = function (phrase) {
+        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
+            var phrase1 = _a[_i];
+            if (phrase1.check(phrase)) {
                 return true;
             }
         }
@@ -1998,11 +1864,7 @@ exports.UnitMeta = UnitMeta;
  * Represents unit with info
  */
 var Unit = /** @class */ (function () {
-    function Unit(id, ratio, unitType) {
-        var phrases = [];
-        for (var _i = 3; _i < arguments.length; _i++) {
-            phrases[_i - 3] = arguments[_i];
-        }
+    function Unit(id, ratio, unitType, phrases) {
         this.unit = new UnitMeta(id, ratio, unitType);
         this.phrases = phrases;
     }
@@ -2028,7 +1890,7 @@ exports.Unit = Unit;
          * @throws Error if phrases already exists
          */
         Units.prototype.Add = function (unit) {
-            if (this.check.apply(this, unit.phrases)) {
+            if (this.check(unit.phrases)) {
                 FcalError_1.FcalError.throwWithoutCtx('phrase already exists');
             }
             this.units.push(unit);
@@ -2037,17 +1899,13 @@ exports.Unit = Unit;
          * check if unit already exists
          * @param phrases
          */
-        Units.prototype.check = function () {
-            var phrases = [];
-            for (var _i = 0; _i < arguments.length; _i++) {
-                phrases[_i] = arguments[_i];
-            }
-            for (var _a = 0, _b = this.units; _a < _b.length; _a++) {
-                var unit = _b[_a];
-                for (var _c = 0, _d = unit.phrases; _c < _d.length; _c++) {
-                    var phrase = _d[_c];
-                    for (var _e = 0, phrases_1 = phrases; _e < phrases_1.length; _e++) {
-                        var phrase2 = phrases_1[_e];
+        Units.prototype.check = function (phrases) {
+            for (var _i = 0, _a = this.units; _i < _a.length; _i++) {
+                var unit = _a[_i];
+                for (var _b = 0, _c = unit.phrases; _b < _c.length; _b++) {
+                    var phrase = _c[_b];
+                    for (var _d = 0, phrases_1 = phrases; _d < phrases_1.length; _d++) {
+                        var phrase2 = phrases_1[_d];
                         if (phrase === phrase2) {
                             return true;
                         }

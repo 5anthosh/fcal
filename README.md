@@ -10,8 +10,6 @@
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 
-[CLI](https://github.com/5anthosh/fcal-cli) for fcal
-
 You can perform basic arithmetic, percentage operations with precision.
 
 ## Features
@@ -19,6 +17,8 @@ You can perform basic arithmetic, percentage operations with precision.
 - Units
 - Variables
 - Functions
+
+> Playground [Codepen](https://codepen.io/5anthosh/pen/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli) 
 
 ## Install
 

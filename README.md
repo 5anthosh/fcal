@@ -6,7 +6,7 @@
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/5anthosh/fcal/graphs/commit-activity)
 [![fcal](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
 
-> Frmula evaluation engine
+> Formula evaluation engine
 
 <div align="center">
   <img src="../assets/example.svg" />

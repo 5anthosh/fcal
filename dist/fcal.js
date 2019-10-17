@@ -196,14 +196,14 @@ function getdefaultUnits() {
 }
 exports.getdefaultUnits = getdefaultUnits;
 function setDistanceUnits(units) {
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', ['cm']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', ['m']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', ['mm']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', ['km']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', ['inch']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', ['ft']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', ['yd', 'yard']));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', ['mi']));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', ['cm', 'centimeter']).Singular('Centimeter').Plural('Centimeters'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', ['m', 'meter']).Singular('Meter').Plural('Meters'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', ['mm', 'milimeter']).Singular('Milimeter').Plural('Milimeters'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', ['km']).Singular('Kilometer').Plural('Kilometers'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', ['inch']).Singular('Inch').Plural('Inches'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', ['ft']).Singular('Foot').Plural('Feet'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', ['yd', 'yard']).Singular('Yard').Plural('Yards'));
+    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', ['mi']).Singular('Mile').Plural('Miles'));
     units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
 }
 function setSpeedUnits(units) {
@@ -214,10 +214,21 @@ function setSpeedUnits(units) {
     units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
 }
 function setTimeUnits(units) {
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second']));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', ['min', 'minute']));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', ['hr', 'hour']));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', ['day', 'day']));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nanosecond', 'nanoseconds'])
+        .Singular('Nanosecond')
+        .Plural('Nanoseconds'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e6), 'msec', ['microsecond', 'microseconds'])
+        .Singular('Microsecond')
+        .Plural('Microseconds'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
+        .Singular('Second')
+        .Plural('Seconds'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', ['min', 'minute', 'minutes'])
+        .Singular('Minute')
+        .Plural('Minutes'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', ['hr', 'hour', 'hours']).Singular('Hour').Plural('Hours'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', ['day', 'days']).Singular('Day').Plural('Days'));
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(604800), 'week(s)', ['week', 'weeks']).Singular('Week').Plural('Weeks'));
 }
 function setTemperatureUnits(units) {
     units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), 'K', ['K', 'kelvin']));
@@ -1747,7 +1758,10 @@ var TYPERANK;
                 .div(ratio);
         };
         UnitNumber.prototype.print = function () {
-            return this.number.toString() + " " + this.unit.unitType;
+            if (this.number.isZero() || this.number.equals(1)) {
+                return this.number.toString() + " " + this.unit.singular;
+            }
+            return this.number.toString() + " " + this.unit.plural;
         };
         return UnitNumber;
     }(Numberic));
@@ -1853,9 +1867,17 @@ var UnitMeta = /** @class */ (function () {
         this.ratio = ratio;
         this.bias = new Big.Decimal(0);
         this.unitType = unitType;
+        this.plural = unitType;
+        this.singular = unitType;
     }
     UnitMeta.prototype.setBias = function (value) {
         this.bias = value;
+    };
+    UnitMeta.prototype.setPlural = function (value) {
+        this.plural = value;
+    };
+    UnitMeta.prototype.setSingular = function (value) {
+        this.singular = value;
     };
     return UnitMeta;
 }());
@@ -1870,6 +1892,14 @@ var Unit = /** @class */ (function () {
     }
     Unit.prototype.setBias = function (value) {
         this.unit.setBias(value);
+        return this;
+    };
+    Unit.prototype.Plural = function (value) {
+        this.unit.setPlural(value);
+        return this;
+    };
+    Unit.prototype.Singular = function (value) {
+        this.unit.setSingular(value);
         return this;
     };
     return Unit;

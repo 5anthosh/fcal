@@ -319,3 +319,20 @@ test('Test Temperature', () => {
     expect(new Fcal().evaluate(expression3)).toStrictEqual(new Type.UnitNumber('408.1222222222222', unit));
   }
 });
+
+test('Singular and Plural units phrases', () => {
+  const expression = '0 sec + 1 sec';
+  let unit;
+  [unit] = getdefaultUnits().get('sec');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression).print()).toStrictEqual('1 Second');
+  }
+
+  const expression1 = '1 weeks in day';
+  [unit] = getdefaultUnits().get('day');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression1).print()).toStrictEqual('7 Days');
+  }
+});

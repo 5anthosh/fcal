@@ -424,6 +424,7 @@ export namespace Type {
 
       return this.newNumeric(left.number.mod(right.number));
     }
+
     public convert(ratio: Big.Decimal, bias: Big.Decimal): Big.Decimal {
       return this.number
         .mul(this.unit.ratio)
@@ -431,8 +432,12 @@ export namespace Type {
         .minus(bias)
         .div(ratio);
     }
+
     public print(): string {
-      return `${this.number.toString()} ${this.unit.unitType}`;
+      if (this.number.isZero() || this.number.equals(1)) {
+        return `${this.number.toString()} ${this.unit.singular}`;
+      }
+      return `${this.number.toString()} ${this.unit.plural}`;
     }
   }
 }

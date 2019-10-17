@@ -6,14 +6,24 @@ export class UnitMeta {
   public ratio: Big.Decimal;
   public bias: Big.Decimal;
   public unitType: string;
+  public singular: string;
+  public plural: string;
   constructor(id: string, ratio: Big.Decimal, unitType: string) {
     this.id = id;
     this.ratio = ratio;
     this.bias = new Big.Decimal(0);
     this.unitType = unitType;
+    this.plural = unitType;
+    this.singular = unitType;
   }
   public setBias(value: Big.Decimal) {
     this.bias = value;
+  }
+  public setPlural(value: string) {
+    this.plural = value;
+  }
+  public setSingular(value: string) {
+    this.singular = value;
   }
 }
 
@@ -29,6 +39,14 @@ export class Unit {
   }
   public setBias(value: Big.Decimal): Unit {
     this.unit.setBias(value);
+    return this;
+  }
+  public Plural(value: string): Unit {
+    this.unit.setPlural(value);
+    return this;
+  }
+  public Singular(value: string): Unit {
+    this.unit.setSingular(value);
     return this;
   }
 }

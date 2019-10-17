@@ -288,3 +288,34 @@ test('Test invalide number literal', () => {
     new Fcal().evaluate(expression2);
   }).toThrowError(new Error("FcalError [0, 7]: Expecting number after + but got '*'"));
 });
+
+test('Test Temperature', () => {
+  const expression = '23432 F + 0.2 C * 9 F / 4 K';
+  let unit;
+  [unit] = getdefaultUnits().get('F');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('23431.356333016553583', unit));
+  }
+
+  const expression1 = '60F in F';
+  [unit] = getdefaultUnits().get('F');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.UnitNumber('60', unit));
+  }
+
+  const expression2 = '0.233452 F in C';
+  [unit] = getdefaultUnits().get('C');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression2)).toStrictEqual(new Type.UnitNumber('-17.64808222222224444', unit));
+  }
+
+  const expression3 = '273.15 F  + 1 K';
+  [unit] = getdefaultUnits().get('K');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression3)).toStrictEqual(new Type.UnitNumber('408.1222222222222', unit));
+  }
+});

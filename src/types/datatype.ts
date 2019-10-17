@@ -289,8 +289,8 @@ export namespace Type {
     public static convertToUnit(value: Numberic, unit: UnitMeta): UnitNumber {
       if (value instanceof UnitNumber) {
         const value2 = value as UnitNumber;
-        if (value2.unit.id === unit.id) {
-          return UnitNumber.New(value2.convert(unit.ratio), unit);
+        if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
+          return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit);
         }
       }
       return UnitNumber.New(value.number, unit);
@@ -329,7 +329,7 @@ export namespace Type {
         if (this.unit.id !== right.unit.id) {
           return right.newNumeric(this.number.add(right.number));
         }
-        return right.newNumeric(this.convert(right.unit.ratio).add(right.number));
+        return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).add(right.number));
       }
       return this.newNumeric(this.number.plus(value.number));
     }
@@ -342,7 +342,7 @@ export namespace Type {
         if (this.unit.id !== right.unit.id) {
           return right.newNumeric(this.number.mul(right.number));
         }
-        return right.newNumeric(this.convert(right.unit.ratio).mul(right.number));
+        return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).mul(right.number));
       }
       return this.newNumeric(this.number.mul(value.number));
     }
@@ -365,7 +365,7 @@ export namespace Type {
         if (left1.unit.id !== right1.unit.id) {
           return left1.newNumeric(left1.number.div(right.number));
         }
-        return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio)));
+        return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio, left1.unit.bias)));
       }
       return this.newNumeric(left.number.div(right.number));
     }
@@ -390,7 +390,7 @@ export namespace Type {
           return left1.newNumeric(left1.number.pow(right.number));
         }
 
-        return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio)));
+        return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio, left1.unit.bias)));
       }
 
       return this.newNumeric(left.number.pow(right.number));
@@ -419,13 +419,17 @@ export namespace Type {
           return left1.newNumeric(left1.number.mod(right1.number));
         }
 
-        return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio)));
+        return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio, left1.unit.bias)));
       }
 
       return this.newNumeric(left.number.mod(right.number));
     }
-    public convert(ration: Big.Decimal): Big.Decimal {
-      return this.number.div(ration).mul(this.unit.ratio);
+    public convert(ratio: Big.Decimal, bias: Big.Decimal): Big.Decimal {
+      return this.number
+        .mul(this.unit.ratio)
+        .add(this.unit.bias)
+        .minus(bias)
+        .div(ratio);
     }
     public print(): string {
       return `${this.number.toString()} ${this.unit.unitType}`;

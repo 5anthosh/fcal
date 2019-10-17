@@ -4,11 +4,16 @@ import { FcalError } from '../FcalError';
 export class UnitMeta {
   public id: string;
   public ratio: Big.Decimal;
+  public bias: Big.Decimal;
   public unitType: string;
   constructor(id: string, ratio: Big.Decimal, unitType: string) {
     this.id = id;
     this.ratio = ratio;
+    this.bias = new Big.Decimal(0);
     this.unitType = unitType;
+  }
+  public setBias(value: Big.Decimal) {
+    this.bias = value;
   }
 }
 
@@ -21,6 +26,10 @@ export class Unit {
   constructor(id: string, ratio: Big.Decimal, unitType: string, ...phrases: string[]) {
     this.unit = new UnitMeta(id, ratio, unitType);
     this.phrases = phrases;
+  }
+  public setBias(value: Big.Decimal): Unit {
+    this.unit.setBias(value);
+    return this;
   }
 }
 

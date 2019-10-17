@@ -6,6 +6,7 @@ export function getdefaultUnits(): Unit.Units {
   setDistanceUnits(units);
   setSpeedUnits(units);
   setTimeUnits(units);
+  setTemperatureUnits(units);
   return units;
 }
 
@@ -34,4 +35,14 @@ function setTimeUnits(units: Unit.Units) {
   units.Add(new Unit('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
   units.Add(new Unit('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
   units.Add(new Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
+}
+
+function setTemperatureUnits(units: Unit.Units) {
+  units.Add(new Unit('TEMPERATURE', new Big.Decimal(1), 'K', 'K', 'kelvin'));
+  units.Add(
+    new Unit('TEMPERATURE', new Big.Decimal('0.5555555555555555555555555'), '°F', '°F', 'F').setBias(
+      new Big.Decimal('255.3722222222222'),
+    ),
+  );
+  units.Add(new Unit('TEMPERATURE', new Big.Decimal(1), '°C', '°C', 'C').setBias(new Big.Decimal(273.15)));
 }

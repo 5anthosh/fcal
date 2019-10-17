@@ -271,6 +271,7 @@ function getdefaultUnits() {
     setDistanceUnits(units);
     setSpeedUnits(units);
     setTimeUnits(units);
+    setTemperatureUnits(units);
     return units;
 }
 exports.getdefaultUnits = getdefaultUnits;
@@ -297,6 +298,11 @@ function setTimeUnits(units) {
     units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', 'min', 'minute'));
     units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', 'hr', 'hour'));
     units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', 'day', 'day'));
+}
+function setTemperatureUnits(units) {
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), 'K', 'K', 'kelvin'));
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal('0.5555555555555555555555555'), '°F', '°F', 'F').setBias(new Big.Decimal('255.3722222222222')));
+    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), '°C', '°C', 'C').setBias(new Big.Decimal(273.15)));
 }
 
 },{"./types/units":16,"decimal.js":17}],4:[function(require,module,exports){
@@ -1716,8 +1722,8 @@ var TYPERANK;
         UnitNumber.convertToUnit = function (value, unit) {
             if (value instanceof UnitNumber) {
                 var value2 = value;
-                if (value2.unit.id === unit.id) {
-                    return UnitNumber.New(value2.convert(unit.ratio), unit);
+                if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
+                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit);
                 }
             }
             return UnitNumber.New(value.number, unit);
@@ -1746,7 +1752,7 @@ var TYPERANK;
                 if (this.unit.id !== right.unit.id) {
                     return right.newNumeric(this.number.add(right.number));
                 }
-                return right.newNumeric(this.convert(right.unit.ratio).add(right.number));
+                return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).add(right.number));
             }
             return this.newNumeric(this.number.plus(value.number));
         };
@@ -1759,7 +1765,7 @@ var TYPERANK;
                 if (this.unit.id !== right.unit.id) {
                     return right.newNumeric(this.number.mul(right.number));
                 }
-                return right.newNumeric(this.convert(right.unit.ratio).mul(right.number));
+                return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).mul(right.number));
             }
             return this.newNumeric(this.number.mul(value.number));
         };
@@ -1783,7 +1789,7 @@ var TYPERANK;
                 if (left1.unit.id !== right1.unit.id) {
                     return left1.newNumeric(left1.number.div(right.number));
                 }
-                return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio)));
+                return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio, left1.unit.bias)));
             }
             return this.newNumeric(left.number.div(right.number));
         };
@@ -1807,7 +1813,7 @@ var TYPERANK;
                 if (left1.unit.id !== right1.unit.id) {
                     return left1.newNumeric(left1.number.pow(right.number));
                 }
-                return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio)));
+                return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio, left1.unit.bias)));
             }
             return this.newNumeric(left.number.pow(right.number));
         };
@@ -1831,12 +1837,16 @@ var TYPERANK;
                 if (left1.unit.unitType === right1.unit.unitType) {
                     return left1.newNumeric(left1.number.mod(right1.number));
                 }
-                return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio)));
+                return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio, left1.unit.bias)));
             }
             return this.newNumeric(left.number.mod(right.number));
         };
-        UnitNumber.prototype.convert = function (ration) {
-            return this.number.div(ration).mul(this.unit.ratio);
+        UnitNumber.prototype.convert = function (ratio, bias) {
+            return this.number
+                .mul(this.unit.ratio)
+                .add(this.unit.bias)
+                .minus(bias)
+                .div(ratio);
         };
         UnitNumber.prototype.print = function () {
             return this.number.toString() + " " + this.unit.unitType;
@@ -1969,13 +1979,18 @@ exports.Phrases = Phrases;
 },{"../FcalError":1}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var Big = require("decimal.js");
 var FcalError_1 = require("../FcalError");
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
         this.ratio = ratio;
+        this.bias = new Big.Decimal(0);
         this.unitType = unitType;
     }
+    UnitMeta.prototype.setBias = function (value) {
+        this.bias = value;
+    };
     return UnitMeta;
 }());
 exports.UnitMeta = UnitMeta;
@@ -1991,6 +2006,10 @@ var Unit = /** @class */ (function () {
         this.unit = new UnitMeta(id, ratio, unitType);
         this.phrases = phrases;
     }
+    Unit.prototype.setBias = function (value) {
+        this.unit.setBias(value);
+        return this;
+    };
     return Unit;
 }());
 exports.Unit = Unit;
@@ -2059,7 +2078,7 @@ exports.Unit = Unit;
 })(Unit = exports.Unit || (exports.Unit = {}));
 exports.Unit = Unit;
 
-},{"../FcalError":1}],17:[function(require,module,exports){
+},{"../FcalError":1,"decimal.js":17}],17:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 

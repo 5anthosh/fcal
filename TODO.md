@@ -2,7 +2,6 @@
 
 _V 0.2.0_
 
-- [ ] add bias to allow units like temperature
 - [ ] add phrases for plural units
 
 _v 0.3.0_
@@ -12,6 +11,8 @@ _v 0.3.0_
 - [ ] complex numbers
 
 **🎉 Finished**
+
+- [x] add bias to allow units like temperature
 - [x] Better error reporting
 - [x] Expontial in numbers
 - [x] tests for functions

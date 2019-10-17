@@ -1,6 +1,6 @@
 # Welcome to fcal 👋
 
-[![version](https://img.shields.io/badge/version-0.1.3-blue.svg?cacheSeconds=2592000)](https://github.com/5anthosh/fcal#readme)
+[![version](https://img.shields.io/badge/version-0.2.0-blue.svg?cacheSeconds=2592000)](https://github.com/5anthosh/fcal#readme)
 [![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/5anthosh/fcal/wiki)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/5anthosh/fcal/graphs/commit-activity)
@@ -88,8 +88,6 @@ console.log(exp.evaluate().print()); // 314.15926535897932385 cm
 ```
 
 ## 🤝 Contributing
-
-📝 [TODO](https://github.com/5anthosh/fcal/blob/master/TODO.md)
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/5anthosh/fcal/issues).
 

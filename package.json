@@ -1,6 +1,6 @@
 {
   "name": "fcal",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Formula evaluation engine",
   "main": "lib/fcal.js",
   "types": "lib/fcal.d.ts",

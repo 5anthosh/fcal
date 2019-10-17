@@ -36,13 +36,13 @@ function setSpeedUnits(units: Unit.Units) {
 
 function setTimeUnits(units: Unit.Units) {
   units.Add(
-    new Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nanosecond', 'nanoseconds'])
+    new Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
       .Singular('Nanosecond')
       .Plural('Nanoseconds'),
   );
 
   units.Add(
-    new Unit('TIME', new Big.Decimal(1e6), 'msec', ['microsecond', 'microseconds'])
+    new Unit('TIME', new Big.Decimal(1e6), 'msec', ['msec', 'microsecond', 'microseconds'])
       .Singular('Microsecond')
       .Plural('Microseconds'),
   );

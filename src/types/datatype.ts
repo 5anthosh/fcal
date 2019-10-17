@@ -434,7 +434,7 @@ export namespace Type {
     }
 
     public print(): string {
-      if (this.number.isZero() || this.number.equals(1)) {
+      if (this.number.lessThanOrEqualTo(1) && !this.number.isNegative()) {
         return `${this.number.toString()} ${this.unit.singular}`;
       }
       return `${this.number.toString()} ${this.unit.plural}`;

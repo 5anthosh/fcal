@@ -214,10 +214,10 @@ function setSpeedUnits(units) {
     units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
 }
 function setTimeUnits(units) {
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nanosecond', 'nanoseconds'])
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
         .Singular('Nanosecond')
         .Plural('Nanoseconds'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e6), 'msec', ['microsecond', 'microseconds'])
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e6), 'msec', ['msec', 'microsecond', 'microseconds'])
         .Singular('Microsecond')
         .Plural('Microseconds'));
     units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
@@ -1758,7 +1758,7 @@ var TYPERANK;
                 .div(ratio);
         };
         UnitNumber.prototype.print = function () {
-            if (this.number.isZero() || this.number.equals(1)) {
+            if (this.number.lessThanOrEqualTo(1) && !this.number.isNegative()) {
                 return this.number.toString() + " " + this.unit.singular;
             }
             return this.number.toString() + " " + this.unit.plural;

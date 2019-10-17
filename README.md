@@ -52,21 +52,21 @@ const { Fcal } = require('fcal');
 const fcal = new Fcal();
 var value = fcal.evaluate('102 day in min + abs(-34 day) in sec');
 
-console.log(value.print()); // 11750400 second(s)
+console.log(value.print()); // 11750400 Seconds
 ```
 
 ### Percentage
 
 ```js
 var value = fcal.evaluate('27% of 230 cm');
-console.log(value.print()); // 62.1 cm
+console.log(value.print()); // 62.1 Centimeters
 ```
 
 You can perform general percentage operation with `+` , `-`
 
 ```js
 var value = fcal.evaluate('1024 m + 6.1%');
-console.log(value.print()); // 1086.464 m
+console.log(value.print()); // 1086.464 Meters
 ```
 
 ### Using expression
@@ -80,11 +80,11 @@ const exp = new Fcal().expression('PI * radius cm ^ 2');
 
 exp.setValues({ radius: 8 });
 
-console.log(exp.evaluate().print()); // 201.06192982974676726 cm
+console.log(exp.evaluate().print()); // 201.06192982974676726 Centimeters
 
 exp.setValues({ radius: 10 });
 
-console.log(exp.evaluate().print()); // 314.15926535897932385 cm
+console.log(exp.evaluate().print()); // 314.15926535897932385 Centimeters
 ```
 
 ## 🤝 Contributing

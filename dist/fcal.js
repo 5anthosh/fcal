@@ -214,10 +214,10 @@ function setSpeedUnits(units) {
     units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
 }
 function setTimeUnits(units) {
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e-9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
         .Singular('Nanosecond')
         .Plural('Nanoseconds'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e6), 'msec', ['msec', 'microsecond', 'microseconds'])
+    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e-6), 'msec', ['msec', 'microsecond', 'microseconds'])
         .Singular('Microsecond')
         .Plural('Microseconds'));
     units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])

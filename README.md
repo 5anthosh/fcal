@@ -1,10 +1,9 @@
 # Welcome to fcal 👋
 
-[![version](https://img.shields.io/badge/version-0.2.0-blue.svg?cacheSeconds=2592000)](https://github.com/5anthosh/fcal#readme)
-[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/5anthosh/fcal/wiki)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/5anthosh/fcal/graphs/commit-activity)
-[![fcal](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
+[![Version](https://badgen.net/npm/v/fcal)](https://www.npmjs.com/package/fcal)
+[![License: MIT](https://badgen.net/npm/license/fcal)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
+[![Hits](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
+[![Downloads](https://badgen.net/npm/dt/fcal)](https://www.npmjs.com/package/fcal)
 
 > Formula evaluation engine
 

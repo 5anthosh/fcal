@@ -1,32 +1,28 @@
 import { FcalError } from '../FcalError';
-import { TokenType } from '../lex/token';
+import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Environment } from './environment';
-import { FcalFunction, FcalFunctions } from './function';
+import { FcalFunction } from './function';
 
 export class Interpreter implements Expr.IVisitor<any> {
   private parser: Parser;
   private ast: Expr;
   private environment: Environment;
-  private funcations: FcalFunctions;
-  constructor(source: string, phrases: Phrases, units: Unit.Units, environment: Environment, functions: FcalFunctions) {
+  constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
     this.parser = new Parser(source, phrases, units);
     this.environment = environment;
-    this.funcations = functions;
     this.ast = this.parser.parse();
   }
 
   public visitCallExpr(expr: Expr.Call): Type {
-    // console.log(`VISIT CALL EXP ${expr.name}`);
     const name = expr.name;
-    let call: FcalFunction | null;
-    let ok: boolean;
-    [call, ok] = this.funcations.get(name);
-    if (ok && call != null) {
+    let call: FcalFunction | undefined;
+    call = this.environment.functions.get(name);
+    if (call !== undefined) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
           FcalError.throwWithEnd(
@@ -45,18 +41,17 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw FcalError.ErrorWithEnd(expr.start, expr.end, `${name} is not callable`);
   }
   public visitAssignExpr(expr: Expr.Assign): Type {
-    // console.log('VISIT ASSIGN');
     const value = this.evaluate(expr.value);
     this.environment.set(expr.name, value);
     return value;
   }
   public visitVariableExpr(expr: Expr.Variable): Type {
-    // console.log('VISIT VARIABLE');
     return this.environment.get(expr.name);
   }
   public evaluateExpression(): Type {
-    // console.log(this.ast.toString());
-    return this.evaluate(this.ast);
+    const value = this.evaluate(this.ast);
+    this.environment.set('_', value);
+    return value;
   }
 
   public visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): Type {
@@ -75,25 +70,23 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
-    // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} LEFT`);
     let left = this.evaluate(expr.left) as Type.BNumber;
-    // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} RIGHT`);
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
-      case TokenType.PLUS:
+      case TT.PLUS:
         return left.Add(right);
-      case TokenType.MINUS:
+      case TT.MINUS:
         return left.Sub(right);
-      case TokenType.TIMES:
+      case TT.TIMES:
         return left.times(right);
-      case TokenType.SLASH:
+      case TT.SLASH:
         return left.divide(right);
-      case TokenType.MOD:
+      case TT.MOD:
         if (right.isZero()) {
           return new Type.BNumber('Infinity');
         }
         return left.modulo(right);
-      case TokenType.CAP:
+      case TT.CAP:
         if (left.isNegative()) {
           if (!right.isInteger()) {
             // safe play with complex numbers
@@ -106,7 +99,7 @@ export class Interpreter implements Expr.IVisitor<any> {
           }
         }
         return left.power(right);
-      case TokenType.OF:
+      case TT.OF:
         left = new Type.Percentage(left.number);
         const per = left as Type.Percentage;
         right.number = per.percentageValue(right.number);
@@ -125,9 +118,8 @@ export class Interpreter implements Expr.IVisitor<any> {
   }
 
   public visitUnaryExpr(expr: Expr.Unary): Type.BNumber {
-    // console.log('VISIT UNARY');
     const right = this.evaluate(expr.right) as Type.BNumber;
-    if (expr.operator.type === TokenType.MINUS) {
+    if (expr.operator.type === TT.MINUS) {
       return right.negated();
     }
     return right;
@@ -149,16 +141,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     }
   }
   private evaluate(expr: Expr): Type {
-    // console.log(expr.toString());
     const ast = expr.accept(this);
-    // console.log(ast.format());
     return ast;
   }
-}
-
-export function setCharAt(str: string, replace: string, start: number, end: number): string {
-  if (start > str.length - 1 && end > str.length - 1) {
-    return str;
-  }
-  return str.substr(0, start) + replace + str.substr(end);
 }

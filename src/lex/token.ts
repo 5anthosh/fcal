@@ -1,4 +1,4 @@
-export enum TokenType {
+export enum TT {
   PLUS,
   MINUS,
   TIMES,
@@ -20,20 +20,20 @@ export enum TokenType {
 }
 
 export function PrintTT(enumNumber: number): string {
-  return TokenType[enumNumber];
+  return TT[enumNumber];
 }
 
 export class Token {
-  public static EOLToken(end: number): Token {
-    return new Token(TokenType.EOL, '', null, end, end);
+  public static EOL(end: number): Token {
+    return new Token(TT.EOL, '', null, end, end);
   }
-  public type: TokenType;
+  public type: TT;
   public lexeme: string;
   public Literal: any;
   public start: number;
   public end: number;
 
-  constructor(type: TokenType, lexeme: string, literal: any, start: number, end: number) {
+  constructor(type: TT, lexeme: string, literal: any, start: number, end: number) {
     this.type = type;
     this.lexeme = lexeme;
     this.start = start;

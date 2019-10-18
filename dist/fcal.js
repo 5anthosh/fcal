@@ -20,13 +20,13 @@ var FcalError = /** @class */ (function (_super) {
         var _this = _super.call(this, message) || this;
         _this.start = start;
         _this.end = end;
+        _this.message = message;
         if (start === -1) {
             _this.name = 'FcalError';
         }
         else {
             _this.name = "FcalError [" + start + ", " + end + "]";
         }
-        _this.message = _this.name + ": " + message;
         return _this;
     }
     FcalError.throw = function (start, message) {
@@ -56,122 +56,122 @@ exports.FcalError = FcalError;
 Object.defineProperty(exports, "__esModule", { value: true });
 var function_1 = require("./interpreter/function");
 function getDefaultFunction() {
-    var functions = new function_1.FcalFunctions();
-    functions.add(
+    var functions = Array();
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('abs', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.abs());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('sqrt', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.sqrt());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('cbrt', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.cbrt());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('log', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.log());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('ln', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.ln());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('round', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.round());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('floor', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.floor());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('ceil', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.ceil());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('cos', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.cosine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('acos', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseCosine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('cosh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicCosine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('acosh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicCosine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('sin', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.sine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('asin', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseSine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('sinh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicSine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('asinh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseHyperbolicSine());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('tan', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.tangent());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('atan', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.inverseTangent());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('tanh', 1, function (_environment, argument) {
         var value = argument[0];
         return value.newNumeric(value.number.hyperbolicTangent());
     }));
-    functions.add(
+    functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new function_1.FcalFunction('atanh', 1, function (_environment, argument) {
         var value = argument[0];
@@ -187,7 +187,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
 var units_1 = require("./types/units");
 function getdefaultUnits() {
-    var units = new units_1.Unit.Units();
+    var units = new Array();
     setDistanceUnits(units);
     setSpeedUnits(units);
     setTimeUnits(units);
@@ -196,44 +196,46 @@ function getdefaultUnits() {
 }
 exports.getdefaultUnits = getdefaultUnits;
 function setDistanceUnits(units) {
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(1), 'cm', ['cm', 'centimeter']).Singular('Centimeter').Plural('Centimeters'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100), 'm', ['m', 'meter']).Singular('Meter').Plural('Meters'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(0.1), 'mm', ['mm', 'milimeter']).Singular('Milimeter').Plural('Milimeters'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(100000), 'km', ['km']).Singular('Kilometer').Plural('Kilometers'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(2.54), 'inch', ['inch']).Singular('Inch').Plural('Inches'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(30.48), 'foot/feet', ['ft']).Singular('Foot').Plural('Feet'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(91.44), 'yard', ['yd', 'yard']).Singular('Yard').Plural('Yards'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(160934.4), 'mile', ['mi']).Singular('Mile').Plural('Miles'));
-    units.Add(new units_1.Unit('LENGTH', new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(1), 'cm', ['cm', 'centimeter'])
+        .Singular('Centimeter')
+        .Plural('Centimeters'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(100), 'm', ['m', 'meter']).Singular('Meter').Plural('Meters'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(0.1), 'mm', ['mm', 'milimeter']).Singular('Milimeter').Plural('Milimeters'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(100000), 'km', ['km']).Singular('Kilometer').Plural('Kilometers'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(2.54), 'inch', ['inch']).Singular('Inch').Plural('Inches'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(30.48), 'foot/feet', ['ft']).Singular('Foot').Plural('Feet'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(91.44), 'yard', ['yd', 'yard']).Singular('Yard').Plural('Yards'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(160934.4), 'mile', ['mi']).Singular('Mile').Plural('Miles'));
+    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
 }
 function setSpeedUnits(units) {
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1), 'km/h', ['kmh', 'kmph', 'khm', 'kph']));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.609344), 'miles/h', ['mph']));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(3.6), 'm/s', ['mps']));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.097), 'ft/s', ['fps']));
-    units.Add(new units_1.Unit('SPEED', new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
+    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1), 'km/h', ['kmh', 'kmph', 'khm', 'kph']));
+    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.609344), 'miles/h', ['mph']));
+    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(3.6), 'm/s', ['mps']));
+    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.097), 'ft/s', ['fps']));
+    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
 }
 function setTimeUnits(units) {
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e-9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1e-9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
         .Singular('Nanosecond')
         .Plural('Nanoseconds'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1e-6), 'msec', ['msec', 'microsecond', 'microseconds'])
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1e-6), 'msec', ['msec', 'microsecond', 'microseconds'])
         .Singular('Microsecond')
         .Plural('Microseconds'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
         .Singular('Second')
         .Plural('Seconds'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(60), 'minute(s)', ['min', 'minute', 'minutes'])
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(60), 'minute(s)', ['min', 'minute', 'minutes'])
         .Singular('Minute')
         .Plural('Minutes'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(3600), 'hour(s)', ['hr', 'hour', 'hours']).Singular('Hour').Plural('Hours'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(86400), 'day(s)', ['day', 'days']).Singular('Day').Plural('Days'));
-    units.Add(new units_1.Unit('TIME', new Big.Decimal(604800), 'week(s)', ['week', 'weeks']).Singular('Week').Plural('Weeks'));
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(3600), 'hour(s)', ['hr', 'hour', 'hours']).Singular('Hour').Plural('Hours'));
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(86400), 'day(s)', ['day', 'days']).Singular('Day').Plural('Days'));
+    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(604800), 'week(s)', ['week', 'weeks']).Singular('Week').Plural('Weeks'));
 }
 function setTemperatureUnits(units) {
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), 'K', ['K', 'kelvin']));
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal('0.5555555555555555555555555'), '°F', ['°F', 'F']).setBias(new Big.Decimal('255.3722222222222')));
-    units.Add(new units_1.Unit('TEMPERATURE', new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
+    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), 'K', ['K', 'kelvin']));
+    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal('0.55555555555555555556'), '°F', ['°F', 'F']).setBias(new Big.Decimal('255.3722222222222')));
+    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
 }
 
 },{"./types/units":16,"decimal.js":17}],4:[function(require,module,exports){
@@ -247,7 +249,6 @@ var environment_1 = require("./interpreter/environment");
 exports.Environment = environment_1.Environment;
 var function_1 = require("./interpreter/function");
 exports.FcalFunction = function_1.FcalFunction;
-exports.FcalFunctions = function_1.FcalFunctions;
 var interpreter_1 = require("./interpreter/interpreter");
 var token_1 = require("./lex/token");
 var datatype_1 = require("./types/datatype");
@@ -262,24 +263,65 @@ exports.Unit = units_1.Unit;
  */
 var Fcal = /** @class */ (function () {
     function Fcal() {
-        this.phrases = Fcal.getdefaultphrases();
-        this.units = defaultUnits_1.getdefaultUnits();
-        this.environment = new environment_1.Environment();
+        this.environment = new environment_1.Environment(Fcal.functions);
         this.setDefaultValues();
-        this.functions = new function_1.FcalFunctions();
-        this.setDefaultFunctions();
     }
+    /**
+     * register new fcal Functions
+     * @param functions
+     */
+    Fcal.UseFunctions = function (functions) {
+        for (var _i = 0, functions_1 = functions; _i < functions_1.length; _i++) {
+            var func = functions_1[_i];
+            this.UseFunction(func);
+        }
+    };
+    /**
+     * Register new Fcal function
+     * @param func
+     */
+    Fcal.UseFunction = function (func) {
+        this.functions.push(func);
+    };
+    /**
+     * Register new units
+     * @param units
+     */
+    Fcal.UseUnits = function (units) {
+        for (var _i = 0, units_2 = units; _i < units_2.length; _i++) {
+            var unit = units_2[_i];
+            this.UseUnit(unit);
+        }
+    };
+    /**
+     * Register new unit
+     * @param unit
+     */
+    Fcal.UseUnit = function (unit) {
+        this.units.push(unit);
+    };
+    Fcal.IntialiseStaticValues = function () {
+        this.phrases = this.getdefaultphrases();
+        this.setDefaultUnits();
+        this.setDefaultFunctions();
+    };
     Fcal.getdefaultphrases = function () {
         var phrases = new phrase_1.Phrases();
-        phrases.addPhrases(token_1.TokenType.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
-        phrases.addPhrases(token_1.TokenType.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
-        phrases.addPhrases(token_1.TokenType.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
-        phrases.addPhrases(token_1.TokenType.SLASH, ['DIVIDE', 'DIVIDEBY']);
-        phrases.addPhrases(token_1.TokenType.CAP, ['POW']);
-        phrases.addPhrases(token_1.TokenType.MOD, ['mod']);
-        phrases.addPhrases(token_1.TokenType.OF, ['of']);
-        phrases.addPhrases(token_1.TokenType.IN, ['in', 'as']);
+        phrases.push(token_1.TokenType.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+        phrases.push(token_1.TokenType.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
+        phrases.push(token_1.TokenType.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
+        phrases.push(token_1.TokenType.SLASH, ['DIVIDE', 'DIVIDEBY']);
+        phrases.push(token_1.TokenType.CAP, ['POW']);
+        phrases.push(token_1.TokenType.MOD, ['mod']);
+        phrases.push(token_1.TokenType.OF, ['of']);
+        phrases.push(token_1.TokenType.IN, ['in', 'as']);
         return phrases;
+    };
+    Fcal.setDefaultFunctions = function () {
+        this.UseFunctions(defaultFunctions_1.getDefaultFunction());
+    };
+    Fcal.setDefaultUnits = function () {
+        this.UseUnits(defaultUnits_1.getdefaultUnits());
     };
     /**
      * Evaluates given expression
@@ -288,17 +330,17 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
-        return new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
     };
     /**
      * Create new  @class Expression with copy of Fcal.Environment
      * @param source expression
      */
     Fcal.prototype.expression = function (source) {
-        var env = new environment_1.Environment();
+        var env = new environment_1.Environment(Fcal.functions);
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, env, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env));
     };
     /**
      * Create new  @class Expression in sync with Fcal.Environment
@@ -306,7 +348,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, this.phrases, this.units, this.environment, this.functions));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment));
     };
     /**
      * create a new variable with value or assign value to variable
@@ -320,26 +362,15 @@ var Fcal = /** @class */ (function () {
             }
         }
     };
-    /**
-     * register new fcal Functions
-     * @param functions
-     */
-    Fcal.prototype.setFunctions = function (functions) {
-        for (var _i = 0, _a = functions.functions; _i < _a.length; _i++) {
-            var func = _a[_i];
-            this.functions.add(func);
-        }
-    };
     Fcal.prototype.setDefaultValues = function () {
         this.setValues({
             E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
             PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
-            PI2: datatype_1.Type.BNumber.New('6.28318530718'),
+            PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
         });
     };
-    Fcal.prototype.setDefaultFunctions = function () {
-        this.setFunctions(defaultFunctions_1.getDefaultFunction());
-    };
+    Fcal.units = new units_1.Unit.List();
+    Fcal.functions = new function_1.FcalFunction.List();
     return Fcal;
 }());
 exports.Fcal = Fcal;
@@ -373,6 +404,7 @@ var Expression = /** @class */ (function () {
     return Expression;
 }());
 exports.Expression = Expression;
+Fcal.IntialiseStaticValues();
 
 },{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./lex/token":10,"./types/datatype":14,"./types/phrase":15,"./types/units":16,"decimal.js":17}],5:[function(require,module,exports){
 "use strict";
@@ -384,8 +416,9 @@ var datatype_1 = require("../types/datatype");
  * It represents state of fcal
  */
 var Environment = /** @class */ (function () {
-    function Environment() {
+    function Environment(functions) {
         this.values = {};
+        this.functions = functions;
     }
     /**
      * Get the value of variable
@@ -444,50 +477,56 @@ exports.FcalFunction = FcalFunction;
 /**
  * List of fcal functions
  */
-var FcalFunctions = /** @class */ (function () {
-    function FcalFunctions() {
-        this.functions = Array();
-    }
-    /**
-     * Add new fcal function
-     * @param fcalFunction
-     * @throws Error if function name is already exists
-     */
-    FcalFunctions.prototype.add = function (fcalFunction) {
-        if (this.check(fcalFunction.name)) {
-            FcalError_1.FcalError.throwWithoutCtx(fcalFunction.name + " is already registered");
+// tslint:disable-next-line:no-namespace
+(function (FcalFunction) {
+    var List = /** @class */ (function () {
+        function List() {
+            this.functions = {};
         }
-        this.functions.push(fcalFunction);
-    };
-    /**
-     * Get function implemention by its function name
-     * @param name function name
-     */
-    FcalFunctions.prototype.get = function (name) {
-        for (var _i = 0, _a = this.functions; _i < _a.length; _i++) {
-            var func = _a[_i];
-            if (func.name === name) {
-                return [func, true];
+        /**
+         * Add new fcal function
+         * @param fcalFunction
+         * @throws Error if function name is already exists
+         */
+        List.prototype.push = function (fcalFunction) {
+            if (this.check(fcalFunction.name)) {
+                FcalError_1.FcalError.throwWithoutCtx(fcalFunction.name + " is already registered");
             }
-        }
-        return [null, false];
-    };
-    /**
-     * check if function is available
-     * @param name function name
-     */
-    FcalFunctions.prototype.check = function (name) {
-        for (var _i = 0, _a = this.functions; _i < _a.length; _i++) {
-            var funcs = _a[_i];
-            if (funcs.name === name) {
-                return true;
+            this.functions[fcalFunction.name] = fcalFunction;
+        };
+        /**
+         * Call a function by its name
+         * @param functionName
+         * @param enviroment
+         * @param argument
+         * @param Type
+         */
+        List.prototype.call = function (functionName, enviroment, argument) {
+            var fcalFunc = this.get(functionName);
+            if (fcalFunc !== undefined) {
+                return fcalFunc.function(enviroment, argument);
             }
-        }
-        return false;
-    };
-    return FcalFunctions;
-}());
-exports.FcalFunctions = FcalFunctions;
+            throw FcalError_1.FcalError.ErrorWithoutCtx("Function " + functionName + " is not found");
+        };
+        /**
+         * Get function implemention by its function name
+         * @param name function name
+         */
+        List.prototype.get = function (name) {
+            return this.functions[name];
+        };
+        /**
+         * check if function is available
+         * @param name function name
+         */
+        List.prototype.check = function (name) {
+            return this.functions.hasOwnProperty(name);
+        };
+        return List;
+    }());
+    FcalFunction.List = List;
+})(FcalFunction = exports.FcalFunction || (exports.FcalFunction = {}));
+exports.FcalFunction = FcalFunction;
 
 },{"../FcalError":1,"../types/datatype":14}],7:[function(require,module,exports){
 "use strict";
@@ -497,28 +536,24 @@ var token_1 = require("../lex/token");
 var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, units, environment, functions) {
+    function Interpreter(source, phrases, units, environment) {
         this.parser = new parser_1.Parser(source, phrases, units);
         this.environment = environment;
-        this.funcations = functions;
         this.ast = this.parser.parse();
     }
     Interpreter.prototype.visitCallExpr = function (expr) {
-        var _a;
-        // console.log(`VISIT CALL EXP ${expr.name}`);
         var name = expr.name;
         var call;
-        var ok;
-        _a = this.funcations.get(name), call = _a[0], ok = _a[1];
-        if (ok && call != null) {
+        call = this.environment.functions.get(name);
+        if (call !== undefined) {
             if (call.arbity !== -1) {
                 if (call.arbity !== expr.argument.length) {
                     FcalError_1.FcalError.throwWithEnd(expr.start, expr.end, "function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
                 }
             }
             var argument = Array();
-            for (var _i = 0, _b = expr.argument; _i < _b.length; _i++) {
-                var param = _b[_i];
+            for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
+                var param = _a[_i];
                 argument.push(this.evaluate(param));
             }
             return call.call(this.environment, argument);
@@ -526,18 +561,17 @@ var Interpreter = /** @class */ (function () {
         throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, name + " is not callable");
     };
     Interpreter.prototype.visitAssignExpr = function (expr) {
-        // console.log('VISIT ASSIGN');
         var value = this.evaluate(expr.value);
         this.environment.set(expr.name, value);
         return value;
     };
     Interpreter.prototype.visitVariableExpr = function (expr) {
-        // console.log('VISIT VARIABLE');
         return this.environment.get(expr.name);
     };
     Interpreter.prototype.evaluateExpression = function () {
-        // console.log(this.ast.toString());
-        return this.evaluate(this.ast);
+        var value = this.evaluate(this.ast);
+        this.environment.set('_', value);
+        return value;
     };
     Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
@@ -554,9 +588,7 @@ var Interpreter = /** @class */ (function () {
         throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
     };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
-        // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} LEFT`);
         var left = this.evaluate(expr.left);
-        // console.log(`VISIT BIN ${PrintTT(expr.operator.type)} RIGHT`);
         var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
             case token_1.TokenType.PLUS:
@@ -601,7 +633,6 @@ var Interpreter = /** @class */ (function () {
         return expr.value;
     };
     Interpreter.prototype.visitUnaryExpr = function (expr) {
-        // console.log('VISIT UNARY');
         var right = this.evaluate(expr.right);
         if (expr.operator.type === token_1.TokenType.MINUS) {
             return right.negated();
@@ -624,21 +655,12 @@ var Interpreter = /** @class */ (function () {
         }
     };
     Interpreter.prototype.evaluate = function (expr) {
-        // console.log(expr.toString());
         var ast = expr.accept(this);
-        // console.log(ast.format());
         return ast;
     };
     return Interpreter;
 }());
 exports.Interpreter = Interpreter;
-function setCharAt(str, replace, start, end) {
-    if (start > str.length - 1 && end > str.length - 1) {
-        return str;
-    }
-    return str.substr(0, start) + replace + str.substr(end);
-}
-exports.setCharAt = setCharAt;
 
 },{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":14}],8:[function(require,module,exports){
 "use strict";
@@ -742,19 +764,17 @@ var Lexer = /** @class */ (function () {
         return this.source.charAt(this.current + n);
     };
     Lexer.prototype.string = function () {
-        var _a, _b;
         while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
             this.advance();
         }
         var text = this.lexeme();
         var type;
-        var ok;
-        _a = this.phrases.search(text), type = _a[0], ok = _a[1];
-        if (ok) {
+        type = this.phrases.get(text);
+        if (type !== undefined) {
             return this.createToken(type);
         }
-        _b = this.units.get(text), ok = _b[1];
-        if (ok) {
+        var unit = this.units.get(text);
+        if (unit) {
             return this.createTokenWithLiteral(token_1.TokenType.UNIT, text);
         }
         return this.createToken(token_1.TokenType.NAME);
@@ -817,6 +837,7 @@ var Lexer = /** @class */ (function () {
         char_1.Char.EQUAL,
         char_1.Char.COMMA,
         char_1.Char.DOUBLE_COLON,
+        char_1.Char.NEWLINE,
     ];
     return Lexer;
 }());
@@ -1212,8 +1233,7 @@ var Parser = /** @class */ (function () {
         if (this.match([token_1.TokenType.IN])) {
             this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
             var unit = this.previous();
-            var unit2 = void 0;
-            unit2 = this.lexer.units.get(unit.lexeme)[0];
+            var unit2 = this.lexer.units.get(unit.lexeme);
             if (unit2 != null) {
                 return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1229,7 +1249,7 @@ var Parser = /** @class */ (function () {
         if (this.match([token_1.TokenType.UNIT])) {
             var unit = this.previous();
             var unit2 = void 0;
-            unit2 = this.lexer.units.get(unit.lexeme)[0];
+            unit2 = this.lexer.units.get(unit.lexeme);
             if (unit2 != null) {
                 return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
             }
@@ -1773,84 +1793,21 @@ exports.Type = Type;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
-var Phrase = /** @class */ (function () {
-    function Phrase(type, phrases) {
-        this.type = type;
-        this.phrases = phrases;
-    }
-    Phrase.prototype.add = function (phrases) {
-        var _a;
-        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
-            var phrase = phrases_1[_i];
-            if (this.check([phrase])) {
-                FcalError_1.FcalError.throwWithoutCtx(phrase + " already exists");
-            }
-        }
-        (_a = this.phrases).push.apply(_a, phrases);
-    };
-    Phrase.prototype.check = function (phrase) {
-        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
-            var phrase1 = _a[_i];
-            for (var _b = 0, phrase_1 = phrase; _b < phrase_1.length; _b++) {
-                var phrase2 = phrase_1[_b];
-                if (phrase2 === phrase1) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    };
-    return Phrase;
-}());
-exports.Phrase = Phrase;
 var Phrases = /** @class */ (function () {
     function Phrases() {
-        this.phrases = [];
+        this.phrases = {};
     }
-    Phrases.prototype.add = function (phrases) {
-        this.phrases.push(phrases);
-    };
-    Phrases.prototype.getPhrases = function (key) {
-        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
-            var phrase = _a[_i];
-            if (phrase.type === key) {
-                return [phrase.phrases, true];
+    Phrases.prototype.push = function (key, phrases) {
+        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
+            var phrase = phrases_1[_i];
+            if (this.phrases.hasOwnProperty(phrase.toUpperCase())) {
+                FcalError_1.FcalError.throwWithoutCtx("phrases already exits");
             }
+            this.phrases[phrase.toUpperCase()] = key;
         }
-        return [[], false];
     };
-    Phrases.prototype.search = function (key) {
-        key = key.toUpperCase();
-        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
-            var phrase = _a[_i];
-            if (phrase.phrases.find(function (x) { return x === key; })) {
-                return [phrase.type, true];
-            }
-        }
-        return [0, false];
-    };
-    Phrases.prototype.addPhrases = function (type, phrases) {
-        var _a;
-        phrases = phrases.map(function (x) { return x.toUpperCase(); });
-        if (this.checkPhrase(phrases)) {
-            FcalError_1.FcalError.throwWithoutCtx("phrases already exits");
-        }
-        for (var _i = 0, _b = this.phrases; _i < _b.length; _i++) {
-            var phrase = _b[_i];
-            if (phrase.type === type) {
-                (_a = phrase.phrases).push.apply(_a, phrases);
-            }
-        }
-        this.add(new Phrase(type, phrases));
-    };
-    Phrases.prototype.checkPhrase = function (phrase) {
-        for (var _i = 0, _a = this.phrases; _i < _a.length; _i++) {
-            var phrase1 = _a[_i];
-            if (phrase1.check(phrase)) {
-                return true;
-            }
-        }
-        return false;
+    Phrases.prototype.get = function (key) {
+        return this.phrases[key.toUpperCase()];
     };
     return Phrases;
 }());
@@ -1907,62 +1864,58 @@ var Unit = /** @class */ (function () {
 exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
 (function (Unit) {
+    Unit.LENGTHID = 'LENGTH';
+    Unit.SPEEDID = 'SPEED';
+    Unit.TIMEID = 'TIME';
+    Unit.TEMPERATUREID = 'TIMERATURE';
     /**
      * List of units
      */
-    var Units = /** @class */ (function () {
-        function Units() {
-            this.units = [];
+    var List = /** @class */ (function () {
+        function List() {
+            this.units = {};
         }
         /**
          * Add a new unit
          * @param unit
          * @throws Error if phrases already exists
          */
-        Units.prototype.Add = function (unit) {
-            if (this.check(unit.phrases)) {
-                FcalError_1.FcalError.throwWithoutCtx('phrase already exists');
+        List.prototype.push = function (unit) {
+            var phrase = this.check(unit.phrases);
+            if (phrase !== null) {
+                FcalError_1.FcalError.throwWithoutCtx(phrase + " phrase already exists");
             }
-            this.units.push(unit);
+            for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
+                var phrase1 = _a[_i];
+                this.units[phrase1] = unit;
+            }
         };
         /**
          * check if unit already exists
          * @param phrases
          */
-        Units.prototype.check = function (phrases) {
-            for (var _i = 0, _a = this.units; _i < _a.length; _i++) {
-                var unit = _a[_i];
-                for (var _b = 0, _c = unit.phrases; _b < _c.length; _b++) {
-                    var phrase = _c[_b];
-                    for (var _d = 0, phrases_1 = phrases; _d < phrases_1.length; _d++) {
-                        var phrase2 = phrases_1[_d];
-                        if (phrase === phrase2) {
-                            return true;
-                        }
-                    }
+        List.prototype.check = function (phrases) {
+            for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
+                var phrase = phrases_1[_i];
+                if (this.units.hasOwnProperty(phrase)) {
+                    return phrase;
                 }
             }
-            return false;
+            return null;
         };
         /**
          * get the unit by its phrase
          * @param phrase
          */
-        Units.prototype.get = function (phrase) {
-            for (var _i = 0, _a = this.units; _i < _a.length; _i++) {
-                var unit = _a[_i];
-                for (var _b = 0, _c = unit.phrases; _b < _c.length; _b++) {
-                    var phrase2 = _c[_b];
-                    if (phrase === phrase2) {
-                        return [unit.unit, true];
-                    }
-                }
+        List.prototype.get = function (phrase) {
+            if (this.units.hasOwnProperty(phrase)) {
+                return this.units[phrase].unit;
             }
-            return [null, false];
+            return null;
         };
-        return Units;
+        return List;
     }());
-    Unit.Units = Units;
+    Unit.List = List;
 })(Unit = exports.Unit || (exports.Unit = {}));
 exports.Unit = Unit;
 

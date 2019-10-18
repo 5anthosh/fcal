@@ -24,11 +24,11 @@ export class FcalError extends Error {
     super(message);
     this.start = start;
     this.end = end;
+    this.message = message;
     if (start === -1) {
       this.name = 'FcalError';
     } else {
       this.name = `FcalError [${start}, ${end}]`;
     }
-    this.message = `${this.name}: ${message}`;
   }
 }

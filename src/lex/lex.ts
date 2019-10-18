@@ -3,7 +3,7 @@ import { Type as any } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Char } from './char';
-import { Token, TokenType } from './token';
+import { Token, TT } from './token';
 export class Lexer {
   public static notAlpha: string[] = [
     Char.PLUS,
@@ -17,6 +17,7 @@ export class Lexer {
     Char.EQUAL,
     Char.COMMA,
     Char.DOUBLE_COLON,
+    Char.NEWLINE,
   ];
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
@@ -30,13 +31,13 @@ export class Lexer {
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
   }
-  public units: Unit.Units;
+  public units: Unit.List;
   private tokens: Token[];
   private source: string;
   private start: number;
   private current: number;
   private phrases: Phrases;
-  constructor(source: string, phrases: Phrases, untis: Unit.Units) {
+  constructor(source: string, phrases: Phrases, untis: Unit.List) {
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
@@ -46,7 +47,7 @@ export class Lexer {
   }
   public Next(): Token {
     if (this.isAtEnd()) {
-      return Token.EOLToken(this.current);
+      return Token.EOL(this.current);
     }
     return this.scan();
   }
@@ -54,29 +55,29 @@ export class Lexer {
     const char = this.space();
     switch (char) {
       case Char.PLUS:
-        return this.createToken(TokenType.PLUS);
+        return this.TT(TT.PLUS);
       case Char.MINUS:
-        return this.createToken(TokenType.MINUS);
+        return this.TT(TT.MINUS);
       case Char.TIMES:
-        return this.createToken(TokenType.TIMES);
+        return this.TT(TT.TIMES);
       case Char.SLASH:
-        return this.createToken(TokenType.SLASH);
+        return this.TT(TT.SLASH);
       case Char.EQUAL:
-        return this.createToken(TokenType.EQUAL);
+        return this.TT(TT.EQUAL);
       case Char.COMMA:
-        return this.createToken(TokenType.COMMA);
+        return this.TT(TT.COMMA);
       case Char.DOUBLE_COLON:
-        return this.createToken(TokenType.EQUAL);
+        return this.TT(TT.EQUAL);
       case Char.OPEN_PARAN:
-        return this.createToken(TokenType.OPEN_PARAN);
+        return this.TT(TT.OPEN_PARAN);
       case Char.CLOSE_PARAN:
-        return this.createToken(TokenType.CLOSE_PARAN);
+        return this.TT(TT.CLOSE_PARAN);
       case Char.CAP:
-        return this.createToken(TokenType.CAP);
+        return this.TT(TT.CAP);
       case Char.PERCENTAGE:
-        return this.createToken(TokenType.PERCENTAGE);
+        return this.TT(TT.PERCENTAGE);
       case Char.NEWLINE:
-        return this.createToken(TokenType.NEWLINE);
+        return this.TT(TT.NEWLINE);
       default:
         if (Lexer.isDigit(char)) {
           return this.number();
@@ -87,7 +88,7 @@ export class Lexer {
   private isAtEnd(): boolean {
     return this.current >= this.source.length;
   }
-  private advance(): string {
+  private eat(): string {
     this.current++;
     return this.source.charAt(this.current - 1);
   }
@@ -99,53 +100,50 @@ export class Lexer {
   }
   private string(): Token {
     while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
-      this.advance();
+      this.eat();
     }
     const text = this.lexeme();
-    let type: TokenType;
-    let ok: boolean;
-    [type, ok] = this.phrases.search(text);
-    if (ok) {
-      return this.createToken(type);
+    let type: TT | undefined;
+    type = this.phrases.get(text);
+    if (type !== undefined) {
+      return this.TT(type);
     }
-
-    [, ok] = this.units.get(text);
-    if (ok) {
-      return this.createTokenWithLiteral(TokenType.UNIT, text);
+    const unit = this.units.get(text);
+    if (unit) {
+      return this.TTWithLiteral(TT.UNIT, text);
     }
-
-    return this.createToken(TokenType.NAME);
+    return this.TT(TT.NAME);
   }
   private number(): Token {
     while (Lexer.isDigit(this.peek(0))) {
-      this.advance();
+      this.eat();
     }
     if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
-      this.advance();
+      this.eat();
       while (Lexer.isDigit(this.peek(0))) {
-        this.advance();
+        this.eat();
       }
     }
     if (this.peek(0) === 'E' || this.peek(0) === 'e') {
       let c = this.peek(0);
-      this.advance();
+      this.eat();
       if (this.peek(0) === '+' || this.peek(0) === '-') {
         c = this.peek(0);
-        this.advance();
+        this.eat();
       }
       if (!Lexer.isDigit(this.peek(0))) {
         FcalError.throwWithEnd(this.start, this.current, `Expecting number after ${c} but got '${this.peek(0)}'`);
       }
       while (Lexer.isDigit(this.peek(0))) {
-        this.advance();
+        this.eat();
       }
     }
-    return this.createTokenWithLiteral(TokenType.Number, new any.BNumber(this.lexeme()));
+    return this.TTWithLiteral(TT.Number, new any.BNumber(this.lexeme()));
   }
-  private createToken(type: TokenType): Token {
-    return this.createTokenWithLiteral(type, null);
+  private TT(type: TT): Token {
+    return this.TTWithLiteral(type, null);
   }
-  private createTokenWithLiteral(type: TokenType, literal: any): Token {
+  private TTWithLiteral(type: TT, literal: any): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);
@@ -155,10 +153,10 @@ export class Lexer {
     return this.source.substring(this.start, this.current);
   }
   private space(): string {
-    let char = this.advance();
+    let char = this.eat();
     while (Lexer.isSpace(char)) {
       this.start = this.current;
-      char = this.advance();
+      char = this.eat();
     }
     return char;
   }

@@ -2,9 +2,9 @@ import { Decimal } from 'decimal.js';
 import { getDefaultFunction } from './defaultFunctions';
 import { getdefaultUnits } from './defaultUnits';
 import { Environment } from './interpreter/environment';
-import { FcalFunction, FcalFunctions } from './interpreter/function';
+import { FcalFunction } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
-import { TokenType } from './lex/token';
+import { TT } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { Unit } from './types/units';
@@ -15,29 +15,69 @@ import { Unit } from './types/units';
  * variables and functions with units
  */
 class Fcal {
-  public static getdefaultphrases(): Phrases {
+  public static units: Unit.List = new Unit.List();
+  public static functions: FcalFunction.List = new FcalFunction.List();
+  /**
+   * register new fcal Functions
+   * @param functions
+   */
+  public static UseFunctions(functions: FcalFunction[]) {
+    for (const func of functions) {
+      this.UseFunction(func);
+    }
+  }
+  /**
+   * Register new Fcal function
+   * @param func
+   */
+  public static UseFunction(func: FcalFunction) {
+    this.functions.push(func);
+  }
+  /**
+   * Register new units
+   * @param units
+   */
+  public static UseUnits(units: Unit[]) {
+    for (const unit of units) {
+      this.UseUnit(unit);
+    }
+  }
+  /**
+   * Register new unit
+   * @param unit
+   */
+  public static UseUnit(unit: Unit) {
+    this.units.push(unit);
+  }
+
+  public static IntialiseStaticValues() {
+    this.phrases = this.getdefaultphrases();
+    this.setDefaultUnits();
+    this.setDefaultFunctions();
+  }
+  private static phrases: Phrases;
+  private static getdefaultphrases(): Phrases {
     const phrases = new Phrases();
-    phrases.addPhrases(TokenType.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
-    phrases.addPhrases(TokenType.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
-    phrases.addPhrases(TokenType.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
-    phrases.addPhrases(TokenType.SLASH, ['DIVIDE', 'DIVIDEBY']);
-    phrases.addPhrases(TokenType.CAP, ['POW']);
-    phrases.addPhrases(TokenType.MOD, ['mod']);
-    phrases.addPhrases(TokenType.OF, ['of']);
-    phrases.addPhrases(TokenType.IN, ['in', 'as']);
+    phrases.push(TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+    phrases.push(TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
+    phrases.push(TT.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
+    phrases.push(TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
+    phrases.push(TT.CAP, ['POW']);
+    phrases.push(TT.MOD, ['mod']);
+    phrases.push(TT.OF, ['of']);
+    phrases.push(TT.IN, ['in', 'as']);
     return phrases;
   }
-  private phrases: Phrases;
-  private units: Unit.Units;
+  private static setDefaultFunctions() {
+    this.UseFunctions(getDefaultFunction());
+  }
+  private static setDefaultUnits() {
+    this.UseUnits(getdefaultUnits());
+  }
   private environment: Environment;
-  private functions: FcalFunctions;
   constructor() {
-    this.phrases = Fcal.getdefaultphrases();
-    this.units = getdefaultUnits();
-    this.environment = new Environment();
+    this.environment = new Environment(Fcal.functions);
     this.setDefaultValues();
-    this.functions = new FcalFunctions();
-    this.setDefaultFunctions();
   }
   /**
    * Evaluates given expression
@@ -46,17 +86,17 @@ class Fcal {
    */
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
-    return new Interpreter(source, this.phrases, this.units, this.environment, this.functions).evaluateExpression();
+    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
   }
   /**
    * Create new  @class Expression with copy of Fcal.Environment
    * @param source expression
    */
   public expression(source: string): Expression {
-    const env = new Environment();
+    const env = new Environment(Fcal.functions);
     env.values = Object.assign({}, this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, this.phrases, this.units, env, this.functions));
+    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env));
   }
   /**
    * Create new  @class Expression in sync with Fcal.Environment
@@ -64,7 +104,7 @@ class Fcal {
    */
   public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, this.phrases, this.units, this.environment, this.functions));
+    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment));
   }
   /**
    * create a new variable with value or assign value to variable
@@ -78,24 +118,13 @@ class Fcal {
       }
     }
   }
-  /**
-   * register new fcal Functions
-   * @param functions
-   */
-  public setFunctions(functions: FcalFunctions) {
-    for (const func of functions.functions) {
-      this.functions.add(func);
-    }
-  }
   private setDefaultValues() {
     this.setValues({
       E: Type.BNumber.New('2.718281828459045235360287'),
       PI: Type.BNumber.New('3.141592653589793238462645'),
-      PI2: Type.BNumber.New('6.28318530718'),
+      PI2: Type.BNumber.New('6.2831853071795864769'),
+      _: Type.BNumber.ZERO,
     });
-  }
-  private setDefaultFunctions() {
-    this.setFunctions(getDefaultFunction());
   }
 }
 
@@ -128,5 +157,5 @@ class Expression {
     this.interpreter.setValues(values);
   }
 }
-
-export { Fcal, Expression, FcalFunctions, FcalFunction, Environment, Unit, Type, Decimal };
+Fcal.IntialiseStaticValues();
+export { Fcal, Expression, FcalFunction, Environment, Unit, Type, Decimal };

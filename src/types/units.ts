@@ -53,54 +53,53 @@ export class Unit {
 
 // tslint:disable-next-line:no-namespace
 export namespace Unit {
+  export const LENGTHID = 'LENGTH';
+  export const SPEEDID = 'SPEED';
+  export const TIMEID = 'TIME';
+  export const TEMPERATUREID = 'TIMERATURE';
   /**
    * List of units
    */
-  export class Units {
-    public units: Unit[];
+  export class List {
+    public units: { [index: string]: Unit };
     constructor() {
-      this.units = [];
+      this.units = {};
     }
     /**
      * Add a new unit
      * @param unit
      * @throws Error if phrases already exists
      */
-    public Add(unit: Unit) {
-      if (this.check(unit.phrases)) {
-        FcalError.throwWithoutCtx('phrase already exists');
+    public push(unit: Unit) {
+      const phrase = this.check(unit.phrases);
+      if (phrase !== null) {
+        FcalError.throwWithoutCtx(`${phrase} phrase already exists`);
       }
-      this.units.push(unit);
+      for (const phrase1 of unit.phrases) {
+        this.units[phrase1] = unit;
+      }
     }
     /**
      * check if unit already exists
      * @param phrases
      */
-    public check(phrases: string[]): boolean {
-      for (const unit of this.units) {
-        for (const phrase of unit.phrases) {
-          for (const phrase2 of phrases) {
-            if (phrase === phrase2) {
-              return true;
-            }
-          }
+    public check(phrases: string[]): string | null {
+      for (const phrase of phrases) {
+        if (this.units.hasOwnProperty(phrase)) {
+          return phrase;
         }
       }
-      return false;
+      return null;
     }
     /**
      * get the unit by its phrase
      * @param phrase
      */
-    public get(phrase: string): [UnitMeta | null, boolean] {
-      for (const unit of this.units) {
-        for (const phrase2 of unit.phrases) {
-          if (phrase === phrase2) {
-            return [unit.unit, true];
-          }
-        }
+    public get(phrase: string): UnitMeta | null {
+      if (this.units.hasOwnProperty(phrase)) {
+        return this.units[phrase].unit;
       }
-      return [null, false];
+      return null;
     }
   }
 }

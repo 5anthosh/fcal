@@ -37,44 +37,52 @@ export class FcalFunction implements ICallable {
 /**
  * List of fcal functions
  */
-export class FcalFunctions {
-  public functions: FcalFunction[];
-  constructor() {
-    this.functions = Array<FcalFunction>();
-  }
-  /**
-   * Add new fcal function
-   * @param fcalFunction
-   * @throws Error if function name is already exists
-   */
-  public add(fcalFunction: FcalFunction) {
-    if (this.check(fcalFunction.name)) {
-      FcalError.throwWithoutCtx(`${fcalFunction.name} is already registered`);
+
+// tslint:disable-next-line:no-namespace
+export namespace FcalFunction {
+  export class List {
+    public functions: { [index: string]: FcalFunction };
+    constructor() {
+      this.functions = {};
     }
-    this.functions.push(fcalFunction);
-  }
-  /**
-   * Get function implemention by its function name
-   * @param name function name
-   */
-  public get(name: string): [FcalFunction | null, boolean] {
-    for (const func of this.functions) {
-      if (func.name === name) {
-        return [func, true];
+    /**
+     * Add new fcal function
+     * @param fcalFunction
+     * @throws Error if function name is already exists
+     */
+    public push(fcalFunction: FcalFunction) {
+      if (this.check(fcalFunction.name)) {
+        FcalError.throwWithoutCtx(`${fcalFunction.name} is already registered`);
       }
+      this.functions[fcalFunction.name] = fcalFunction;
     }
-    return [null, false];
-  }
-  /**
-   * check if function is available
-   * @param name function name
-   */
-  private check(name: string): boolean {
-    for (const funcs of this.functions) {
-      if (funcs.name === name) {
-        return true;
+    /**
+     * Call a function by its name
+     * @param functionName
+     * @param enviroment
+     * @param argument
+     * @param Type
+     */
+    public call(functionName: string, enviroment: Environment, argument: Type[]): Type {
+      const fcalFunc = this.get(functionName);
+      if (fcalFunc !== undefined) {
+        return fcalFunc.function(enviroment, argument);
       }
+      throw FcalError.ErrorWithoutCtx(`Function ${functionName} is not found`);
     }
-    return false;
+    /**
+     * Get function implemention by its function name
+     * @param name function name
+     */
+    public get(name: string): FcalFunction | undefined {
+      return this.functions[name];
+    }
+    /**
+     * check if function is available
+     * @param name function name
+     */
+    private check(name: string): boolean {
+      return this.functions.hasOwnProperty(name);
+    }
   }
 }

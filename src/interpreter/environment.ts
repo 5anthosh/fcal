@@ -1,5 +1,6 @@
 import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
+import { FcalFunction } from './function';
 
 /**
  * Represents runtime variable environment
@@ -8,9 +9,11 @@ import { Type } from '../types/datatype';
 export class Environment {
   // simple object is used for variables
   // with key as variable name and value as value
+  public functions: FcalFunction.List;
   public values: { [index: string]: Type };
-  constructor() {
+  constructor(functions: FcalFunction.List) {
     this.values = {};
+    this.functions = functions;
   }
   /**
    * Get the value of variable

@@ -307,14 +307,14 @@ var Fcal = /** @class */ (function () {
     };
     Fcal.getdefaultphrases = function () {
         var phrases = new phrase_1.Phrases();
-        phrases.push(token_1.TokenType.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
-        phrases.push(token_1.TokenType.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
-        phrases.push(token_1.TokenType.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
-        phrases.push(token_1.TokenType.SLASH, ['DIVIDE', 'DIVIDEBY']);
-        phrases.push(token_1.TokenType.CAP, ['POW']);
-        phrases.push(token_1.TokenType.MOD, ['mod']);
-        phrases.push(token_1.TokenType.OF, ['of']);
-        phrases.push(token_1.TokenType.IN, ['in', 'as']);
+        phrases.push(token_1.TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+        phrases.push(token_1.TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
+        phrases.push(token_1.TT.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
+        phrases.push(token_1.TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
+        phrases.push(token_1.TT.CAP, ['POW']);
+        phrases.push(token_1.TT.MOD, ['mod']);
+        phrases.push(token_1.TT.OF, ['of']);
+        phrases.push(token_1.TT.IN, ['in', 'as']);
         return phrases;
     };
     Fcal.setDefaultFunctions = function () {
@@ -367,6 +367,7 @@ var Fcal = /** @class */ (function () {
             E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
             PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
             PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
+            _: datatype_1.Type.BNumber.ZERO,
         });
     };
     Fcal.units = new units_1.Unit.List();
@@ -591,20 +592,20 @@ var Interpreter = /** @class */ (function () {
         var left = this.evaluate(expr.left);
         var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
-            case token_1.TokenType.PLUS:
+            case token_1.TT.PLUS:
                 return left.Add(right);
-            case token_1.TokenType.MINUS:
+            case token_1.TT.MINUS:
                 return left.Sub(right);
-            case token_1.TokenType.TIMES:
+            case token_1.TT.TIMES:
                 return left.times(right);
-            case token_1.TokenType.SLASH:
+            case token_1.TT.SLASH:
                 return left.divide(right);
-            case token_1.TokenType.MOD:
+            case token_1.TT.MOD:
                 if (right.isZero()) {
                     return new datatype_1.Type.BNumber('Infinity');
                 }
                 return left.modulo(right);
-            case token_1.TokenType.CAP:
+            case token_1.TT.CAP:
                 if (left.isNegative()) {
                     if (!right.isInteger()) {
                         // safe play with complex numbers
@@ -617,7 +618,7 @@ var Interpreter = /** @class */ (function () {
                     }
                 }
                 return left.power(right);
-            case token_1.TokenType.OF:
+            case token_1.TT.OF:
                 left = new datatype_1.Type.Percentage(left.number);
                 var per = left;
                 right.number = per.percentageValue(right.number);
@@ -634,7 +635,7 @@ var Interpreter = /** @class */ (function () {
     };
     Interpreter.prototype.visitUnaryExpr = function (expr) {
         var right = this.evaluate(expr.right);
-        if (expr.operator.type === token_1.TokenType.MINUS) {
+        if (expr.operator.type === token_1.TT.MINUS) {
             return right.negated();
         }
         return right;
@@ -712,7 +713,7 @@ var Lexer = /** @class */ (function () {
     };
     Lexer.prototype.Next = function () {
         if (this.isAtEnd()) {
-            return token_1.Token.EOLToken(this.current);
+            return token_1.Token.EOL(this.current);
         }
         return this.scan();
     };
@@ -720,29 +721,29 @@ var Lexer = /** @class */ (function () {
         var char = this.space();
         switch (char) {
             case char_1.Char.PLUS:
-                return this.createToken(token_1.TokenType.PLUS);
+                return this.TT(token_1.TT.PLUS);
             case char_1.Char.MINUS:
-                return this.createToken(token_1.TokenType.MINUS);
+                return this.TT(token_1.TT.MINUS);
             case char_1.Char.TIMES:
-                return this.createToken(token_1.TokenType.TIMES);
+                return this.TT(token_1.TT.TIMES);
             case char_1.Char.SLASH:
-                return this.createToken(token_1.TokenType.SLASH);
+                return this.TT(token_1.TT.SLASH);
             case char_1.Char.EQUAL:
-                return this.createToken(token_1.TokenType.EQUAL);
+                return this.TT(token_1.TT.EQUAL);
             case char_1.Char.COMMA:
-                return this.createToken(token_1.TokenType.COMMA);
+                return this.TT(token_1.TT.COMMA);
             case char_1.Char.DOUBLE_COLON:
-                return this.createToken(token_1.TokenType.EQUAL);
+                return this.TT(token_1.TT.EQUAL);
             case char_1.Char.OPEN_PARAN:
-                return this.createToken(token_1.TokenType.OPEN_PARAN);
+                return this.TT(token_1.TT.OPEN_PARAN);
             case char_1.Char.CLOSE_PARAN:
-                return this.createToken(token_1.TokenType.CLOSE_PARAN);
+                return this.TT(token_1.TT.CLOSE_PARAN);
             case char_1.Char.CAP:
-                return this.createToken(token_1.TokenType.CAP);
+                return this.TT(token_1.TT.CAP);
             case char_1.Char.PERCENTAGE:
-                return this.createToken(token_1.TokenType.PERCENTAGE);
+                return this.TT(token_1.TT.PERCENTAGE);
             case char_1.Char.NEWLINE:
-                return this.createToken(token_1.TokenType.NEWLINE);
+                return this.TT(token_1.TT.NEWLINE);
             default:
                 if (Lexer.isDigit(char)) {
                     return this.number();
@@ -753,7 +754,7 @@ var Lexer = /** @class */ (function () {
     Lexer.prototype.isAtEnd = function () {
         return this.current >= this.source.length;
     };
-    Lexer.prototype.advance = function () {
+    Lexer.prototype.eat = function () {
         this.current++;
         return this.source.charAt(this.current - 1);
     };
@@ -765,50 +766,50 @@ var Lexer = /** @class */ (function () {
     };
     Lexer.prototype.string = function () {
         while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
-            this.advance();
+            this.eat();
         }
         var text = this.lexeme();
         var type;
         type = this.phrases.get(text);
         if (type !== undefined) {
-            return this.createToken(type);
+            return this.TT(type);
         }
         var unit = this.units.get(text);
         if (unit) {
-            return this.createTokenWithLiteral(token_1.TokenType.UNIT, text);
+            return this.TTWithLiteral(token_1.TT.UNIT, text);
         }
-        return this.createToken(token_1.TokenType.NAME);
+        return this.TT(token_1.TT.NAME);
     };
     Lexer.prototype.number = function () {
         while (Lexer.isDigit(this.peek(0))) {
-            this.advance();
+            this.eat();
         }
         if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
-            this.advance();
+            this.eat();
             while (Lexer.isDigit(this.peek(0))) {
-                this.advance();
+                this.eat();
             }
         }
         if (this.peek(0) === 'E' || this.peek(0) === 'e') {
             var c = this.peek(0);
-            this.advance();
+            this.eat();
             if (this.peek(0) === '+' || this.peek(0) === '-') {
                 c = this.peek(0);
-                this.advance();
+                this.eat();
             }
             if (!Lexer.isDigit(this.peek(0))) {
                 FcalError_1.FcalError.throwWithEnd(this.start, this.current, "Expecting number after " + c + " but got '" + this.peek(0) + "'");
             }
             while (Lexer.isDigit(this.peek(0))) {
-                this.advance();
+                this.eat();
             }
         }
-        return this.createTokenWithLiteral(token_1.TokenType.Number, new datatype_1.Type.BNumber(this.lexeme()));
+        return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(this.lexeme()));
     };
-    Lexer.prototype.createToken = function (type) {
-        return this.createTokenWithLiteral(type, null);
+    Lexer.prototype.TT = function (type) {
+        return this.TTWithLiteral(type, null);
     };
-    Lexer.prototype.createTokenWithLiteral = function (type, literal) {
+    Lexer.prototype.TTWithLiteral = function (type, literal) {
         var token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
         this.start = this.current;
         this.tokens.push(token);
@@ -818,10 +819,10 @@ var Lexer = /** @class */ (function () {
         return this.source.substring(this.start, this.current);
     };
     Lexer.prototype.space = function () {
-        var char = this.advance();
+        var char = this.eat();
         while (Lexer.isSpace(char)) {
             this.start = this.current;
-            char = this.advance();
+            char = this.eat();
         }
         return char;
     };
@@ -846,29 +847,29 @@ exports.Lexer = Lexer;
 },{"../FcalError":1,"../types/datatype":14,"./char":8,"./token":10}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var TokenType;
-(function (TokenType) {
-    TokenType[TokenType["PLUS"] = 0] = "PLUS";
-    TokenType[TokenType["MINUS"] = 1] = "MINUS";
-    TokenType[TokenType["TIMES"] = 2] = "TIMES";
-    TokenType[TokenType["MOD"] = 3] = "MOD";
-    TokenType[TokenType["SLASH"] = 4] = "SLASH";
-    TokenType[TokenType["Number"] = 5] = "Number";
-    TokenType[TokenType["OPEN_PARAN"] = 6] = "OPEN_PARAN";
-    TokenType[TokenType["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
-    TokenType[TokenType["NEWLINE"] = 8] = "NEWLINE";
-    TokenType[TokenType["EOL"] = 9] = "EOL";
-    TokenType[TokenType["IN"] = 10] = "IN";
-    TokenType[TokenType["NAME"] = 11] = "NAME";
-    TokenType[TokenType["EQUAL"] = 12] = "EQUAL";
-    TokenType[TokenType["COMMA"] = 13] = "COMMA";
-    TokenType[TokenType["PERCENTAGE"] = 14] = "PERCENTAGE";
-    TokenType[TokenType["OF"] = 15] = "OF";
-    TokenType[TokenType["UNIT"] = 16] = "UNIT";
-    TokenType[TokenType["CAP"] = 17] = "CAP";
-})(TokenType = exports.TokenType || (exports.TokenType = {}));
+var TT;
+(function (TT) {
+    TT[TT["PLUS"] = 0] = "PLUS";
+    TT[TT["MINUS"] = 1] = "MINUS";
+    TT[TT["TIMES"] = 2] = "TIMES";
+    TT[TT["MOD"] = 3] = "MOD";
+    TT[TT["SLASH"] = 4] = "SLASH";
+    TT[TT["Number"] = 5] = "Number";
+    TT[TT["OPEN_PARAN"] = 6] = "OPEN_PARAN";
+    TT[TT["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
+    TT[TT["NEWLINE"] = 8] = "NEWLINE";
+    TT[TT["EOL"] = 9] = "EOL";
+    TT[TT["IN"] = 10] = "IN";
+    TT[TT["NAME"] = 11] = "NAME";
+    TT[TT["EQUAL"] = 12] = "EQUAL";
+    TT[TT["COMMA"] = 13] = "COMMA";
+    TT[TT["PERCENTAGE"] = 14] = "PERCENTAGE";
+    TT[TT["OF"] = 15] = "OF";
+    TT[TT["UNIT"] = 16] = "UNIT";
+    TT[TT["CAP"] = 17] = "CAP";
+})(TT = exports.TT || (exports.TT = {}));
 function PrintTT(enumNumber) {
-    return TokenType[enumNumber];
+    return TT[enumNumber];
 }
 exports.PrintTT = PrintTT;
 var Token = /** @class */ (function () {
@@ -879,8 +880,8 @@ var Token = /** @class */ (function () {
         this.end = end;
         this.Literal = literal;
     }
-    Token.EOLToken = function (end) {
-        return new Token(TokenType.EOL, '', null, end, end);
+    Token.EOL = function (end) {
+        return new Token(TT.EOL, '', null, end, end);
     };
     Token.prototype.toString = function () {
         var literal = '';
@@ -1162,17 +1163,17 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.Stmt = function () {
         var expr = this.assignment();
-        if (this.match([token_1.TokenType.NEWLINE])) {
+        if (this.match([token_1.TT.NEWLINE])) {
             return expr;
         }
-        if (this.peek().type === token_1.TokenType.EOL) {
+        if (this.peek().type === token_1.TT.EOL) {
             FcalError_1.FcalError.throw(this.peek().end, 'Expecting new Line');
         }
         throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Unexpected token " + this.peek().lexeme);
     };
     Parser.prototype.assignment = function () {
         var expr = this.expression();
-        if (this.match([token_1.TokenType.EQUAL])) {
+        if (this.match([token_1.TT.EQUAL])) {
             var expres = this.expression();
             if (expr instanceof expr_1.Expr.Variable) {
                 var name_1 = expr.name;
@@ -1186,7 +1187,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.percentage = function () {
         var expr = this.addition();
-        while (this.match([token_1.TokenType.OF])) {
+        while (this.match([token_1.TT.OF])) {
             var operator = this.previous();
             var right = this.addition();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1195,7 +1196,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.addition = function () {
         var expr = this.multiply();
-        while (this.match([token_1.TokenType.PLUS, token_1.TokenType.MINUS])) {
+        while (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
             var operator = this.previous();
             var right = this.multiply();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1204,7 +1205,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.multiply = function () {
         var expr = this.unary();
-        while (this.match([token_1.TokenType.TIMES, token_1.TokenType.SLASH, token_1.TokenType.MOD, token_1.TokenType.OF])) {
+        while (this.match([token_1.TT.TIMES, token_1.TT.SLASH, token_1.TT.MOD, token_1.TT.OF])) {
             var operator = this.previous();
             var right = this.unary();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1212,7 +1213,7 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.unary = function () {
-        if (this.match([token_1.TokenType.PLUS, token_1.TokenType.MINUS])) {
+        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
             var operator = this.previous();
             var right = this.unary();
             return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
@@ -1221,7 +1222,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.exponent = function () {
         var expr = this.unitConvert();
-        while (this.match([token_1.TokenType.CAP])) {
+        while (this.match([token_1.TT.CAP])) {
             var operator = this.previous();
             var right = this.unary();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
@@ -1230,8 +1231,8 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.unitConvert = function () {
         var expr = this.suffix();
-        if (this.match([token_1.TokenType.IN])) {
-            this.consume(token_1.TokenType.UNIT, 'Expecting unit after in');
+        if (this.match([token_1.TT.IN])) {
+            this.consume(token_1.TT.UNIT, 'Expecting unit after in');
             var unit = this.previous();
             var unit2 = this.lexer.units.get(unit.lexeme);
             if (unit2 != null) {
@@ -1242,11 +1243,11 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.suffix = function () {
         var expr = this.call();
-        if (this.match([token_1.TokenType.PERCENTAGE])) {
+        if (this.match([token_1.TT.PERCENTAGE])) {
             var operator = this.previous();
             return new expr_1.Expr.Percentage(expr, expr.start, operator.end);
         }
-        if (this.match([token_1.TokenType.UNIT])) {
+        if (this.match([token_1.TT.UNIT])) {
             var unit = this.previous();
             var unit2 = void 0;
             unit2 = this.lexer.units.get(unit.lexeme);
@@ -1258,18 +1259,18 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.call = function () {
         var expr = this.term();
-        if (this.match([token_1.TokenType.OPEN_PARAN])) {
+        if (this.match([token_1.TT.OPEN_PARAN])) {
             if (expr instanceof expr_1.Expr.Variable) {
                 var argument = Array();
-                if (this.peek().type !== token_1.TokenType.CLOSE_PARAN) {
+                if (this.peek().type !== token_1.TT.CLOSE_PARAN) {
                     do {
                         if (argument.length >= 255) {
                             FcalError_1.FcalError.throwWithEnd(expr.start, this.peek().end, expr.name + " function cannot have more than 255 arguments");
                         }
                         argument.push(this.expression());
-                    } while (this.match([token_1.TokenType.COMMA]));
+                    } while (this.match([token_1.TT.COMMA]));
                 }
-                this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after the arguments");
+                this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
             }
             FcalError_1.FcalError.throwWithEnd(expr.start, this.previous().end, "Not callable");
@@ -1277,16 +1278,16 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.term = function () {
-        if (this.match([token_1.TokenType.Number])) {
+        if (this.match([token_1.TT.Number])) {
             return new expr_1.Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
         }
-        if (this.match([token_1.TokenType.OPEN_PARAN])) {
+        if (this.match([token_1.TT.OPEN_PARAN])) {
             var start = this.previous();
             var expr = this.expression();
-            this.consume(token_1.TokenType.CLOSE_PARAN, "Expect ')' after expression");
+            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression");
             return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
         }
-        if (this.match([token_1.TokenType.NAME])) {
+        if (this.match([token_1.TT.NAME])) {
             return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
         }
         throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Expect expression but found " + this.peek().lexeme);
@@ -1316,7 +1317,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.isAtEnd = function () {
         var token = this.nextToken();
-        return token.type === token_1.TokenType.EOL;
+        return token.type === token_1.TT.EOL;
     };
     Parser.prototype.nextToken = function () {
         if (this.ntoken < this.tokens.length) {
@@ -1326,7 +1327,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.getToken = function () {
         var token = this.lexer.Next();
-        if (token.type !== token_1.TokenType.EOL) {
+        if (token.type !== token_1.TT.EOL) {
             this.tokens.push(token);
         }
         return token;

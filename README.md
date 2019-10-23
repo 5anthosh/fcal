@@ -30,7 +30,7 @@ You can perform basic arithmetic, percentage operations with precision.
 the library is the single JavaScript file fcal.js (or minified, fcal.min.js).
 
 ```html
-<script src=https://cdn.jsdelivr.net/npm/fcal/dist/fcal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fcal/dist/fcal.js"></script>
 ```
 
 ### With [NPM](https://www.npmjs.com/)

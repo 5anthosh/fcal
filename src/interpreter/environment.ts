@@ -1,3 +1,4 @@
+import Big = require('decimal.js');
 import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 import { FcalFunction } from './function';
@@ -17,8 +18,8 @@ export class Environment {
   }
   /**
    * Get the value of variable
-   * @param key variable name
-   * @throws Error if variable is not available
+   * @param {String} key variable name
+   * @throws {FcalError} Error if variable is not available
    */
   public get(key: string): Type {
     if (this.values.hasOwnProperty(key)) {
@@ -28,10 +29,10 @@ export class Environment {
   }
   /**
    * create or assign a variable with value
-   * @param key variable name
+   * @param {} key variable name
    * @param value value
    */
-  public set(key: string, value: Type | number) {
+  public set(key: string, value: Type | Big.Decimal | number | string) {
     if (value instanceof Type) {
       this.values[key] = value;
       return;

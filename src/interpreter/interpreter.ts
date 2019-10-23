@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { FcalError } from '../FcalError';
 import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
@@ -9,20 +10,19 @@ import { Environment } from './environment';
 import { FcalFunction } from './function';
 
 export class Interpreter implements Expr.IVisitor<any> {
-  private parser: Parser;
   private ast: Expr;
   private environment: Environment;
   constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
-    this.parser = new Parser(source, phrases, units);
+    const parser = new Parser(source, phrases, units);
     this.environment = environment;
-    this.ast = this.parser.parse();
+    this.ast = parser.parse();
   }
 
   public visitCallExpr(expr: Expr.Call): Type {
     const name = expr.name;
     let call: FcalFunction | undefined;
     call = this.environment.functions.get(name);
-    if (call !== undefined) {
+    if (call) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
           FcalError.throwWithEnd(
@@ -89,13 +89,11 @@ export class Interpreter implements Expr.IVisitor<any> {
       case TT.CAP:
         if (left.isNegative()) {
           if (!right.isInteger()) {
-            // safe play with complex numbers
-            // -2^0.25 will handled like -(2^0.25)
-            // may support complex numbers in future
-            return left
-              .negated()
-              .power(right)
-              .negated();
+            FcalError.throwWithEnd(
+              expr.left.start,
+              expr.right.end,
+              `Pow of operation results in complex number and complex is not supported yet`,
+            );
           }
         }
         return left.power(right);
@@ -132,7 +130,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     }
     throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
   }
-  public setValues(values: { [index: string]: Type | number }) {
+  public setValues(values: { [index: string]: Type | number | string | Decimal }) {
     for (const key in values) {
       if (values.hasOwnProperty(key)) {
         const element = values[key];

@@ -1,9 +1,13 @@
 import Big = require('decimal.js');
+import { NumberSystem } from './numberSystem';
 import { UnitMeta } from './units';
 export abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
   public abstract print(): string;
+  public toString(): string {
+    return this.print();
+  }
 }
 
 export enum DATATYPE {
@@ -25,6 +29,7 @@ export namespace Type {
   export abstract class Numberic extends Type {
     public number: Big.Decimal;
     public leftflag: boolean;
+    public numberSys: NumberSystem;
     constructor(value: string | Big.Decimal | number) {
       super();
       if (value instanceof Big.Decimal) {
@@ -32,14 +37,17 @@ export namespace Type {
       } else {
         this.number = new Big.Decimal(value);
       }
+      this.numberSys = NumberSystem.Decimal;
       this.leftflag = false;
     }
+    public setSystem(numberSys: NumberSystem) {
+      this.numberSys = numberSys;
+    }
+    public toNumericString(): string {
+      return this.numberSys.to(this.number);
+    }
     public print(): string {
-      // if (this.number.isInteger()) {
-      //   return format.formatMoney(this.number.toString(), '').green;
-      // }
-      // return format.formatMoney(this.number.toString(), '', 16).green;
-      return this.number.toString();
+      return this.toNumericString();
     }
 
     public Add(value: Numberic): Numberic {
@@ -58,9 +66,11 @@ export namespace Type {
       }
       return this.newNumeric(value.plus(this).number);
     }
+
     public Sub(value: Numberic): Numberic {
       return this.Add(value.negated());
     }
+
     public times(value: Numberic): Numberic {
       // check type to see which datatype operation
       // if both type is same na right variable operation
@@ -273,7 +283,7 @@ export namespace Type {
       return value.mul(this.number.div(Percentage.base));
     }
     public print(): string {
-      return `% ${this.number.toString()}`;
+      return `% ${this.toNumericString()}`;
     }
     public newNumeric(value: Big.Decimal): Numberic {
       return Percentage.New(value);
@@ -435,9 +445,9 @@ export namespace Type {
 
     public print(): string {
       if (this.number.lessThanOrEqualTo(1) && !this.number.isNegative()) {
-        return `${this.number.toString()} ${this.unit.singular}`;
+        return `${this.toNumericString()} ${this.unit.singular}`;
       }
-      return `${this.number.toString()} ${this.unit.plural}`;
+      return `${this.toNumericString()} ${this.unit.plural}`;
     }
   }
 }

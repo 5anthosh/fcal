@@ -16,7 +16,10 @@ test('Divide By Zero', () => {
 
 test('Power result in imaginary number', () => {
   const expression = '(-2)^2.5';
-  expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('-5.6568542494923801952'));
+  const error = 'Pow of operation results in complex number and complex is not supported yet';
+  expect(() => {
+    new Fcal().evaluate(expression);
+  }).toThrow(error);
 });
 
 test('Phrases', () => {
@@ -61,7 +64,7 @@ test('Percentage power and modulo', () => {
   const expression1 = '3% mod 500 + (0.23 mod 79%)% mod 7 ';
   expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.BNumber('15.003381'));
   const expression2 =
-    '- (-1%) + (+1%) + 1.000% / 1.000% + 1% x (1%) * (0.2%) x (5%) x (-1%) x (--1%) + 4% mod 5% mod 45%   mod 1% ';
+    '- (-1%) + (+1%) + 1.000% / 1.000% + 1% mul (1%) * (0.2%) mul (5%) mul (-1%) mul (--1%) + 4% mod 5% mod 45%   mod 1% ';
   expect(new Fcal().evaluate(expression2)).toStrictEqual(new Type.Percentage('2'));
 });
 
@@ -76,13 +79,13 @@ test('New line', () => {
   //   new Fcal().evaluate(expression);
   // }).toThrowError(new Error('Expecting new Line'));
 
-  const expression1 = '1234+12341324123 x 34 \t \n $';
+  const expression1 = '1234+12341324123 * 34 \t \n $';
   expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
 });
 
 test('Parser error Expect expression', () => {
-  const expression = 'x 123$';
-  const error = new Error('Expect expression but found x');
+  const expression = '* 123$';
+  const error = new Error('Expect expression but found *');
   error.name = 'FcalError [0, 1]';
   expect(() => {
     new Fcal().evaluate(expression);
@@ -90,7 +93,7 @@ test('Parser error Expect expression', () => {
 });
 
 test('Lex error unexpected token', () => {
-  const expression = '123 x 123!';
+  const expression = '123 mul 123!';
   const error = new Error('Unexpected token !');
   error.name = 'FcalError [9, 10]';
   expect(() => {
@@ -245,7 +248,7 @@ test('Function already registered', () => {
   error.name = 'FcalError';
   expect(() => {
     Fcal.UseFunction(func);
-  }).toThrowError();
+  }).toThrowError(error);
 });
 
 test('Not callable', () => {
@@ -256,6 +259,29 @@ test('Not callable', () => {
     fcal.evaluate('23*PI(45)*23%');
   }).toThrowError(error);
 });
+
+test('Registered function return null value`', () => {
+  // tslint:disable-next-line: only-arrow-functions variable-name
+  const func = new FcalFunction('dummyFunc', 1, function(_environment: Environment, _param: Type[]): Type {
+    return (null as unknown) as Type;
+  });
+  Fcal.UseFunction(func);
+  expect(new Fcal().evaluate('dummyFunc(223434532)')).toStrictEqual(new Type.BNumber(0));
+});
+
+test('Registered function return invalid return value`', () => {
+  // tslint:disable-next-line: only-arrow-functions variable-name
+  const func = new FcalFunction('dummyFunc2', 1, function(_environment: Environment, _param: Type[]): Type {
+    return ('asdf' as unknown) as Type;
+  });
+  Fcal.UseFunction(func);
+  const error = new Error('dummyFunc2 Function Invalid return type,  Expecting Fcal.Type');
+  error.name = 'FcalError';
+  expect(() => {
+    new Fcal().evaluate('dummyFunc2(223434532)');
+  }).toThrowError(error);
+});
+
 test('test set Values decimal', () => {
   const expression = 'l * b';
   const fcal = new Fcal();
@@ -349,4 +375,17 @@ test('Last created variable _', () => {
     expect(fcal.evaluate(expression)).toStrictEqual(new Type.UnitNumber('10', unit));
     expect(fcal.evaluate('_ + 1 week in day')).toStrictEqual(new Type.UnitNumber('17', unit));
   }
+});
+
+test('Number system', () => {
+  const expression =
+    '0xaaabbbcccdddeeeffff - 0o12525356746315673673577777 + 0b1km + 0x2sec + 0o3mph * 0b00101 - 0x0004minute * (0b1 - 0o2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 0xA * (0o1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
+  const unit = Fcal.units.get('day');
+  expect(unit).not.toEqual(null);
+  if (unit != null) {
+    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('33.412934840534418202', unit));
+  }
+  expect(new Fcal().evaluate('0b11011101101').toString()).toStrictEqual('0b11011101101');
+  expect(new Fcal().evaluate('0o445342').toString()).toStrictEqual('0o445342');
+  expect(new Fcal().evaluate('0xaaaAaaabbbcddd').toString()).toStrictEqual('0xaaaaaaabbbcddd');
 });

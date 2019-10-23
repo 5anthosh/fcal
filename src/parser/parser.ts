@@ -97,7 +97,7 @@ export class Parser {
       this.consume(TT.UNIT, 'Expecting unit after in');
       const unit = this.previous();
       const unit2 = this.lexer.units.get(unit.lexeme);
-      if (unit2 != null) {
+      if (unit2) {
         return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
       }
     }
@@ -113,7 +113,7 @@ export class Parser {
       const unit = this.previous();
       let unit2;
       unit2 = this.lexer.units.get(unit.lexeme);
-      if (unit2 != null) {
+      if (unit2) {
         return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
       }
     }

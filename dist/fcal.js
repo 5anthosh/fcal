@@ -238,7 +238,7 @@ function setTemperatureUnits(units) {
     units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
 }
 
-},{"./types/units":16,"decimal.js":17}],4:[function(require,module,exports){
+},{"./types/units":17,"decimal.js":18}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require("decimal.js");
@@ -268,7 +268,7 @@ var Fcal = /** @class */ (function () {
     }
     /**
      * register new fcal Functions
-     * @param functions
+     * @param {Array<FcalFunction>} functions list of fcal function definitions
      */
     Fcal.UseFunctions = function (functions) {
         for (var _i = 0, functions_1 = functions; _i < functions_1.length; _i++) {
@@ -278,14 +278,14 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Register new Fcal function
-     * @param func
+     * @param {FcalFunction} function fcal function definitions
      */
     Fcal.UseFunction = function (func) {
         this.functions.push(func);
     };
     /**
      * Register new units
-     * @param units
+     * @param {Array<Unit>} units
      */
     Fcal.UseUnits = function (units) {
         for (var _i = 0, units_2 = units; _i < units_2.length; _i++) {
@@ -295,21 +295,29 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Register new unit
-     * @param unit
+     * @param {Unit} unit
      */
     Fcal.UseUnit = function (unit) {
         this.units.push(unit);
     };
     Fcal.IntialiseStaticValues = function () {
-        this.phrases = this.getdefaultphrases();
-        this.setDefaultUnits();
-        this.setDefaultFunctions();
+        if (!this.phrases) {
+            this.phrases = this.getdefaultphrases();
+        }
+        if (!this.units) {
+            this.units = new units_1.Unit.List();
+            this.setDefaultUnits();
+        }
+        if (!this.functions) {
+            this.functions = new function_1.FcalFunction.List();
+            this.setDefaultFunctions();
+        }
     };
     Fcal.getdefaultphrases = function () {
         var phrases = new phrase_1.Phrases();
         phrases.push(token_1.TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
         phrases.push(token_1.TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
-        phrases.push(token_1.TT.TIMES, ['TIMES', 'x', 'MULTIPLIEDBY', 'mul']);
+        phrases.push(token_1.TT.TIMES, ['TIMES', 'MULTIPLIEDBY', 'mul']);
         phrases.push(token_1.TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
         phrases.push(token_1.TT.CAP, ['POW']);
         phrases.push(token_1.TT.MOD, ['mod']);
@@ -325,16 +333,17 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Evaluates given expression
-     * @param source expression
-     * @returns result of expression
+     * @param {String} expression formula expression
+     * @returns {Type} result of expression
      */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
         return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
     };
     /**
-     * Create new  @class Expression with copy of Fcal.Environment
-     * @param source expression
+     * Create new expression with copy of Fcal.Environment
+     * @param {String} source formula expression
+     * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expression = function (source) {
         var env = new environment_1.Environment(Fcal.functions);
@@ -343,8 +352,9 @@ var Fcal = /** @class */ (function () {
         return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env));
     };
     /**
-     * Create new  @class Expression in sync with Fcal.Environment
-     * @param source
+     * Create new  Expression in sync with Fcal.Environment
+     * @param {Strign} source formula expression
+     * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
@@ -352,7 +362,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * create a new variable with value or assign value to variable
-     * @param values
+     * @param {{[index:string]: Type | number | string | Decimal}} values vairbles
      */
     Fcal.prototype.setValues = function (values) {
         for (var key in values) {
@@ -370,8 +380,6 @@ var Fcal = /** @class */ (function () {
             _: datatype_1.Type.BNumber.ZERO,
         });
     };
-    Fcal.units = new units_1.Unit.List();
-    Fcal.functions = new function_1.FcalFunction.List();
     return Fcal;
 }());
 exports.Fcal = Fcal;
@@ -390,14 +398,16 @@ var Expression = /** @class */ (function () {
         this.interpreter = interpeter;
     }
     /**
-     * Evaluate AST
+     * Evaluate AST of formula expression
+     * @returns {Type}  result of formula expression
      */
     Expression.prototype.evaluate = function () {
         return this.interpreter.evaluateExpression();
     };
     /**
      * Change state of variables
-     * @param values
+     * if variable is not found,  it will create a new variable
+     * @param {{[index:string]: Type | number}} values variables
      */
     Expression.prototype.setValues = function (values) {
         this.interpreter.setValues(values);
@@ -407,7 +417,7 @@ var Expression = /** @class */ (function () {
 exports.Expression = Expression;
 Fcal.IntialiseStaticValues();
 
-},{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./lex/token":10,"./types/datatype":14,"./types/phrase":15,"./types/units":16,"decimal.js":17}],5:[function(require,module,exports){
+},{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./lex/token":10,"./types/datatype":14,"./types/phrase":16,"./types/units":17,"decimal.js":18}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
@@ -423,8 +433,8 @@ var Environment = /** @class */ (function () {
     }
     /**
      * Get the value of variable
-     * @param key variable name
-     * @throws Error if variable is not available
+     * @param {String} key variable name
+     * @throws {FcalError} Error if variable is not available
      */
     Environment.prototype.get = function (key) {
         if (this.values.hasOwnProperty(key)) {
@@ -434,7 +444,7 @@ var Environment = /** @class */ (function () {
     };
     /**
      * create or assign a variable with value
-     * @param key variable name
+     * @param {} key variable name
      * @param value value
      */
     Environment.prototype.set = function (key, value) {
@@ -462,13 +472,22 @@ var FcalFunction = /** @class */ (function () {
         this.function = func;
         this.name = name;
     }
-    // evaluate function
+    /**
+     * call the function
+     * @param {Environment} environment state of fcal
+     * @param {Array<Type>} argument arguments of the function
+     * @returns {Type} function result
+     * @throws {FcalError} Error if function return invalid return type
+     */
     FcalFunction.prototype.call = function (environment, argument) {
         var value = this.function(environment, argument);
-        if (value === null) {
+        if (!value) {
             // if function does not return no value then
             // Assign basic 0 number
-            return datatype_1.Type.BNumber.New('0');
+            return datatype_1.Type.BNumber.New(0);
+        }
+        if (!(value instanceof datatype_1.Type)) {
+            throw FcalError_1.FcalError.ErrorWithoutCtx(this.name + " Function Invalid return type,  Expecting Fcal.Type");
         }
         return value;
     };
@@ -486,8 +505,8 @@ exports.FcalFunction = FcalFunction;
         }
         /**
          * Add new fcal function
-         * @param fcalFunction
-         * @throws Error if function name is already exists
+         * @param {FcalFunction} fcalFunction
+         * @throws {FcalError} Error if function name is already exists
          */
         List.prototype.push = function (fcalFunction) {
             if (this.check(fcalFunction.name)) {
@@ -497,28 +516,31 @@ exports.FcalFunction = FcalFunction;
         };
         /**
          * Call a function by its name
-         * @param functionName
-         * @param enviroment
-         * @param argument
-         * @param Type
+         * @param {string} name name of the function
+         * @param {Environment} enviroment state of fcal
+         * @param {Array<Type>} argument arguments for the function
+         * @param {Type} Type resullt of the function
+         * @throws {FcalError} Error if function is not found
          */
-        List.prototype.call = function (functionName, enviroment, argument) {
-            var fcalFunc = this.get(functionName);
-            if (fcalFunc !== undefined) {
+        List.prototype.call = function (name, enviroment, argument) {
+            var fcalFunc = this.get(name);
+            if (fcalFunc) {
                 return fcalFunc.function(enviroment, argument);
             }
-            throw FcalError_1.FcalError.ErrorWithoutCtx("Function " + functionName + " is not found");
+            throw FcalError_1.FcalError.ErrorWithoutCtx("Function " + name + " is not found");
         };
         /**
          * Get function implemention by its function name
-         * @param name function name
+         * @param {string} name function name
+         * @returns {FcalFunction | undefined} function
          */
         List.prototype.get = function (name) {
             return this.functions[name];
         };
         /**
          * check if function is available
-         * @param name function name
+         * @param {name} name function name
+         * @returns {boolean} if function is available
          */
         List.prototype.check = function (name) {
             return this.functions.hasOwnProperty(name);
@@ -538,15 +560,15 @@ var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
 var Interpreter = /** @class */ (function () {
     function Interpreter(source, phrases, units, environment) {
-        this.parser = new parser_1.Parser(source, phrases, units);
+        var parser = new parser_1.Parser(source, phrases, units);
         this.environment = environment;
-        this.ast = this.parser.parse();
+        this.ast = parser.parse();
     }
     Interpreter.prototype.visitCallExpr = function (expr) {
         var name = expr.name;
         var call;
         call = this.environment.functions.get(name);
-        if (call !== undefined) {
+        if (call) {
             if (call.arbity !== -1) {
                 if (call.arbity !== expr.argument.length) {
                     FcalError_1.FcalError.throwWithEnd(expr.start, expr.end, "function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
@@ -608,13 +630,7 @@ var Interpreter = /** @class */ (function () {
             case token_1.TT.CAP:
                 if (left.isNegative()) {
                     if (!right.isInteger()) {
-                        // safe play with complex numbers
-                        // -2^0.25 will handled like -(2^0.25)
-                        // may support complex numbers in future
-                        return left
-                            .negated()
-                            .power(right)
-                            .negated();
+                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, "Pow of operation results in complex number and complex is not supported yet");
                     }
                 }
                 return left.power(right);
@@ -691,10 +707,12 @@ exports.Char = Char;
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
+var numberSystem_1 = require("../types/numberSystem");
 var char_1 = require("./char");
 var token_1 = require("./token");
 var Lexer = /** @class */ (function () {
     function Lexer(source, phrases, untis) {
+        // Removing the space around expression
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
@@ -710,6 +728,15 @@ var Lexer = /** @class */ (function () {
     };
     Lexer.isSpace = function (char) {
         return char === '\t' || char === ' ';
+    };
+    Lexer.isBinaryDigit = function (char) {
+        return char === '0' || char === '1';
+    };
+    Lexer.isOctalDigit = function (char) {
+        return char >= '0' && char <= '8';
+    };
+    Lexer.isHexDigit = function (char) {
+        return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
     };
     Lexer.prototype.Next = function () {
         if (this.isAtEnd()) {
@@ -781,6 +808,42 @@ var Lexer = /** @class */ (function () {
         return this.TT(token_1.TT.NAME);
     };
     Lexer.prototype.number = function () {
+        if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+            this.eat();
+            if (!Lexer.isBinaryDigit(this.peek(0))) {
+                FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in binary number");
+            }
+            while (Lexer.isBinaryDigit(this.peek(0))) {
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.Binary);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
+        if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+            this.eat();
+            if (!Lexer.isOctalDigit(this.peek(0))) {
+                FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in Octal number");
+            }
+            while (Lexer.isOctalDigit(this.peek(0))) {
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.Octal);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
+        if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+            this.eat();
+            if (!Lexer.isHexDigit(this.peek(0))) {
+                FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in Hexa decimal");
+            }
+            while (Lexer.isHexDigit(this.peek(0))) {
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.HexaDecimal);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
         while (Lexer.isDigit(this.peek(0))) {
             this.eat();
         }
@@ -844,7 +907,7 @@ var Lexer = /** @class */ (function () {
 }());
 exports.Lexer = Lexer;
 
-},{"../FcalError":1,"../types/datatype":14,"./char":8,"./token":10}],10:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":14,"../types/numberSystem":15,"./char":8,"./token":10}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TT;
@@ -1235,7 +1298,7 @@ var Parser = /** @class */ (function () {
             this.consume(token_1.TT.UNIT, 'Expecting unit after in');
             var unit = this.previous();
             var unit2 = this.lexer.units.get(unit.lexeme);
-            if (unit2 != null) {
+            if (unit2) {
                 return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
             }
         }
@@ -1251,7 +1314,7 @@ var Parser = /** @class */ (function () {
             var unit = this.previous();
             var unit2 = void 0;
             unit2 = this.lexer.units.get(unit.lexeme);
-            if (unit2 != null) {
+            if (unit2) {
                 return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
             }
         }
@@ -1362,9 +1425,13 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
+var numberSystem_1 = require("./numberSystem");
 var Type = /** @class */ (function () {
     function Type() {
     }
+    Type.prototype.toString = function () {
+        return this.print();
+    };
     return Type;
 }());
 exports.Type = Type;
@@ -1395,15 +1462,18 @@ var TYPERANK;
             else {
                 _this.number = new Big.Decimal(value);
             }
+            _this.numberSys = numberSystem_1.NumberSystem.Decimal;
             _this.leftflag = false;
             return _this;
         }
+        Numberic.prototype.setSystem = function (numberSys) {
+            this.numberSys = numberSys;
+        };
+        Numberic.prototype.toNumericString = function () {
+            return this.numberSys.to(this.number);
+        };
         Numberic.prototype.print = function () {
-            // if (this.number.isInteger()) {
-            //   return format.formatMoney(this.number.toString(), '').green;
-            // }
-            // return format.formatMoney(this.number.toString(), '', 16).green;
-            return this.number.toString();
+            return this.toNumericString();
         };
         Numberic.prototype.Add = function (value) {
             // check type to see which datatype operation
@@ -1625,7 +1695,7 @@ var TYPERANK;
             return value.mul(this.number.div(Percentage.base));
         };
         Percentage.prototype.print = function () {
-            return "% " + this.number.toString();
+            return "% " + this.toNumericString();
         };
         Percentage.prototype.newNumeric = function (value) {
             return Percentage.New(value);
@@ -1780,9 +1850,9 @@ var TYPERANK;
         };
         UnitNumber.prototype.print = function () {
             if (this.number.lessThanOrEqualTo(1) && !this.number.isNegative()) {
-                return this.number.toString() + " " + this.unit.singular;
+                return this.toNumericString() + " " + this.unit.singular;
             }
-            return this.number.toString() + " " + this.unit.plural;
+            return this.toNumericString() + " " + this.unit.plural;
         };
         return UnitNumber;
     }(Numberic));
@@ -1790,7 +1860,34 @@ var TYPERANK;
 })(Type = exports.Type || (exports.Type = {}));
 exports.Type = Type;
 
-},{"decimal.js":17}],15:[function(require,module,exports){
+},{"./numberSystem":15,"decimal.js":18}],15:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NumberSystem = /** @class */ (function () {
+    function NumberSystem(to) {
+        this.to = to;
+    }
+    NumberSystem.Decimal = new NumberSystem(function (num) {
+        return num.toString();
+    });
+    NumberSystem.HexaDecimal = new NumberSystem(function (num) {
+        return num.toHexadecimal();
+    });
+    NumberSystem.Binary = new NumberSystem(function (num) {
+        return num.toBinary();
+    });
+    NumberSystem.Octal = new NumberSystem(function (num) {
+        return num.toOctal();
+    });
+    return NumberSystem;
+}());
+exports.NumberSystem = NumberSystem;
+// // tslint:disable-next-line: no-namespace
+// export namespace NumberSystem {
+//   class
+// }
+
+},{}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
@@ -1814,7 +1911,7 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"../FcalError":1}],16:[function(require,module,exports){
+},{"../FcalError":1}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
@@ -1845,19 +1942,27 @@ exports.UnitMeta = UnitMeta;
  */
 var Unit = /** @class */ (function () {
     function Unit(id, ratio, unitType, phrases) {
-        this.unit = new UnitMeta(id, ratio, unitType);
         this.phrases = phrases;
+        if (ratio instanceof Big.Decimal) {
+            this.meta = new UnitMeta(id, ratio, unitType);
+            return;
+        }
+        this.meta = new UnitMeta(id, new Big.Decimal(ratio), unitType);
     }
     Unit.prototype.setBias = function (value) {
-        this.unit.setBias(value);
+        if (value instanceof Big.Decimal) {
+            this.meta.setBias(value);
+            return this;
+        }
+        this.meta.setBias(new Big.Decimal(value));
         return this;
     };
     Unit.prototype.Plural = function (value) {
-        this.unit.setPlural(value);
+        this.meta.setPlural(value);
         return this;
     };
     Unit.prototype.Singular = function (value) {
-        this.unit.setSingular(value);
+        this.meta.setSingular(value);
         return this;
     };
     return Unit;
@@ -1883,7 +1988,7 @@ exports.Unit = Unit;
          */
         List.prototype.push = function (unit) {
             var phrase = this.check(unit.phrases);
-            if (phrase !== null) {
+            if (phrase) {
                 FcalError_1.FcalError.throwWithoutCtx(phrase + " phrase already exists");
             }
             for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
@@ -1910,7 +2015,7 @@ exports.Unit = Unit;
          */
         List.prototype.get = function (phrase) {
             if (this.units.hasOwnProperty(phrase)) {
-                return this.units[phrase].unit;
+                return this.units[phrase].meta;
             }
             return null;
         };
@@ -1920,7 +2025,7 @@ exports.Unit = Unit;
 })(Unit = exports.Unit || (exports.Unit = {}));
 exports.Unit = Unit;
 
-},{"../FcalError":1,"decimal.js":17}],17:[function(require,module,exports){
+},{"../FcalError":1,"decimal.js":18}],18:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 

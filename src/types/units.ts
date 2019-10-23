@@ -32,21 +32,29 @@ export class UnitMeta {
  */
 export class Unit {
   public phrases: string[];
-  public unit: UnitMeta;
-  constructor(id: string, ratio: Big.Decimal, unitType: string, phrases: string[]) {
-    this.unit = new UnitMeta(id, ratio, unitType);
+  public meta: UnitMeta;
+  constructor(id: string, ratio: Big.Decimal | number | string, unitType: string, phrases: string[]) {
     this.phrases = phrases;
+    if (ratio instanceof Big.Decimal) {
+      this.meta = new UnitMeta(id, ratio, unitType);
+      return;
+    }
+    this.meta = new UnitMeta(id, new Big.Decimal(ratio), unitType);
   }
-  public setBias(value: Big.Decimal): Unit {
-    this.unit.setBias(value);
+  public setBias(value: Big.Decimal | number | string): Unit {
+    if (value instanceof Big.Decimal) {
+      this.meta.setBias(value);
+      return this;
+    }
+    this.meta.setBias(new Big.Decimal(value));
     return this;
   }
   public Plural(value: string): Unit {
-    this.unit.setPlural(value);
+    this.meta.setPlural(value);
     return this;
   }
   public Singular(value: string): Unit {
-    this.unit.setSingular(value);
+    this.meta.setSingular(value);
     return this;
   }
 }
@@ -72,7 +80,7 @@ export namespace Unit {
      */
     public push(unit: Unit) {
       const phrase = this.check(unit.phrases);
-      if (phrase !== null) {
+      if (phrase) {
         FcalError.throwWithoutCtx(`${phrase} phrase already exists`);
       }
       for (const phrase1 of unit.phrases) {
@@ -97,7 +105,7 @@ export namespace Unit {
      */
     public get(phrase: string): UnitMeta | null {
       if (this.units.hasOwnProperty(phrase)) {
-        return this.units[phrase].unit;
+        return this.units[phrase].meta;
       }
       return null;
     }

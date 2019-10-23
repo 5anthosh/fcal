@@ -23,13 +23,22 @@ export class FcalFunction implements ICallable {
     this.function = func;
     this.name = name;
   }
-  // evaluate function
+  /**
+   * call the function
+   * @param {Environment} environment state of fcal
+   * @param {Array<Type>} argument arguments of the function
+   * @returns {Type} function result
+   * @throws {FcalError} Error if function return invalid return type
+   */
   public call(environment: Environment, argument: Type[]): Type {
     const value = this.function(environment, argument);
-    if (value === null) {
+    if (!value) {
       // if function does not return no value then
       // Assign basic 0 number
-      return Type.BNumber.New('0');
+      return Type.BNumber.New(0);
+    }
+    if (!(value instanceof Type)) {
+      throw FcalError.ErrorWithoutCtx(`${this.name} Function Invalid return type,  Expecting Fcal.Type`);
     }
     return value;
   }
@@ -47,8 +56,8 @@ export namespace FcalFunction {
     }
     /**
      * Add new fcal function
-     * @param fcalFunction
-     * @throws Error if function name is already exists
+     * @param {FcalFunction} fcalFunction
+     * @throws {FcalError} Error if function name is already exists
      */
     public push(fcalFunction: FcalFunction) {
       if (this.check(fcalFunction.name)) {
@@ -58,28 +67,31 @@ export namespace FcalFunction {
     }
     /**
      * Call a function by its name
-     * @param functionName
-     * @param enviroment
-     * @param argument
-     * @param Type
+     * @param {string} name name of the function
+     * @param {Environment} enviroment state of fcal
+     * @param {Array<Type>} argument arguments for the function
+     * @param {Type} Type resullt of the function
+     * @throws {FcalError} Error if function is not found
      */
-    public call(functionName: string, enviroment: Environment, argument: Type[]): Type {
-      const fcalFunc = this.get(functionName);
-      if (fcalFunc !== undefined) {
+    public call(name: string, enviroment: Environment, argument: Type[]): Type {
+      const fcalFunc = this.get(name);
+      if (fcalFunc) {
         return fcalFunc.function(enviroment, argument);
       }
-      throw FcalError.ErrorWithoutCtx(`Function ${functionName} is not found`);
+      throw FcalError.ErrorWithoutCtx(`Function ${name} is not found`);
     }
     /**
      * Get function implemention by its function name
-     * @param name function name
+     * @param {string} name function name
+     * @returns {FcalFunction | undefined} function
      */
     public get(name: string): FcalFunction | undefined {
       return this.functions[name];
     }
     /**
      * check if function is available
-     * @param name function name
+     * @param {name} name function name
+     * @returns {boolean} if function is available
      */
     private check(name: string): boolean {
       return this.functions.hasOwnProperty(name);

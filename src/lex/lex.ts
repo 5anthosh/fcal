@@ -1,5 +1,6 @@
 import { FcalError } from '../FcalError';
-import { Type as any } from '../types/datatype';
+import { Type } from '../types/datatype';
+import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Char } from './char';
@@ -31,6 +32,15 @@ export class Lexer {
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
   }
+  private static isBinaryDigit(char: string): boolean {
+    return char === '0' || char === '1';
+  }
+  private static isOctalDigit(char: string): boolean {
+    return char >= '0' && char <= '8';
+  }
+  private static isHexDigit(char: string): boolean {
+    return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
+  }
   public units: Unit.List;
   private tokens: Token[];
   private source: string;
@@ -38,6 +48,7 @@ export class Lexer {
   private current: number;
   private phrases: Phrases;
   constructor(source: string, phrases: Phrases, untis: Unit.List) {
+    // Removing the space around expression
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
@@ -115,6 +126,42 @@ export class Lexer {
     return this.TT(TT.NAME);
   }
   private number(): Token {
+    if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+      this.eat();
+      if (!Lexer.isBinaryDigit(this.peek(0))) {
+        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in binary number`);
+      }
+      while (Lexer.isBinaryDigit(this.peek(0))) {
+        this.eat();
+      }
+      const value = new Type.BNumber(this.lexeme());
+      value.setSystem(NumberSystem.Binary);
+      return this.TTWithLiteral(TT.Number, value);
+    }
+    if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+      this.eat();
+      if (!Lexer.isOctalDigit(this.peek(0))) {
+        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Octal number`);
+      }
+      while (Lexer.isOctalDigit(this.peek(0))) {
+        this.eat();
+      }
+      const value = new Type.BNumber(this.lexeme());
+      value.setSystem(NumberSystem.Octal);
+      return this.TTWithLiteral(TT.Number, value);
+    }
+    if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+      this.eat();
+      if (!Lexer.isHexDigit(this.peek(0))) {
+        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Hexa decimal`);
+      }
+      while (Lexer.isHexDigit(this.peek(0))) {
+        this.eat();
+      }
+      const value = new Type.BNumber(this.lexeme());
+      value.setSystem(NumberSystem.HexaDecimal);
+      return this.TTWithLiteral(TT.Number, value);
+    }
     while (Lexer.isDigit(this.peek(0))) {
       this.eat();
     }
@@ -138,7 +185,7 @@ export class Lexer {
         this.eat();
       }
     }
-    return this.TTWithLiteral(TT.Number, new any.BNumber(this.lexeme()));
+    return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme()));
   }
   private TT(type: TT): Token {
     return this.TTWithLiteral(type, null);

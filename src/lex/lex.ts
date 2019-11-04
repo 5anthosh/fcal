@@ -115,6 +115,9 @@ export class Lexer {
     }
     const text = this.lexeme();
     let type: TT | undefined;
+    if (text === 'Infinity') {
+      return this.TTWithLiteral(TT.Number, new Type.BNumber(text));
+    }
     type = this.phrases.get(text);
     if (type !== undefined) {
       return this.TT(type);

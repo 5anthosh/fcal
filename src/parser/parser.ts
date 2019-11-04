@@ -150,7 +150,7 @@ export class Parser {
     if (this.match([TT.OPEN_PARAN])) {
       const start = this.previous();
       const expr = this.expression();
-      this.consume(TT.CLOSE_PARAN, "Expect ')' after expression");
+      this.consume(TT.CLOSE_PARAN, `Expect ')' after expression but found ${this.peek().lexeme}`);
       return new Expr.Grouping(expr, start.start, this.previous().end);
     }
     if (this.match([TT.NAME])) {

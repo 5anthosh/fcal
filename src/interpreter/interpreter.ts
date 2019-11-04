@@ -48,6 +48,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   public visitVariableExpr(expr: Expr.Variable): Type {
     return this.environment.get(expr.name);
   }
+
   public evaluateExpression(): Type {
     const value = this.evaluate(this.ast);
     this.environment.set('_', value);
@@ -74,14 +75,40 @@ export class Interpreter implements Expr.IVisitor<any> {
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
       case TT.PLUS:
+        if (!left.number.isFinite() && !right.number.isFinite()) {
+          if (
+            !(
+              (left.number.isNegative() && right.number.isNegative()) ||
+              (left.number.isPositive() && right.number.isPositive())
+            )
+          ) {
+            // console.log(left.number, right.number);
+            FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+          }
+        }
         return left.Add(right);
       case TT.MINUS:
+        if (!left.number.isFinite() && !right.number.isFinite()) {
+          if (
+            (left.number.isPositive() && right.number.isPositive()) ||
+            (left.number.isNegative() && right.number.isNegative())
+          ) {
+            // console.log(left.number, right.number)
+            FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+          }
+        }
         return left.Sub(right);
       case TT.TIMES:
         return left.times(right);
       case TT.SLASH:
+        if (!left.number.isFinite() && !right.number.isFinite()) {
+          FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Division between Infinity is indeterminate');
+        }
         return left.divide(right);
       case TT.MOD:
+        if (!left.number.isFinite()) {
+          FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Modulus between Infinity is indeterminate');
+        }
         if (right.isZero()) {
           return new Type.BNumber('Infinity');
         }

@@ -8,7 +8,7 @@
 > Formula evaluation engine
 
 <div align="center">
-  <img src="../assets/example.svg" />
+  <img src="https://raw.githubusercontent.com/5anthosh/fcal/assets/example.svg?sanitize=true" />
 </div>
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
@@ -21,7 +21,7 @@ You can perform basic arithmetic, percentage operations with precision.
 - Variables
 - Functions
 
-> Playground [Codepen](https://codepen.io/5anthosh/pen/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli) 
+> Playground [Codepen](https://codepen.io/5anthosh/pen/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
 
 ## Install
 

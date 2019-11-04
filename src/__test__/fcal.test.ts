@@ -3,6 +3,7 @@ import { FcalError } from '../FcalError';
 import { Environment } from '../interpreter/environment';
 import { FcalFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
+
 test('Simple arithmetic operation', () => {
   const expression =
     '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4 ';
@@ -24,7 +25,8 @@ test('Power result in imaginary number', () => {
 
 test('Phrases', () => {
   const expression =
-    '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS 1) + 1.000 / 1.000 + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) pow 3 ^ -4';
+    '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS 1) + 1.000 / 1.000\
+     + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) pow 3 ^ -4';
   expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('24.412934840534418202'));
 });
 
@@ -54,7 +56,8 @@ test('Percentage divide and mulitiplication', () => {
   const expression1 = '44%/600 ----4% + 10%/0.0003 - 23/2% ';
   expect(new Fcal().evaluate(expression1)).toStrictEqual(new Type.BNumber('-49.4424'));
   const expression2 =
-    '1% + 2% + 3% * 5% - 4% * (1% - 2%) / 3.4% - (-1%) + (+1%) + 1.000% / 1.000% + 1% * (1%) * (0.2%) * (5%) * (-1%) * (--1%) * (-1%) + (1.23423%) ^ (2%) ^ 3% ^ -4% ';
+    '1% + 2% + 3% * 5% - 4% * (1% - 2%) / 3.4% - (-1%) + (+1%) + 1.000% / 1.000% \
+    + 1% * (1%) * (0.2%) * (5%) * (-1%) * (--1%) * (-1%) + (1.23423%) ^ (2%) ^ 3% ^ -4% ';
   expect(new Fcal().evaluate(expression2)).toStrictEqual(new Type.Percentage('24.412934840534418202'));
 });
 
@@ -130,7 +133,8 @@ test('Time units addition as operator', () => {
 
 test('Invalid unit operations', () => {
   const expression =
-    '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
+    '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh /\
+     1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
   const unit = Fcal.units.get('day');
   expect(unit).not.toEqual(null);
   if (unit != null) {
@@ -182,7 +186,8 @@ test('Default functions', () => {
   }
 
   const trigno =
-    'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
+    'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) \
+    - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
   const unit2 = Fcal.units.get('cm');
   expect(unit2).not.toEqual(null);
   if (unit2 != null) {
@@ -379,7 +384,10 @@ test('Last created variable _', () => {
 
 test('Number system', () => {
   const expression =
-    '0xaaabbbcccdddeeeffff - 0o12525356746315673673577777 + 0b1km + 0x2sec + 0o3mph * 0b00101 - 0x0004minute * (0b1 - 0o2) / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 0xA * (0o1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
+    '0xaaabbbcccdddeeeffff - 0o12525356746315673673577777 \
+    + 0b1km + 0x2sec + 0o3mph * 0b00101 - 0x0004minute * (0b1 - 0o2)\
+     / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 0xA * (0o1) * (0.2) \
+     * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
   const unit = Fcal.units.get('day');
   expect(unit).not.toEqual(null);
   if (unit != null) {
@@ -388,4 +396,26 @@ test('Number system', () => {
   expect(new Fcal().evaluate('0b11011101101').toString()).toStrictEqual('0b11011101101');
   expect(new Fcal().evaluate('0o445342').toString()).toStrictEqual('0o445342');
   expect(new Fcal().evaluate('0xaaaAaaabbbcddd').toString()).toStrictEqual('0xaaaaaaabbbcddd');
+});
+
+test('Infinity', () => {
+  const expression =
+    'Infinity + Infinity - (-Infinity) + (1/0)% of 342 * Infinity + 23 / +++ Infinity + 23/0/0 + 45 mod 0xaa / 0.00';
+  expect(new Fcal().evaluate(expression).toString()).toStrictEqual('Infinity');
+
+  expect(() => {
+    new Fcal().evaluate('---Infinity + 1/0');
+  }).toThrowError('Subtraction between Infinity is indeterminate');
+
+  expect(() => {
+    new Fcal().evaluate('---Infinity - -(45 * 234 mod 0o0)');
+  }).toThrowError('Subtraction between Infinity is indeterminate');
+
+  expect(() => {
+    new Fcal().evaluate('(Infinity * -23) / (12 * (Infinity))');
+  }).toThrowError('Division between Infinity is indeterminate');
+
+  expect(() => {
+    new Fcal().evaluate('(0B10010 % of Infinity) mod (2.2323E-3 ^ Infinity)');
+  }).toThrowError('Modulus between Infinity is indeterminate');
 });

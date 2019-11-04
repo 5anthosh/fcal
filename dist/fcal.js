@@ -615,14 +615,34 @@ var Interpreter = /** @class */ (function () {
         var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
             case token_1.TT.PLUS:
+                if (!left.number.isFinite() && !right.number.isFinite()) {
+                    if (!((left.number.isNegative() && right.number.isNegative()) ||
+                        (left.number.isPositive() && right.number.isPositive()))) {
+                        // console.log(left.number, right.number);
+                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+                    }
+                }
                 return left.Add(right);
             case token_1.TT.MINUS:
+                if (!left.number.isFinite() && !right.number.isFinite()) {
+                    if ((left.number.isPositive() && right.number.isPositive()) ||
+                        (left.number.isNegative() && right.number.isNegative())) {
+                        // console.log(left.number, right.number)
+                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+                    }
+                }
                 return left.Sub(right);
             case token_1.TT.TIMES:
                 return left.times(right);
             case token_1.TT.SLASH:
+                if (!left.number.isFinite() && !right.number.isFinite()) {
+                    FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Division between Infinity is indeterminate');
+                }
                 return left.divide(right);
             case token_1.TT.MOD:
+                if (!left.number.isFinite()) {
+                    FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Modulus between Infinity is indeterminate');
+                }
                 if (right.isZero()) {
                     return new datatype_1.Type.BNumber('Infinity');
                 }
@@ -797,6 +817,9 @@ var Lexer = /** @class */ (function () {
         }
         var text = this.lexeme();
         var type;
+        if (text === 'Infinity') {
+            return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(text));
+        }
         type = this.phrases.get(text);
         if (type !== undefined) {
             return this.TT(type);
@@ -1347,7 +1370,7 @@ var Parser = /** @class */ (function () {
         if (this.match([token_1.TT.OPEN_PARAN])) {
             var start = this.previous();
             var expr = this.expression();
-            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression");
+            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression but found " + this.peek().lexeme);
             return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
         }
         if (this.match([token_1.TT.NAME])) {

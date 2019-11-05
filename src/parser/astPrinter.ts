@@ -10,7 +10,13 @@ export class ASTPrinter implements Expr.IVisitor<string> {
     this.depth = 0;
   }
   public visitCallExpr(expr: Expr.Call): string {
-    return `${ASTPrinter.createPrefix(this.depth, 'Function')} \n|\n${expr.name}`;
+    let str = `${ASTPrinter.createPrefix(this.depth, 'FUNCTION')} ==> ${expr.name} `;
+    this.depth += ASTPrinter.tab;
+    for (const arg of expr.argument) {
+      str = `${str} \n|\n${this.evaluate(arg)}`;
+    }
+    this.depth -= ASTPrinter.tab;
+    return str;
   }
   public visitAssignExpr(expr: Expr.Assign): string {
     this.depth += ASTPrinter.tab;

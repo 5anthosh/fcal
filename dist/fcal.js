@@ -241,7 +241,7 @@ var phrase_1 = require("./types/phrase");
 var units_1 = require("./types/units");
 exports.Unit = units_1.Unit;
 /**
- * Formula evaluation engine.
+ * Math expression evaluation engine.
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
@@ -325,7 +325,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Evaluates given expression
-     * @param {String} expression formula expression
+     * @param {String} expression Math expression
      * @returns {Type} result of expression
      */
     Fcal.prototype.evaluate = function (source) {
@@ -334,7 +334,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Create new expression with copy of Fcal.Environment
-     * @param {String} source formula expression
+     * @param {String} source Math  expression
      * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expression = function (source) {
@@ -345,7 +345,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Create new  Expression in sync with Fcal.Environment
-     * @param {Strign} source formula expression
+     * @param {Strign} source Math expression
      * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expressionSync = function (source) {
@@ -390,8 +390,8 @@ var Expression = /** @class */ (function () {
         this.interpreter = interpeter;
     }
     /**
-     * Evaluate AST of formula expression
-     * @returns {Type}  result of formula expression
+     * Evaluate AST of Math expression
+     * @returns {Type}  result of Math expression
      */
     Expression.prototype.evaluate = function () {
         return this.interpreter.evaluateExpression();
@@ -403,6 +403,9 @@ var Expression = /** @class */ (function () {
      */
     Expression.prototype.setValues = function (values) {
         this.interpreter.setValues(values);
+    };
+    Expression.prototype.getAST = function () {
+        return this.interpreter.getAST();
     };
     return Expression;
 }());
@@ -563,6 +566,9 @@ var Interpreter = /** @class */ (function () {
         this.environment = environment;
         this.ast = parser.parse();
     }
+    Interpreter.prototype.getAST = function () {
+        return this.ast.toString();
+    };
     Interpreter.prototype.visitCallExpr = function (expr) {
         var name = expr.name;
         var call;
@@ -989,7 +995,14 @@ var ASTPrinter = /** @class */ (function () {
         return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
     };
     ASTPrinter.prototype.visitCallExpr = function (expr) {
-        return ASTPrinter.createPrefix(this.depth, 'Function') + " \n|\n" + expr.name;
+        var str = ASTPrinter.createPrefix(this.depth, 'FUNCTION') + " ==> " + expr.name + " ";
+        this.depth += ASTPrinter.tab;
+        for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
+            var arg = _a[_i];
+            str = str + " \n|\n" + this.evaluate(arg);
+        }
+        this.depth -= ASTPrinter.tab;
+        return str;
     };
     ASTPrinter.prototype.visitAssignExpr = function (expr) {
         this.depth += ASTPrinter.tab;

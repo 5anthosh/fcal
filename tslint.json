@@ -6,7 +6,7 @@
     ],
     "jsRules": {},
     "rules": {
-        "unified-signatures": false,
+        "unified-signatures": true,
         "max-classes-per-file": false
     },
     "rulesDirectory": []

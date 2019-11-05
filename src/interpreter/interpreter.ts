@@ -18,6 +18,9 @@ export class Interpreter implements Expr.IVisitor<any> {
     this.ast = parser.parse();
   }
 
+  public getAST(): string {
+    return this.ast.toString();
+  }
   public visitCallExpr(expr: Expr.Call): Type {
     const name = expr.name;
     let call: FcalFunction | undefined;

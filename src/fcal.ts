@@ -10,7 +10,7 @@ import { Phrases } from './types/phrase';
 import { Unit, UnitMeta } from './types/units';
 
 /**
- * Formula evaluation engine.
+ * Math expression evaluation engine.
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
@@ -99,7 +99,7 @@ class Fcal {
   }
   /**
    * Evaluates given expression
-   * @param {String} expression formula expression
+   * @param {String} expression Math expression
    * @returns {Type} result of expression
    */
   public evaluate(source: string): Type {
@@ -108,7 +108,7 @@ class Fcal {
   }
   /**
    * Create new expression with copy of Fcal.Environment
-   * @param {String} source formula expression
+   * @param {String} source Math  expression
    * @returns {Expression} Expression with parsed AST
    */
   public expression(source: string): Expression {
@@ -119,7 +119,7 @@ class Fcal {
   }
   /**
    * Create new  Expression in sync with Fcal.Environment
-   * @param {Strign} source formula expression
+   * @param {Strign} source Math expression
    * @returns {Expression} Expression with parsed AST
    */
   public expressionSync(source: string): Expression {
@@ -164,8 +164,8 @@ class Expression {
     this.interpreter = interpeter;
   }
   /**
-   * Evaluate AST of formula expression
-   * @returns {Type}  result of formula expression
+   * Evaluate AST of Math expression
+   * @returns {Type}  result of Math expression
    */
   public evaluate(): Type {
     return this.interpreter.evaluateExpression();
@@ -177,6 +177,9 @@ class Expression {
    */
   public setValues(values: { [index: string]: Type | number | string | Decimal }) {
     this.interpreter.setValues(values);
+  }
+  public getAST(): string {
+    return this.interpreter.getAST();
   }
 }
 Fcal.IntialiseStaticValues();

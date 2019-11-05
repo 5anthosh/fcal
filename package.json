@@ -1,7 +1,7 @@
 {
   "name": "fcal",
-  "version": "0.2.1",
-  "description": "Formula evaluation engine",
+  "version": "0.3.0",
+  "description": "Math expression evaluation engine",
   "main": "lib/fcal.js",
   "types": "lib/fcal.d.ts",
   "scripts": {
@@ -49,6 +49,7 @@
   "keywords": [
     "formula",
     "interpreter",
-    "math"
+    "math",
+    "expression"
   ]
 }

@@ -16,37 +16,21 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError = /** @class */ (function (_super) {
     __extends(FcalError, _super);
-    function FcalError(start, end, message) {
+    function FcalError(message, start, end) {
         var _this = _super.call(this, message) || this;
         _this.start = start;
         _this.end = end;
         _this.message = message;
-        if (start === -1) {
+        if (!start) {
             _this.name = 'FcalError';
+            return _this;
         }
-        else {
-            _this.name = "FcalError [" + start + ", " + end + "]";
+        if (!end) {
+            _this.end = start;
         }
+        _this.name = "FcalError [" + _this.start + ", " + _this.end + "]";
         return _this;
     }
-    FcalError.throw = function (start, message) {
-        throw FcalError.Error(start, message);
-    };
-    FcalError.throwWithEnd = function (start, end, message) {
-        throw FcalError.ErrorWithEnd(start, end, message);
-    };
-    FcalError.throwWithoutCtx = function (message) {
-        FcalError.throw(-1, message);
-    };
-    FcalError.Error = function (start, message) {
-        return new FcalError(start, start, message);
-    };
-    FcalError.ErrorWithEnd = function (start, end, message) {
-        return new FcalError(start, end, message);
-    };
-    FcalError.ErrorWithoutCtx = function (message) {
-        return FcalError.Error(-1, message);
-    };
     return FcalError;
 }(Error));
 exports.FcalError = FcalError;
@@ -448,7 +432,7 @@ var Environment = /** @class */ (function () {
         if (this.values.hasOwnProperty(key)) {
             return this.values[key];
         }
-        throw FcalError_1.FcalError.ErrorWithoutCtx("Undefined variable " + key);
+        throw new FcalError_1.FcalError("Undefined variable " + key);
     };
     /**
      * create or assign a variable with value
@@ -502,7 +486,7 @@ var FcalFunction = /** @class */ (function () {
             return datatype_1.Type.BNumber.New(value);
         }
         if (!(value instanceof datatype_1.Type)) {
-            throw FcalError_1.FcalError.ErrorWithoutCtx(this.name + " Function Invalid return type,  Expecting Fcal.Type but got " + typeof value);
+            throw new FcalError_1.FcalError(this.name + " Function Invalid return type,  Expecting Fcal.Type but got " + typeof value);
         }
         return value;
     };
@@ -525,7 +509,7 @@ exports.FcalFunction = FcalFunction;
          */
         List.prototype.push = function (fcalFunction) {
             if (this.check(fcalFunction.name)) {
-                FcalError_1.FcalError.throwWithoutCtx(fcalFunction.name + " is already registered");
+                throw new FcalError_1.FcalError(fcalFunction.name + " is already registered");
             }
             this.functions[fcalFunction.name] = fcalFunction;
         };
@@ -542,7 +526,7 @@ exports.FcalFunction = FcalFunction;
             if (fcalFunc) {
                 return fcalFunc.function(enviroment, argument);
             }
-            throw FcalError_1.FcalError.ErrorWithoutCtx("Function " + name + " is not found");
+            throw new FcalError_1.FcalError("Function " + name + " is not found");
         };
         /**
          * Get function implemention by its function name
@@ -586,7 +570,7 @@ var Interpreter = /** @class */ (function () {
         if (call) {
             if (call.arbity !== -1) {
                 if (call.arbity !== expr.argument.length) {
-                    FcalError_1.FcalError.throwWithEnd(expr.start, expr.end, "function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length);
+                    throw new FcalError_1.FcalError("function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length, expr.start, expr.end);
                 }
             }
             var argument = Array();
@@ -596,7 +580,7 @@ var Interpreter = /** @class */ (function () {
             }
             return call.call(this.environment, argument);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, name + " is not callable");
+        throw new FcalError_1.FcalError(name + " is not callable", expr.start, expr.end);
     };
     Interpreter.prototype.visitAssignExpr = function (expr) {
         var value = this.evaluate(expr.value);
@@ -616,14 +600,14 @@ var Interpreter = /** @class */ (function () {
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before in');
+        throw new FcalError_1.FcalError('Expecting numeric value before in', expr.start, expr.end);
     };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.UnitNumber.New(value.n, expr.unit);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
+        throw new FcalError_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
     };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         var left = this.evaluate(expr.left);
@@ -633,7 +617,7 @@ var Interpreter = /** @class */ (function () {
                 if (!left.n.isFinite() && !right.n.isFinite()) {
                     if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
                         // console.log(left.number, right.number);
-                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+                        throw new FcalError_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
                     }
                 }
                 return left.Add(right);
@@ -641,7 +625,7 @@ var Interpreter = /** @class */ (function () {
                 if (!left.n.isFinite() && !right.n.isFinite()) {
                     if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
                         // console.log(left.number, right.number)
-                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+                        throw new FcalError_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
                     }
                 }
                 return left.Sub(right);
@@ -649,12 +633,12 @@ var Interpreter = /** @class */ (function () {
                 return left.times(right);
             case token_1.TT.SLASH:
                 if (!left.n.isFinite() && !right.n.isFinite()) {
-                    FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Division between Infinity is indeterminate');
+                    throw new FcalError_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
                 }
                 return left.divide(right);
             case token_1.TT.MOD:
                 if (!left.n.isFinite()) {
-                    FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Modulus between Infinity is indeterminate');
+                    throw new FcalError_1.FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
                 }
                 if (right.isZero()) {
                     return new datatype_1.Type.BNumber('Infinity');
@@ -663,7 +647,7 @@ var Interpreter = /** @class */ (function () {
             case token_1.TT.CAP:
                 if (left.isNegative()) {
                     if (!right.isInteger()) {
-                        FcalError_1.FcalError.throwWithEnd(expr.left.start, expr.right.end, "Pow of operation results in complex number and complex is not supported yet");
+                        throw new FcalError_1.FcalError("Pow of operation results in complex number and complex is not supported yet", expr.left.start, expr.right.end);
                     }
                 }
                 return left.power(right);
@@ -694,7 +678,7 @@ var Interpreter = /** @class */ (function () {
         if (value instanceof datatype_1.Type.Numberic) {
             return datatype_1.Type.Percentage.New(value.n);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
+        throw new FcalError_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
     };
     Interpreter.prototype.setValues = function (values) {
         for (var key in values) {
@@ -848,7 +832,7 @@ var Lexer = /** @class */ (function () {
             this.eat();
             while (Lexer.isDigit(this.peek(0))) {
                 if (!Lexer.isBinaryDigit(this.peek(0))) {
-                    FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in binary number");
+                    throw new FcalError_1.FcalError("Unexpected '" + this.peek(0) + "' in binary number", this.current);
                 }
                 this.eat();
             }
@@ -860,7 +844,7 @@ var Lexer = /** @class */ (function () {
             this.eat();
             while (Lexer.isDigit(this.peek(0))) {
                 if (!Lexer.isOctalDigit(this.peek(0))) {
-                    FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in Octal number");
+                    throw new FcalError_1.FcalError("Unexpected '" + this.peek(0) + "' in Octal number", this.current);
                 }
                 this.eat();
             }
@@ -871,7 +855,7 @@ var Lexer = /** @class */ (function () {
         if (this.peek(0) === 'x' || this.peek(0) === 'X') {
             this.eat();
             if (!Lexer.isHexDigit(this.peek(0))) {
-                FcalError_1.FcalError.throw(this.current, "Unexpected '" + this.peek(0) + "' in Hexa decimal");
+                throw new FcalError_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexa decimal", this.current);
             }
             while (Lexer.isHexDigit(this.peek(0))) {
                 this.eat();
@@ -897,7 +881,7 @@ var Lexer = /** @class */ (function () {
                 this.eat();
             }
             if (!Lexer.isDigit(this.peek(0))) {
-                FcalError_1.FcalError.throwWithEnd(this.start, this.current, "Expecting number after " + c + " but got '" + this.peek(0) + "'");
+                throw new FcalError_1.FcalError("Expecting number after " + c + " but got '" + this.peek(0) + "'", this.start, this.current);
             }
             while (Lexer.isDigit(this.peek(0))) {
                 this.eat();
@@ -1266,9 +1250,9 @@ var Parser = /** @class */ (function () {
             return expr;
         }
         if (this.peek().type === token_1.TT.EOL) {
-            FcalError_1.FcalError.throw(this.peek().end, 'Expecting new Line');
+            throw new FcalError_1.FcalError('Expecting new Line', this.peek().end);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Unexpected token " + this.peek().lexeme);
+        throw new FcalError_1.FcalError("Unexpected token " + this.peek().lexeme, this.peek().start, this.peek().end);
     };
     Parser.prototype.assignment = function () {
         var expr = this.expression();
@@ -1355,7 +1339,7 @@ var Parser = /** @class */ (function () {
                 if (this.peek().type !== token_1.TT.CLOSE_PARAN) {
                     do {
                         if (argument.length >= 255) {
-                            FcalError_1.FcalError.throwWithEnd(expr.start, this.peek().end, expr.name + " function cannot have more than 255 arguments");
+                            throw new FcalError_1.FcalError(expr.name + " function cannot have more than 255 arguments", expr.start, this.peek().end);
                         }
                         argument.push(this.expression());
                     } while (this.match([token_1.TT.COMMA]));
@@ -1363,7 +1347,7 @@ var Parser = /** @class */ (function () {
                 this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
             }
-            FcalError_1.FcalError.throwWithEnd(expr.start, this.previous().end, "Not callable");
+            throw new FcalError_1.FcalError("Not callable", expr.start, this.previous().end);
         }
         return expr;
     };
@@ -1380,7 +1364,7 @@ var Parser = /** @class */ (function () {
         if (this.match([token_1.TT.NAME])) {
             return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
         }
-        throw FcalError_1.FcalError.ErrorWithEnd(this.peek().start, this.peek().end, "Expect expression but found " + this.peek().lexeme);
+        throw new FcalError_1.FcalError("Expect expression but found " + this.peek().lexeme, this.peek().start, this.peek().end);
     };
     Parser.prototype.match = function (types) {
         for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
@@ -1397,7 +1381,7 @@ var Parser = /** @class */ (function () {
             this.incr();
             return;
         }
-        FcalError_1.FcalError.throwWithEnd(this.peek().start, this.peek().end, message);
+        throw new FcalError_1.FcalError(message, this.peek().start, this.peek().end);
     };
     Parser.prototype.check = function (type) {
         if (this.isAtEnd()) {
@@ -1932,7 +1916,7 @@ var Phrases = /** @class */ (function () {
         for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
             var phrase = phrases_1[_i];
             if (this.phrases.hasOwnProperty(phrase.toUpperCase())) {
-                FcalError_1.FcalError.throwWithoutCtx("phrases already exits");
+                throw new FcalError_1.FcalError("phrases already exits");
             }
             this.phrases[phrase.toUpperCase()] = key;
         }
@@ -2042,7 +2026,7 @@ exports.Unit = Unit;
         List.prototype.push = function (unit) {
             var phrase = this.check(unit.phrases);
             if (phrase) {
-                FcalError_1.FcalError.throwWithoutCtx(phrase + " phrase already exists");
+                throw new FcalError_1.FcalError(phrase + " phrase already exists");
             }
             for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
                 var phrase1 = _a[_i];

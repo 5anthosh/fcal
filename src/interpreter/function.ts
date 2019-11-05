@@ -42,9 +42,7 @@ export class FcalFunction implements ICallable {
       return Type.BNumber.New(value);
     }
     if (!(value instanceof Type)) {
-      throw FcalError.ErrorWithoutCtx(
-        `${this.name} Function Invalid return type,  Expecting Fcal.Type but got ${typeof value}`,
-      );
+      throw new FcalError(`${this.name} Function Invalid return type,  Expecting Fcal.Type but got ${typeof value}`);
     }
     return value;
   }
@@ -67,7 +65,7 @@ export namespace FcalFunction {
      */
     public push(fcalFunction: FcalFunction) {
       if (this.check(fcalFunction.name)) {
-        FcalError.throwWithoutCtx(`${fcalFunction.name} is already registered`);
+        throw new FcalError(`${fcalFunction.name} is already registered`);
       }
       this.functions[fcalFunction.name] = fcalFunction;
     }
@@ -84,7 +82,7 @@ export namespace FcalFunction {
       if (fcalFunc) {
         return fcalFunc.function(enviroment, argument);
       }
-      throw FcalError.ErrorWithoutCtx(`Function ${name} is not found`);
+      throw new FcalError(`Function ${name} is not found`);
     }
     /**
      * Get function implemention by its function name

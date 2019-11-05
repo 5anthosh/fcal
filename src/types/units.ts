@@ -106,7 +106,7 @@ export namespace Unit {
     public push(unit: Unit) {
       const phrase = this.check(unit.phrases);
       if (phrase) {
-        FcalError.throwWithoutCtx(`${phrase} phrase already exists`);
+        throw new FcalError(`${phrase} phrase already exists`);
       }
       for (const phrase1 of unit.phrases) {
         this.units[phrase1] = unit;

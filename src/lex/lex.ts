@@ -133,7 +133,7 @@ export class Lexer {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isBinaryDigit(this.peek(0))) {
-          FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in binary number`);
+          throw new FcalError(`Unexpected '${this.peek(0)}' in binary number`, this.current);
         }
         this.eat();
       }
@@ -145,7 +145,7 @@ export class Lexer {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isOctalDigit(this.peek(0))) {
-          FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Octal number`);
+          throw new FcalError(`Unexpected '${this.peek(0)}' in Octal number`, this.current);
         }
         this.eat();
       }
@@ -156,7 +156,7 @@ export class Lexer {
     if (this.peek(0) === 'x' || this.peek(0) === 'X') {
       this.eat();
       if (!Lexer.isHexDigit(this.peek(0))) {
-        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Hexa decimal`);
+        throw new FcalError(`Unexpected '${this.peek(0)}' in Hexa decimal`, this.current);
       }
       while (Lexer.isHexDigit(this.peek(0))) {
         this.eat();
@@ -182,7 +182,7 @@ export class Lexer {
         this.eat();
       }
       if (!Lexer.isDigit(this.peek(0))) {
-        FcalError.throwWithEnd(this.start, this.current, `Expecting number after ${c} but got '${this.peek(0)}'`);
+        throw new FcalError(`Expecting number after ${c} but got '${this.peek(0)}'`, this.start, this.current);
       }
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();

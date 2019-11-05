@@ -9,7 +9,7 @@ export class Phrases {
   public push(key: TT, phrases: string[]) {
     for (const phrase of phrases) {
       if (this.phrases.hasOwnProperty(phrase.toUpperCase())) {
-        FcalError.throwWithoutCtx(`phrases already exits`);
+        throw new FcalError(`phrases already exits`);
       }
       this.phrases[phrase.toUpperCase()] = key;
     }

@@ -25,10 +25,10 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (call) {
       if (call.arbity !== -1) {
         if (call.arbity !== expr.argument.length) {
-          FcalError.throwWithEnd(
+          throw new FcalError(
+            `function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`,
             expr.start,
             expr.end,
-            `function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`,
           );
         }
       }
@@ -38,7 +38,7 @@ export class Interpreter implements Expr.IVisitor<any> {
       }
       return call.call(this.environment, argument);
     }
-    throw FcalError.ErrorWithEnd(expr.start, expr.end, `${name} is not callable`);
+    throw new FcalError(`${name} is not callable`, expr.start, expr.end);
   }
   public visitAssignExpr(expr: Expr.Assign): Type {
     const value = this.evaluate(expr.value);
@@ -60,14 +60,14 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (value instanceof Type.Numberic) {
       return Type.UnitNumber.convertToUnit(value as Type.Numberic, expr.unit);
     }
-    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before in');
+    throw new FcalError('Expecting numeric value before in', expr.start, expr.end);
   }
   public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
       return Type.UnitNumber.New((value as Type.Numberic).n, expr.unit);
     }
-    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
+    throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
@@ -78,7 +78,7 @@ export class Interpreter implements Expr.IVisitor<any> {
         if (!left.n.isFinite() && !right.n.isFinite()) {
           if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
             // console.log(left.number, right.number);
-            FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+            throw new FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
           }
         }
         return left.Add(right);
@@ -86,7 +86,7 @@ export class Interpreter implements Expr.IVisitor<any> {
         if (!left.n.isFinite() && !right.n.isFinite()) {
           if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
             // console.log(left.number, right.number)
-            FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
+            throw new FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
           }
         }
         return left.Sub(right);
@@ -94,12 +94,12 @@ export class Interpreter implements Expr.IVisitor<any> {
         return left.times(right);
       case TT.SLASH:
         if (!left.n.isFinite() && !right.n.isFinite()) {
-          FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Division between Infinity is indeterminate');
+          throw new FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
         }
         return left.divide(right);
       case TT.MOD:
         if (!left.n.isFinite()) {
-          FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Modulus between Infinity is indeterminate');
+          throw new FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
         }
         if (right.isZero()) {
           return new Type.BNumber('Infinity');
@@ -108,10 +108,10 @@ export class Interpreter implements Expr.IVisitor<any> {
       case TT.CAP:
         if (left.isNegative()) {
           if (!right.isInteger()) {
-            FcalError.throwWithEnd(
+            throw new FcalError(
+              `Pow of operation results in complex number and complex is not supported yet`,
               expr.left.start,
               expr.right.end,
-              `Pow of operation results in complex number and complex is not supported yet`,
             );
           }
         }
@@ -147,7 +147,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     if (value instanceof Type.Numberic) {
       return Type.Percentage.New((value as Type.Numberic).n);
     }
-    throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
+    throw new FcalError('Expecting numeric value in percentage', expr.start, expr.end);
   }
   public setValues(values: { [index: string]: Type | number | string | Decimal }) {
     for (const key in values) {

@@ -25,7 +25,7 @@ export class Environment {
     if (this.values.hasOwnProperty(key)) {
       return this.values[key];
     }
-    throw FcalError.ErrorWithoutCtx(`Undefined variable ${key}`);
+    throw new FcalError(`Undefined variable ${key}`);
   }
   /**
    * create or assign a variable with value

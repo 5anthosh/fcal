@@ -171,7 +171,7 @@ test('Undefined variable', () => {
   const expression = '34 * PIy ^ 2';
   const fcal = new Fcal();
   const expr = fcal.expression(expression);
-  const error = FcalError.ErrorWithoutCtx('Undefined variable PIy');
+  const error = new FcalError('Undefined variable PIy');
   error.name = 'FcalError';
   expect(() => {
     expr.evaluate();

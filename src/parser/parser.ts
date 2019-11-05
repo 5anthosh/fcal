@@ -26,9 +26,9 @@ export class Parser {
       return expr;
     }
     if (this.peek().type === TT.EOL) {
-      FcalError.throw(this.peek().end, 'Expecting new Line');
+      throw new FcalError('Expecting new Line', this.peek().end);
     }
-    throw FcalError.ErrorWithEnd(this.peek().start, this.peek().end, `Unexpected token ${this.peek().lexeme}`);
+    throw new FcalError(`Unexpected token ${this.peek().lexeme}`, this.peek().start, this.peek().end);
   }
   private assignment(): Expr {
     const expr = this.expression();
@@ -117,10 +117,10 @@ export class Parser {
         if (this.peek().type !== TT.CLOSE_PARAN) {
           do {
             if (argument.length >= 255) {
-              FcalError.throwWithEnd(
+              throw new FcalError(
+                `${expr.name} function cannot have more than 255 arguments`,
                 expr.start,
                 this.peek().end,
-                `${expr.name} function cannot have more than 255 arguments`,
               );
             }
             argument.push(this.expression());
@@ -129,7 +129,7 @@ export class Parser {
         this.consume(TT.CLOSE_PARAN, "Expect ')' after the arguments");
         return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
       }
-      FcalError.throwWithEnd(expr.start, this.previous().end, `Not callable`);
+      throw new FcalError(`Not callable`, expr.start, this.previous().end);
     }
     return expr;
   }
@@ -146,11 +146,7 @@ export class Parser {
     if (this.match([TT.NAME])) {
       return new Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
     }
-    throw FcalError.ErrorWithEnd(
-      this.peek().start,
-      this.peek().end,
-      `Expect expression but found ${this.peek().lexeme}`,
-    );
+    throw new FcalError(`Expect expression but found ${this.peek().lexeme}`, this.peek().start, this.peek().end);
   }
 
   private match(types: TT[]): boolean {
@@ -167,7 +163,7 @@ export class Parser {
       this.incr();
       return;
     }
-    FcalError.throwWithEnd(this.peek().start, this.peek().end, message);
+    throw new FcalError(message, this.peek().start, this.peek().end);
   }
   private check(type: TT): boolean {
     if (this.isAtEnd()) {

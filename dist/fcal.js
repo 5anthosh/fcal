@@ -1962,13 +1962,21 @@ var UnitMeta = /** @class */ (function () {
         if (this.r instanceof Big.Decimal) {
             return this.r;
         }
-        return this.r();
+        var value = this.r();
+        if (value instanceof Big.Decimal) {
+            return value;
+        }
+        return new Big.Decimal(value);
     };
     UnitMeta.prototype.bias = function () {
         if (this.b instanceof Big.Decimal) {
             return this.b;
         }
-        return this.b();
+        var value = this.b();
+        if (value instanceof Big.Decimal) {
+            return value;
+        }
+        return new Big.Decimal(value);
     };
     UnitMeta.prototype.setBias = function (value) {
         this.b = value;
@@ -1988,7 +1996,7 @@ exports.UnitMeta = UnitMeta;
 var Unit = /** @class */ (function () {
     function Unit(id, ratio, unitType, phrases) {
         this.phrases = phrases;
-        if (ratio instanceof Big.Decimal) {
+        if (ratio instanceof Big.Decimal || typeof ratio === 'function') {
             this.meta = new UnitMeta(id, ratio, unitType);
             return;
         }

@@ -19,6 +19,46 @@ You can perform basic arithmetic, percentage operations with precision.
 
 > Playground [Codepen](https://codepen.io/5anthosh/pen/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
 
+## Example
+
+```js
+const fcal = new Fcal();
+// New variable
+fcal.evaluate('radius : 23 m'); // 23 Meters
+
+fcal.evaluate('PI * radius ^ 2'); // 1661.9025137490006231 Meters
+
+fcal.evaluate('PI2 * radius'); // 144.51326206514 Meters
+
+// Predefined functions
+fcal.evaluate('log(23)'); // 1.3617278360175928789
+
+// Percentage
+fcal.evaluate('23 % of 1023'); // 235.29
+
+fcal.evaluate('200 sec + 120 %'); // 440 Seconds
+
+// Unit convertion
+fcal.evaluate('20 min + 34 day in sec'); // 2938800 Seconds
+
+fcal.evaluate('sin(PI)'); // -1.6167204971158028306e-24
+
+// Constants
+fcal.evaluate('E'); // 2.718281828459045235360287
+
+// Predefined units
+fcal.evaluate('speed = 20 kph'); // 20 km/h
+
+fcal.evaluate('speed in mps'); // 5.5555555555555555556 m/s
+
+fcal.evaluate('23 C add 123 F'); // 196.40000000000004 °F
+
+fcal.evaluate('1.2 nsec + 3 week in sec'); // 1814400.0000000012 Seconds
+
+// Various number system
+fcal.evaluate('0b1010011 day + 45'); // 128 Days
+```
+
 ## Install
 
 ### Browser

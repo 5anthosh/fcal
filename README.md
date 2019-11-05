@@ -1,15 +1,11 @@
-# Welcome to fcal 👋
+![iamg](https://raw.githubusercontent.com/5anthosh/fcal/assets/logo.png)
 
 [![Version](https://badgen.net/npm/v/fcal)](https://www.npmjs.com/package/fcal)
 [![License: MIT](https://badgen.net/npm/license/fcal)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
 [![Hits](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
 [![Downloads](https://badgen.net/npm/dt/fcal)](https://www.npmjs.com/package/fcal)
 
-> Formula evaluation engine
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/5anthosh/fcal/assets/example.svg?sanitize=true" />
-</div>
+> Math expression evaluation engine
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 
@@ -107,12 +103,8 @@ $ npm install
 ### Run tests
 
 ```sh
-npm test
+$ npm test
 ```
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
 
 ## Author
 

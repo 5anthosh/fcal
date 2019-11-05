@@ -65,7 +65,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.UnitNumber.New((value as Type.Numberic).number, expr.unit);
+      return Type.UnitNumber.New((value as Type.Numberic).n, expr.unit);
     }
     throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value before unit');
   }
@@ -75,24 +75,16 @@ export class Interpreter implements Expr.IVisitor<any> {
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
       case TT.PLUS:
-        if (!left.number.isFinite() && !right.number.isFinite()) {
-          if (
-            !(
-              (left.number.isNegative() && right.number.isNegative()) ||
-              (left.number.isPositive() && right.number.isPositive())
-            )
-          ) {
+        if (!left.n.isFinite() && !right.n.isFinite()) {
+          if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
             // console.log(left.number, right.number);
             FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
           }
         }
         return left.Add(right);
       case TT.MINUS:
-        if (!left.number.isFinite() && !right.number.isFinite()) {
-          if (
-            (left.number.isPositive() && right.number.isPositive()) ||
-            (left.number.isNegative() && right.number.isNegative())
-          ) {
+        if (!left.n.isFinite() && !right.n.isFinite()) {
+          if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
             // console.log(left.number, right.number)
             FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Subtraction between Infinity is indeterminate');
           }
@@ -101,12 +93,12 @@ export class Interpreter implements Expr.IVisitor<any> {
       case TT.TIMES:
         return left.times(right);
       case TT.SLASH:
-        if (!left.number.isFinite() && !right.number.isFinite()) {
+        if (!left.n.isFinite() && !right.n.isFinite()) {
           FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Division between Infinity is indeterminate');
         }
         return left.divide(right);
       case TT.MOD:
-        if (!left.number.isFinite()) {
+        if (!left.n.isFinite()) {
           FcalError.throwWithEnd(expr.left.start, expr.right.end, 'Modulus between Infinity is indeterminate');
         }
         if (right.isZero()) {
@@ -125,9 +117,9 @@ export class Interpreter implements Expr.IVisitor<any> {
         }
         return left.power(right);
       case TT.OF:
-        left = new Type.Percentage(left.number);
+        left = new Type.Percentage(left.n);
         const per = left as Type.Percentage;
-        right.number = per.percentageValue(right.number);
+        right.n = per.percentageValue(right.n);
         return right;
       default:
         return Type.BNumber.ZERO;
@@ -153,7 +145,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   public visitPercentageExpr(expr: Expr.Percentage): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.Percentage.New((value as Type.Numberic).number);
+      return Type.Percentage.New((value as Type.Numberic).n);
     }
     throw FcalError.ErrorWithEnd(expr.start, expr.end, 'Expecting numeric value in percentage');
   }

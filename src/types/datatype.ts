@@ -27,24 +27,24 @@ export enum TYPERANK {
 // tslint:disable-next-line:no-namespace
 export namespace Type {
   export abstract class Numberic extends Type {
-    public number: Big.Decimal;
-    public leftflag: boolean;
-    public numberSys: NumberSystem;
+    public n: Big.Decimal;
+    public lf: boolean;
+    public ns: NumberSystem;
     constructor(value: string | Big.Decimal | number) {
       super();
       if (value instanceof Big.Decimal) {
-        this.number = value;
+        this.n = value;
       } else {
-        this.number = new Big.Decimal(value);
+        this.n = new Big.Decimal(value);
       }
-      this.numberSys = NumberSystem.Decimal;
-      this.leftflag = false;
+      this.ns = NumberSystem.Decimal;
+      this.lf = false;
     }
     public setSystem(numberSys: NumberSystem) {
-      this.numberSys = numberSys;
+      this.ns = numberSys;
     }
     public toNumericString(): string {
-      return this.numberSys.to(this.number);
+      return this.ns.to(this.n);
     }
     public print(): string {
       return this.toNumericString();
@@ -53,18 +53,18 @@ export namespace Type {
     public Add(value: Numberic): Numberic {
       // check type to see which datatype operation
       // if both type is same na right variable operation
-      this.leftflag = true;
+      this.lf = true;
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
-          return value.newNumeric(this.plus(value).number);
+          return value.New(this.plus(value).n);
         }
         return this.plus(value);
       }
       if (value.TYPERANK >= this.TYPERANK) {
         return value.plus(this);
       }
-      return this.newNumeric(value.plus(this).number);
+      return this.New(value.plus(this).n);
     }
 
     public Sub(value: Numberic): Numberic {
@@ -74,83 +74,83 @@ export namespace Type {
     public times(value: Numberic): Numberic {
       // check type to see which datatype operation
       // if both type is same na right variable operation
-      this.leftflag = true;
+      this.lf = true;
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
-          return value.newNumeric(this.mul(value).number);
+          return value.New(this.mul(value).n);
         }
         return this.mul(value);
       }
       if (value.TYPERANK >= this.TYPERANK) {
         return value.mul(this);
       }
-      return this.newNumeric(value.mul(this).number);
+      return this.New(value.mul(this).n);
     }
 
     public divide(value: Numberic): Numberic {
       // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
       // check type to see which datatype operation
       // if both type is same na right variable operation
-      this.leftflag = true;
+      this.lf = true;
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
           if (this.TYPERANK === value.TYPERANK) {
-            return this.newNumeric(this.div(value).number);
+            return this.New(this.div(value).n);
           }
-          return value.newNumeric(this.div(value).number);
+          return value.New(this.div(value).n);
         }
         return this.div(value);
       }
       if (value.TYPERANK >= this.TYPERANK) {
         return value.div(this);
       }
-      return this.newNumeric(value.div(this).number);
+      return this.New(value.div(this).n);
     }
 
     public power(value: Numberic): Numberic {
       // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
       // check type to see which datatype operation
       // if both type is same na right variable operation
-      this.leftflag = true;
+      this.lf = true;
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
           if (this.TYPERANK === value.TYPERANK) {
-            return this.newNumeric(this.pow(value).number);
+            return this.New(this.pow(value).n);
           }
-          return value.newNumeric(this.pow(value).number);
+          return value.New(this.pow(value).n);
         }
         return this.pow(value);
       }
       if (value.TYPERANK >= this.TYPERANK) {
         return value.pow(this);
       }
-      return this.newNumeric(value.pow(this).number);
+      return this.New(value.pow(this).n);
     }
 
     public modulo(value: Numberic): Numberic {
       // check type to see which datatype operation
       // if both type is same na right variable operation
-      this.leftflag = true;
+      this.lf = true;
       if (this.TYPE >= value.TYPE) {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
           if (this.TYPERANK === value.TYPERANK) {
-            return this.newNumeric(this.mod(value).number);
+            return this.New(this.mod(value).n);
           }
-          return value.newNumeric(this.mod(value).number);
+          return value.New(this.mod(value).n);
         }
         return this.mod(value);
       }
       if (value.TYPERANK >= this.TYPERANK) {
         return value.mod(this);
       }
-      return this.newNumeric(value.mod(this).number);
+      return this.New(value.mod(this).n);
     }
 
-    public abstract newNumeric(value: Big.Decimal): Numberic;
+    public abstract New(value: Big.Decimal): Numberic;
     public abstract isZero(): boolean;
     public abstract isNegative(): boolean;
     public abstract isInteger(): boolean;
@@ -177,39 +177,39 @@ export namespace Type {
       this.TYPERANK = TYPERANK.NUMBER;
     }
     public isZero(): boolean {
-      return this.number.isZero();
+      return this.n.isZero();
     }
     public isNegative(): boolean {
-      return this.number.isNegative();
+      return this.n.isNegative();
     }
     public isInteger(): boolean {
-      return this.number.isInteger();
+      return this.n.isInteger();
     }
     public negated(): Numberic {
-      return BNumber.New(this.number.negated());
+      return BNumber.New(this.n.negated());
     }
     public div(value: Numberic): Numberic {
-      return BNumber.New(this.number.div(value.number));
+      return BNumber.New(this.n.div(value.n));
     }
     public pow(value: Numberic): Numberic {
-      return BNumber.New(this.number.pow(value.number));
+      return BNumber.New(this.n.pow(value.n));
     }
     public mod(value: Numberic): Numberic {
-      return BNumber.New(this.number.modulo(value.number));
+      return BNumber.New(this.n.modulo(value.n));
     }
     public mul(value: Numberic): Numberic {
       // if (value instanceof BNumber) {
       // }
-      return BNumber.New(this.number.mul(value.number));
+      return BNumber.New(this.n.mul(value.n));
       // return value.mul(value.newNumeric(this.number));
     }
     public plus(value: Numberic): Numberic {
       // if (value instanceof BNumber) {
       // }
-      return BNumber.New(this.number.plus(value.number));
+      return BNumber.New(this.n.plus(value.n));
       // return value.plus(value.newNumeric(this.number));
     }
-    public newNumeric(value: Big.Decimal): Numberic {
+    public New(value: Big.Decimal): Numberic {
       return BNumber.New(value);
     }
   }
@@ -229,63 +229,63 @@ export namespace Type {
       this.TYPERANK = TYPERANK.PERCENTAGE;
     }
     public isZero(): boolean {
-      return this.number.isZero();
+      return this.n.isZero();
     }
     public isNegative(): boolean {
-      return this.number.isNegative();
+      return this.n.isNegative();
     }
     public isInteger(): boolean {
-      return this.number.isInteger();
+      return this.n.isInteger();
     }
     public negated(): Numberic {
-      return Percentage.New(this.number.negated());
+      return Percentage.New(this.n.negated());
     }
     public plus(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return Percentage.New(this.number.plus(value.number));
+        return Percentage.New(this.n.plus(value.n));
       }
-      return Percentage.New(value.number.plus(this.percentageValue(value.number)));
+      return Percentage.New(value.n.plus(this.percentageValue(value.n)));
     }
     public mul(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return Percentage.New(this.number.mul(value.number));
+        return Percentage.New(this.n.mul(value.n));
       }
-      return Percentage.New(value.number.mul(this.percentageValue(value.number)));
+      return Percentage.New(value.n.mul(this.percentageValue(value.n)));
     }
     public div(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return Percentage.New(this.number.div(value.number));
+        return Percentage.New(this.n.div(value.n));
       }
-      if (value.leftflag) {
-        return Percentage.New(value.number.div(this.percentageValue(value.number)));
+      if (value.lf) {
+        return Percentage.New(value.n.div(this.percentageValue(value.n)));
       }
-      return Percentage.New(this.percentageValue(value.number).div(value.number));
+      return Percentage.New(this.percentageValue(value.n).div(value.n));
     }
     public pow(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return Percentage.New(this.number.pow(value.number));
+        return Percentage.New(this.n.pow(value.n));
       }
-      if (value.leftflag) {
-        return Percentage.New(value.number.pow(this.percentageValue(value.number)));
+      if (value.lf) {
+        return Percentage.New(value.n.pow(this.percentageValue(value.n)));
       }
-      return Percentage.New(this.percentageValue(value.number).pow(value.number));
+      return Percentage.New(this.percentageValue(value.n).pow(value.n));
     }
     public mod(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return Percentage.New(this.number.mod(value.number));
+        return Percentage.New(this.n.mod(value.n));
       }
-      if (value.leftflag) {
-        return Percentage.New(value.number.mod(this.percentageValue(value.number)));
+      if (value.lf) {
+        return Percentage.New(value.n.mod(this.percentageValue(value.n)));
       }
-      return Percentage.New(this.percentageValue(value.number).mod(value.number));
+      return Percentage.New(this.percentageValue(value.n).mod(value.n));
     }
     public percentageValue(value: Big.Decimal): Big.Decimal {
-      return value.mul(this.number.div(Percentage.base));
+      return value.mul(this.n.div(Percentage.base));
     }
     public print(): string {
       return `% ${this.toNumericString()}`;
     }
-    public newNumeric(value: Big.Decimal): Numberic {
+    public New(value: Big.Decimal): Numberic {
       return Percentage.New(value);
     }
   }
@@ -300,66 +300,66 @@ export namespace Type {
       if (value instanceof UnitNumber) {
         const value2 = value as UnitNumber;
         if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-          return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit);
+          return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit);
         }
       }
-      return UnitNumber.New(value.number, unit);
+      return UnitNumber.New(value.n, unit);
     }
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
     public unit: UnitMeta;
-    constructor(value: string | Big.Decimal, unit: UnitMeta) {
+    constructor(value: string | Big.Decimal | number, unit: UnitMeta) {
       super(value);
       this.unit = unit;
       this.TYPE = DATATYPE.UNIT;
       this.TYPERANK = TYPERANK.UNIT;
     }
 
-    public newNumeric(value: Big.Decimal): Numberic {
+    public New(value: Big.Decimal): Numberic {
       return new UnitNumber(value, this.unit);
     }
     public isZero(): boolean {
-      return this.number.isZero();
+      return this.n.isZero();
     }
     public isNegative(): boolean {
-      return this.number.isNegative();
+      return this.n.isNegative();
     }
     public isInteger(): boolean {
-      return this.number.isInteger();
+      return this.n.isInteger();
     }
     public negated(): Numberic {
-      return this.newNumeric(this.number.negated());
+      return this.New(this.n.negated());
     }
     public plus(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
         if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-          return this.newNumeric(this.number.add(right.number));
+          return this.New(this.n.add(right.n));
         }
         if (this.unit.id !== right.unit.id) {
-          return right.newNumeric(this.number.add(right.number));
+          return right.New(this.n.add(right.n));
         }
-        return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).add(right.number));
+        return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
       }
-      return this.newNumeric(this.number.plus(value.number));
+      return this.New(this.n.plus(value.n));
     }
     public mul(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
         if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-          return this.newNumeric(this.number.mul(right.number));
+          return this.New(this.n.mul(right.n));
         }
         if (this.unit.id !== right.unit.id) {
-          return right.newNumeric(this.number.mul(right.number));
+          return right.New(this.n.mul(right.n));
         }
-        return right.newNumeric(this.convert(right.unit.ratio, right.unit.bias).mul(right.number));
+        return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
       }
-      return this.newNumeric(this.number.mul(value.number));
+      return this.New(this.n.mul(value.n));
     }
     public div(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      if (this.leftflag) {
+      if (this.lf) {
         left = this;
         right = value;
       } else {
@@ -370,19 +370,19 @@ export namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.unitType === right1.unit.unitType) {
-          return left1.newNumeric(left1.number.div(right1.number));
+          return left1.New(left1.n.div(right1.n));
         }
         if (left1.unit.id !== right1.unit.id) {
-          return left1.newNumeric(left1.number.div(right.number));
+          return left1.New(left1.n.div(right.n));
         }
-        return left1.newNumeric(left1.number.div(right1.convert(left1.unit.ratio, left1.unit.bias)));
+        return left1.New(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
       }
-      return this.newNumeric(left.number.div(right.number));
+      return this.New(left.n.div(right.n));
     }
     public pow(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      if (this.leftflag) {
+      if (this.lf) {
         left = this;
         right = value;
       } else {
@@ -393,23 +393,23 @@ export namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.unitType === right1.unit.unitType) {
-          return left1.newNumeric(left1.number.pow(right1.number));
+          return left1.New(left1.n.pow(right1.n));
         }
 
         if (left1.unit.id !== right1.unit.id) {
-          return left1.newNumeric(left1.number.pow(right.number));
+          return left1.New(left1.n.pow(right.n));
         }
 
-        return left1.newNumeric(left1.number.pow(right1.convert(left1.unit.ratio, left1.unit.bias)));
+        return left1.New(left1.n.pow(right1.convert(left1.ratio(), left1.bias())));
       }
 
-      return this.newNumeric(left.number.pow(right.number));
+      return this.New(left.n.pow(right.n));
     }
     public mod(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
 
-      if (this.leftflag) {
+      if (this.lf) {
         left = this;
         right = value;
       } else {
@@ -422,29 +422,37 @@ export namespace Type {
         const right1: UnitNumber = right as UnitNumber;
 
         if (left1.unit.id !== right1.unit.id) {
-          return left1.newNumeric(left1.number.mod(right1.number));
+          return left1.New(left1.n.mod(right1.n));
         }
 
         if (left1.unit.unitType === right1.unit.unitType) {
-          return left1.newNumeric(left1.number.mod(right1.number));
+          return left1.New(left1.n.mod(right1.n));
         }
 
-        return left1.newNumeric(left1.number.mod(right1.convert(left1.unit.ratio, left1.unit.bias)));
+        return left1.New(left1.n.mod(right1.convert(left1.ratio(), left1.bias())));
       }
 
-      return this.newNumeric(left.number.mod(right.number));
+      return this.New(left.n.mod(right.n));
     }
 
     public convert(ratio: Big.Decimal, bias: Big.Decimal): Big.Decimal {
-      return this.number
-        .mul(this.unit.ratio)
-        .add(this.unit.bias)
+      return this.n
+        .mul(this.ratio())
+        .add(this.bias())
         .minus(bias)
         .div(ratio);
     }
 
+    public ratio(): Big.Decimal {
+      return this.unit.ratio();
+    }
+
+    public bias(): Big.Decimal {
+      return this.unit.bias();
+    }
+
     public print(): string {
-      if (this.number.lessThanOrEqualTo(1) && !this.number.isNegative()) {
+      if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
         return `${this.toNumericString()} ${this.unit.singular}`;
       }
       return `${this.toNumericString()} ${this.unit.plural}`;

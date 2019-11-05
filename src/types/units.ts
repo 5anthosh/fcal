@@ -1,23 +1,48 @@
 import Big = require('decimal.js');
 import { FcalError } from '../FcalError';
 
+type ratioFuncFmt = () => Big.Decimal | number;
+
 export class UnitMeta {
   public id: string;
-  public ratio: Big.Decimal;
-  public bias: Big.Decimal;
+  public r: Big.Decimal | ratioFuncFmt;
+  public b: Big.Decimal | ratioFuncFmt;
   public unitType: string;
   public singular: string;
   public plural: string;
-  constructor(id: string, ratio: Big.Decimal, unitType: string) {
+  constructor(id: string, ratio: Big.Decimal | ratioFuncFmt, unitType: string) {
     this.id = id;
-    this.ratio = ratio;
-    this.bias = new Big.Decimal(0);
+    this.r = ratio;
+    this.b = new Big.Decimal(0);
     this.unitType = unitType;
     this.plural = unitType;
     this.singular = unitType;
   }
+
+  public ratio(): Big.Decimal {
+    if (this.r instanceof Big.Decimal) {
+      return this.r;
+    }
+    const value = this.r();
+    if (value instanceof Big.Decimal) {
+      return value;
+    }
+    return new Big.Decimal(value);
+  }
+
+  public bias(): Big.Decimal {
+    if (this.b instanceof Big.Decimal) {
+      return this.b;
+    }
+    const value = this.b();
+    if (value instanceof Big.Decimal) {
+      return value;
+    }
+    return new Big.Decimal(value);
+  }
+
   public setBias(value: Big.Decimal) {
-    this.bias = value;
+    this.b = value;
   }
   public setPlural(value: string) {
     this.plural = value;
@@ -33,9 +58,9 @@ export class UnitMeta {
 export class Unit {
   public phrases: string[];
   public meta: UnitMeta;
-  constructor(id: string, ratio: Big.Decimal | number | string, unitType: string, phrases: string[]) {
+  constructor(id: string, ratio: Big.Decimal | number | string | ratioFuncFmt, unitType: string, phrases: string[]) {
     this.phrases = phrases;
-    if (ratio instanceof Big.Decimal) {
+    if (ratio instanceof Big.Decimal || typeof ratio === 'function') {
       this.meta = new UnitMeta(id, ratio, unitType);
       return;
     }

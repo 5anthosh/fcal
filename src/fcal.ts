@@ -7,7 +7,7 @@ import { Interpreter } from './interpreter/interpreter';
 import { TT } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
-import { Unit } from './types/units';
+import { Unit, UnitMeta } from './types/units';
 
 /**
  * Formula evaluation engine.
@@ -42,12 +42,22 @@ class Fcal {
       this.UseUnit(unit);
     }
   }
+
   /**
    * Register new unit
    * @param {Unit} unit
    */
   public static UseUnit(unit: Unit) {
     this.units.push(unit);
+  }
+
+  /**
+   * Get unit meta by its phrase
+   * @param {string} unit phrase
+   * @returns {UnitMeta | null}
+   */
+  public static getUnit(unit: string): UnitMeta | null {
+    return this.units.get(unit);
   }
 
   public static IntialiseStaticValues() {

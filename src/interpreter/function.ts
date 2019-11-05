@@ -1,12 +1,13 @@
+import Decimal from 'decimal.js';
 import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 import { Environment } from './environment';
 
 export interface ICallable {
-  call(environment: Environment, argument: Type[]): Type;
+  call(environment: Environment, argument: Type[]): Type | number | Decimal;
 }
 
-type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type;
+type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
 
 /**
  * FcalFunction represents function in fcal
@@ -37,8 +38,13 @@ export class FcalFunction implements ICallable {
       // Assign basic 0 number
       return Type.BNumber.New(0);
     }
+    if (typeof value === 'number' || value instanceof Decimal) {
+      return Type.BNumber.New(value);
+    }
     if (!(value instanceof Type)) {
-      throw FcalError.ErrorWithoutCtx(`${this.name} Function Invalid return type,  Expecting Fcal.Type`);
+      throw FcalError.ErrorWithoutCtx(
+        `${this.name} Function Invalid return type,  Expecting Fcal.Type but got ${typeof value}`,
+      );
     }
     return value;
   }
@@ -73,7 +79,7 @@ export namespace FcalFunction {
      * @param {Type} Type resullt of the function
      * @throws {FcalError} Error if function is not found
      */
-    public call(name: string, enviroment: Environment, argument: Type[]): Type {
+    public call(name: string, enviroment: Environment, argument: Type[]): Type | number | Decimal {
       const fcalFunc = this.get(name);
       if (fcalFunc) {
         return fcalFunc.function(enviroment, argument);

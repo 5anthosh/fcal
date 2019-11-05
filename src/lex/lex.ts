@@ -131,10 +131,10 @@ export class Lexer {
   private number(): Token {
     if (this.peek(0) === 'b' || this.peek(0) === 'B') {
       this.eat();
-      if (!Lexer.isBinaryDigit(this.peek(0))) {
-        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in binary number`);
-      }
-      while (Lexer.isBinaryDigit(this.peek(0))) {
+      while (Lexer.isDigit(this.peek(0))) {
+        if (!Lexer.isBinaryDigit(this.peek(0))) {
+          FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in binary number`);
+        }
         this.eat();
       }
       const value = new Type.BNumber(this.lexeme());
@@ -143,10 +143,10 @@ export class Lexer {
     }
     if (this.peek(0) === 'o' || this.peek(0) === 'O') {
       this.eat();
-      if (!Lexer.isOctalDigit(this.peek(0))) {
-        FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Octal number`);
-      }
-      while (Lexer.isOctalDigit(this.peek(0))) {
+      while (Lexer.isDigit(this.peek(0))) {
+        if (!Lexer.isOctalDigit(this.peek(0))) {
+          FcalError.throw(this.current, `Unexpected '${this.peek(0)}' in Octal number`);
+        }
         this.eat();
       }
       const value = new Type.BNumber(this.lexeme());

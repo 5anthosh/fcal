@@ -1,7 +1,5 @@
 import { Fcal } from '../fcal';
 import { FcalError } from '../FcalError';
-import { Environment } from '../interpreter/environment';
-import { FcalFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
 
 test('Simple arithmetic operation', () => {
@@ -104,54 +102,6 @@ test('Lex error unexpected token', () => {
   }).toThrow(error);
 });
 
-test('Time units addition', () => {
-  const expression = '1 day + 23sec + 1hr ';
-  const unit = Fcal.units.get('hr');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('25.006388888888888889', unit));
-  }
-});
-
-test('Time units addition In operator', () => {
-  const expression = '1 day + 1day +  23sec + 1hr in sec ';
-  const unit = Fcal.units.get('sec');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('176423', unit));
-  }
-});
-
-test('Time units addition as operator', () => {
-  const expression = '1 day - 1day*23sec + 23sec + 1hr as sec ';
-  const unit = Fcal.units.get('sec');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('-1897177', unit));
-  }
-});
-
-test('Invalid unit operations', () => {
-  const expression =
-    '1km + 2sec + 3mph * 5 - 4minute * (1 - 2) / 3.4inch - (-1) + (+1) + 1.000kmh /\
-     1.000sec + 1 * (1) * (0.2) * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
-  const unit = Fcal.units.get('day');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('24.412934840534418202', unit));
-  }
-});
-
-test('Time units addition In operator', () => {
-  const expression =
-    '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec';
-  const unit = Fcal.units.get('sec');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('-1897177', unit));
-  }
-});
-
 test('Percentage of with units', () => {
   const expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 ';
   expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.BNumber('124916.110704'));
@@ -228,65 +178,6 @@ test('Undefined variable', () => {
   }).toThrow(error);
 });
 
-test('Register new function', () => {
-  // tslint:disable-next-line: only-arrow-functions variable-name
-  const func = new FcalFunction('asdfasdf123', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
-    return value.newNumeric(value.number.sinh());
-  });
-  const error = new Error('asdfasdf123 is already registered');
-  error.name = 'FcalError';
-  expect(() => {
-    Fcal.UseFunction(func);
-  }).not.toThrowError(error);
-  const fcal = new Fcal();
-  expect(fcal.evaluate('asdfasdf123(45) %')).toStrictEqual(new Type.Percentage('17467135528742547674'));
-});
-
-test('Function already registered', () => {
-  // tslint:disable-next-line: only-arrow-functions variable-name
-  const func = new FcalFunction('abs', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
-    return value.newNumeric(value.number.abs());
-  });
-  const error = new Error('abs is already registered');
-  error.name = 'FcalError';
-  expect(() => {
-    Fcal.UseFunction(func);
-  }).toThrowError(error);
-});
-
-test('Not callable', () => {
-  const fcal = new Fcal();
-  const error = new Error('PI is not callable');
-  error.name = 'FcalError [3, 9]';
-  expect(() => {
-    fcal.evaluate('23*PI(45)*23%');
-  }).toThrowError(error);
-});
-
-test('Registered function return null value`', () => {
-  // tslint:disable-next-line: only-arrow-functions variable-name
-  const func = new FcalFunction('dummyFunc', 1, function(_environment: Environment, _param: Type[]): Type {
-    return (null as unknown) as Type;
-  });
-  Fcal.UseFunction(func);
-  expect(new Fcal().evaluate('dummyFunc(223434532)')).toStrictEqual(new Type.BNumber(0));
-});
-
-test('Registered function return invalid return value`', () => {
-  // tslint:disable-next-line: only-arrow-functions variable-name
-  const func = new FcalFunction('dummyFunc2', 1, function(_environment: Environment, _param: Type[]): Type {
-    return ('asdf' as unknown) as Type;
-  });
-  Fcal.UseFunction(func);
-  const error = new Error('dummyFunc2 Function Invalid return type,  Expecting Fcal.Type');
-  error.name = 'FcalError';
-  expect(() => {
-    new Fcal().evaluate('dummyFunc2(223434532)');
-  }).toThrowError(error);
-});
-
 test('test set Values decimal', () => {
   const expression = 'l * b';
   const fcal = new Fcal();
@@ -353,23 +244,6 @@ test('Temperature', () => {
   }
 });
 
-test('Singular and Plural units phrases', () => {
-  const expression = '0 sec + 1 sec';
-  let unit;
-  unit = Fcal.units.get('sec');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression).print()).toStrictEqual('1 Second');
-  }
-
-  const expression1 = '1 weeks in day';
-  unit = Fcal.units.get('day');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(new Fcal().evaluate(expression1).print()).toStrictEqual('7 Days');
-  }
-});
-
 test('Last created variable _', () => {
   const expression = '2^2 + 4 K + 2 day';
   const unit = Fcal.units.get('day');
@@ -396,6 +270,22 @@ test('Number system', () => {
   expect(new Fcal().evaluate('0b11011101101').toString()).toStrictEqual('0b11011101101');
   expect(new Fcal().evaluate('0o445342').toString()).toStrictEqual('0o445342');
   expect(new Fcal().evaluate('0xaaaAaaabbbcddd').toString()).toStrictEqual('0xaaaaaaabbbcddd');
+});
+
+test('Invalid number literal (Number system)', () => {
+  expect(() => {
+    new Fcal().evaluate('0b11130');
+  }).toThrowError("Unexpected '3' in binary number");
+  expect(() => {
+    new Fcal().evaluate('0o24234988');
+  }).toThrowError("Unexpected '9' in Octal number");
+  expect(() => {
+    new Fcal().evaluate('0xz11122aaa');
+  }).toThrowError("Unexpected 'z' in Hexa decimal");
+
+  expect(() => {
+    new Fcal().evaluate('0x123011z11122aaa');
+  }).toThrowError('Unexpected token z11122aaa');
 });
 
 test('Infinity', () => {

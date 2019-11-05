@@ -9,7 +9,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('abs', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.abs());
+      return value.New(value.n.abs());
     }),
   );
 
@@ -17,7 +17,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('sqrt', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.sqrt());
+      return value.New(value.n.sqrt());
     }),
   );
 
@@ -25,7 +25,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('cbrt', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.cbrt());
+      return value.New(value.n.cbrt());
     }),
   );
 
@@ -33,7 +33,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('log', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.log());
+      return value.New(value.n.log());
     }),
   );
 
@@ -41,7 +41,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('ln', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.ln());
+      return value.New(value.n.ln());
     }),
   );
 
@@ -49,14 +49,14 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('round', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.round());
+      return value.New(value.n.round());
     }),
   );
   functions.push(
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('floor', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.floor());
+      return value.New(value.n.floor());
     }),
   );
 
@@ -64,7 +64,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('ceil', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.ceil());
+      return value.New(value.n.ceil());
     }),
   );
 
@@ -72,7 +72,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('cos', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.cosine());
+      return value.New(value.n.cosine());
     }),
   );
 
@@ -80,7 +80,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('acos', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseCosine());
+      return value.New(value.n.inverseCosine());
     }),
   );
 
@@ -88,7 +88,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('cosh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.hyperbolicCosine());
+      return value.New(value.n.hyperbolicCosine());
     }),
   );
 
@@ -96,7 +96,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('acosh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseHyperbolicCosine());
+      return value.New(value.n.inverseHyperbolicCosine());
     }),
   );
 
@@ -104,7 +104,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('sin', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.sine());
+      return value.New(value.n.sine());
     }),
   );
 
@@ -112,7 +112,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('asin', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseSine());
+      return value.New(value.n.inverseSine());
     }),
   );
 
@@ -120,7 +120,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('sinh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.hyperbolicSine());
+      return value.New(value.n.hyperbolicSine());
     }),
   );
 
@@ -128,7 +128,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('asinh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseHyperbolicSine());
+      return value.New(value.n.inverseHyperbolicSine());
     }),
   );
 
@@ -136,7 +136,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('tan', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.tangent());
+      return value.New(value.n.tangent());
     }),
   );
 
@@ -144,7 +144,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('atan', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseTangent());
+      return value.New(value.n.inverseTangent());
     }),
   );
 
@@ -152,7 +152,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('tanh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.hyperbolicTangent());
+      return value.New(value.n.hyperbolicTangent());
     }),
   );
 
@@ -160,7 +160,7 @@ export function getDefaultFunction(): FcalFunction[] {
     // tslint:disable-next-line: only-arrow-functions variable-name
     new FcalFunction('atanh', 1, function(_environment: Environment, argument: Type[]): Type {
       const value = argument[0] as Type.Numberic;
-      return value.newNumeric(value.number.inverseHyperbolicTangent());
+      return value.New(value.n.inverseHyperbolicTangent());
     }),
   );
 

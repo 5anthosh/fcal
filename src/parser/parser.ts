@@ -42,17 +42,7 @@ export class Parser {
     return expr;
   }
   private expression(): Expr {
-    return this.percentage();
-  }
-
-  private percentage(): Expr {
-    let expr = this.addition();
-    while (this.match([TT.OF])) {
-      const operator = this.previous();
-      const right = this.addition();
-      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
-    }
-    return expr;
+    return this.addition();
   }
   private addition(): Expr {
     let expr = this.multiply();

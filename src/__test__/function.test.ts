@@ -6,20 +6,23 @@ import { Type } from '../types/datatype';
 test('Default functions', () => {
   const expression =
     'abs(-23) + log(123) - ln(0.23) * sqrt(12) / cbrt(60) ^ round(1.2344) mod ceil(2.7) + floor(23.6 cm)  ';
-  const unit = Fcal.units.get('cm');
+  const unit = Fcal.getUnit('cm');
   expect(unit).not.toEqual(null);
   if (unit != null) {
-    expect(new Fcal().evaluate(expression)).toStrictEqual(new Type.UnitNumber('49.390359524782034541', unit));
+    expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('49.390359524782034541', unit));
   }
 
   const trigno =
     'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) \
     - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
-  const unit2 = Fcal.units.get('cm');
+  const unit2 = Fcal.getUnit('cm');
   expect(unit2).not.toEqual(null);
   if (unit2 != null) {
-    expect(new Fcal().evaluate(trigno)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
+    expect(Fcal.eval(trigno)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
   }
+
+  const sigexpr = 'sigma(1,100)';
+  expect(Fcal.eval(sigexpr)).toStrictEqual(new Type.BNumber(5050));
 });
 
 test('Register new function', () => {
@@ -77,7 +80,7 @@ test('Registered function return null value`', () => {
     return (null as unknown) as Type;
   });
   Fcal.UseFunction(func);
-  expect(new Fcal().evaluate('dummyFunc(223434532)')).toStrictEqual(new Type.BNumber(0));
+  expect(Fcal.eval('dummyFunc(223434532)')).toStrictEqual(new Type.BNumber(0));
 });
 
 test('Registered function return invalid return value`', () => {
@@ -89,6 +92,6 @@ test('Registered function return invalid return value`', () => {
   const error = new Error('dummyFunc2 Function Invalid return type,  Expecting Fcal.Type but got string');
   error.name = 'FcalError';
   expect(() => {
-    new Fcal().evaluate('dummyFunc2(223434532)');
+    Fcal.eval('dummyFunc2(223434532)');
   }).toThrowError(error);
 });

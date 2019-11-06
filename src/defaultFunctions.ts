@@ -1,3 +1,4 @@
+import Decimal from 'decimal.js';
 import { Environment } from './interpreter/environment';
 import { FcalFunction } from './interpreter/function';
 import { Type } from './types/datatype';
@@ -164,5 +165,21 @@ export function getDefaultFunction(): FcalFunction[] {
     }),
   );
 
+  functions.push(
+    new FcalFunction(
+      'sigma',
+      2,
+      // tslint:disable-next-line: variable-name
+      (_env: Environment, args: Type[]): Decimal => {
+        const start = args[0] as Type.Numberic;
+        const end = args[1] as Type.Numberic;
+        start.n = start.n.minus(1);
+        return end.n
+          .mul(end.n.plus(1))
+          .div(2)
+          .sub(start.n.mul(start.n.plus(1)).div(2));
+      },
+    ),
+  );
   return functions;
 }

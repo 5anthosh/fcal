@@ -12,7 +12,8 @@ export abstract class Expr extends ASTPrinter {
     this.end = end;
   }
   public toString(): string {
-    return this.print(this);
+    const res = this.print(this);
+    return res.substring(0, res.length - 2);
   }
   public abstract accept<T>(visitor: Expr.IVisitor<T>): T;
 }

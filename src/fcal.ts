@@ -10,13 +10,19 @@ import { Phrases } from './types/phrase';
 import { Unit, UnitMeta } from './types/units';
 
 /**
- * Math expression evaluation engine.
+ * Math expression evaluator
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
 class Fcal {
-  public static units: Unit.List;
-  public static functions: FcalFunction.List;
+  /**
+   * Quick math expression evaluator
+   * @param {string} source expression
+   * @returns {Type} result
+   */
+  public static eval(source: string): Type {
+    return new Fcal().evaluate(source);
+  }
   /**
    * register new fcal Functions
    * @param {Array<FcalFunction>} functions list of fcal function definitions
@@ -73,6 +79,8 @@ class Fcal {
       this.setDefaultFunctions();
     }
   }
+  private static units: Unit.List;
+  private static functions: FcalFunction.List;
   private static phrases: Phrases;
   private static getdefaultphrases(): Phrases {
     const phrases = new Phrases();
@@ -92,6 +100,9 @@ class Fcal {
   private static setDefaultUnits() {
     this.UseUnits(getdefaultUnits());
   }
+
+  /* ========================================================  */
+  
   private environment: Environment;
   constructor() {
     this.environment = new Environment(Fcal.functions);
@@ -183,4 +194,5 @@ class Expression {
   }
 }
 Fcal.IntialiseStaticValues();
+
 export { Fcal, Expression, FcalFunction, Environment, Unit, Type, Decimal };

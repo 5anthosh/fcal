@@ -5,7 +5,7 @@
 [![Hits](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
 [![Downloads](https://badgen.net/npm/dt/fcal)](https://www.npmjs.com/package/fcal)
 
-> Math expression evaluation engine
+> Math expression evaluator
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 

@@ -161,6 +161,17 @@ function getDefaultFunction() {
         var value = argument[0];
         return value.New(value.n.inverseHyperbolicTangent());
     }));
+    functions.push(new function_1.FcalFunction('sigma', 2, 
+    // tslint:disable-next-line: variable-name
+    function (_env, args) {
+        var start = args[0];
+        var end = args[1];
+        start.n = start.n.minus(1);
+        return end.n
+            .mul(end.n.plus(1))
+            .div(2)
+            .sub(start.n.mul(start.n.plus(1)).div(2));
+    }));
     return functions;
 }
 exports.getDefaultFunction = getDefaultFunction;
@@ -241,7 +252,7 @@ var phrase_1 = require("./types/phrase");
 var units_1 = require("./types/units");
 exports.Unit = units_1.Unit;
 /**
- * Math expression evaluation engine.
+ * Math expression evaluator
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
@@ -250,6 +261,14 @@ var Fcal = /** @class */ (function () {
         this.environment = new environment_1.Environment(Fcal.functions);
         this.setDefaultValues();
     }
+    /**
+     * Quick math expression evaluator
+     * @param {string} source expression
+     * @returns {Type} result
+     */
+    Fcal.eval = function (source) {
+        return new Fcal().evaluate(source);
+    };
     /**
      * register new fcal Functions
      * @param {Array<FcalFunction>} functions list of fcal function definitions
@@ -1092,7 +1111,8 @@ var Expr = /** @class */ (function (_super) {
         return _this;
     }
     Expr.prototype.toString = function () {
-        return this.print(this);
+        var res = this.print(this);
+        return res.substring(0, res.length - 2);
     };
     return Expr;
 }(astPrinter_1.ASTPrinter));

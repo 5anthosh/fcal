@@ -1,5 +1,6 @@
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
+import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 import { ASTPrinter } from './astPrinter';
 
@@ -116,10 +117,10 @@ export namespace Expr {
       return visitor.visitUnitExpr(this);
     }
   }
-  export class UnitConvertionExpr extends Expr {
+  export class UnitorNSConvertionExpr extends Expr {
     public expression: Expr;
-    public unit: UnitMeta;
-    constructor(expression: Expr, unit: UnitMeta, start: number, end: number) {
+    public unit: UnitMeta | NumberSystem;
+    constructor(expression: Expr, unit: UnitMeta | NumberSystem, start: number, end: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
@@ -148,7 +149,7 @@ export namespace Expr {
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
-    visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): T;
+    visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): T;
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;

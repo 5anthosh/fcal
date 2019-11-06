@@ -1,9 +1,11 @@
 import { FcalError } from '../FcalError';
 import { Lexer } from '../lex/lex';
 import { Token, TT } from '../lex/token';
+import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Expr } from './expr';
+
 export class Parser {
   public source: string;
   private lexer: Lexer;
@@ -33,11 +35,12 @@ export class Parser {
   private assignment(): Expr {
     const expr = this.expression();
     if (this.match([TT.EQUAL])) {
-      const expres = this.expression();
+      const expres = this.assignment();
       if (expr instanceof Expr.Variable) {
         const name = (expr as Expr.Variable).name;
         return new Expr.Assign(name, expres, expr.start, expres.end);
       }
+      throw new FcalError('Execting variable in left side of assignment', expr.start, expr.end);
     }
     return expr;
   }
@@ -84,12 +87,21 @@ export class Parser {
   private unitConvert(): Expr {
     const expr = this.suffix();
     if (this.match([TT.IN])) {
-      this.consume(TT.UNIT, 'Expecting unit after in');
-      const unit = this.previous();
-      const unit2 = this.lexer.units.get(unit.lexeme);
-      if (unit2) {
-        return new Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+      if (this.match([TT.UNIT])) {
+        const unit = this.previous();
+        const unit2 = this.lexer.units.get(unit.lexeme);
+        if (unit2) {
+          return new Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
+        }
       }
+      if (this.match([TT.NS])) {
+        const token = this.previous();
+        const ns = NumberSystem.get(token.lexeme);
+        if (ns) {
+          return new Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
+        }
+      }
+      throw new FcalError('Expecting unit after in');
     }
     return expr;
   }

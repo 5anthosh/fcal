@@ -1,5 +1,4 @@
 import { Fcal } from '../fcal';
-import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 
 test('Simple arithmetic operation', () => {
@@ -33,47 +32,6 @@ test('Modulo Operation', () => {
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('2.0'));
 });
 
-test('Percentage addition', () => {
-  const expression = '+(234)% + 1000 ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('+3340'));
-  const expression1 = '+(234)% + 1000% ';
-  expect(Fcal.eval(expression1)).toStrictEqual(new Type.Percentage('1234'));
-});
-
-test('Percentage sub', () => {
-  const expression = '-(234)% - 1000 - 0.25% ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('1336.65'));
-  const expression1 = '-(234)% - (1000+23)% - 0.25% ';
-  expect(Fcal.eval(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
-});
-
-test('Percentage divide and mulitiplication', () => {
-  const expression = '-24%*34 + (30 - 2*+(-2))%*24 ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('-81.6'));
-
-  const expression1 = '44%/600 ----4% + 10%/0.0003 - 23/2% ';
-  expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('-49.4424'));
-  const expression2 =
-    '1% + 2% + 3% * 5% - 4% * (1% - 2%) / 3.4% - (-1%) + (+1%) + 1.000% / 1.000% \
-    + 1% * (1%) * (0.2%) * (5%) * (-1%) * (--1%) * (-1%) + (1.23423%) ^ (2%) ^ 3% ^ -4% ';
-  expect(Fcal.eval(expression2)).toStrictEqual(new Type.Percentage('24.412934840534418202'));
-});
-
-test('Percentage power and modulo', () => {
-  const expression = '24% ^ (2^2%^2%^2) + 34 - 0.0023%^10 + 10^10% ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('44.229046038763679064'));
-  const expression1 = '3% mod 500 + (0.23 mod 79%)% mod 7 ';
-  expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('15.003381'));
-  const expression2 =
-    '- (-1%) + (+1%) + 1.000% / 1.000% + 1% mul (1%) * (0.2%) mul (5%) mul (-1%) mul (--1%) + 4% mod 5% mod 45%   mod 1% ';
-  expect(Fcal.eval(expression2)).toStrictEqual(new Type.Percentage('2'));
-});
-
-test('Percentage of', () => {
-  const expression = '24% of ((39 + 1) of 23) of 77* 34 ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('57.80544'));
-});
-
 test('New line', () => {
   // const expression = '    1 + \t 5 \t';
   // expect(() => {
@@ -100,23 +58,6 @@ test('Lex error unexpected token', () => {
   expect(() => {
     Fcal.eval(expression);
   }).toThrow(error);
-});
-
-test('Percentage of with units', () => {
-  const expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('124916.110704'));
-});
-
-test('Percentage sub variable', () => {
-  const expression = '-(f1)% - f2 - f3 ';
-  const fcal = new Fcal();
-  expect(fcal.evaluate('f1 : 234 ')).toStrictEqual(new Type.BNumber('234'));
-  expect(fcal.evaluate('f2 : 1000 ')).toStrictEqual(new Type.BNumber('1000'));
-  expect(fcal.evaluate('f3 = 0.25% ')).toStrictEqual(new Type.Percentage('0.25'));
-  expect(fcal.evaluate(expression)).toStrictEqual(new Type.BNumber('1336.65'));
-  expect(fcal.evaluate('f2 = (1000+23)% ')).toStrictEqual(new Type.Percentage('1023'));
-  const expression1 = '-f1% - f2 - f3 ';
-  expect(fcal.evaluate(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
 });
 
 test('PI area of the circle', () => {
@@ -165,30 +106,6 @@ test('Expression Sync', () => {
   fcal.setValues({ radius: new Type.BNumber('21') });
   expect(expr1.evaluate()).toStrictEqual(new Type.BNumber('20'));
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber('131.94689145077131601'));
-});
-
-test('Undefined variable', () => {
-  const expression = '34 * PIy ^ 2';
-  const fcal = new Fcal();
-  const expr = fcal.expression(expression);
-  const error = new FcalError('Undefined variable PIy');
-  error.name = 'FcalError';
-  expect(() => {
-    expr.evaluate();
-  }).toThrow(error);
-});
-
-test('test set Values decimal', () => {
-  const expression = 'l * b';
-  const fcal = new Fcal();
-  const expr = fcal.expression(expression);
-  expr.setValues({ l: 10, b: 20 });
-  expect(expr.evaluate()).toStrictEqual(new Type.BNumber(200));
-});
-
-test('E in number literal', () => {
-  const expression = '1E-8 + 1e+3 * 1.23e00 + 1.223E23';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('1.223e+23'));
 });
 
 test('Invalid number literal', () => {
@@ -242,50 +159,6 @@ test('Temperature', () => {
   if (unit != null) {
     expect(Fcal.eval(expression3)).toStrictEqual(new Type.UnitNumber('408.1222222222222', unit));
   }
-});
-
-test('Last created variable _', () => {
-  const expression = '2^2 + 4 K + 2 day';
-  const unit = Fcal.getUnit('day');
-  const fcal = new Fcal();
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(fcal.evaluate('_ * 3')).toStrictEqual(new Type.BNumber('0'));
-    expect(fcal.evaluate(expression)).toStrictEqual(new Type.UnitNumber('10', unit));
-    expect(fcal.evaluate('_ + 1 week in day')).toStrictEqual(new Type.UnitNumber('17', unit));
-  }
-});
-
-test('Number system', () => {
-  const expression =
-    '0xaaabbbcccdddeeeffff - 0o12525356746315673673577777 \
-    + 0b1km + 0x2sec + 0o3mph * 0b00101 - 0x0004minute * (0b1 - 0o2)\
-     / 3.4inch - (-1) + (+1) + 1.000kmh / 1.000sec + 0xA * (0o1) * (0.2) \
-     * (5) * (-1km) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4day ';
-  const unit = Fcal.getUnit('day');
-  expect(unit).not.toEqual(null);
-  if (unit != null) {
-    expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('33.412934840534418202', unit));
-  }
-  expect(Fcal.eval('0b11011101101').toString()).toStrictEqual('0b11011101101');
-  expect(Fcal.eval('0o445342').toString()).toStrictEqual('0o445342');
-  expect(Fcal.eval('0xaaaAaaabbbcddd').toString()).toStrictEqual('0xaaaaaaabbbcddd');
-});
-
-test('Invalid number literal (Number system)', () => {
-  expect(() => {
-    Fcal.eval('0b11130');
-  }).toThrowError("Unexpected '3' in binary number");
-  expect(() => {
-    Fcal.eval('0o24234988');
-  }).toThrowError("Unexpected '9' in Octal number");
-  expect(() => {
-    Fcal.eval('0xz11122aaa');
-  }).toThrowError("Unexpected 'z' in Hexa decimal");
-
-  expect(() => {
-    Fcal.eval('0x123011z11122aaa');
-  }).toThrowError('Unexpected token z11122aaa');
 });
 
 test('Infinity', () => {

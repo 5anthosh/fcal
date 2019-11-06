@@ -5,7 +5,7 @@ import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
-import { Unit } from '../types/units';
+import { Unit, UnitMeta } from '../types/units';
 import { Environment } from './environment';
 import { FcalFunction } from './function';
 
@@ -58,17 +58,20 @@ export class Interpreter implements Expr.IVisitor<any> {
     return value;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): Type {
+  public visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.UnitNumber.convertToUnit(value as Type.Numberic, expr.unit);
+      if (expr.unit instanceof UnitMeta) {
+        return Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
+      }
+      return (value as Type.Numberic).setSystem(expr.unit);
     }
     throw new FcalError('Expecting numeric value before in', expr.start, expr.end);
   }
   public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      return Type.UnitNumber.New((value as Type.Numberic).n, expr.unit);
+      return Type.UnitNumber.New((value as Type.Numberic).n, expr.unit).setSystem(value.ns);
     }
     throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }

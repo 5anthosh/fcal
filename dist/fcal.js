@@ -579,6 +579,7 @@ var FcalError_1 = require("../FcalError");
 var token_1 = require("../lex/token");
 var parser_1 = require("../parser/parser");
 var datatype_1 = require("../types/datatype");
+var units_1 = require("../types/units");
 var Interpreter = /** @class */ (function () {
     function Interpreter(source, phrases, units, environment) {
         var parser = new parser_1.Parser(source, phrases, units);
@@ -623,14 +624,17 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit);
+            if (expr.unit instanceof units_1.UnitMeta) {
+                return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
+            }
+            return value.setSystem(expr.unit);
         }
         throw new FcalError_1.FcalError('Expecting numeric value before in', expr.start, expr.end);
     };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.UnitNumber.New(value.n, expr.unit);
+            return datatype_1.Type.UnitNumber.New(value.n, expr.unit).setSystem(value.ns);
         }
         throw new FcalError_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
     };
@@ -721,7 +725,7 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":14}],8:[function(require,module,exports){
+},{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":14,"../types/units":17}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Char = /** @class */ (function () {
@@ -850,6 +854,10 @@ var Lexer = /** @class */ (function () {
         if (unit) {
             return this.TTWithLiteral(token_1.TT.UNIT, text);
         }
+        var ns = numberSystem_1.NumberSystem.get(text);
+        if (ns) {
+            return this.TTWithLiteral(token_1.TT.NS, text);
+        }
         return this.TT(token_1.TT.NAME);
     };
     Lexer.prototype.number = function () {
@@ -975,6 +983,7 @@ var TT;
     TT[TT["OF"] = 15] = "OF";
     TT[TT["UNIT"] = 16] = "UNIT";
     TT[TT["CAP"] = 17] = "CAP";
+    TT[TT["NS"] = 18] = "NS";
 })(TT = exports.TT || (exports.TT = {}));
 function PrintTT(enumNumber) {
     return TT[enumNumber];
@@ -1006,6 +1015,7 @@ exports.Token = Token;
 },{}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var units_1 = require("../types/units");
 var ASTPrinter = /** @class */ (function () {
     function ASTPrinter() {
         this.depth = 0;
@@ -1042,7 +1052,10 @@ var ASTPrinter = /** @class */ (function () {
         this.depth += ASTPrinter.tab;
         var expression = this.evaluate(expr.expression);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
+        if (expr.unit instanceof units_1.UnitMeta) {
+            return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
+        }
+        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.name + " \n|\n" + expression;
     };
     ASTPrinter.prototype.visitBinaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -1085,7 +1098,7 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{}],12:[function(require,module,exports){
+},{"../types/units":17}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1228,20 +1241,20 @@ exports.Expr = Expr;
         return UnitExpr;
     }(Expr));
     Expr.UnitExpr = UnitExpr;
-    var UnitConvertionExpr = /** @class */ (function (_super) {
-        __extends(UnitConvertionExpr, _super);
-        function UnitConvertionExpr(expression, unit, start, end) {
+    var UnitorNSConvertionExpr = /** @class */ (function (_super) {
+        __extends(UnitorNSConvertionExpr, _super);
+        function UnitorNSConvertionExpr(expression, unit, start, end) {
             var _this = _super.call(this, start, end) || this;
             _this.unit = unit;
             _this.expression = expression;
             return _this;
         }
-        UnitConvertionExpr.prototype.accept = function (visitor) {
+        UnitorNSConvertionExpr.prototype.accept = function (visitor) {
             return visitor.visitUnitConvertionExpr(this);
         };
-        return UnitConvertionExpr;
+        return UnitorNSConvertionExpr;
     }(Expr));
-    Expr.UnitConvertionExpr = UnitConvertionExpr;
+    Expr.UnitorNSConvertionExpr = UnitorNSConvertionExpr;
     var Unary = /** @class */ (function (_super) {
         __extends(Unary, _super);
         function Unary(operator, right, start, end) {
@@ -1265,6 +1278,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var lex_1 = require("../lex/lex");
 var token_1 = require("../lex/token");
+var numberSystem_1 = require("../types/numberSystem");
 var expr_1 = require("./expr");
 var Parser = /** @class */ (function () {
     function Parser(source, phrases, units) {
@@ -1290,11 +1304,12 @@ var Parser = /** @class */ (function () {
     Parser.prototype.assignment = function () {
         var expr = this.expression();
         if (this.match([token_1.TT.EQUAL])) {
-            var expres = this.expression();
+            var expres = this.assignment();
             if (expr instanceof expr_1.Expr.Variable) {
                 var name_1 = expr.name;
                 return new expr_1.Expr.Assign(name_1, expres, expr.start, expres.end);
             }
+            throw new FcalError_1.FcalError('Execting variable in left side of assignment', expr.start, expr.end);
         }
         return expr;
     };
@@ -1339,12 +1354,21 @@ var Parser = /** @class */ (function () {
     Parser.prototype.unitConvert = function () {
         var expr = this.suffix();
         if (this.match([token_1.TT.IN])) {
-            this.consume(token_1.TT.UNIT, 'Expecting unit after in');
-            var unit = this.previous();
-            var unit2 = this.lexer.units.get(unit.lexeme);
-            if (unit2) {
-                return new expr_1.Expr.UnitConvertionExpr(expr, unit2, expr.start, unit.end);
+            if (this.match([token_1.TT.UNIT])) {
+                var unit = this.previous();
+                var unit2 = this.lexer.units.get(unit.lexeme);
+                if (unit2) {
+                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
+                }
             }
+            if (this.match([token_1.TT.NS])) {
+                var token = this.previous();
+                var ns = numberSystem_1.NumberSystem.get(token.lexeme);
+                if (ns) {
+                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
+                }
+            }
+            throw new FcalError_1.FcalError('Expecting unit after in');
         }
         return expr;
     };
@@ -1452,7 +1476,7 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"../FcalError":1,"../lex/lex":9,"../lex/token":10,"./expr":12}],14:[function(require,module,exports){
+},{"../FcalError":1,"../lex/lex":9,"../lex/token":10,"../types/numberSystem":15,"./expr":12}],14:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1512,6 +1536,7 @@ var TYPERANK;
         }
         Numberic.prototype.setSystem = function (numberSys) {
             this.ns = numberSys;
+            return this;
         };
         Numberic.prototype.toNumericString = function () {
             return this.ns.to(this.n);
@@ -1767,10 +1792,10 @@ var TYPERANK;
             if (value instanceof UnitNumber) {
                 var value2 = value;
                 if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-                    return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit);
+                    return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit).setSystem(value.ns);
                 }
             }
-            return UnitNumber.New(value.n, unit);
+            return UnitNumber.New(value.n, unit).setSystem(value.ns);
         };
         UnitNumber.prototype.New = function (value) {
             return new UnitNumber(value, this.unit);
@@ -1914,21 +1939,35 @@ exports.Type = Type;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NumberSystem = /** @class */ (function () {
-    function NumberSystem(to) {
+    function NumberSystem(name, to) {
         this.to = to;
+        this.name = name;
     }
-    NumberSystem.Decimal = new NumberSystem(function (num) {
+    NumberSystem.get = function (ns) {
+        return NumberSystem.ns[ns];
+    };
+    NumberSystem.Decimal = new NumberSystem('Decimal', function (num) {
         return num.toString();
     });
-    NumberSystem.HexaDecimal = new NumberSystem(function (num) {
+    NumberSystem.HexaDecimal = new NumberSystem('HexaDecimal', function (num) {
         return num.toHexadecimal();
     });
-    NumberSystem.Binary = new NumberSystem(function (num) {
+    NumberSystem.Binary = new NumberSystem('Binary', function (num) {
         return num.toBinary();
     });
-    NumberSystem.Octal = new NumberSystem(function (num) {
+    NumberSystem.Octal = new NumberSystem('Octal', function (num) {
         return num.toOctal();
     });
+    NumberSystem.ns = {
+        bin: NumberSystem.Binary,
+        binary: NumberSystem.Binary,
+        dec: NumberSystem.Decimal,
+        decimal: NumberSystem.Decimal,
+        hex: NumberSystem.HexaDecimal,
+        hexadecimal: NumberSystem.HexaDecimal,
+        oct: NumberSystem.Octal,
+        octal: NumberSystem.Octal,
+    };
     return NumberSystem;
 }());
 exports.NumberSystem = NumberSystem;

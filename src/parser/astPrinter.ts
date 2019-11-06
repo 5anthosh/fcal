@@ -1,3 +1,4 @@
+import { UnitMeta } from '../types/units';
 import { Expr } from './expr';
 export class ASTPrinter implements Expr.IVisitor<string> {
   private static tab: number = 2;
@@ -34,11 +35,14 @@ export class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'UNIT')} ${expr.unit.unitType} \n|\n${expression}`;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.UnitConvertionExpr): string {
+  public visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.unitType} \n|\n${expression}`;
+    if (expr.unit instanceof UnitMeta) {
+      return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.unitType} \n|\n${expression}`;
+    }
+    return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.name} \n|\n${expression}`;
   }
 
   public visitBinaryExpr(expr: Expr.Binary): string {

@@ -102,7 +102,7 @@ class Fcal {
   }
 
   /* ========================================================  */
-  
+
   private environment: Environment;
   constructor() {
     this.environment = new Environment(Fcal.functions);

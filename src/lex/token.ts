@@ -17,6 +17,7 @@ export enum TT {
   OF,
   UNIT,
   CAP,
+  NS,
 }
 
 export function PrintTT(enumNumber: number): string {

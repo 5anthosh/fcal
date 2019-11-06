@@ -10,7 +10,7 @@
     "browser": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/fcal.min.js",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "ctest": "jest --verbose --config jestconfig.json --coverage",
+    "ctest": "jest --verbose --config jestconfig.json --coverage && xdg-open coverage/lcov-report/index.html",
     "prepare": "npm run build",
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",

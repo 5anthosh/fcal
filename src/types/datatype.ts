@@ -40,8 +40,9 @@ export namespace Type {
       this.ns = NumberSystem.Decimal;
       this.lf = false;
     }
-    public setSystem(numberSys: NumberSystem) {
+    public setSystem(numberSys: NumberSystem): Numberic {
       this.ns = numberSys;
+      return this;
     }
     public toNumericString(): string {
       return this.ns.to(this.n);
@@ -300,10 +301,10 @@ export namespace Type {
       if (value instanceof UnitNumber) {
         const value2 = value as UnitNumber;
         if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-          return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit);
+          return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit).setSystem(value.ns) as UnitNumber;
         }
       }
-      return UnitNumber.New(value.n, unit);
+      return UnitNumber.New(value.n, unit).setSystem(value.ns) as UnitNumber;
     }
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;

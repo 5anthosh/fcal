@@ -126,6 +126,10 @@ export class Lexer {
     if (unit) {
       return this.TTWithLiteral(TT.UNIT, text);
     }
+    const ns = NumberSystem.get(text);
+    if (ns) {
+      return this.TTWithLiteral(TT.NS, text);
+    }
     return this.TT(TT.NAME);
   }
   private number(): Token {

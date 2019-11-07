@@ -1,27 +1,24 @@
 export enum TT {
-  PLUS,
-  MINUS,
-  TIMES,
-  MOD,
-  SLASH,
-  Number,
-  OPEN_PARAN,
-  CLOSE_PARAN,
-  NEWLINE,
-  EOL,
-  IN,
-  NAME,
-  EQUAL,
-  COMMA,
-  PERCENTAGE,
-  OF,
-  UNIT,
-  CAP,
-  NS,
-}
-
-export function PrintTT(enumNumber: number): string {
-  return TT[enumNumber];
+  PLUS = '+',
+  MINUS = '-',
+  TIMES = '*',
+  MOD = 'mod',
+  SLASH = '/',
+  Number = 'number',
+  OPEN_PARAN = '(',
+  CLOSE_PARAN = ')',
+  NEWLINE = '\n',
+  EOL = 'EOL',
+  IN = 'in',
+  NAME = 'name',
+  EQUAL = '=',
+  COMMA = ',',
+  PERCENTAGE = '%',
+  OF = 'of',
+  UNIT = 'unit',
+  CAP = '^',
+  NS = 'ns',
+  DOUBLE_COLON = ':',
 }
 
 export class Token {
@@ -46,7 +43,7 @@ export class Token {
     if (this.Literal !== null) {
       literal = this.Literal.format();
     }
-    return `< ${PrintTT(this.type)} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
+    return `< ${this.type} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
   }
 }
 

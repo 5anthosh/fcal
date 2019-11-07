@@ -117,5 +117,5 @@ test('Create whole new unit', () => {
 test('Add already existing unit', () => {
   expect(() => {
     Fcal.UseUnit(new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
-  }).toThrowError('month phrase already exists');
+  }).toThrowError('month is already used in unit');
 });

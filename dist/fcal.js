@@ -176,7 +176,7 @@ function getDefaultFunction() {
 }
 exports.getDefaultFunction = getDefaultFunction;
 
-},{"./interpreter/function":6}],3:[function(require,module,exports){
+},{"./interpreter/function":7}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
@@ -233,19 +233,21 @@ function setTemperatureUnits(units) {
     units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
 }
 
-},{"./types/units":17,"decimal.js":18}],4:[function(require,module,exports){
+},{"./types/units":18,"decimal.js":19}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require("decimal.js");
 exports.Decimal = decimal_js_1.Decimal;
 var defaultFunctions_1 = require("./defaultFunctions");
 var defaultUnits_1 = require("./defaultUnits");
+var constants_1 = require("./interpreter/constants");
 var environment_1 = require("./interpreter/environment");
 exports.Environment = environment_1.Environment;
 var function_1 = require("./interpreter/function");
 exports.FcalFunction = function_1.FcalFunction;
 var interpreter_1 = require("./interpreter/interpreter");
 var token_1 = require("./lex/token");
+var symboltable_1 = require("./symboltable");
 var datatype_1 = require("./types/datatype");
 exports.Type = datatype_1.Type;
 var phrase_1 = require("./types/phrase");
@@ -258,8 +260,8 @@ exports.Unit = units_1.Unit;
  */
 var Fcal = /** @class */ (function () {
     function Fcal() {
-        this.environment = new environment_1.Environment(Fcal.functions);
-        this.setDefaultValues();
+        this.lst = Fcal.gst.clone();
+        this.environment = new environment_1.Environment(Fcal.functions, this.lst, Fcal.constants);
     }
     /**
      * Quick math expression evaluator
@@ -284,6 +286,7 @@ var Fcal = /** @class */ (function () {
      * @param {FcalFunction} function fcal function definitions
      */
     Fcal.UseFunction = function (func) {
+        Fcal.gst.set(func.name, symboltable_1.Entity.FUNCTION);
         this.functions.push(func);
     };
     /**
@@ -311,21 +314,37 @@ var Fcal = /** @class */ (function () {
     Fcal.getUnit = function (unit) {
         return this.units.get(unit);
     };
+    /**
+     * useConstants
+     */
+    Fcal.useConstants = function (constants) {
+        for (var key in constants) {
+            if (constants.hasOwnProperty(key)) {
+                var element = constants[key];
+                this.constants.set(key, element);
+            }
+        }
+    };
     Fcal.IntialiseStaticValues = function () {
+        this.gst = new symboltable_1.SymbolTable();
         if (!this.phrases) {
             this.phrases = this.getdefaultphrases();
         }
         if (!this.units) {
-            this.units = new units_1.Unit.List();
+            this.units = new units_1.Unit.List(Fcal.gst);
             this.setDefaultUnits();
         }
         if (!this.functions) {
             this.functions = new function_1.FcalFunction.List();
             this.setDefaultFunctions();
         }
+        if (!this.constants) {
+            this.constants = new constants_1.Constant(this.gst);
+            this.setDefaultConstants();
+        }
     };
     Fcal.getdefaultphrases = function () {
-        var phrases = new phrase_1.Phrases();
+        var phrases = new phrase_1.Phrases(this.gst);
         phrases.push(token_1.TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
         phrases.push(token_1.TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
         phrases.push(token_1.TT.TIMES, ['TIMES', 'MULTIPLIEDBY', 'mul']);
@@ -342,6 +361,14 @@ var Fcal = /** @class */ (function () {
     Fcal.setDefaultUnits = function () {
         this.UseUnits(defaultUnits_1.getdefaultUnits());
     };
+    Fcal.setDefaultConstants = function () {
+        this.useConstants({
+            E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
+            PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
+            PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
+            _: datatype_1.Type.BNumber.ZERO,
+        });
+    };
     /**
      * Evaluates given expression
      * @param {String} expression Math expression
@@ -357,7 +384,8 @@ var Fcal = /** @class */ (function () {
      * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expression = function (source) {
-        var env = new environment_1.Environment(Fcal.functions);
+        var symbolTable = this.lst.clone();
+        var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = Object.assign({}, this.environment.values);
         source = prefixNewLIne(source);
         return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env));
@@ -382,14 +410,6 @@ var Fcal = /** @class */ (function () {
                 this.environment.set(key, element);
             }
         }
-    };
-    Fcal.prototype.setDefaultValues = function () {
-        this.setValues({
-            E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
-            PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
-            PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
-            _: datatype_1.Type.BNumber.ZERO,
-        });
     };
     return Fcal;
 }());
@@ -431,19 +451,50 @@ var Expression = /** @class */ (function () {
 exports.Expression = Expression;
 Fcal.IntialiseStaticValues();
 
-},{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./lex/token":10,"./types/datatype":14,"./types/phrase":16,"./types/units":17,"decimal.js":18}],5:[function(require,module,exports){
+},{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/constants":5,"./interpreter/environment":6,"./interpreter/function":7,"./interpreter/interpreter":8,"./lex/token":10,"./symboltable":14,"./types/datatype":15,"./types/phrase":17,"./types/units":18,"decimal.js":19}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var symboltable_1 = require("../symboltable");
+var datatype_1 = require("../types/datatype");
+var Constant = /** @class */ (function () {
+    function Constant(symbolTable) {
+        this.values = {};
+        this.symbolTable = symbolTable;
+    }
+    /**
+     * create or assign a constant with value
+     * @param {string} key constatn name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Constant.prototype.set = function (key, value) {
+        if (!this.values.hasOwnProperty(key)) {
+            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
+        }
+        if (value instanceof datatype_1.Type) {
+            this.values[key] = value;
+            return;
+        }
+        this.values[key] = datatype_1.Type.BNumber.New(value);
+    };
+    return Constant;
+}());
+exports.Constant = Constant;
+
+},{"../symboltable":14,"../types/datatype":15}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
+var symboltable_1 = require("../symboltable");
 var datatype_1 = require("../types/datatype");
 /**
  * Represents runtime variable environment
  * It represents state of fcal
  */
 var Environment = /** @class */ (function () {
-    function Environment(functions) {
-        this.values = {};
+    function Environment(functions, symbolTable, constants) {
+        this.values = Object.assign({}, constants.values);
         this.functions = functions;
+        this.symbolTable = symbolTable;
     }
     /**
      * Get the value of variable
@@ -462,6 +513,9 @@ var Environment = /** @class */ (function () {
      * @param value value
      */
     Environment.prototype.set = function (key, value) {
+        if (!this.values.hasOwnProperty(key)) {
+            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
+        }
         if (value instanceof datatype_1.Type) {
             this.values[key] = value;
             return;
@@ -472,7 +526,7 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"../FcalError":1,"../types/datatype":14}],6:[function(require,module,exports){
+},{"../FcalError":1,"../symboltable":14,"../types/datatype":15}],7:[function(require,module,exports){
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -572,7 +626,7 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction = exports.FcalFunction || (exports.FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"../FcalError":1,"../types/datatype":14,"decimal.js":18}],7:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":15,"decimal.js":19}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
@@ -582,7 +636,7 @@ var datatype_1 = require("../types/datatype");
 var units_1 = require("../types/units");
 var Interpreter = /** @class */ (function () {
     function Interpreter(source, phrases, units, environment) {
-        var parser = new parser_1.Parser(source, phrases, units);
+        var parser = new parser_1.Parser(source, phrases, units, environment.symbolTable);
         this.environment = environment;
         this.ast = parser.parse();
     }
@@ -725,36 +779,12 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":14,"../types/units":17}],8:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var Char = /** @class */ (function () {
-    function Char() {
-    }
-    Char.PLUS = '+';
-    Char.MINUS = '-';
-    Char.TIMES = '*';
-    Char.MOD = 'mod';
-    Char.SLASH = '/';
-    Char.OPEN_PARAN = '(';
-    Char.CLOSE_PARAN = ')';
-    Char.CAP = '^';
-    Char.PERCENTAGE = '%';
-    Char.EQUAL = '=';
-    Char.DOUBLE_COLON = ':';
-    Char.COMMA = ',';
-    Char.NEWLINE = '\n';
-    return Char;
-}());
-exports.Char = Char;
-
-},{}],9:[function(require,module,exports){
+},{"../FcalError":1,"../lex/token":10,"../parser/parser":13,"../types/datatype":15,"../types/units":18}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
 var numberSystem_1 = require("../types/numberSystem");
-var char_1 = require("./char");
 var token_1 = require("./token");
 var Lexer = /** @class */ (function () {
     function Lexer(source, phrases, untis) {
@@ -793,29 +823,29 @@ var Lexer = /** @class */ (function () {
     Lexer.prototype.scan = function () {
         var char = this.space();
         switch (char) {
-            case char_1.Char.PLUS:
+            case token_1.TT.PLUS:
                 return this.TT(token_1.TT.PLUS);
-            case char_1.Char.MINUS:
+            case token_1.TT.MINUS:
                 return this.TT(token_1.TT.MINUS);
-            case char_1.Char.TIMES:
+            case token_1.TT.TIMES:
                 return this.TT(token_1.TT.TIMES);
-            case char_1.Char.SLASH:
+            case token_1.TT.SLASH:
                 return this.TT(token_1.TT.SLASH);
-            case char_1.Char.EQUAL:
+            case token_1.TT.EQUAL:
                 return this.TT(token_1.TT.EQUAL);
-            case char_1.Char.COMMA:
+            case token_1.TT.COMMA:
                 return this.TT(token_1.TT.COMMA);
-            case char_1.Char.DOUBLE_COLON:
-                return this.TT(token_1.TT.EQUAL);
-            case char_1.Char.OPEN_PARAN:
+            case token_1.TT.DOUBLE_COLON:
+                return this.TT(token_1.TT.DOUBLE_COLON);
+            case token_1.TT.OPEN_PARAN:
                 return this.TT(token_1.TT.OPEN_PARAN);
-            case char_1.Char.CLOSE_PARAN:
+            case token_1.TT.CLOSE_PARAN:
                 return this.TT(token_1.TT.CLOSE_PARAN);
-            case char_1.Char.CAP:
+            case token_1.TT.CAP:
                 return this.TT(token_1.TT.CAP);
-            case char_1.Char.PERCENTAGE:
+            case token_1.TT.PERCENTAGE:
                 return this.TT(token_1.TT.PERCENTAGE);
-            case char_1.Char.NEWLINE:
+            case token_1.TT.NEWLINE:
                 return this.TT(token_1.TT.NEWLINE);
             default:
                 if (Lexer.isDigit(char)) {
@@ -943,52 +973,49 @@ var Lexer = /** @class */ (function () {
         return char;
     };
     Lexer.notAlpha = [
-        char_1.Char.PLUS,
-        char_1.Char.MINUS,
-        char_1.Char.TIMES,
-        char_1.Char.SLASH,
-        char_1.Char.OPEN_PARAN,
-        char_1.Char.CLOSE_PARAN,
-        char_1.Char.CAP,
-        char_1.Char.PERCENTAGE,
-        char_1.Char.EQUAL,
-        char_1.Char.COMMA,
-        char_1.Char.DOUBLE_COLON,
-        char_1.Char.NEWLINE,
+        token_1.TT.PLUS,
+        token_1.TT.MINUS,
+        token_1.TT.TIMES,
+        token_1.TT.SLASH,
+        token_1.TT.OPEN_PARAN,
+        token_1.TT.CLOSE_PARAN,
+        token_1.TT.CAP,
+        token_1.TT.PERCENTAGE,
+        token_1.TT.EQUAL,
+        token_1.TT.COMMA,
+        token_1.TT.DOUBLE_COLON,
+        token_1.TT.NEWLINE,
     ];
     return Lexer;
 }());
 exports.Lexer = Lexer;
 
-},{"../FcalError":1,"../types/datatype":14,"../types/numberSystem":15,"./char":8,"./token":10}],10:[function(require,module,exports){
+},{"../FcalError":1,"../types/datatype":15,"../types/numberSystem":16,"./token":10}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TT;
 (function (TT) {
-    TT[TT["PLUS"] = 0] = "PLUS";
-    TT[TT["MINUS"] = 1] = "MINUS";
-    TT[TT["TIMES"] = 2] = "TIMES";
-    TT[TT["MOD"] = 3] = "MOD";
-    TT[TT["SLASH"] = 4] = "SLASH";
-    TT[TT["Number"] = 5] = "Number";
-    TT[TT["OPEN_PARAN"] = 6] = "OPEN_PARAN";
-    TT[TT["CLOSE_PARAN"] = 7] = "CLOSE_PARAN";
-    TT[TT["NEWLINE"] = 8] = "NEWLINE";
-    TT[TT["EOL"] = 9] = "EOL";
-    TT[TT["IN"] = 10] = "IN";
-    TT[TT["NAME"] = 11] = "NAME";
-    TT[TT["EQUAL"] = 12] = "EQUAL";
-    TT[TT["COMMA"] = 13] = "COMMA";
-    TT[TT["PERCENTAGE"] = 14] = "PERCENTAGE";
-    TT[TT["OF"] = 15] = "OF";
-    TT[TT["UNIT"] = 16] = "UNIT";
-    TT[TT["CAP"] = 17] = "CAP";
-    TT[TT["NS"] = 18] = "NS";
+    TT["PLUS"] = "+";
+    TT["MINUS"] = "-";
+    TT["TIMES"] = "*";
+    TT["MOD"] = "mod";
+    TT["SLASH"] = "/";
+    TT["Number"] = "number";
+    TT["OPEN_PARAN"] = "(";
+    TT["CLOSE_PARAN"] = ")";
+    TT["NEWLINE"] = "\n";
+    TT["EOL"] = "EOL";
+    TT["IN"] = "in";
+    TT["NAME"] = "name";
+    TT["EQUAL"] = "=";
+    TT["COMMA"] = ",";
+    TT["PERCENTAGE"] = "%";
+    TT["OF"] = "of";
+    TT["UNIT"] = "unit";
+    TT["CAP"] = "^";
+    TT["NS"] = "ns";
+    TT["DOUBLE_COLON"] = ":";
 })(TT = exports.TT || (exports.TT = {}));
-function PrintTT(enumNumber) {
-    return TT[enumNumber];
-}
-exports.PrintTT = PrintTT;
 var Token = /** @class */ (function () {
     function Token(type, lexeme, literal, start, end) {
         this.type = type;
@@ -1005,7 +1032,7 @@ var Token = /** @class */ (function () {
         if (this.Literal !== null) {
             literal = this.Literal.format();
         }
-        return "< " + PrintTT(this.type) + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>";
+        return "< " + this.type + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>";
     };
     return Token;
 }());
@@ -1098,7 +1125,7 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{"../types/units":17}],12:[function(require,module,exports){
+},{"../types/units":18}],12:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1281,11 +1308,12 @@ var token_1 = require("../lex/token");
 var numberSystem_1 = require("../types/numberSystem");
 var expr_1 = require("./expr");
 var Parser = /** @class */ (function () {
-    function Parser(source, phrases, units) {
+    function Parser(source, phrases, units, symbolTable) {
         this.source = source;
         this.lexer = new lex_1.Lexer(this.source, phrases, units);
         this.ntoken = 0;
         this.tokens = [];
+        this.symbolTable = symbolTable;
     }
     Parser.prototype.parse = function () {
         var expr = this.Stmt();
@@ -1303,7 +1331,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.assignment = function () {
         var expr = this.expression();
-        if (this.match([token_1.TT.EQUAL])) {
+        if (this.match([token_1.TT.EQUAL, token_1.TT.DOUBLE_COLON])) {
             var expres = this.assignment();
             if (expr instanceof expr_1.Expr.Variable) {
                 var name_1 = expr.name;
@@ -1421,7 +1449,12 @@ var Parser = /** @class */ (function () {
         if (this.match([token_1.TT.NAME])) {
             return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
         }
-        throw new FcalError_1.FcalError("Expect expression but found " + this.peek().lexeme, this.peek().start, this.peek().end);
+        var lexeme = this.peek().lexeme;
+        var entity = this.symbolTable.get(lexeme);
+        if (entity) {
+            throw new FcalError_1.FcalError("Expect expression but found " + lexeme + " [" + entity.toLowerCase() + "]", this.peek().start, this.peek().end);
+        }
+        throw new FcalError_1.FcalError("Expect expression but found " + lexeme, this.peek().start, this.peek().end);
     };
     Parser.prototype.match = function (types) {
         for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
@@ -1476,7 +1509,51 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"../FcalError":1,"../lex/lex":9,"../lex/token":10,"../types/numberSystem":15,"./expr":12}],14:[function(require,module,exports){
+},{"../FcalError":1,"../lex/lex":9,"../lex/token":10,"../types/numberSystem":16,"./expr":12}],14:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var FcalError_1 = require("./FcalError");
+var SymbolTable = /** @class */ (function () {
+    function SymbolTable() {
+        this.registry = {
+            bin: Entity.NS,
+            binary: Entity.NS,
+            dec: Entity.NS,
+            decimal: Entity.NS,
+            hex: Entity.NS,
+            hexadecimal: Entity.NS,
+            oct: Entity.NS,
+            octal: Entity.NS,
+        };
+    }
+    SymbolTable.prototype.set = function (phrase, entity) {
+        if (this.registry.hasOwnProperty(phrase)) {
+            throw new FcalError_1.FcalError(phrase + " is already used in " + this.registry[phrase].toLowerCase());
+        }
+        this.registry[phrase] = entity;
+    };
+    SymbolTable.prototype.get = function (phrase) {
+        return this.registry[phrase];
+    };
+    SymbolTable.prototype.clone = function () {
+        var clone = new SymbolTable();
+        clone.registry = Object.assign({}, this.registry);
+        return clone;
+    };
+    return SymbolTable;
+}());
+exports.SymbolTable = SymbolTable;
+var Entity;
+(function (Entity) {
+    Entity["FUNCTION"] = "FUNCTION";
+    Entity["VARIABLE"] = "VARIABLE";
+    Entity["CONSTANT"] = "CONSTANT";
+    Entity["OPERATION_PHRASE"] = "OPERATION PHRASE";
+    Entity["NS"] = "NUMBER SYSTEM";
+    Entity["UNIT"] = "UNIT";
+})(Entity = exports.Entity || (exports.Entity = {}));
+
+},{"./FcalError":1}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1637,6 +1714,9 @@ var TYPERANK;
                 return value.mod(this);
             }
             return this.New(value.mod(this).n);
+        };
+        Numberic.prototype.toNumber = function () {
+            return this.n.toNumber();
         };
         return Numberic;
     }(Type));
@@ -1935,7 +2015,7 @@ var TYPERANK;
 })(Type = exports.Type || (exports.Type = {}));
 exports.Type = Type;
 
-},{"./numberSystem":15,"decimal.js":18}],15:[function(require,module,exports){
+},{"./numberSystem":16,"decimal.js":19}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NumberSystem = /** @class */ (function () {
@@ -1976,20 +2056,19 @@ exports.NumberSystem = NumberSystem;
 //   class
 // }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var FcalError_1 = require("../FcalError");
+var symboltable_1 = require("../symboltable");
 var Phrases = /** @class */ (function () {
-    function Phrases() {
+    function Phrases(symbolTable) {
+        this.symbolTable = symbolTable;
         this.phrases = {};
     }
     Phrases.prototype.push = function (key, phrases) {
         for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
             var phrase = phrases_1[_i];
-            if (this.phrases.hasOwnProperty(phrase.toUpperCase())) {
-                throw new FcalError_1.FcalError("phrases already exits");
-            }
+            this.symbolTable.set(phrase.toUpperCase(), symboltable_1.Entity.OPERATION_PHRASE);
             this.phrases[phrase.toUpperCase()] = key;
         }
     };
@@ -2000,11 +2079,11 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"../FcalError":1}],17:[function(require,module,exports){
+},{"../symboltable":14}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Big = require("decimal.js");
-var FcalError_1 = require("../FcalError");
+var symboltable_1 = require("../symboltable");
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
@@ -2087,7 +2166,8 @@ exports.Unit = Unit;
      * List of units
      */
     var List = /** @class */ (function () {
-        function List() {
+        function List(symbolTable) {
+            this.symbolTable = symbolTable;
             this.units = {};
         }
         /**
@@ -2096,27 +2176,11 @@ exports.Unit = Unit;
          * @throws Error if phrases already exists
          */
         List.prototype.push = function (unit) {
-            var phrase = this.check(unit.phrases);
-            if (phrase) {
-                throw new FcalError_1.FcalError(phrase + " phrase already exists");
-            }
             for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
                 var phrase1 = _a[_i];
+                this.symbolTable.set(phrase1, symboltable_1.Entity.UNIT);
                 this.units[phrase1] = unit;
             }
-        };
-        /**
-         * check if unit already exists
-         * @param phrases
-         */
-        List.prototype.check = function (phrases) {
-            for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
-                var phrase = phrases_1[_i];
-                if (this.units.hasOwnProperty(phrase)) {
-                    return phrase;
-                }
-            }
-            return null;
         };
         /**
          * get the unit by its phrase
@@ -2134,7 +2198,7 @@ exports.Unit = Unit;
 })(Unit = exports.Unit || (exports.Unit = {}));
 exports.Unit = Unit;
 
-},{"../FcalError":1,"decimal.js":18}],18:[function(require,module,exports){
+},{"../symboltable":14,"decimal.js":19}],19:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 

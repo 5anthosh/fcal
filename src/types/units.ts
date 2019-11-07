@@ -1,5 +1,5 @@
 import Big = require('decimal.js');
-import { FcalError } from '../FcalError';
+import { Entity, SymbolTable } from '../symboltable';
 
 type ratioFuncFmt = () => Big.Decimal | number;
 
@@ -94,8 +94,10 @@ export namespace Unit {
    * List of units
    */
   export class List {
+    public symbolTable: SymbolTable;
     public units: { [index: string]: Unit };
-    constructor() {
+    constructor(symbolTable: SymbolTable) {
+      this.symbolTable = symbolTable;
       this.units = {};
     }
     /**
@@ -104,25 +106,10 @@ export namespace Unit {
      * @throws Error if phrases already exists
      */
     public push(unit: Unit) {
-      const phrase = this.check(unit.phrases);
-      if (phrase) {
-        throw new FcalError(`${phrase} phrase already exists`);
-      }
       for (const phrase1 of unit.phrases) {
+        this.symbolTable.set(phrase1, Entity.UNIT);
         this.units[phrase1] = unit;
       }
-    }
-    /**
-     * check if unit already exists
-     * @param phrases
-     */
-    public check(phrases: string[]): string | null {
-      for (const phrase of phrases) {
-        if (this.units.hasOwnProperty(phrase)) {
-          return phrase;
-        }
-      }
-      return null;
     }
     /**
      * get the unit by its phrase

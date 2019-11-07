@@ -5,6 +5,7 @@ export abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
   public abstract print(): string;
+  public abstract toNumber(): number;
   public toString(): string {
     return this.print();
   }
@@ -149,6 +150,10 @@ export namespace Type {
         return value.mod(this);
       }
       return this.New(value.mod(this).n);
+    }
+
+    public toNumber(): number {
+      return this.n.toNumber();
     }
 
     public abstract New(value: Big.Decimal): Numberic;

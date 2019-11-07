@@ -1,6 +1,7 @@
 import { FcalError } from '../FcalError';
 import { Lexer } from '../lex/lex';
 import { Token, TT } from '../lex/token';
+import { SymbolTable } from '../symboltable';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
@@ -11,11 +12,13 @@ export class Parser {
   private lexer: Lexer;
   private ntoken: number;
   private tokens: Token[];
-  constructor(source: string, phrases: Phrases, units: Unit.List) {
+  private symbolTable: SymbolTable;
+  constructor(source: string, phrases: Phrases, units: Unit.List, symbolTable: SymbolTable) {
     this.source = source;
     this.lexer = new Lexer(this.source, phrases, units);
     this.ntoken = 0;
     this.tokens = [];
+    this.symbolTable = symbolTable;
   }
   public parse(): Expr {
     const expr = this.Stmt();
@@ -34,7 +37,7 @@ export class Parser {
   }
   private assignment(): Expr {
     const expr = this.expression();
-    if (this.match([TT.EQUAL])) {
+    if (this.match([TT.EQUAL, TT.DOUBLE_COLON])) {
       const expres = this.assignment();
       if (expr instanceof Expr.Variable) {
         const name = (expr as Expr.Variable).name;
@@ -158,7 +161,16 @@ export class Parser {
     if (this.match([TT.NAME])) {
       return new Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
     }
-    throw new FcalError(`Expect expression but found ${this.peek().lexeme}`, this.peek().start, this.peek().end);
+    const lexeme = this.peek().lexeme;
+    const entity = this.symbolTable.get(lexeme);
+    if (entity) {
+      throw new FcalError(
+        `Expect expression but found ${lexeme} [${entity.toLowerCase()}]`,
+        this.peek().start,
+        this.peek().end,
+      );
+    }
+    throw new FcalError(`Expect expression but found ${lexeme}`, this.peek().start, this.peek().end);
   }
 
   private match(types: TT[]): boolean {

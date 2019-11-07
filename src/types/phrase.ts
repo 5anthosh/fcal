@@ -1,16 +1,16 @@
-import { FcalError } from '../FcalError';
 import { TT } from '../lex/token';
+import { Entity, SymbolTable } from '../symboltable';
 
 export class Phrases {
   public phrases: { [index: string]: TT };
-  constructor() {
+  private symbolTable: SymbolTable;
+  constructor(symbolTable: SymbolTable) {
+    this.symbolTable = symbolTable;
     this.phrases = {};
   }
   public push(key: TT, phrases: string[]) {
     for (const phrase of phrases) {
-      if (this.phrases.hasOwnProperty(phrase.toUpperCase())) {
-        throw new FcalError(`phrases already exits`);
-      }
+      this.symbolTable.set(phrase.toUpperCase(), Entity.OPERATION_PHRASE);
       this.phrases[phrase.toUpperCase()] = key;
     }
   }

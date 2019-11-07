@@ -3,22 +3,21 @@ import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
-import { Char } from './char';
 import { Token, TT } from './token';
 export class Lexer {
   public static notAlpha: string[] = [
-    Char.PLUS,
-    Char.MINUS,
-    Char.TIMES,
-    Char.SLASH,
-    Char.OPEN_PARAN,
-    Char.CLOSE_PARAN,
-    Char.CAP,
-    Char.PERCENTAGE,
-    Char.EQUAL,
-    Char.COMMA,
-    Char.DOUBLE_COLON,
-    Char.NEWLINE,
+    TT.PLUS,
+    TT.MINUS,
+    TT.TIMES,
+    TT.SLASH,
+    TT.OPEN_PARAN,
+    TT.CLOSE_PARAN,
+    TT.CAP,
+    TT.PERCENTAGE,
+    TT.EQUAL,
+    TT.COMMA,
+    TT.DOUBLE_COLON,
+    TT.NEWLINE,
   ];
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
@@ -65,29 +64,29 @@ export class Lexer {
   private scan(): Token {
     const char = this.space();
     switch (char) {
-      case Char.PLUS:
+      case TT.PLUS:
         return this.TT(TT.PLUS);
-      case Char.MINUS:
+      case TT.MINUS:
         return this.TT(TT.MINUS);
-      case Char.TIMES:
+      case TT.TIMES:
         return this.TT(TT.TIMES);
-      case Char.SLASH:
+      case TT.SLASH:
         return this.TT(TT.SLASH);
-      case Char.EQUAL:
+      case TT.EQUAL:
         return this.TT(TT.EQUAL);
-      case Char.COMMA:
+      case TT.COMMA:
         return this.TT(TT.COMMA);
-      case Char.DOUBLE_COLON:
-        return this.TT(TT.EQUAL);
-      case Char.OPEN_PARAN:
+      case TT.DOUBLE_COLON:
+        return this.TT(TT.DOUBLE_COLON);
+      case TT.OPEN_PARAN:
         return this.TT(TT.OPEN_PARAN);
-      case Char.CLOSE_PARAN:
+      case TT.CLOSE_PARAN:
         return this.TT(TT.CLOSE_PARAN);
-      case Char.CAP:
+      case TT.CAP:
         return this.TT(TT.CAP);
-      case Char.PERCENTAGE:
+      case TT.PERCENTAGE:
         return this.TT(TT.PERCENTAGE);
-      case Char.NEWLINE:
+      case TT.NEWLINE:
         return this.TT(TT.NEWLINE);
       default:
         if (Lexer.isDigit(char)) {

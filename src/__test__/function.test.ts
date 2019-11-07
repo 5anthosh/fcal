@@ -58,7 +58,7 @@ test('Function already registered', () => {
     const value = param[0] as Type.Numberic;
     return value.New(value.n.abs());
   });
-  const error = new Error('abs is already registered');
+  const error = new Error('abs is already used in function');
   error.name = 'FcalError';
   expect(() => {
     Fcal.UseFunction(func);

@@ -13,7 +13,7 @@ export class Interpreter implements Expr.IVisitor<any> {
   private ast: Expr;
   private environment: Environment;
   constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
-    const parser = new Parser(source, phrases, units);
+    const parser = new Parser(source, phrases, units, environment.symbolTable);
     this.environment = environment;
     this.ast = parser.parse();
   }

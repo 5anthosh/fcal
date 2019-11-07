@@ -1,6 +1,6 @@
 {
   "name": "fcal",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Math expression evaluator",
   "main": "lib/fcal.js",
   "types": "lib/fcal.d.ts",

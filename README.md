@@ -5,7 +5,9 @@
 [![Hits](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)
 [![Downloads](https://badgen.net/npm/dt/fcal)](https://www.npmjs.com/package/fcal)
 
-> Math expression evaluator
+> Fcaljs is an extensive math expression evaluator library for JavaScript and Node.js.
+> Using fcal, you can perform basic arithmetic, percentage operations with precision.
+> It features a flexible expression parser with a large set of built-in units, functions and constants
 
 ### 🏠 [Homepage](https://github.com/5anthosh/fcal/wiki)
 

@@ -1,6 +1,6 @@
 ![iamg](https://raw.githubusercontent.com/5anthosh/fcal/assets/logo.png)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2F5anthosh%2Ffcal.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2F5anthosh%2Ffcal?ref=badge_shield)
 
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2F5anthosh%2Ffcal.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2F5anthosh%2Ffcal?ref=badge_shield)
 [![Version](https://badgen.net/npm/v/fcal)](https://www.npmjs.com/package/fcal)
 [![License: MIT](https://badgen.net/npm/license/fcal)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
 [![Hits](https://data.jsdelivr.com/v1/package/npm/fcal/badge)](https://www.jsdelivr.com/package/npm/fcal)

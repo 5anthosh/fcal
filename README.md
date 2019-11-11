@@ -1,4 +1,5 @@
 ![iamg](https://raw.githubusercontent.com/5anthosh/fcal/assets/logo.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2F5anthosh%2Ffcal.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2F5anthosh%2Ffcal?ref=badge_shield)
 
 [![Version](https://badgen.net/npm/v/fcal)](https://www.npmjs.com/package/fcal)
 [![License: MIT](https://badgen.net/npm/license/fcal)](https://github.com/5anthosh/fcal/blob/master/LICENSE)
@@ -156,3 +157,6 @@ $ npm test
 
 Copyright © 2019 [Santhosh Kumar](https://github.com/5anthosh).<br />
 This project is [MIT](https://github.com/5anthosh/fcal/blob/master/LICENSE) licensed.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2F5anthosh%2Ffcal.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2F5anthosh%2Ffcal?ref=badge_large)

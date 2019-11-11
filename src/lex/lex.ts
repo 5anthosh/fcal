@@ -1,4 +1,4 @@
-import { FcalError } from '../FcalError';
+import { FcalError } from '../fcal';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';

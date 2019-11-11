@@ -1,5 +1,5 @@
 import { Fcal } from '../fcal';
-import { FcalError } from '../FcalError';
+import { FcalError } from '../fcal';
 import { Type } from '../types/datatype';
 
 test('Assignment', () => {

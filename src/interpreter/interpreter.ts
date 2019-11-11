@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { FcalError } from '../FcalError';
+import { FcalError } from '../fcal';
 import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';

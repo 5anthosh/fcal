@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { Entity, SymbolTable } from '../symboltable';
+import { Entity, SymbolTable } from '../interpreter/symboltable';
 
 type callbackFuncFmt = () => Decimal | number;
 
@@ -100,10 +100,10 @@ namespace Unit {
    */
   export class List {
     public symbolTable: SymbolTable;
-    public units: { [index: string]: Unit };
+    public units: Map<string, Unit>;
     constructor(symbolTable: SymbolTable) {
       this.symbolTable = symbolTable;
-      this.units = {};
+      this.units = new Map<string, Unit>();
     }
     /**
      * Add a new unit
@@ -113,7 +113,7 @@ namespace Unit {
     public push(unit: Unit): void {
       for (const phrase1 of unit.phrases) {
         this.symbolTable.set(phrase1, Entity.UNIT);
-        this.units[phrase1] = unit;
+        this.units.set(phrase1, unit);
       }
     }
     /**
@@ -122,8 +122,9 @@ namespace Unit {
      * @returns {UnitMeta | null }
      */
     public get(phrase: string): UnitMeta | null {
-      if (this.units.hasOwnProperty(phrase)) {
-        return this.units[phrase].meta;
+      const c = this.units.get(phrase);
+      if (c) {
+        return c.meta;
       }
       return null;
     }

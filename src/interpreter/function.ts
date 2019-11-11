@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { FcalError } from '../FcalError';
+import { FcalError } from '../fcal';
 import { Type } from '../types/datatype';
 import { Environment } from './environment';
 
@@ -7,7 +7,7 @@ interface ICallable {
   call(environment: Environment, argument: Type[]): Type | number | Decimal;
 }
 
-type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
+export type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
 
 /**
  * FcalFunction represents function in fcal
@@ -54,20 +54,31 @@ class FcalFunction implements ICallable {
 // tslint:disable-next-line:no-namespace
 namespace FcalFunction {
   export class List {
-    public functions: { [index: string]: FcalFunction };
+    public functions: Map<string, FcalFunction>;
     constructor() {
-      this.functions = {};
+      this.functions = new Map<string, FcalFunction>();
     }
     /**
      * Add new fcal function
      * @param {FcalFunction} fcalFunction
      * @throws {FcalError} Error if function name is already exists
      */
-    public push(fcalFunction: FcalFunction | { name: string; arbity: number; func: FcalFunctionFmt }): void {
-      if (fcalFunction instanceof FcalFunction) {
-        return this.addFF(fcalFunction);
+    public push(ff: FcalFunction): void {
+      if (this.check(ff.name)) {
+        throw new FcalError(`${ff.name} is already registered`);
       }
-      this.addFF(new FcalFunction(fcalFunction.name, fcalFunction.arbity, fcalFunction.func));
+      if (ff.arbity < -1) {
+        throw new FcalError(
+          `Can not register ${ff.name}, invalid arbity should be greater than or equal to -1 but got ${ff.arbity}`,
+        );
+      }
+      if (ff.arbity >= 255) {
+        throw new FcalError(`Can not register ${ff.name}, function cannot have more than 254 arguments`);
+      }
+      if (ff.arbity % 1 !== 0) {
+        throw new FcalError(`Can not register ${ff.name}, arbity should be Integer`);
+      }
+      this.functions.set(ff.name, ff);
     }
     /**
      * Call a function by its name
@@ -90,7 +101,7 @@ namespace FcalFunction {
      * @returns {FcalFunction | undefined} function
      */
     public get(name: string): FcalFunction | undefined {
-      return this.functions[name];
+      return this.functions.get(name);
     }
     /**
      * check if function is available
@@ -99,13 +110,6 @@ namespace FcalFunction {
      */
     private check(name: string): boolean {
       return this.functions.hasOwnProperty(name);
-    }
-
-    private addFF(ff: FcalFunction): void {
-      if (this.check(ff.name)) {
-        throw new FcalError(`${ff.name} is already registered`);
-      }
-      this.functions[ff.name] = ff;
     }
   }
 }

@@ -1,7 +1,7 @@
-import { FcalError } from '../FcalError';
+import { FcalError } from '../fcal';
+import { SymbolTable } from '../interpreter/symboltable';
 import { Lexer } from '../lex/lex';
 import { Token, TT } from '../lex/token';
-import { SymbolTable } from '../symboltable';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
@@ -131,13 +131,6 @@ class Parser {
         const argument = Array<Expr>();
         if (this.peek().type !== TT.CLOSE_PARAN) {
           do {
-            if (argument.length >= 255) {
-              throw new FcalError(
-                `${expr.name} function cannot have more than 255 arguments`,
-                expr.start,
-                this.peek().end,
-              );
-            }
             argument.push(this.expression());
           } while (this.match([TT.COMMA]));
         }

@@ -1,7 +1,7 @@
-import { IUseUnit } from './fcal';
-import { Unit } from './types/units';
+import { IUseUnit } from '../fcal';
+import { Unit } from '../types/units';
 
-export function getdefaultUnits(): Array<IUseUnit | Unit> {
+export function getDefaultUnits(): Array<IUseUnit | Unit> {
   const units = new Array<IUseUnit | Unit>();
   setDistanceUnits(units);
   setSpeedUnits(units);

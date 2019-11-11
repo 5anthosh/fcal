@@ -18,7 +18,7 @@
 - Variables
 - Functions
 
-> Playground [Codepen](https://codepen.io/5anthosh/pen/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
+> Playground [Codepen](https://codepen.io/5anthosh/full/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
 
 ## Example
 
@@ -157,6 +157,5 @@ $ npm test
 
 Copyright © 2019 [Santhosh Kumar](https://github.com/5anthosh).<br />
 This project is [MIT](https://github.com/5anthosh/fcal/blob/master/LICENSE) licensed.
-
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2F5anthosh%2Ffcal.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2F5anthosh%2Ffcal?ref=badge_large)

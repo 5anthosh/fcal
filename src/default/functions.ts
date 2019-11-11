@@ -1,9 +1,9 @@
 import { Decimal } from 'decimal.js';
-import { Environment } from './interpreter/environment';
-import { FcalFunction } from './interpreter/function';
-import { Type } from './types/datatype';
+import { Environment } from '../interpreter/environment';
+import { FcalFunction } from '../interpreter/function';
+import { Type } from '../types/datatype';
 
-export function getDefaultFunction(): FcalFunction[] {
+export function getDefaultFunctions(): FcalFunction[] {
   const functions = Array<FcalFunction>();
 
   functions.push(

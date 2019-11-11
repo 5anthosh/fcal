@@ -1,15 +1,25 @@
 import { Decimal } from 'decimal.js';
-import { getDefaultFunction } from './defaultFunctions';
-import { getdefaultUnits } from './defaultUnits';
+import { getDefaultFunctions } from './default/functions';
+import { getDefaultUnits } from './default/units';
 import { Constant } from './interpreter/constants';
 import { Environment } from './interpreter/environment';
-import { FcalFunction } from './interpreter/function';
+import { FcalFunction, FcalFunctionFmt } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
+import { Entity, SymbolTable } from './interpreter/symboltable';
 import { TT } from './lex/token';
-import { Entity, SymbolTable } from './symboltable';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { callbackFuncFmt, Unit, UnitMeta } from './types/units';
+
+/**
+ * IUseFunction
+ * Interface for UseFunction
+ */
+export interface IUseFunction {
+  name: string;
+  arbity: number;
+  func: FcalFunctionFmt;
+}
 
 /**
  * IUseUnit
@@ -44,7 +54,7 @@ class Fcal {
    * register new fcal Functions
    * @param {Array<FcalFunction>} functions list of fcal function definitions
    */
-  public static UseFunctions(functions: FcalFunction[]): void {
+  public static UseFunctions(functions: Array<FcalFunction | IUseFunction>): void {
     for (const func of functions) {
       this.UseFunction(func);
     }
@@ -54,9 +64,13 @@ class Fcal {
    * Register new Fcal function
    * @param {FcalFunction} function fcal function definitions
    */
-  public static UseFunction(func: FcalFunction): void {
-    Fcal.gst.set(func.name, Entity.FUNCTION);
-    this.functions.push(func);
+  public static UseFunction(func: FcalFunction | IUseFunction): void {
+    if (func instanceof FcalFunction) {
+      Fcal.gst.set(func.name, Entity.FUNCTION);
+      this.functions.push(func);
+      return;
+    }
+    this.functions.push(new FcalFunction(func.name, func.arbity, func.func));
   }
 
   /**
@@ -112,7 +126,7 @@ class Fcal {
     }
   }
 
-  public static IntialiseStaticValues(): void {
+  public static initialize(): void {
     this.gst = new SymbolTable();
     if (!this.phrases) {
       this.phrases = this.getdefaultphrases();
@@ -150,11 +164,11 @@ class Fcal {
   }
 
   private static setDefaultFunctions(): void {
-    this.UseFunctions(getDefaultFunction());
+    this.UseFunctions(getDefaultFunctions());
   }
 
   private static setDefaultUnits(): void {
-    this.UseUnits(getdefaultUnits());
+    this.UseUnits(getDefaultUnits());
   }
 
   private static setDefaultConstants(): void {
@@ -191,7 +205,7 @@ class Fcal {
   public expression(source: string): Expression {
     const symbolTable = this.lst.clone();
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
-    env.values = Object.assign({}, this.environment.values);
+    env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
     return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env));
   }
@@ -254,8 +268,31 @@ class Expression {
   }
 }
 
+/**
+ * FcalError class
+ * it represents Error in Fcal
+ */
+class FcalError extends Error {
+  public start?: number;
+  public end?: number;
+  constructor(message: string, start?: number, end?: number) {
+    super(message);
+    this.start = start;
+    this.end = end;
+    this.message = message;
+    if (!start) {
+      this.name = 'FcalError';
+      return;
+    }
+    if (!end) {
+      this.end = start;
+    }
+    this.name = `FcalError [${this.start}, ${this.end}]`;
+  }
+}
+
 /***************************************************************/
 
-Fcal.IntialiseStaticValues();
+Fcal.initialize();
 
-export { Fcal, Expression, FcalFunction, Environment, Unit, Type, Decimal };
+export { Fcal, FcalError, Expression, FcalFunction, Environment, Unit, Type, Decimal };

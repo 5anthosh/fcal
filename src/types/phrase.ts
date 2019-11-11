@@ -1,21 +1,21 @@
+import { Entity, SymbolTable } from '../interpreter/symboltable';
 import { TT } from '../lex/token';
-import { Entity, SymbolTable } from '../symboltable';
 
 class Phrases {
-  public phrases: { [index: string]: TT };
+  public phrases: Map<string, TT>;
   private symbolTable: SymbolTable;
   constructor(symbolTable: SymbolTable) {
     this.symbolTable = symbolTable;
-    this.phrases = {};
+    this.phrases = new Map<string, TT>();
   }
   public push(key: TT, phrases: string[]) {
     for (const phrase of phrases) {
       this.symbolTable.set(phrase.toUpperCase(), Entity.OPERATION_PHRASE);
-      this.phrases[phrase.toUpperCase()] = key;
+      this.phrases.set(phrase.toUpperCase(), key);
     }
   }
   public get(key: string): TT | undefined {
-    return this.phrases[key.toUpperCase()];
+    return this.phrases.get(key.toUpperCase());
   }
 }
 

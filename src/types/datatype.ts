@@ -99,7 +99,7 @@ export namespace Type {
         // check typerandk to see which will be the return type
         if (this.TYPERANK <= value.TYPERANK) {
           if (this.TYPERANK === value.TYPERANK) {
-            return this.New(this.div(value).n);
+            return this.div(value);
           }
           return value.New(this.div(value).n);
         }
@@ -376,7 +376,7 @@ export namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.unitType === right1.unit.unitType) {
-          return left1.New(left1.n.div(right1.n));
+          return new Type.BNumber(left1.n.div(right1.n));
         }
         if (left1.unit.id !== right1.unit.id) {
           return left1.New(left1.n.div(right.n));

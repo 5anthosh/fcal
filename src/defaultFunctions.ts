@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { Environment } from './interpreter/environment';
 import { FcalFunction } from './interpreter/function';
 import { Type } from './types/datatype';

@@ -1,9 +1,9 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { FcalError } from '../FcalError';
 import { Type } from '../types/datatype';
 import { Environment } from './environment';
 
-export interface ICallable {
+interface ICallable {
   call(environment: Environment, argument: Type[]): Type | number | Decimal;
 }
 
@@ -12,7 +12,7 @@ type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | nu
 /**
  * FcalFunction represents function in fcal
  */
-export class FcalFunction implements ICallable {
+class FcalFunction implements ICallable {
   // no of arguments
   public arbity: number;
   // name of the function
@@ -52,7 +52,7 @@ export class FcalFunction implements ICallable {
  */
 
 // tslint:disable-next-line:no-namespace
-export namespace FcalFunction {
+namespace FcalFunction {
   export class List {
     public functions: { [index: string]: FcalFunction };
     constructor() {
@@ -63,11 +63,11 @@ export namespace FcalFunction {
      * @param {FcalFunction} fcalFunction
      * @throws {FcalError} Error if function name is already exists
      */
-    public push(fcalFunction: FcalFunction) {
-      if (this.check(fcalFunction.name)) {
-        throw new FcalError(`${fcalFunction.name} is already registered`);
+    public push(fcalFunction: FcalFunction | { name: string; arbity: number; func: FcalFunctionFmt }): void {
+      if (fcalFunction instanceof FcalFunction) {
+        return this.addFF(fcalFunction);
       }
-      this.functions[fcalFunction.name] = fcalFunction;
+      this.addFF(new FcalFunction(fcalFunction.name, fcalFunction.arbity, fcalFunction.func));
     }
     /**
      * Call a function by its name
@@ -100,5 +100,14 @@ export namespace FcalFunction {
     private check(name: string): boolean {
       return this.functions.hasOwnProperty(name);
     }
+
+    private addFF(ff: FcalFunction): void {
+      if (this.check(ff.name)) {
+        throw new FcalError(`${ff.name} is already registered`);
+      }
+      this.functions[ff.name] = ff;
+    }
   }
 }
+
+export { FcalFunction };

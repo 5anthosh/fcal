@@ -7,7 +7,7 @@ import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Expr } from './expr';
 
-export class Parser {
+class Parser {
   public source: string;
   private lexer: Lexer;
   private ntoken: number;
@@ -218,7 +218,9 @@ export class Parser {
   private peek(): Token {
     return this.nextToken();
   }
-  private incr() {
+  private incr(): void {
     this.ntoken++;
   }
 }
+
+export { Parser };

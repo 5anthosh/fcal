@@ -1,47 +1,47 @@
-import Big = require('decimal.js');
+import { Decimal } from 'decimal.js';
 import { Entity, SymbolTable } from '../symboltable';
 
-type ratioFuncFmt = () => Big.Decimal | number;
+type callbackFuncFmt = () => Decimal | number;
 
-export class UnitMeta {
+class UnitMeta {
   public id: string;
-  public r: Big.Decimal | ratioFuncFmt;
-  public b: Big.Decimal | ratioFuncFmt;
+  public r: Decimal | callbackFuncFmt;
+  public b: Decimal | callbackFuncFmt;
   public unitType: string;
   public singular: string;
   public plural: string;
-  constructor(id: string, ratio: Big.Decimal | ratioFuncFmt, unitType: string) {
+  constructor(id: string, ratio: Decimal | callbackFuncFmt, unitType: string) {
     this.id = id;
     this.r = ratio;
-    this.b = new Big.Decimal(0);
+    this.b = new Decimal(0);
     this.unitType = unitType;
     this.plural = unitType;
     this.singular = unitType;
   }
 
-  public ratio(): Big.Decimal {
-    if (this.r instanceof Big.Decimal) {
+  public get ratio(): Decimal {
+    if (this.r instanceof Decimal) {
       return this.r;
     }
     const value = this.r();
-    if (value instanceof Big.Decimal) {
+    if (value instanceof Decimal) {
       return value;
     }
-    return new Big.Decimal(value);
+    return new Decimal(value);
   }
 
-  public bias(): Big.Decimal {
-    if (this.b instanceof Big.Decimal) {
+  public get bias(): Decimal {
+    if (this.b instanceof Decimal) {
       return this.b;
     }
     const value = this.b();
-    if (value instanceof Big.Decimal) {
+    if (value instanceof Decimal) {
       return value;
     }
-    return new Big.Decimal(value);
+    return new Decimal(value);
   }
 
-  public setBias(value: Big.Decimal) {
+  public setBias(value: Decimal | callbackFuncFmt) {
     this.b = value;
   }
   public setPlural(value: string) {
@@ -55,23 +55,27 @@ export class UnitMeta {
 /**
  * Represents unit with info
  */
-export class Unit {
+class Unit {
   public phrases: string[];
   public meta: UnitMeta;
-  constructor(id: string, ratio: Big.Decimal | number | string | ratioFuncFmt, unitType: string, phrases: string[]) {
+  constructor(id: string, ratio: Decimal | number | string | callbackFuncFmt, unitType: string, phrases: string[]) {
     this.phrases = phrases;
-    if (ratio instanceof Big.Decimal || typeof ratio === 'function') {
+    if (ratio instanceof Decimal || typeof ratio === 'function') {
       this.meta = new UnitMeta(id, ratio, unitType);
       return;
     }
-    this.meta = new UnitMeta(id, new Big.Decimal(ratio), unitType);
+    this.meta = new UnitMeta(id, new Decimal(ratio), unitType);
   }
-  public setBias(value: Big.Decimal | number | string): Unit {
-    if (value instanceof Big.Decimal) {
+  public setBias(value: Decimal | number | string | callbackFuncFmt): Unit {
+    if (value instanceof Decimal) {
       this.meta.setBias(value);
       return this;
     }
-    this.meta.setBias(new Big.Decimal(value));
+    if (typeof value === 'function') {
+      this.meta.setBias(value);
+      return this;
+    }
+    this.meta.setBias(new Decimal(value));
     return this;
   }
   public Plural(value: string): Unit {
@@ -85,13 +89,14 @@ export class Unit {
 }
 
 // tslint:disable-next-line:no-namespace
-export namespace Unit {
+namespace Unit {
   export const LENGTHID = 'LENGTH';
   export const SPEEDID = 'SPEED';
   export const TIMEID = 'TIME';
   export const TEMPERATUREID = 'TIMERATURE';
+
   /**
-   * List of units
+   * List of {Unit} sunits
    */
   export class List {
     public symbolTable: SymbolTable;
@@ -102,10 +107,10 @@ export namespace Unit {
     }
     /**
      * Add a new unit
-     * @param unit
-     * @throws Error if phrases already exists
+     * @param {Unit} unit
+     * @throws {FcalError} Error if phrases already exists
      */
-    public push(unit: Unit) {
+    public push(unit: Unit): void {
       for (const phrase1 of unit.phrases) {
         this.symbolTable.set(phrase1, Entity.UNIT);
         this.units[phrase1] = unit;
@@ -113,7 +118,8 @@ export namespace Unit {
     }
     /**
      * get the unit by its phrase
-     * @param phrase
+     * @param {string} phrase
+     * @returns {UnitMeta | null }
      */
     public get(phrase: string): UnitMeta | null {
       if (this.units.hasOwnProperty(phrase)) {
@@ -123,3 +129,5 @@ export namespace Unit {
     }
   }
 }
+
+export { Unit, UnitMeta, callbackFuncFmt };

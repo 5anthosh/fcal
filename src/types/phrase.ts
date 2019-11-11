@@ -1,7 +1,7 @@
 import { TT } from '../lex/token';
 import { Entity, SymbolTable } from '../symboltable';
 
-export class Phrases {
+class Phrases {
   public phrases: { [index: string]: TT };
   private symbolTable: SymbolTable;
   constructor(symbolTable: SymbolTable) {
@@ -18,3 +18,5 @@ export class Phrases {
     return this.phrases[key.toUpperCase()];
   }
 }
+
+export { Phrases };

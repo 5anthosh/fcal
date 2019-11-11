@@ -4,7 +4,7 @@ import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 import { ASTPrinter } from './astPrinter';
 
-export abstract class Expr extends ASTPrinter {
+abstract class Expr extends ASTPrinter {
   public start: number;
   public end: number;
   constructor(start: number, end: number) {
@@ -20,7 +20,7 @@ export abstract class Expr extends ASTPrinter {
 }
 
 // tslint:disable-next-line: no-namespace
-export namespace Expr {
+namespace Expr {
   export class Binary extends Expr {
     public left: Expr;
     public operator: Token;
@@ -155,3 +155,5 @@ export namespace Expr {
     visitCallExpr(expr: Expr.Call): T;
   }
 }
+
+export { Expr };

@@ -1,6 +1,7 @@
 import { UnitMeta } from '../types/units';
 import { Expr } from './expr';
-export class ASTPrinter implements Expr.IVisitor<string> {
+
+class ASTPrinter implements Expr.IVisitor<string> {
   private static tab: number = 2;
   private static prefixchar = '+';
   private static createPrefix(depth: number, type: string): string {
@@ -81,3 +82,5 @@ export class ASTPrinter implements Expr.IVisitor<string> {
     return ast;
   }
 }
+
+export { ASTPrinter };

@@ -1,6 +1,6 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 
-export class NumberSystem {
+class NumberSystem {
   public static Decimal = new NumberSystem('Decimal', (num: Decimal) => {
     return num.toString();
   });
@@ -37,7 +37,4 @@ export class NumberSystem {
   }
 }
 
-// // tslint:disable-next-line: no-namespace
-// export namespace NumberSystem {
-//   class
-// }
+export { NumberSystem };

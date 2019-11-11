@@ -1,4 +1,4 @@
-export enum TT {
+enum TT {
   PLUS = '+',
   MINUS = '-',
   TIMES = '*',
@@ -21,7 +21,7 @@ export enum TT {
   DOUBLE_COLON = ':',
 }
 
-export class Token {
+class Token {
   public static EOL(end: number): Token {
     return new Token(TT.EOL, '', null, end, end);
   }
@@ -47,4 +47,4 @@ export class Token {
   }
 }
 
-// export default { TokenType, Token };
+export { TT, Token };

@@ -1,4 +1,4 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { FcalError } from '../FcalError';
 import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
@@ -9,7 +9,7 @@ import { Unit, UnitMeta } from '../types/units';
 import { Environment } from './environment';
 import { FcalFunction } from './function';
 
-export class Interpreter implements Expr.IVisitor<any> {
+class Interpreter implements Expr.IVisitor<Type> {
   private ast: Expr;
   private environment: Environment;
   constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
@@ -76,7 +76,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }
 
-  public visitBinaryExpr(expr: Expr.Binary): Type.BNumber {
+  public visitBinaryExpr(expr: Expr.Binary): Type {
     let left = this.evaluate(expr.left) as Type.BNumber;
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
@@ -140,7 +140,7 @@ export class Interpreter implements Expr.IVisitor<any> {
     return expr.value;
   }
 
-  public visitUnaryExpr(expr: Expr.Unary): Type.BNumber {
+  public visitUnaryExpr(expr: Expr.Unary): Type {
     const right = this.evaluate(expr.right) as Type.BNumber;
     if (expr.operator.type === TT.MINUS) {
       return right.negated();
@@ -168,3 +168,5 @@ export class Interpreter implements Expr.IVisitor<any> {
     return ast;
   }
 }
+
+export { Interpreter };

@@ -1,4 +1,4 @@
-import Big = require('decimal.js');
+import { Decimal } from 'decimal.js';
 import { FcalError } from '../FcalError';
 import { Entity, SymbolTable } from '../symboltable';
 import { Type } from '../types/datatype';
@@ -9,7 +9,7 @@ import { FcalFunction } from './function';
  * Represents runtime variable environment
  * It represents state of fcal
  */
-export class Environment {
+class Environment {
   // simple object is used for variables
   // with key as variable name and value as value
   public functions: FcalFunction.List;
@@ -36,7 +36,7 @@ export class Environment {
    * @param {} key variable name
    * @param value value
    */
-  public set(key: string, value: Type | Big.Decimal | number | string) {
+  public set(key: string, value: Type | Decimal | number | string): void {
     if (!this.values.hasOwnProperty(key)) {
       this.symbolTable.set(key, Entity.VARIABLE);
     }
@@ -47,3 +47,5 @@ export class Environment {
     this.values[key] = Type.BNumber.New(value);
   }
 }
+
+export { Environment };

@@ -179,7 +179,6 @@ exports.getDefaultFunction = getDefaultFunction;
 },{"./interpreter/function":7}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Big = require("decimal.js");
 var units_1 = require("./types/units");
 function getdefaultUnits() {
     var units = new Array();
@@ -191,49 +190,199 @@ function getdefaultUnits() {
 }
 exports.getdefaultUnits = getdefaultUnits;
 function setDistanceUnits(units) {
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(1), 'cm', ['cm', 'centimeter'])
-        .Singular('Centimeter')
-        .Plural('Centimeters'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(100), 'm', ['m', 'meter']).Singular('Meter').Plural('Meters'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(0.1), 'mm', ['mm', 'milimeter']).Singular('Milimeter').Plural('Milimeters'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(100000), 'km', ['km']).Singular('Kilometer').Plural('Kilometers'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(2.54), 'inch', ['inch']).Singular('Inch').Plural('Inches'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(30.48), 'foot/feet', ['ft']).Singular('Foot').Plural('Feet'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(91.44), 'yard', ['yd', 'yard']).Singular('Yard').Plural('Yards'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(160934.4), 'mile', ['mi']).Singular('Mile').Plural('Miles'));
-    units.push(new units_1.Unit(units_1.Unit.LENGTHID, new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['cm', 'centimeter'],
+            plural: 'Centimeters',
+            ratio: 1,
+            singular: 'Centimeter',
+            type: 'cm',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['m', 'meter'],
+            plural: 'Meters',
+            ratio: 100,
+            singular: 'Meter',
+            type: 'm',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['mm', 'milimeter'],
+            plural: 'Milimeters',
+            ratio: 0.1,
+            singular: 'Milimeter',
+            type: 'mm',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['km'],
+            plural: 'Kilometers',
+            ratio: 100000,
+            singular: 'Kilometer',
+            type: 'km',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['inch'],
+            plural: 'Inches',
+            ratio: 2.54,
+            singular: 'Inch',
+            type: 'inch',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['ft'],
+            plural: 'Feet',
+            ratio: 30.48,
+            singular: 'Foot',
+            type: 'foot/feet',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['yd', 'yard'],
+            plural: 'Yards',
+            ratio: 91.44,
+            singular: 'Yard',
+            type: 'yard',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['mi'],
+            plural: 'Miles',
+            ratio: 160934.4,
+            singular: 'Mile',
+            type: 'mile',
+        },
+        {
+            id: units_1.Unit.LENGTHID,
+            phrases: ['nmi'],
+            ratio: 185200,
+            type: 'nautical mile (nmi)',
+        },
+    ]);
 }
 function setSpeedUnits(units) {
-    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1), 'km/h', ['kmh', 'kmph', 'khm', 'kph']));
-    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.609344), 'miles/h', ['mph']));
-    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(3.6), 'm/s', ['mps']));
-    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.097), 'ft/s', ['fps']));
-    units.push(new units_1.Unit(units_1.Unit.SPEEDID, new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.SPEEDID,
+            phrases: ['kmh', 'kmph', 'khm', 'kph'],
+            ratio: 1,
+            type: 'km/h',
+        },
+        {
+            id: units_1.Unit.SPEEDID,
+            phrases: ['mph'],
+            ratio: 1.609344,
+            type: 'miles/h',
+        },
+        {
+            id: units_1.Unit.SPEEDID,
+            phrases: ['mps'],
+            ratio: 3.6,
+            type: 'm/s',
+        },
+        {
+            id: units_1.Unit.SPEEDID,
+            phrases: ['fps'],
+            ratio: 1.097,
+            type: 'ft/s',
+        },
+        {
+            id: units_1.Unit.SPEEDID,
+            phrases: ['kts', 'knots'],
+            ratio: 1.852,
+            type: 'kt',
+        },
+    ]);
 }
 function setTimeUnits(units) {
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1e-9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
-        .Singular('Nanosecond')
-        .Plural('Nanoseconds'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1e-6), 'msec', ['msec', 'microsecond', 'microseconds'])
-        .Singular('Microsecond')
-        .Plural('Microseconds'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
-        .Singular('Second')
-        .Plural('Seconds'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(60), 'minute(s)', ['min', 'minute', 'minutes'])
-        .Singular('Minute')
-        .Plural('Minutes'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(3600), 'hour(s)', ['hr', 'hour', 'hours']).Singular('Hour').Plural('Hours'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(86400), 'day(s)', ['day', 'days']).Singular('Day').Plural('Days'));
-    units.push(new units_1.Unit(units_1.Unit.TIMEID, new Big.Decimal(604800), 'week(s)', ['week', 'weeks']).Singular('Week').Plural('Weeks'));
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['nsec', 'nanosecond', 'nanoseconds'],
+            plural: 'Nanoseconds',
+            ratio: 1e-9,
+            singular: 'Nanosecond',
+            type: 'nsec',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['msec', 'microsecond', 'microseconds'],
+            plural: 'Microseconds',
+            ratio: 1e-6,
+            singular: 'Microsecond',
+            type: 'msec',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['sec', 'second', 'seconds'],
+            plural: 'Seconds',
+            ratio: 1,
+            singular: 'Second',
+            type: 'second',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['min', 'minute', 'minutes'],
+            plural: 'Minutes',
+            ratio: 60,
+            singular: 'Minute',
+            type: 'minute',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['hr', 'hour', 'hours'],
+            plural: 'Hours',
+            ratio: 3600,
+            singular: 'Hour',
+            type: 'hour',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['day', 'days'],
+            plural: 'Days',
+            ratio: 86400,
+            singular: 'Day',
+            type: 'day',
+        },
+        {
+            id: units_1.Unit.TIMEID,
+            phrases: ['week', 'weeks'],
+            plural: 'Weeks',
+            ratio: 604800,
+            singular: 'Week',
+            type: 'week',
+        },
+    ]);
 }
 function setTemperatureUnits(units) {
-    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), 'K', ['K', 'kelvin']));
-    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal('0.55555555555555555556'), '°F', ['°F', 'F']).setBias(new Big.Decimal('255.3722222222222')));
-    units.push(new units_1.Unit(units_1.Unit.TEMPERATUREID, new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.TEMPERATUREID,
+            phrases: ['K', 'kelvin'],
+            ratio: 1,
+            type: 'K',
+        },
+        {
+            bias: '255.3722222222222',
+            id: units_1.Unit.TEMPERATUREID,
+            phrases: ['°F', 'F'],
+            ratio: '0.55555555555555555556',
+            type: '°F',
+        },
+        {
+            bias: 273.15,
+            id: units_1.Unit.TEMPERATUREID,
+            phrases: ['°C', 'C'],
+            ratio: 1,
+            type: '°C',
+        },
+    ]);
 }
 
-},{"./types/units":18,"decimal.js":19}],4:[function(require,module,exports){
+},{"./types/units":18}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require("decimal.js");
@@ -304,7 +453,20 @@ var Fcal = /** @class */ (function () {
      * @param {Unit} unit
      */
     Fcal.UseUnit = function (unit) {
-        this.units.push(unit);
+        if (unit instanceof units_1.Unit) {
+            return this.units.push(unit);
+        }
+        var u = new units_1.Unit(unit.id, unit.ratio, unit.type, unit.phrases);
+        if (unit.bias) {
+            u.setBias(unit.bias);
+        }
+        if (unit.plural) {
+            u.Plural(unit.plural);
+        }
+        if (unit.singular) {
+            u.Singular(unit.singular);
+        }
+        this.units.push(u);
     };
     /**
      * Get unit meta by its phrase
@@ -315,7 +477,8 @@ var Fcal = /** @class */ (function () {
         return this.units.get(unit);
     };
     /**
-     * useConstants
+     * useConstants set the constants in fcal
+     * @param { { [index: string]: Type | Decimal | number | string } } constants
      */
     Fcal.useConstants = function (constants) {
         for (var key in constants) {
@@ -438,7 +601,7 @@ var Expression = /** @class */ (function () {
     /**
      * Change state of variables
      * if variable is not found,  it will create a new variable
-     * @param {{[index:string]: Type | number}} values variables
+     * @param {{[index:string]: Type | number | string | Decimal}} values variables
      */
     Expression.prototype.setValues = function (values) {
         this.interpreter.setValues(values);
@@ -449,6 +612,7 @@ var Expression = /** @class */ (function () {
     return Expression;
 }());
 exports.Expression = Expression;
+/***************************************************************/
 Fcal.IntialiseStaticValues();
 
 },{"./defaultFunctions":2,"./defaultUnits":3,"./interpreter/constants":5,"./interpreter/environment":6,"./interpreter/function":7,"./interpreter/interpreter":8,"./lex/token":10,"./symboltable":14,"./types/datatype":15,"./types/phrase":17,"./types/units":18,"decimal.js":19}],5:[function(require,module,exports){
@@ -528,11 +692,8 @@ exports.Environment = Environment;
 
 },{"../FcalError":1,"../symboltable":14,"../types/datatype":15}],7:[function(require,module,exports){
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = __importDefault(require("decimal.js"));
+var decimal_js_1 = require("decimal.js");
 var FcalError_1 = require("../FcalError");
 var datatype_1 = require("../types/datatype");
 /**
@@ -558,7 +719,7 @@ var FcalFunction = /** @class */ (function () {
             // Assign basic 0 number
             return datatype_1.Type.BNumber.New(0);
         }
-        if (typeof value === 'number' || value instanceof decimal_js_1.default) {
+        if (typeof value === 'number' || value instanceof decimal_js_1.Decimal) {
             return datatype_1.Type.BNumber.New(value);
         }
         if (!(value instanceof datatype_1.Type)) {
@@ -584,10 +745,10 @@ exports.FcalFunction = FcalFunction;
          * @throws {FcalError} Error if function name is already exists
          */
         List.prototype.push = function (fcalFunction) {
-            if (this.check(fcalFunction.name)) {
-                throw new FcalError_1.FcalError(fcalFunction.name + " is already registered");
+            if (fcalFunction instanceof FcalFunction) {
+                return this.addFF(fcalFunction);
             }
-            this.functions[fcalFunction.name] = fcalFunction;
+            this.addFF(new FcalFunction(fcalFunction.name, fcalFunction.arbity, fcalFunction.func));
         };
         /**
          * Call a function by its name
@@ -620,10 +781,16 @@ exports.FcalFunction = FcalFunction;
         List.prototype.check = function (name) {
             return this.functions.hasOwnProperty(name);
         };
+        List.prototype.addFF = function (ff) {
+            if (this.check(ff.name)) {
+                throw new FcalError_1.FcalError(ff.name + " is already registered");
+            }
+            this.functions[ff.name] = ff;
+        };
         return List;
     }());
     FcalFunction.List = List;
-})(FcalFunction = exports.FcalFunction || (exports.FcalFunction = {}));
+})(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
 },{"../FcalError":1,"../types/datatype":15,"decimal.js":19}],8:[function(require,module,exports){
@@ -1015,7 +1182,8 @@ var TT;
     TT["CAP"] = "^";
     TT["NS"] = "ns";
     TT["DOUBLE_COLON"] = ":";
-})(TT = exports.TT || (exports.TT = {}));
+})(TT || (TT = {}));
+exports.TT = TT;
 var Token = /** @class */ (function () {
     function Token(type, lexeme, literal, start, end) {
         this.type = type;
@@ -1037,7 +1205,6 @@ var Token = /** @class */ (function () {
     return Token;
 }());
 exports.Token = Token;
-// export default { TokenType, Token };
 
 },{}],11:[function(require,module,exports){
 "use strict";
@@ -1296,7 +1463,7 @@ exports.Expr = Expr;
         return Unary;
     }(Expr));
     Expr.Unary = Unary;
-})(Expr = exports.Expr || (exports.Expr = {}));
+})(Expr || (Expr = {}));
 exports.Expr = Expr;
 
 },{"./astPrinter":11}],13:[function(require,module,exports){
@@ -1569,7 +1736,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Big = require("decimal.js");
+var decimal_js_1 = require("decimal.js");
 var numberSystem_1 = require("./numberSystem");
 var Type = /** @class */ (function () {
     function Type() {
@@ -1601,11 +1768,11 @@ var TYPERANK;
         __extends(Numberic, _super);
         function Numberic(value) {
             var _this = _super.call(this) || this;
-            if (value instanceof Big.Decimal) {
+            if (value instanceof decimal_js_1.Decimal) {
                 _this.n = value;
             }
             else {
-                _this.n = new Big.Decimal(value);
+                _this.n = new decimal_js_1.Decimal(value);
             }
             _this.ns = numberSystem_1.NumberSystem.Decimal;
             _this.lf = false;
@@ -1665,7 +1832,7 @@ var TYPERANK;
                 // check typerandk to see which will be the return type
                 if (this.TYPERANK <= value.TYPERANK) {
                     if (this.TYPERANK === value.TYPERANK) {
-                        return this.New(this.div(value).n);
+                        return this.div(value);
                     }
                     return value.New(this.div(value).n);
                 }
@@ -1771,7 +1938,7 @@ var TYPERANK;
         BNumber.prototype.New = function (value) {
             return BNumber.New(value);
         };
-        BNumber.ZERO = BNumber.New(new Big.Decimal(0));
+        BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
         return BNumber;
     }(Numberic));
     Type.BNumber = BNumber;
@@ -1849,7 +2016,7 @@ var TYPERANK;
         Percentage.prototype.New = function (value) {
             return Percentage.New(value);
         };
-        Percentage.base = new Big.Decimal(100);
+        Percentage.base = new decimal_js_1.Decimal(100);
         return Percentage;
     }(Numberic));
     Type.Percentage = Percentage;
@@ -1872,7 +2039,7 @@ var TYPERANK;
             if (value instanceof UnitNumber) {
                 var value2 = value;
                 if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-                    return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit).setSystem(value.ns);
+                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns);
                 }
             }
             return UnitNumber.New(value.n, unit).setSystem(value.ns);
@@ -1933,7 +2100,7 @@ var TYPERANK;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.unitType === right1.unit.unitType) {
-                    return left1.New(left1.n.div(right1.n));
+                    return new Type.BNumber(left1.n.div(right1.n));
                 }
                 if (left1.unit.id !== right1.unit.id) {
                     return left1.New(left1.n.div(right.n));
@@ -1998,10 +2165,10 @@ var TYPERANK;
                 .div(ratio);
         };
         UnitNumber.prototype.ratio = function () {
-            return this.unit.ratio();
+            return this.unit.ratio;
         };
         UnitNumber.prototype.bias = function () {
-            return this.unit.bias();
+            return this.unit.bias;
         };
         UnitNumber.prototype.print = function () {
             if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
@@ -2012,7 +2179,7 @@ var TYPERANK;
         return UnitNumber;
     }(Numberic));
     Type.UnitNumber = UnitNumber;
-})(Type = exports.Type || (exports.Type = {}));
+})(Type || (Type = {}));
 exports.Type = Type;
 
 },{"./numberSystem":16,"decimal.js":19}],16:[function(require,module,exports){
@@ -2051,10 +2218,6 @@ var NumberSystem = /** @class */ (function () {
     return NumberSystem;
 }());
 exports.NumberSystem = NumberSystem;
-// // tslint:disable-next-line: no-namespace
-// export namespace NumberSystem {
-//   class
-// }
 
 },{}],17:[function(require,module,exports){
 "use strict";
@@ -2082,37 +2245,45 @@ exports.Phrases = Phrases;
 },{"../symboltable":14}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Big = require("decimal.js");
+var decimal_js_1 = require("decimal.js");
 var symboltable_1 = require("../symboltable");
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
         this.r = ratio;
-        this.b = new Big.Decimal(0);
+        this.b = new decimal_js_1.Decimal(0);
         this.unitType = unitType;
         this.plural = unitType;
         this.singular = unitType;
     }
-    UnitMeta.prototype.ratio = function () {
-        if (this.r instanceof Big.Decimal) {
-            return this.r;
-        }
-        var value = this.r();
-        if (value instanceof Big.Decimal) {
-            return value;
-        }
-        return new Big.Decimal(value);
-    };
-    UnitMeta.prototype.bias = function () {
-        if (this.b instanceof Big.Decimal) {
-            return this.b;
-        }
-        var value = this.b();
-        if (value instanceof Big.Decimal) {
-            return value;
-        }
-        return new Big.Decimal(value);
-    };
+    Object.defineProperty(UnitMeta.prototype, "ratio", {
+        get: function () {
+            if (this.r instanceof decimal_js_1.Decimal) {
+                return this.r;
+            }
+            var value = this.r();
+            if (value instanceof decimal_js_1.Decimal) {
+                return value;
+            }
+            return new decimal_js_1.Decimal(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UnitMeta.prototype, "bias", {
+        get: function () {
+            if (this.b instanceof decimal_js_1.Decimal) {
+                return this.b;
+            }
+            var value = this.b();
+            if (value instanceof decimal_js_1.Decimal) {
+                return value;
+            }
+            return new decimal_js_1.Decimal(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
     UnitMeta.prototype.setBias = function (value) {
         this.b = value;
     };
@@ -2131,18 +2302,22 @@ exports.UnitMeta = UnitMeta;
 var Unit = /** @class */ (function () {
     function Unit(id, ratio, unitType, phrases) {
         this.phrases = phrases;
-        if (ratio instanceof Big.Decimal || typeof ratio === 'function') {
+        if (ratio instanceof decimal_js_1.Decimal || typeof ratio === 'function') {
             this.meta = new UnitMeta(id, ratio, unitType);
             return;
         }
-        this.meta = new UnitMeta(id, new Big.Decimal(ratio), unitType);
+        this.meta = new UnitMeta(id, new decimal_js_1.Decimal(ratio), unitType);
     }
     Unit.prototype.setBias = function (value) {
-        if (value instanceof Big.Decimal) {
+        if (value instanceof decimal_js_1.Decimal) {
             this.meta.setBias(value);
             return this;
         }
-        this.meta.setBias(new Big.Decimal(value));
+        if (typeof value === 'function') {
+            this.meta.setBias(value);
+            return this;
+        }
+        this.meta.setBias(new decimal_js_1.Decimal(value));
         return this;
     };
     Unit.prototype.Plural = function (value) {
@@ -2163,7 +2338,7 @@ exports.Unit = Unit;
     Unit.TIMEID = 'TIME';
     Unit.TEMPERATUREID = 'TIMERATURE';
     /**
-     * List of units
+     * List of {Unit} sunits
      */
     var List = /** @class */ (function () {
         function List(symbolTable) {
@@ -2172,8 +2347,8 @@ exports.Unit = Unit;
         }
         /**
          * Add a new unit
-         * @param unit
-         * @throws Error if phrases already exists
+         * @param {Unit} unit
+         * @throws {FcalError} Error if phrases already exists
          */
         List.prototype.push = function (unit) {
             for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
@@ -2184,7 +2359,8 @@ exports.Unit = Unit;
         };
         /**
          * get the unit by its phrase
-         * @param phrase
+         * @param {string} phrase
+         * @returns {UnitMeta | null }
          */
         List.prototype.get = function (phrase) {
             if (this.units.hasOwnProperty(phrase)) {
@@ -2195,7 +2371,7 @@ exports.Unit = Unit;
         return List;
     }());
     Unit.List = List;
-})(Unit = exports.Unit || (exports.Unit = {}));
+})(Unit || (Unit = {}));
 exports.Unit = Unit;
 
 },{"../symboltable":14,"decimal.js":19}],19:[function(require,module,exports){

@@ -14,7 +14,7 @@ export class SymbolTable {
       octal: Entity.NS,
     };
   }
-  public set(phrase: string, entity: Entity) {
+  public set(phrase: string, entity: Entity): void {
     if (this.registry.hasOwnProperty(phrase)) {
       throw new FcalError(`${phrase} is already used in ${this.registry[phrase].toLowerCase()}`);
     }

@@ -4,7 +4,8 @@ import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Token, TT } from './token';
-export class Lexer {
+
+class Lexer {
   public static notAlpha: string[] = [
     TT.PLUS,
     TT.MINUS,
@@ -214,3 +215,5 @@ export class Lexer {
     return char;
   }
 }
+
+export { Lexer };

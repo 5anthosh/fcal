@@ -6,8 +6,8 @@
   "types": "lib/fcal.d.ts",
   "scripts": {
     "test": "jest --verbose --config jestconfig.json",
-    "build": "npm run browser && tsc",
-    "browser": "tsc --target es5 && browserify lib/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify lib/fcal.js --standalone fcal -o  dist/fcal.min.js",
+    "build": "npm run browser && rm -rf lib && tsc",
+    "browser": "tsc --target es5 --outDir es5 && browserify es5/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify es5/fcal.js --standalone fcal -o  dist/fcal.min.js && rm -rf es5",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "ctest": "jest --verbose --config jestconfig.json --coverage && xdg-open coverage/lcov-report/index.html",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/5anthosh/fcal#readme",
   "devDependencies": {
     "@types/jest": "^24.0.22",
-    "@types/node": "^12.12.6",
+    "@types/node": "^12.12.7",
     "browserify": "^16.5.0",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",

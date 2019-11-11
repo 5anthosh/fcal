@@ -9,7 +9,21 @@ import { TT } from './lex/token';
 import { Entity, SymbolTable } from './symboltable';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
-import { Unit, UnitMeta } from './types/units';
+import { callbackFuncFmt, Unit, UnitMeta } from './types/units';
+
+/**
+ * IUseUnit
+ * Interface for UseUnit functions param
+ */
+export interface IUseUnit {
+  id: string;
+  type: string;
+  ratio: Decimal | number | string | callbackFuncFmt;
+  bias?: Decimal | number | string | callbackFuncFmt;
+  phrases: string[];
+  singular?: string;
+  plural?: string;
+}
 
 /**
  * Math expression evaluator
@@ -25,28 +39,31 @@ class Fcal {
   public static eval(source: string): Type {
     return new Fcal().evaluate(source);
   }
+
   /**
    * register new fcal Functions
    * @param {Array<FcalFunction>} functions list of fcal function definitions
    */
-  public static UseFunctions(functions: FcalFunction[]) {
+  public static UseFunctions(functions: FcalFunction[]): void {
     for (const func of functions) {
       this.UseFunction(func);
     }
   }
+
   /**
    * Register new Fcal function
    * @param {FcalFunction} function fcal function definitions
    */
-  public static UseFunction(func: FcalFunction) {
+  public static UseFunction(func: FcalFunction): void {
     Fcal.gst.set(func.name, Entity.FUNCTION);
     this.functions.push(func);
   }
+
   /**
    * Register new units
    * @param {Array<Unit>} units
    */
-  public static UseUnits(units: Unit[]) {
+  public static UseUnits(units: Array<Unit | IUseUnit>): void {
     for (const unit of units) {
       this.UseUnit(unit);
     }
@@ -56,8 +73,21 @@ class Fcal {
    * Register new unit
    * @param {Unit} unit
    */
-  public static UseUnit(unit: Unit) {
-    this.units.push(unit);
+  public static UseUnit(unit: Unit | IUseUnit): void {
+    if (unit instanceof Unit) {
+      return this.units.push(unit);
+    }
+    const u = new Unit(unit.id, unit.ratio, unit.type, unit.phrases);
+    if (unit.bias) {
+      u.setBias(unit.bias);
+    }
+    if (unit.plural) {
+      u.Plural(unit.plural);
+    }
+    if (unit.singular) {
+      u.Singular(unit.singular);
+    }
+    this.units.push(u);
   }
 
   /**
@@ -70,9 +100,10 @@ class Fcal {
   }
 
   /**
-   * useConstants
+   * useConstants set the constants in fcal
+   * @param { { [index: string]: Type | Decimal | number | string } } constants
    */
-  public static useConstants(constants: { [index: string]: Type | Decimal | number | string }) {
+  public static useConstants(constants: { [index: string]: Type | Decimal | number | string }): void {
     for (const key in constants) {
       if (constants.hasOwnProperty(key)) {
         const element = constants[key];
@@ -81,7 +112,7 @@ class Fcal {
     }
   }
 
-  public static IntialiseStaticValues() {
+  public static IntialiseStaticValues(): void {
     this.gst = new SymbolTable();
     if (!this.phrases) {
       this.phrases = this.getdefaultphrases();
@@ -99,6 +130,7 @@ class Fcal {
       this.setDefaultConstants();
     }
   }
+
   private static gst: SymbolTable;
   private static units: Unit.List;
   private static functions: FcalFunction.List;
@@ -116,14 +148,16 @@ class Fcal {
     phrases.push(TT.IN, ['in', 'as']);
     return phrases;
   }
-  private static setDefaultFunctions() {
+
+  private static setDefaultFunctions(): void {
     this.UseFunctions(getDefaultFunction());
   }
-  private static setDefaultUnits() {
+
+  private static setDefaultUnits(): void {
     this.UseUnits(getdefaultUnits());
   }
 
-  private static setDefaultConstants() {
+  private static setDefaultConstants(): void {
     this.useConstants({
       E: Type.BNumber.New('2.718281828459045235360287'),
       PI: Type.BNumber.New('3.141592653589793238462645'),
@@ -132,7 +166,7 @@ class Fcal {
     });
   }
 
-  /* ========================================================  */
+  /* =========================Class attributes===============================  */
 
   private environment: Environment;
   private lst: SymbolTable;
@@ -190,6 +224,7 @@ function prefixNewLIne(source: string): string {
   }
   return source + '\n';
 }
+
 /**
  * Expression takes AST created from Parser and
  * evaluate AST with its state
@@ -209,15 +244,18 @@ class Expression {
   /**
    * Change state of variables
    * if variable is not found,  it will create a new variable
-   * @param {{[index:string]: Type | number}} values variables
+   * @param {{[index:string]: Type | number | string | Decimal}} values variables
    */
-  public setValues(values: { [index: string]: Type | number | string | Decimal }) {
+  public setValues(values: { [index: string]: Type | number | string | Decimal }): void {
     this.interpreter.setValues(values);
   }
   public getAST(): string {
     return this.interpreter.getAST();
   }
 }
+
+/***************************************************************/
+
 Fcal.IntialiseStaticValues();
 
 export { Fcal, Expression, FcalFunction, Environment, Unit, Type, Decimal };

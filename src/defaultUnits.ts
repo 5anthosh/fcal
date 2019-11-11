@@ -1,8 +1,8 @@
-import Big = require('decimal.js');
+import { IUseUnit } from './fcal';
 import { Unit } from './types/units';
 
-export function getdefaultUnits(): Unit[] {
-  const units = new Array<Unit>();
+export function getdefaultUnits(): Array<IUseUnit | Unit> {
+  const units = new Array<IUseUnit | Unit>();
   setDistanceUnits(units);
   setSpeedUnits(units);
   setTimeUnits(units);
@@ -10,70 +10,215 @@ export function getdefaultUnits(): Unit[] {
   return units;
 }
 
-function setDistanceUnits(units: Unit[]) {
+function setDistanceUnits(units: Array<IUseUnit | Unit>): void {
   units.push(
-    new Unit(Unit.LENGTHID, new Big.Decimal(1), 'cm', ['cm', 'centimeter'])
-      .Singular('Centimeter')
-      .Plural('Centimeters'),
+    ...[
+      {
+        id: Unit.LENGTHID,
+        phrases: ['cm', 'centimeter'],
+        plural: 'Centimeters',
+        ratio: 1,
+        singular: 'Centimeter',
+        type: 'cm',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['m', 'meter'],
+        plural: 'Meters',
+        ratio: 100,
+        singular: 'Meter',
+        type: 'm',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['mm', 'milimeter'],
+        plural: 'Milimeters',
+        ratio: 0.1,
+        singular: 'Milimeter',
+        type: 'mm',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['km'],
+        plural: 'Kilometers',
+        ratio: 100000,
+        singular: 'Kilometer',
+        type: 'km',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['inch'],
+        plural: 'Inches',
+        ratio: 2.54,
+        singular: 'Inch',
+        type: 'inch',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['ft'],
+        plural: 'Feet',
+        ratio: 30.48,
+        singular: 'Foot',
+        type: 'foot/feet',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['yd', 'yard'],
+        plural: 'Yards',
+        ratio: 91.44,
+        singular: 'Yard',
+        type: 'yard',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['mi'],
+        plural: 'Miles',
+        ratio: 160934.4,
+        singular: 'Mile',
+        type: 'mile',
+      },
+
+      {
+        id: Unit.LENGTHID,
+        phrases: ['nmi'],
+        ratio: 185200,
+        type: 'nautical mile (nmi)',
+      },
+    ],
   );
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(100), 'm', ['m', 'meter']).Singular('Meter').Plural('Meters'));
-  units.push(
-    new Unit(Unit.LENGTHID, new Big.Decimal(0.1), 'mm', ['mm', 'milimeter']).Singular('Milimeter').Plural('Milimeters'),
-  );
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(100000), 'km', ['km']).Singular('Kilometer').Plural('Kilometers'));
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(2.54), 'inch', ['inch']).Singular('Inch').Plural('Inches'));
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(30.48), 'foot/feet', ['ft']).Singular('Foot').Plural('Feet'));
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(91.44), 'yard', ['yd', 'yard']).Singular('Yard').Plural('Yards'));
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(160934.4), 'mile', ['mi']).Singular('Mile').Plural('Miles'));
-  units.push(new Unit(Unit.LENGTHID, new Big.Decimal(185200), 'nautical mile (nmi)', ['nmi']));
 }
 
-function setSpeedUnits(units: Unit[]) {
-  units.push(new Unit(Unit.SPEEDID, new Big.Decimal(1), 'km/h', ['kmh', 'kmph', 'khm', 'kph']));
-  units.push(new Unit(Unit.SPEEDID, new Big.Decimal(1.609344), 'miles/h', ['mph']));
-  units.push(new Unit(Unit.SPEEDID, new Big.Decimal(3.6), 'm/s', ['mps']));
-  units.push(new Unit(Unit.SPEEDID, new Big.Decimal(1.097), 'ft/s', ['fps']));
-  units.push(new Unit(Unit.SPEEDID, new Big.Decimal(1.852), 'kt', ['kts', 'knots']));
-}
-
-function setTimeUnits(units: Unit[]) {
+function setSpeedUnits(units: Array<IUseUnit | Unit>): void {
   units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(1e-9), 'nsec', ['nsec', 'nanosecond', 'nanoseconds'])
-      .Singular('Nanosecond')
-      .Plural('Nanoseconds'),
-  );
-
-  units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(1e-6), 'msec', ['msec', 'microsecond', 'microseconds'])
-      .Singular('Microsecond')
-      .Plural('Microseconds'),
-  );
-
-  units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(1), 'second(s)', ['sec', 'second', 'seconds'])
-      .Singular('Second')
-      .Plural('Seconds'),
-  );
-  units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(60), 'minute(s)', ['min', 'minute', 'minutes'])
-      .Singular('Minute')
-      .Plural('Minutes'),
-  );
-  units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(3600), 'hour(s)', ['hr', 'hour', 'hours']).Singular('Hour').Plural('Hours'),
-  );
-  units.push(new Unit(Unit.TIMEID, new Big.Decimal(86400), 'day(s)', ['day', 'days']).Singular('Day').Plural('Days'));
-  units.push(
-    new Unit(Unit.TIMEID, new Big.Decimal(604800), 'week(s)', ['week', 'weeks']).Singular('Week').Plural('Weeks'),
+    ...[
+      {
+        id: Unit.SPEEDID,
+        phrases: ['kmh', 'kmph', 'khm', 'kph'],
+        ratio: 1,
+        type: 'km/h',
+      },
+      {
+        id: Unit.SPEEDID,
+        phrases: ['mph'],
+        ratio: 1.609344,
+        type: 'miles/h',
+      },
+      {
+        id: Unit.SPEEDID,
+        phrases: ['mps'],
+        ratio: 3.6,
+        type: 'm/s',
+      },
+      {
+        id: Unit.SPEEDID,
+        phrases: ['fps'],
+        ratio: 1.097,
+        type: 'ft/s',
+      },
+      {
+        id: Unit.SPEEDID,
+        phrases: ['kts', 'knots'],
+        ratio: 1.852,
+        type: 'kt',
+      },
+    ],
   );
 }
 
-function setTemperatureUnits(units: Unit[]) {
-  units.push(new Unit(Unit.TEMPERATUREID, new Big.Decimal(1), 'K', ['K', 'kelvin']));
+function setTimeUnits(units: Array<IUseUnit | Unit>): void {
   units.push(
-    new Unit(Unit.TEMPERATUREID, new Big.Decimal('0.55555555555555555556'), '°F', ['°F', 'F']).setBias(
-      new Big.Decimal('255.3722222222222'),
-    ),
+    ...[
+      {
+        id: Unit.TIMEID,
+        phrases: ['nsec', 'nanosecond', 'nanoseconds'],
+        plural: 'Nanoseconds',
+        ratio: 1e-9,
+        singular: 'Nanosecond',
+        type: 'nsec',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['msec', 'microsecond', 'microseconds'],
+        plural: 'Microseconds',
+        ratio: 1e-6,
+        singular: 'Microsecond',
+        type: 'msec',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['sec', 'second', 'seconds'],
+        plural: 'Seconds',
+        ratio: 1,
+        singular: 'Second',
+        type: 'second',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['min', 'minute', 'minutes'],
+        plural: 'Minutes',
+        ratio: 60,
+        singular: 'Minute',
+        type: 'minute',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['hr', 'hour', 'hours'],
+        plural: 'Hours',
+        ratio: 3600,
+        singular: 'Hour',
+        type: 'hour',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['day', 'days'],
+        plural: 'Days',
+        ratio: 86400,
+        singular: 'Day',
+        type: 'day',
+      },
+      {
+        id: Unit.TIMEID,
+        phrases: ['week', 'weeks'],
+        plural: 'Weeks',
+        ratio: 604800,
+        singular: 'Week',
+        type: 'week',
+      },
+    ],
   );
-  units.push(new Unit(Unit.TEMPERATUREID, new Big.Decimal(1), '°C', ['°C', 'C']).setBias(new Big.Decimal(273.15)));
+}
+
+function setTemperatureUnits(units: Array<IUseUnit | Unit>): void {
+  units.push(
+    ...[
+      {
+        id: Unit.TEMPERATUREID,
+        phrases: ['K', 'kelvin'],
+        ratio: 1,
+        type: 'K',
+      },
+
+      {
+        bias: '255.3722222222222',
+        id: Unit.TEMPERATUREID,
+        phrases: ['°F', 'F'],
+        ratio: '0.55555555555555555556',
+        type: '°F',
+      },
+      {
+        bias: 273.15,
+        id: Unit.TEMPERATUREID,
+        phrases: ['°C', 'C'],
+        ratio: 1,
+        type: '°C',
+      },
+    ],
+  );
 }

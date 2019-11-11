@@ -1,7 +1,8 @@
-import Big = require('decimal.js');
+import { Decimal } from 'decimal.js';
 import { NumberSystem } from './numberSystem';
 import { UnitMeta } from './units';
-export abstract class Type {
+
+abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPERANK: TYPERANK;
   public abstract print(): string;
@@ -26,17 +27,17 @@ export enum TYPERANK {
  * Represents a type of variable or value
  */
 // tslint:disable-next-line:no-namespace
-export namespace Type {
+namespace Type {
   export abstract class Numberic extends Type {
-    public n: Big.Decimal;
+    public n: Decimal;
     public lf: boolean;
     public ns: NumberSystem;
-    constructor(value: string | Big.Decimal | number) {
+    constructor(value: string | Decimal | number) {
       super();
-      if (value instanceof Big.Decimal) {
+      if (value instanceof Decimal) {
         this.n = value;
       } else {
-        this.n = new Big.Decimal(value);
+        this.n = new Decimal(value);
       }
       this.ns = NumberSystem.Decimal;
       this.lf = false;
@@ -156,7 +157,7 @@ export namespace Type {
       return this.n.toNumber();
     }
 
-    public abstract New(value: Big.Decimal): Numberic;
+    public abstract New(value: Decimal): Numberic;
     public abstract isZero(): boolean;
     public abstract isNegative(): boolean;
     public abstract isInteger(): boolean;
@@ -171,13 +172,13 @@ export namespace Type {
    * Basic Number type
    */
   export class BNumber extends Numberic {
-    public static ZERO = BNumber.New(new Big.Decimal(0));
-    public static New(value: string | Big.Decimal | number) {
+    public static ZERO = BNumber.New(new Decimal(0));
+    public static New(value: string | Decimal | number) {
       return new BNumber(value);
     }
     public TYPERANK: TYPERANK;
     public TYPE: DATATYPE;
-    constructor(value: string | Big.Decimal | number) {
+    constructor(value: string | Decimal | number) {
       super(value);
       this.TYPE = DATATYPE.NUMBER;
       this.TYPERANK = TYPERANK.NUMBER;
@@ -215,7 +216,7 @@ export namespace Type {
       return BNumber.New(this.n.plus(value.n));
       // return value.plus(value.newNumeric(this.number));
     }
-    public New(value: Big.Decimal): Numberic {
+    public New(value: Decimal): Numberic {
       return BNumber.New(value);
     }
   }
@@ -223,13 +224,13 @@ export namespace Type {
    * Percentage type
    */
   export class Percentage extends Numberic {
-    public static New(value: string | Big.Decimal): Percentage {
+    public static New(value: string | Decimal): Percentage {
       return new Percentage(value);
     }
-    private static base = new Big.Decimal(100);
+    private static base = new Decimal(100);
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
-    constructor(value: string | Big.Decimal) {
+    constructor(value: string | Decimal) {
       super(value);
       this.TYPE = DATATYPE.PERCENTAGE;
       this.TYPERANK = TYPERANK.PERCENTAGE;
@@ -285,13 +286,13 @@ export namespace Type {
       }
       return Percentage.New(this.percentageValue(value.n).mod(value.n));
     }
-    public percentageValue(value: Big.Decimal): Big.Decimal {
+    public percentageValue(value: Decimal): Decimal {
       return value.mul(this.n.div(Percentage.base));
     }
     public print(): string {
       return `% ${this.toNumericString()}`;
     }
-    public New(value: Big.Decimal): Numberic {
+    public New(value: Decimal): Numberic {
       return Percentage.New(value);
     }
   }
@@ -299,14 +300,14 @@ export namespace Type {
    * Number with unit
    */
   export class UnitNumber extends Numberic {
-    public static New(value: string | Big.Decimal, unit: UnitMeta): UnitNumber {
+    public static New(value: string | Decimal, unit: UnitMeta): UnitNumber {
       return new UnitNumber(value, unit);
     }
     public static convertToUnit(value: Numberic, unit: UnitMeta): UnitNumber {
       if (value instanceof UnitNumber) {
         const value2 = value as UnitNumber;
         if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-          return UnitNumber.New(value2.convert(unit.ratio(), unit.bias()), unit).setSystem(value.ns) as UnitNumber;
+          return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns) as UnitNumber;
         }
       }
       return UnitNumber.New(value.n, unit).setSystem(value.ns) as UnitNumber;
@@ -314,14 +315,14 @@ export namespace Type {
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
     public unit: UnitMeta;
-    constructor(value: string | Big.Decimal | number, unit: UnitMeta) {
+    constructor(value: string | Decimal | number, unit: UnitMeta) {
       super(value);
       this.unit = unit;
       this.TYPE = DATATYPE.UNIT;
       this.TYPERANK = TYPERANK.UNIT;
     }
 
-    public New(value: Big.Decimal): Numberic {
+    public New(value: Decimal): Numberic {
       return new UnitNumber(value, this.unit);
     }
     public isZero(): boolean {
@@ -441,7 +442,7 @@ export namespace Type {
       return this.New(left.n.mod(right.n));
     }
 
-    public convert(ratio: Big.Decimal, bias: Big.Decimal): Big.Decimal {
+    public convert(ratio: Decimal, bias: Decimal): Decimal {
       return this.n
         .mul(this.ratio())
         .add(this.bias())
@@ -449,12 +450,12 @@ export namespace Type {
         .div(ratio);
     }
 
-    public ratio(): Big.Decimal {
-      return this.unit.ratio();
+    public ratio(): Decimal {
+      return this.unit.ratio;
     }
 
-    public bias(): Big.Decimal {
-      return this.unit.bias();
+    public bias(): Decimal {
+      return this.unit.bias;
     }
 
     public print(): string {
@@ -465,3 +466,5 @@ export namespace Type {
     }
   }
 }
+
+export { Type };

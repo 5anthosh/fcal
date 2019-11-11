@@ -1,8 +1,8 @@
-import Decimal from 'decimal.js';
+import { Decimal } from 'decimal.js';
 import { Entity, SymbolTable } from '../symboltable';
 import { Type } from '../types/datatype';
 
-export class Constant {
+class Constant {
   // simple object is used for variables
   // with key as variable name and value as value
   public symbolTable: SymbolTable;
@@ -16,7 +16,7 @@ export class Constant {
    * @param {string} key constatn name
    * @param  {Type | Big.Decimal | number | string} value value
    */
-  public set(key: string, value: Type | Decimal | number | string) {
+  public set(key: string, value: Type | Decimal | number | string): void {
     if (!this.values.hasOwnProperty(key)) {
       this.symbolTable.set(key, Entity.VARIABLE);
     }
@@ -27,3 +27,5 @@ export class Constant {
     this.values[key] = Type.BNumber.New(value);
   }
 }
+
+export { Constant };

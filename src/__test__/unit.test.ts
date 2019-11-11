@@ -51,6 +51,17 @@ test('Time units addition In operator', () => {
   }
 });
 
+test('units division', () => {
+  expect(Fcal.eval('34 km / 1 km + 120%')).toStrictEqual(Type.BNumber.New(74.8));
+  const unit = Fcal.getUnit('cm');
+  expect(unit).not.toBeNull();
+  if (unit) {
+    expect(Fcal.eval('(0x23 km / 0b101 m)  in cm')).toStrictEqual(new Type.UnitNumber(700000000, unit));
+    expect(Fcal.eval('(100 km / 45)  in cm')).toStrictEqual(new Type.UnitNumber('222222.22222222222222', unit));
+    expect(Fcal.eval('(0o127 / 0.4e-2 m)  in cm')).toStrictEqual(new Type.UnitNumber('2175000', unit));
+  }
+});
+
 test('Singular and Plural units phrases', () => {
   const expression = '0 sec + 1 sec';
   let unit;
@@ -75,6 +86,8 @@ test('Add new unit type to Existing Unit', () => {
   if (unit) {
     expect(Fcal.eval('1 month in days')).toStrictEqual(new Type.UnitNumber(30, unit));
   }
+
+  Fcal.UseUnit({ id: Unit.LENGTHID, type: 'new-length', ratio: 1.2, phrases: ['news', 'news2'] });
 });
 
 test('Create whole new unit', () => {

@@ -56,8 +56,12 @@ test('units division', () => {
   const unit = Fcal.getUnit('cm');
   expect(unit).not.toBeNull();
   if (unit) {
-    expect(Fcal.eval('(0x23 km / 0b101 m)  in cm')).toStrictEqual(new Type.UnitNumber(700000000, unit));
+    expect(Fcal.eval('(0x23 km / 0b101 m)  in cm')).toStrictEqual(new Type.UnitNumber(7000, unit));
+
+    expect(Fcal.eval('23.23 cm / 3 days')).toStrictEqual(new Type.UnitNumber('7.7433333333333333333', unit));
+
     expect(Fcal.eval('(100 km / 45)  in cm')).toStrictEqual(new Type.UnitNumber('222222.22222222222222', unit));
+
     expect(Fcal.eval('(0o127 / 0.4e-2 m)  in cm')).toStrictEqual(new Type.UnitNumber('2175000', unit));
   }
 });
@@ -86,8 +90,14 @@ test('Add new unit type to Existing Unit', () => {
   if (unit) {
     expect(Fcal.eval('1 month in days')).toStrictEqual(new Type.UnitNumber(30, unit));
   }
-
-  Fcal.UseUnit({ id: Unit.LENGTHID, type: 'new-length', ratio: 1.2, phrases: ['news', 'news2'] });
+  expect(() =>
+    Fcal.UseUnit({ id: Unit.LENGTHID, type: 'new-length', ratio: 1.2, phrases: ['news', 'news2'] }),
+  ).not.toThrow();
+  const unit1 = Fcal.getUnit('cm');
+  expect(unit1).not.toBeNull();
+  if (unit1) {
+    expect(Fcal.eval('2 news in cm')).toStrictEqual(new Type.UnitNumber('2.4', unit1));
+  }
 });
 
 test('Create whole new unit', () => {

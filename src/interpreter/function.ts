@@ -14,13 +14,13 @@ export type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Ty
  */
 class FcalFunction implements ICallable {
   // no of arguments
-  public arbity: number;
+  public readonly arity: number;
   // name of the function
-  public name: string;
+  public readonly name: string;
   // function implemention
-  public function: FcalFunctionFmt;
-  constructor(name: string, arbity: number, func: FcalFunctionFmt) {
-    this.arbity = arbity;
+  public readonly function: FcalFunctionFmt;
+  constructor(name: string, arity: number, func: FcalFunctionFmt) {
+    this.arity = arity;
     this.function = func;
     this.name = name;
   }
@@ -54,7 +54,7 @@ class FcalFunction implements ICallable {
 // tslint:disable-next-line:no-namespace
 namespace FcalFunction {
   export class List {
-    public functions: Map<string, FcalFunction>;
+    public readonly functions: Map<string, FcalFunction>;
     constructor() {
       this.functions = new Map<string, FcalFunction>();
     }
@@ -67,16 +67,16 @@ namespace FcalFunction {
       if (this.check(ff.name)) {
         throw new FcalError(`${ff.name} is already registered`);
       }
-      if (ff.arbity < -1) {
+      if (ff.arity < -1) {
         throw new FcalError(
-          `Can not register ${ff.name}, invalid arbity should be greater than or equal to -1 but got ${ff.arbity}`,
+          `Can not register ${ff.name}, arity should be greater than or equal to -1 but got ${ff.arity}`,
         );
       }
-      if (ff.arbity >= 255) {
+      if (ff.arity >= 255) {
         throw new FcalError(`Can not register ${ff.name}, function cannot have more than 254 arguments`);
       }
-      if (ff.arbity % 1 !== 0) {
-        throw new FcalError(`Can not register ${ff.name}, arbity should be Integer`);
+      if (ff.arity % 1 !== 0) {
+        throw new FcalError(`Can not register ${ff.name}, arity should be Integer`);
       }
       this.functions.set(ff.name, ff);
     }

@@ -382,7 +382,7 @@ namespace Type {
         if (left1.unit.id !== right1.unit.id) {
           return left1.New(left1.n.div(right.n));
         }
-        return left1.New(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
+        return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
       }
       return this.New(left.n.div(right.n));
     }

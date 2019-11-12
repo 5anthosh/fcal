@@ -1,8 +1,8 @@
 import { IUseUnit } from '../fcal';
 import { Unit } from '../types/units';
 
-export function getDefaultUnits(): Array<IUseUnit | Unit> {
-  const units = new Array<IUseUnit | Unit>();
+export function getDefaultUnits(): IUseUnit[] {
+  const units = new Array<IUseUnit>();
   setDistanceUnits(units);
   setSpeedUnits(units);
   setTimeUnits(units);
@@ -10,7 +10,7 @@ export function getDefaultUnits(): Array<IUseUnit | Unit> {
   return units;
 }
 
-function setDistanceUnits(units: Array<IUseUnit | Unit>): void {
+function setDistanceUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
@@ -95,7 +95,7 @@ function setDistanceUnits(units: Array<IUseUnit | Unit>): void {
   );
 }
 
-function setSpeedUnits(units: Array<IUseUnit | Unit>): void {
+function setSpeedUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
@@ -132,7 +132,7 @@ function setSpeedUnits(units: Array<IUseUnit | Unit>): void {
   );
 }
 
-function setTimeUnits(units: Array<IUseUnit | Unit>): void {
+function setTimeUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
@@ -195,7 +195,7 @@ function setTimeUnits(units: Array<IUseUnit | Unit>): void {
   );
 }
 
-function setTemperatureUnits(units: Array<IUseUnit | Unit>): void {
+function setTemperatureUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {

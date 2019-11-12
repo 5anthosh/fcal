@@ -32,7 +32,7 @@
     "@types/node": "^12.12.7",
     "browserify": "^16.5.0",
     "jest": "^24.9.0",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "tinyify": "^2.5.2",
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.1",

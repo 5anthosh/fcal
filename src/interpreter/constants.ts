@@ -5,8 +5,8 @@ import { Entity, SymbolTable } from './symboltable';
 class Constant {
   // simple object is used for variables
   // with key as variable name and value as value
-  public symbolTable: SymbolTable;
-  public values: Map<string, Type>;
+  public readonly symbolTable: SymbolTable;
+  public readonly values: Map<string, Type>;
   constructor(symbolTable: SymbolTable) {
     this.values = new Map<string, Type>();
     this.symbolTable = symbolTable;

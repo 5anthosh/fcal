@@ -1,7 +1,7 @@
 import { FcalError } from '../fcal';
 
-export class SymbolTable {
-  private registry: Map<string, Entity>;
+class SymbolTable {
+  private readonly registry: Map<string, Entity>;
   constructor(entries?: Map<string, Entity>) {
     if (entries) {
       this.registry = new Map<string, Entity>(entries);
@@ -31,7 +31,7 @@ export class SymbolTable {
     return new SymbolTable(this.registry);
   }
 }
-export enum Entity {
+enum Entity {
   FUNCTION = 'FUNCTION',
   VARIABLE = 'VARIABLE',
   CONSTANT = 'CONSTANT',
@@ -39,3 +39,5 @@ export enum Entity {
   NS = 'NUMBER SYSTEM',
   UNIT = 'UNIT',
 }
+
+export { Entity, SymbolTable };

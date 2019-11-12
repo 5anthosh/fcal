@@ -1,145 +1,208 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var function_1 = require("../interpreter/function");
 function getDefaultFunctions() {
-    var functions = Array();
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('abs', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.abs());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sqrt', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.sqrt());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cbrt', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.cbrt());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('log', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.log());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('ln', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.ln());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('round', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.round());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('floor', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.floor());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('ceil', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.ceil());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cos', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.cosine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('acos', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseCosine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('cosh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.hyperbolicCosine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('acosh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseHyperbolicCosine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sin', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.sine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('asin', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseSine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('sinh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.hyperbolicSine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('asinh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseHyperbolicSine());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('tan', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.tangent());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('atan', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseTangent());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('tanh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.hyperbolicTangent());
-    }));
-    functions.push(
-    // tslint:disable-next-line: only-arrow-functions variable-name
-    new function_1.FcalFunction('atanh', 1, function (_environment, argument) {
-        var value = argument[0];
-        return value.New(value.n.inverseHyperbolicTangent());
-    }));
-    functions.push(new function_1.FcalFunction('sigma', 2, 
-    // tslint:disable-next-line: variable-name
-    function (_env, args) {
-        var start = args[0];
-        var end = args[1];
-        start.n = start.n.minus(1);
-        return end.n
-            .mul(end.n.plus(1))
-            .div(2)
-            .sub(start.n.mul(start.n.plus(1)).div(2));
-    }));
+    var functions = [
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.abs());
+            },
+            name: 'abs',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.sqrt());
+            },
+            name: 'sqrt',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.cbrt());
+            },
+            name: 'cbrt',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.log());
+            },
+            name: 'log',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.ln());
+            },
+            name: 'ln',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.round());
+            },
+            name: 'round',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.floor());
+            },
+            name: 'floor',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.ceil());
+            },
+            name: 'ceil',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.cos());
+            },
+            name: 'cos',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.acos());
+            },
+            name: 'acos',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.cosh());
+            },
+            name: 'cosh',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.acosh());
+            },
+            name: 'acosh',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.sin());
+            },
+            name: 'sin',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.asin());
+            },
+            name: 'asin',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.sinh());
+            },
+            name: 'sinh',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.asinh());
+            },
+            name: 'asinh',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.tan());
+            },
+            name: 'tan',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.atan());
+            },
+            name: 'atan',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.tanh());
+            },
+            name: 'tanh',
+        },
+        {
+            arity: 1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var value = args[0];
+                return value.New(value.n.atanh());
+            },
+            name: 'atanh',
+        },
+        {
+            arity: 2,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                var start = args[0];
+                var end = args[1];
+                start.n = start.n.minus(1);
+                return end.n
+                    .mul(end.n.plus(1))
+                    .div(2)
+                    .sub(start.n.mul(start.n.plus(1)).div(2));
+            },
+            name: 'sigma',
+        },
+    ];
     return functions;
 }
 exports.getDefaultFunctions = getDefaultFunctions;
 
-},{"../interpreter/function":6}],2:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var units_1 = require("../types/units");
@@ -411,12 +474,12 @@ var Fcal = /** @class */ (function () {
      * @param {FcalFunction} function fcal function definitions
      */
     Fcal.UseFunction = function (func) {
+        Fcal.gst.set(func.name, symboltable_1.Entity.FUNCTION);
         if (func instanceof function_1.FcalFunction) {
-            Fcal.gst.set(func.name, symboltable_1.Entity.FUNCTION);
             this.functions.push(func);
             return;
         }
-        this.functions.push(new function_1.FcalFunction(func.name, func.arbity, func.func));
+        this.functions.push(new function_1.FcalFunction(func.name, func.arity, func.func));
     };
     /**
      * Register new units
@@ -514,7 +577,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Evaluates given expression
-     * @param {String} expression Math expression
+     * @param {string} expression Math expression
      * @returns {Type} result of expression
      */
     Fcal.prototype.evaluate = function (source) {
@@ -523,7 +586,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Create new expression with copy of Fcal.Environment
-     * @param {String} source Math  expression
+     * @param {string} source Math  expression
      * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expression = function (source) {
@@ -535,7 +598,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Create new  Expression in sync with Fcal.Environment
-     * @param {Strign} source Math expression
+     * @param {string} source Math expression
      * @returns {Expression} Expression with parsed AST
      */
     Fcal.prototype.expressionSync = function (source) {
@@ -705,8 +768,8 @@ var datatype_1 = require("../types/datatype");
  * FcalFunction represents function in fcal
  */
 var FcalFunction = /** @class */ (function () {
-    function FcalFunction(name, arbity, func) {
-        this.arbity = arbity;
+    function FcalFunction(name, arity, func) {
+        this.arity = arity;
         this.function = func;
         this.name = name;
     }
@@ -753,14 +816,14 @@ exports.FcalFunction = FcalFunction;
             if (this.check(ff.name)) {
                 throw new fcal_1.FcalError(ff.name + " is already registered");
             }
-            if (ff.arbity < -1) {
-                throw new fcal_1.FcalError("Can not register " + ff.name + ", invalid arbity should be greater than or equal to -1 but got " + ff.arbity);
+            if (ff.arity < -1) {
+                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be greater than or equal to -1 but got " + ff.arity);
             }
-            if (ff.arbity >= 255) {
+            if (ff.arity >= 255) {
                 throw new fcal_1.FcalError("Can not register " + ff.name + ", function cannot have more than 254 arguments");
             }
-            if (ff.arbity % 1 !== 0) {
-                throw new fcal_1.FcalError("Can not register " + ff.name + ", arbity should be Integer");
+            if (ff.arity % 1 !== 0) {
+                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be Integer");
             }
             this.functions.set(ff.name, ff);
         };
@@ -823,9 +886,9 @@ var Interpreter = /** @class */ (function () {
         var call;
         call = this.environment.functions.get(name);
         if (call) {
-            if (call.arbity !== -1) {
-                if (call.arbity !== expr.argument.length) {
-                    throw new fcal_1.FcalError("function " + name + " Expected " + call.arbity + " args but got " + expr.argument.length, expr.start, expr.end);
+            if (call.arity !== -1) {
+                if (call.arity !== expr.argument.length) {
+                    throw new fcal_1.FcalError("function " + name + " Expected " + call.arity + " args but got " + expr.argument.length, expr.start, expr.end);
                 }
             }
             var argument = Array();
@@ -998,7 +1061,8 @@ var Entity;
     Entity["OPERATION_PHRASE"] = "OPERATION PHRASE";
     Entity["NS"] = "NUMBER SYSTEM";
     Entity["UNIT"] = "UNIT";
-})(Entity = exports.Entity || (exports.Entity = {}));
+})(Entity || (Entity = {}));
+exports.Entity = Entity;
 
 },{"../fcal":3}],9:[function(require,module,exports){
 "use strict";
@@ -2112,7 +2176,7 @@ var TYPERANK;
                 if (left1.unit.id !== right1.unit.id) {
                     return left1.New(left1.n.div(right.n));
                 }
-                return left1.New(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
+                return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
             }
             return this.New(left.n.div(right.n));
         };

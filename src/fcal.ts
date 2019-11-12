@@ -17,7 +17,7 @@ import { callbackFuncFmt, Unit, UnitMeta } from './types/units';
  */
 export interface IUseFunction {
   name: string;
-  arbity: number;
+  arity: number;
   func: FcalFunctionFmt;
 }
 
@@ -65,12 +65,12 @@ class Fcal {
    * @param {FcalFunction} function fcal function definitions
    */
   public static UseFunction(func: FcalFunction | IUseFunction): void {
+    Fcal.gst.set(func.name, Entity.FUNCTION);
     if (func instanceof FcalFunction) {
-      Fcal.gst.set(func.name, Entity.FUNCTION);
       this.functions.push(func);
       return;
     }
-    this.functions.push(new FcalFunction(func.name, func.arbity, func.func));
+    this.functions.push(new FcalFunction(func.name, func.arity, func.func));
   }
 
   /**
@@ -144,7 +144,6 @@ class Fcal {
       this.setDefaultConstants();
     }
   }
-
   private static gst: SymbolTable;
   private static units: Unit.List;
   private static functions: FcalFunction.List;
@@ -162,7 +161,6 @@ class Fcal {
     phrases.push(TT.IN, ['in', 'as']);
     return phrases;
   }
-
   private static setDefaultFunctions(): void {
     this.UseFunctions(getDefaultFunctions());
   }
@@ -190,7 +188,7 @@ class Fcal {
   }
   /**
    * Evaluates given expression
-   * @param {String} expression Math expression
+   * @param {string} expression Math expression
    * @returns {Type} result of expression
    */
   public evaluate(source: string): Type {
@@ -199,7 +197,7 @@ class Fcal {
   }
   /**
    * Create new expression with copy of Fcal.Environment
-   * @param {String} source Math  expression
+   * @param {string} source Math  expression
    * @returns {Expression} Expression with parsed AST
    */
   public expression(source: string): Expression {
@@ -211,7 +209,7 @@ class Fcal {
   }
   /**
    * Create new  Expression in sync with Fcal.Environment
-   * @param {Strign} source Math expression
+   * @param {string} source Math expression
    * @returns {Expression} Expression with parsed AST
    */
   public expressionSync(source: string): Expression {

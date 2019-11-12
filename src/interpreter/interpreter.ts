@@ -10,8 +10,8 @@ import { Environment } from './environment';
 import { FcalFunction } from './function';
 
 class Interpreter implements Expr.IVisitor<Type> {
-  private ast: Expr;
-  private environment: Environment;
+  private readonly ast: Expr;
+  private readonly environment: Environment;
   constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
     const parser = new Parser(source, phrases, units, environment.symbolTable);
     this.environment = environment;
@@ -26,10 +26,10 @@ class Interpreter implements Expr.IVisitor<Type> {
     let call: FcalFunction | undefined;
     call = this.environment.functions.get(name);
     if (call) {
-      if (call.arbity !== -1) {
-        if (call.arbity !== expr.argument.length) {
+      if (call.arity !== -1) {
+        if (call.arity !== expr.argument.length) {
           throw new FcalError(
-            `function ${name} Expected ${call.arbity} args but got ${expr.argument.length}`,
+            `function ${name} Expected ${call.arity} args but got ${expr.argument.length}`,
             expr.start,
             expr.end,
           );

@@ -38,6 +38,50 @@ test('Register new function', () => {
   }).not.toThrowError(error);
   const fcal = new Fcal();
   expect(fcal.evaluate('asdfasdf123(45) %')).toStrictEqual(new Type.Percentage('17467135528742547674'));
+  expect(() =>
+    Fcal.UseFunction({
+      arity: -1,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        return args[0];
+      },
+      name: 'newFunc',
+    }),
+  ).not.toThrowError();
+  expect(Fcal.eval('newFunc(09.4,2,3,4,56,67)')).toStrictEqual(new Type.BNumber(9.4));
+});
+
+test('Register function with invalid arity', () => {
+  expect(() =>
+    Fcal.UseFunction({
+      arity: -2,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        return args[0];
+      },
+      name: 'newFunc1',
+    }),
+  ).toThrowError('Can not register newFunc1, arity should be greater than or equal to -1 but got -2');
+  expect(() =>
+    Fcal.UseFunction({
+      arity: 34.56,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        return args[0];
+      },
+      name: 'newFunc2',
+    }),
+  ).toThrowError('Can not register newFunc2, arity should be Integer');
+  expect(() =>
+    Fcal.UseFunction({
+      arity: 255,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        return args[0];
+      },
+      name: 'newFunc3',
+    }),
+  ).toThrowError('Can not register newFunc3, function cannot have more than 254 arguments');
 });
 
 test('Register function with number return ', () => {

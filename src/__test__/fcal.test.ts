@@ -190,7 +190,7 @@ test('Infinity', () => {
 test('AST print()', () => {
   const expr = new Fcal().expression('y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)%');
   expect(expr.getAST()).toStrictEqual(`\
-+ (0)ASSIGN 
++ (0)ASSIGN y 
 |
 +---- (1)BINARY  < + +  (56, 57)> 
 |

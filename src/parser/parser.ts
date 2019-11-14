@@ -66,36 +66,17 @@ class Parser {
   }
 
   private multiply(): Expr {
-    let expr = this.unary();
+    let expr = this.unitConvert();
     while (this.match([TT.TIMES, TT.SLASH, TT.MOD, TT.OF])) {
       const operator = this.previous();
-      const right = this.unary();
-      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
-    }
-    return expr;
-  }
-
-  private unary(): Expr {
-    if (this.match([TT.PLUS, TT.MINUS])) {
-      const operator = this.previous();
-      const right = this.unary();
-      return new Expr.Unary(operator, right, operator.start, right.end);
-    }
-    return this.exponent();
-  }
-
-  private exponent(): Expr {
-    let expr = this.unitConvert();
-    while (this.match([TT.CAP])) {
-      const operator = this.previous();
-      const right = this.unary();
+      const right = this.unitConvert();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }
 
   private unitConvert(): Expr {
-    const expr = this.suffix();
+    const expr = this.unary();
     if (this.match([TT.IN])) {
       if (this.match([TT.UNIT])) {
         const unit = this.previous();
@@ -112,6 +93,25 @@ class Parser {
         }
       }
       throw new FcalError('Expecting unit after in');
+    }
+    return expr;
+  }
+
+  private unary(): Expr {
+    if (this.match([TT.PLUS, TT.MINUS])) {
+      const operator = this.previous();
+      const right = this.unary();
+      return new Expr.Unary(operator, right, operator.start, right.end);
+    }
+    return this.exponent();
+  }
+
+  private exponent(): Expr {
+    let expr = this.suffix();
+    while (this.match([TT.CAP])) {
+      const operator = this.previous();
+      const right = this.unary();
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
     }
     return expr;
   }

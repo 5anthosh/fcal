@@ -29,7 +29,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     this.depth += ASTPrinter.tab;
     const value = this.evaluate(expr.value);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'ASSIGN')} \n|\n${value}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'ASSIGN')} ${expr.name} \n|\n${value}`;
   }
 
   public visitVariableExpr(expr: Expr.Variable): string {

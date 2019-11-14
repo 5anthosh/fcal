@@ -1373,7 +1373,7 @@ var ASTPrinter = /** @class */ (function () {
         this.depth += ASTPrinter.tab;
         var value = this.evaluate(expr.value);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'ASSIGN') + " \n|\n" + value;
+        return ASTPrinter.createPrefix(this.depth, 'ASSIGN') + " " + expr.name + " \n|\n" + value;
     };
     ASTPrinter.prototype.visitVariableExpr = function (expr) {
         return ASTPrinter.createPrefix(this.depth, 'VARIABLE') + " " + expr.name + "\n|\n";
@@ -1663,33 +1663,16 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.multiply = function () {
-        var expr = this.unary();
+        var expr = this.unitConvert();
         while (this.match([token_1.TT.TIMES, token_1.TT.SLASH, token_1.TT.MOD, token_1.TT.OF])) {
             var operator = this.previous();
-            var right = this.unary();
-            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
-        }
-        return expr;
-    };
-    Parser.prototype.unary = function () {
-        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
-            var operator = this.previous();
-            var right = this.unary();
-            return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
-        }
-        return this.exponent();
-    };
-    Parser.prototype.exponent = function () {
-        var expr = this.unitConvert();
-        while (this.match([token_1.TT.CAP])) {
-            var operator = this.previous();
-            var right = this.unary();
+            var right = this.unitConvert();
             expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
         }
         return expr;
     };
     Parser.prototype.unitConvert = function () {
-        var expr = this.suffix();
+        var expr = this.unary();
         if (this.match([token_1.TT.IN])) {
             if (this.match([token_1.TT.UNIT])) {
                 var unit = this.previous();
@@ -1706,6 +1689,23 @@ var Parser = /** @class */ (function () {
                 }
             }
             throw new fcal_1.FcalError('Expecting unit after in');
+        }
+        return expr;
+    };
+    Parser.prototype.unary = function () {
+        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
+            var operator = this.previous();
+            var right = this.unary();
+            return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
+        }
+        return this.exponent();
+    };
+    Parser.prototype.exponent = function () {
+        var expr = this.suffix();
+        while (this.match([token_1.TT.CAP])) {
+            var operator = this.previous();
+            var right = this.unary();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
         }
         return expr;
     };

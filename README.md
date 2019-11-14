@@ -10,7 +10,8 @@
 
 > Fcaljs is an extensive math expression evaluator library for JavaScript and Node.js.
 > Using fcal, you can perform basic arithmetic, percentage operations with precision.
-> It features a flexible expression parser with a large set of built-in units, functions and constants
+> It features a flexible expression parser with a large set of built-in units, functions and constants.
+> Inspired from [Numi](https://numi.app)
 
 ## Features
 
@@ -58,6 +59,8 @@ fcal.evaluate('1.2 nsec + 3 week in sec'); // 1814400.0000000012 Seconds
 
 // Various number system
 fcal.evaluate('0b1010011 day + 45'); // 128 Days
+
+fcal.evaluate('23.44 kmh in oct'); //  0o27.341217270243656051 km/h
 ```
 
 ## Install

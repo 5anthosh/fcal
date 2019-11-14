@@ -34,9 +34,10 @@ test('Invalid number literal (Number system)', () => {
 });
 
 test('Number system conversion', () => {
-  expect(Fcal.eval('342 cm in bin').toString()).toStrictEqual('0b101010110 Centimeters');
+  expect(Fcal.eval('-342 cm in bin').toString()).toStrictEqual('-0b101010110 Centimeters');
   expect(Fcal.eval('0b110010111011 % in hex').toString()).toStrictEqual('% 0xcbb');
   expect(Fcal.eval('(3 + 0.14) in oct').toString()).toStrictEqual('0o3.1075341217270243656');
   expect(Fcal.eval('0o21436 sec as bin').toString()).toStrictEqual('0b10001100011110 Seconds');
-  expect(Fcal.eval('0xD7A day as decimal').toString()).toStrictEqual('3450 Days');
+  expect(Fcal.eval('-0xD7A day as decimal').toString()).toStrictEqual('-3450 Days');
+  expect(Fcal.eval('---23.44 kmh as oct').toString()).toStrictEqual('-0o27.341217270243656051 km/h');
 });

@@ -2,6 +2,7 @@ import { FcalError } from '../fcal';
 
 class SymbolTable {
   private readonly registry: Map<string, Entity>;
+
   constructor(entries?: Map<string, Entity>) {
     if (entries) {
       this.registry = new Map<string, Entity>(entries);
@@ -17,6 +18,7 @@ class SymbolTable {
     this.registry.set('oct', Entity.NS);
     this.registry.set('octal', Entity.NS);
   }
+
   public set(phrase: string, entity: Entity): void {
     const c = this.registry.get(phrase);
     if (c) {
@@ -24,9 +26,11 @@ class SymbolTable {
     }
     this.registry.set(phrase, entity);
   }
+
   public get(phrase: string): Entity | undefined {
     return this.registry.get(phrase);
   }
+
   public clone(): SymbolTable {
     return new SymbolTable(this.registry);
   }

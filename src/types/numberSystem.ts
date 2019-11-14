@@ -1,36 +1,40 @@
 import { Decimal } from 'decimal.js';
 
 class NumberSystem {
-  public static Decimal = new NumberSystem('Decimal', (num: Decimal) => {
+  public static dec = new NumberSystem('Decimal', (num: Decimal) => {
     return num.toString();
   });
 
-  public static HexaDecimal = new NumberSystem('HexaDecimal', (num: Decimal) => {
+  public static hex = new NumberSystem('HexaDecimal', (num: Decimal) => {
     return num.toHexadecimal();
   });
 
-  public static Binary = new NumberSystem('Binary', (num: Decimal) => {
+  public static bin = new NumberSystem('Binary', (num: Decimal) => {
     return num.toBinary();
   });
 
-  public static Octal = new NumberSystem('Octal', (num: Decimal) => {
+  public static oct = new NumberSystem('Octal', (num: Decimal) => {
     return num.toOctal();
   });
+
   public static get(ns: string): NumberSystem | undefined {
     return NumberSystem.ns[ns];
   }
+
   private static ns: { [index: string]: NumberSystem } = {
-    bin: NumberSystem.Binary,
-    binary: NumberSystem.Binary,
-    dec: NumberSystem.Decimal,
-    decimal: NumberSystem.Decimal,
-    hex: NumberSystem.HexaDecimal,
-    hexadecimal: NumberSystem.HexaDecimal,
-    oct: NumberSystem.Octal,
-    octal: NumberSystem.Octal,
+    bin: NumberSystem.bin,
+    binary: NumberSystem.bin,
+    dec: NumberSystem.dec,
+    decimal: NumberSystem.dec,
+    hex: NumberSystem.hex,
+    hexadecimal: NumberSystem.hex,
+    oct: NumberSystem.oct,
+    octal: NumberSystem.oct,
   };
+
   public name: string;
   public to: (num: Decimal) => string;
+
   constructor(name: string, to: (num: Decimal) => string) {
     this.to = to;
     this.name = name;

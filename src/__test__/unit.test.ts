@@ -1,5 +1,5 @@
 import Decimal from 'decimal.js';
-import { Fcal } from '../fcal';
+import { Fcal, IUseUnit } from '../fcal';
 import { Type } from '../types/datatype';
 import { Unit } from '../types/units';
 
@@ -84,14 +84,25 @@ test('Singular and Plural units phrases', () => {
 });
 
 test('Add new unit type to Existing Unit', () => {
-  Fcal.UseUnit(new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
+  Fcal.UseUnit(
+    new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months'])
+      .Singular('month')
+      .Plural('months')
+      .setBias((): number => 0),
+  );
   const unit = Fcal.getUnit('day');
   expect(unit).not.toBeNull();
   if (unit) {
     expect(Fcal.eval('1 month in days')).toStrictEqual(new Type.UnitNumber(30, unit));
   }
   expect(() =>
-    Fcal.UseUnit({ id: Unit.LENGTHID, type: 'new-length', ratio: 1.2, phrases: ['news', 'news2'] }),
+    Fcal.UseUnit({
+      bias: (): Decimal => new Decimal(0),
+      id: Unit.LENGTHID,
+      phrases: ['news', 'news2'],
+      ratio: 1.2,
+      type: 'new-length',
+    }),
   ).not.toThrow();
   const unit1 = Fcal.getUnit('cm');
   expect(unit1).not.toBeNull();
@@ -101,20 +112,19 @@ test('Add new unit type to Existing Unit', () => {
 });
 
 test('Create whole new unit', () => {
-  const units = [];
+  const units = Array<Unit | IUseUnit>();
+  units.push({
+    bias: new Decimal(0),
+    id: 'CONTENT',
+    phrases: ['char', 'chars'],
+    plural: 'characters',
+    ratio: (): number => {
+      return 1;
+    },
+    singular: 'character',
+    type: 'char',
+  });
 
-  units.push(
-    new Unit(
-      'CONTENT',
-      (): number => {
-        return 1;
-      },
-      'char',
-      ['char', 'chars'],
-    )
-      .Singular('character')
-      .Plural('characters'),
-  );
   units.push(
     new Unit(
       'CONTENT',

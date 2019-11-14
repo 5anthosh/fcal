@@ -19,11 +19,13 @@ class FcalFunction implements ICallable {
   public readonly name: string;
   // function implemention
   public readonly function: FcalFunctionFmt;
+
   constructor(name: string, arity: number, func: FcalFunctionFmt) {
     this.arity = arity;
     this.function = func;
     this.name = name;
   }
+
   /**
    * call the function
    * @param {Environment} environment state of fcal
@@ -55,9 +57,11 @@ class FcalFunction implements ICallable {
 namespace FcalFunction {
   export class List {
     public readonly functions: Map<string, FcalFunction>;
+
     constructor() {
       this.functions = new Map<string, FcalFunction>();
     }
+
     /**
      * Add new fcal function
      * @param {FcalFunction} fcalFunction
@@ -65,6 +69,7 @@ namespace FcalFunction {
      */
     public push(ff: FcalFunction): void {
       if (this.check(ff.name)) {
+        // This is unreachable code , becuase SymbolTable will take of this
         throw new FcalError(`${ff.name} is already registered`);
       }
       if (ff.arity < -1) {
@@ -80,6 +85,7 @@ namespace FcalFunction {
       }
       this.functions.set(ff.name, ff);
     }
+
     /**
      * Call a function by its name
      * @param {string} name name of the function
@@ -95,6 +101,7 @@ namespace FcalFunction {
       }
       throw new FcalError(`Function ${name} is not found`);
     }
+
     /**
      * Get function implemention by its function name
      * @param {string} name function name
@@ -103,6 +110,7 @@ namespace FcalFunction {
     public get(name: string): FcalFunction | undefined {
       return this.functions.get(name);
     }
+
     /**
      * check if function is available
      * @param {name} name function name

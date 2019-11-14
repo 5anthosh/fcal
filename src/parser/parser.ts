@@ -13,6 +13,7 @@ class Parser {
   private ntoken: number;
   private tokens: Token[];
   private symbolTable: SymbolTable;
+
   constructor(source: string, phrases: Phrases, units: Unit.List, symbolTable: SymbolTable) {
     this.source = source;
     this.lexer = new Lexer(this.source, phrases, units);
@@ -20,6 +21,7 @@ class Parser {
     this.tokens = [];
     this.symbolTable = symbolTable;
   }
+
   public parse(): Expr {
     const expr = this.Stmt();
     return expr;
@@ -35,6 +37,7 @@ class Parser {
     }
     throw new FcalError(`Unexpected token ${this.peek().lexeme}`, this.peek().start, this.peek().end);
   }
+
   private assignment(): Expr {
     const expr = this.expression();
     if (this.match([TT.EQUAL, TT.DOUBLE_COLON])) {
@@ -47,9 +50,11 @@ class Parser {
     }
     return expr;
   }
+
   private expression(): Expr {
     return this.addition();
   }
+
   private addition(): Expr {
     let expr = this.multiply();
     while (this.match([TT.PLUS, TT.MINUS])) {
@@ -78,6 +83,7 @@ class Parser {
     }
     return this.exponent();
   }
+
   private exponent(): Expr {
     let expr = this.unitConvert();
     while (this.match([TT.CAP])) {
@@ -87,6 +93,7 @@ class Parser {
     }
     return expr;
   }
+
   private unitConvert(): Expr {
     const expr = this.suffix();
     if (this.match([TT.IN])) {
@@ -108,6 +115,7 @@ class Parser {
     }
     return expr;
   }
+
   private suffix(): Expr {
     const expr = this.call();
     if (this.match([TT.PERCENTAGE])) {
@@ -124,6 +132,7 @@ class Parser {
     }
     return expr;
   }
+
   private call(): Expr {
     const expr = this.term();
     if (this.match([TT.OPEN_PARAN])) {
@@ -141,6 +150,7 @@ class Parser {
     }
     return expr;
   }
+
   private term(): Expr {
     if (this.match([TT.Number])) {
       return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
@@ -175,6 +185,7 @@ class Parser {
     }
     return false;
   }
+
   private consume(type: TT, message: string) {
     if (this.check(type)) {
       this.incr();
@@ -182,22 +193,26 @@ class Parser {
     }
     throw new FcalError(message, this.peek().start, this.peek().end);
   }
+
   private check(type: TT): boolean {
     if (this.isAtEnd()) {
       return false;
     }
     return this.peek().type === type;
   }
+
   private isAtEnd(): boolean {
     const token = this.nextToken();
     return token.type === TT.EOL;
   }
+
   private nextToken(): Token {
     if (this.ntoken < this.tokens.length) {
       return this.tokens[this.ntoken];
     }
     return this.getToken();
   }
+
   private getToken(): Token {
     const token = this.lexer.Next();
     if (token.type !== TT.EOL) {

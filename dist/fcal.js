@@ -442,7 +442,7 @@ var phrase_1 = require("./types/phrase");
 var units_2 = require("./types/units");
 exports.Unit = units_2.Unit;
 /**
- * Math expression evaluator
+ * Math expression evaluator.
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
@@ -524,12 +524,7 @@ var Fcal = /** @class */ (function () {
      * @param { { [index: string]: Type | Decimal | number | string } } constants
      */
     Fcal.useConstants = function (constants) {
-        for (var key in constants) {
-            if (constants.hasOwnProperty(key)) {
-                var element = constants[key];
-                this.constants.set(key, element);
-            }
-        }
+        this.constants.use(constants);
     };
     Fcal.initialize = function () {
         this.gst = new symboltable_1.SymbolTable();
@@ -607,15 +602,10 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * create a new variable with value or assign value to variable
-     * @param {{[index:string]: Type | number | string | Decimal}} values vairbles
+     * @param {Object | EnvInputType} values vairbles
      */
     Fcal.prototype.setValues = function (values) {
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.environment.set(key, element);
-            }
-        }
+        this.environment.use(values);
     };
     return Fcal;
 }());
@@ -644,7 +634,7 @@ var Expression = /** @class */ (function () {
     /**
      * Change state of variables
      * if variable is not found,  it will create a new variable
-     * @param {{[index:string]: Type | number | string | Decimal}} values variables
+     * @param {Object | Map} values variables
      */
     Expression.prototype.setValues = function (values) {
         this.interpreter.setValues(values);
@@ -707,6 +697,25 @@ var Constant = /** @class */ (function () {
         }
         this.values.set(key, datatype_1.Type.BNumber.New(value));
     };
+    /**
+     * import values from Object or map into constants
+     * @param {Object | Map} values
+     */
+    Constant.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
+        }
+    };
     return Constant;
 }());
 exports.Constant = Constant;
@@ -753,6 +762,25 @@ var Environment = /** @class */ (function () {
             return;
         }
         this.values.set(key, datatype_1.Type.BNumber.New(value));
+    };
+    /**
+     * import values from  Object or Map
+     * @param {Object | Map} values
+     */
+    Environment.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
+        }
     };
     return Environment;
 }());
@@ -814,6 +842,7 @@ exports.FcalFunction = FcalFunction;
          */
         List.prototype.push = function (ff) {
             if (this.check(ff.name)) {
+                // This is unreachable code , becuase SymbolTable will take of this
                 throw new fcal_1.FcalError(ff.name + " is already registered");
             }
             if (ff.arity < -1) {
@@ -888,7 +917,7 @@ var Interpreter = /** @class */ (function () {
         if (call) {
             if (call.arity !== -1) {
                 if (call.arity !== expr.argument.length) {
-                    throw new fcal_1.FcalError("function " + name + " Expected " + call.arity + " args but got " + expr.argument.length, expr.start, expr.end);
+                    throw new fcal_1.FcalError("function " + name + " expected " + call.arity + " args but got " + expr.argument.length, expr.start, expr.end);
                 }
             }
             var argument = Array();
@@ -1002,12 +1031,7 @@ var Interpreter = /** @class */ (function () {
         throw new fcal_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
     };
     Interpreter.prototype.setValues = function (values) {
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.environment.set(key, element);
-            }
-        }
+        this.environment.use(values);
     };
     Interpreter.prototype.evaluate = function (expr) {
         var ast = expr.accept(this);
@@ -1077,7 +1101,7 @@ var Lexer = /** @class */ (function () {
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
-        this.tokens = [];
+        this.tokens = Array();
         this.phrases = phrases;
         this.units = untis;
     }
@@ -1162,7 +1186,7 @@ var Lexer = /** @class */ (function () {
             return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(text));
         }
         type = this.phrases.get(text);
-        if (type !== undefined) {
+        if (type) {
             return this.TT(type);
         }
         var unit = this.units.get(text);
@@ -1185,7 +1209,7 @@ var Lexer = /** @class */ (function () {
                 this.eat();
             }
             var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.Binary);
+            value.setSystem(numberSystem_1.NumberSystem.bin);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
         if (this.peek(0) === 'o' || this.peek(0) === 'O') {
@@ -1197,7 +1221,7 @@ var Lexer = /** @class */ (function () {
                 this.eat();
             }
             var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.Octal);
+            value.setSystem(numberSystem_1.NumberSystem.oct);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
         if (this.peek(0) === 'x' || this.peek(0) === 'X') {
@@ -1209,7 +1233,7 @@ var Lexer = /** @class */ (function () {
                 this.eat();
             }
             var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.HexaDecimal);
+            value.setSystem(numberSystem_1.NumberSystem.hex);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
         while (Lexer.isDigit(this.peek(0))) {
@@ -1845,7 +1869,7 @@ var TYPERANK;
             else {
                 _this.n = new decimal_js_1.Decimal(value);
             }
-            _this.ns = numberSystem_1.NumberSystem.Decimal;
+            _this.ns = numberSystem_1.NumberSystem.dec;
             _this.lf = false;
             return _this;
         }
@@ -1995,16 +2019,10 @@ var TYPERANK;
             return BNumber.New(this.n.modulo(value.n));
         };
         BNumber.prototype.mul = function (value) {
-            // if (value instanceof BNumber) {
-            // }
             return BNumber.New(this.n.mul(value.n));
-            // return value.mul(value.newNumeric(this.number));
         };
         BNumber.prototype.plus = function (value) {
-            // if (value instanceof BNumber) {
-            // }
             return BNumber.New(this.n.plus(value.n));
-            // return value.plus(value.newNumeric(this.number));
         };
         BNumber.prototype.New = function (value) {
             return BNumber.New(value);
@@ -2264,27 +2282,27 @@ var NumberSystem = /** @class */ (function () {
     NumberSystem.get = function (ns) {
         return NumberSystem.ns[ns];
     };
-    NumberSystem.Decimal = new NumberSystem('Decimal', function (num) {
+    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
         return num.toString();
     });
-    NumberSystem.HexaDecimal = new NumberSystem('HexaDecimal', function (num) {
+    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
         return num.toHexadecimal();
     });
-    NumberSystem.Binary = new NumberSystem('Binary', function (num) {
+    NumberSystem.bin = new NumberSystem('Binary', function (num) {
         return num.toBinary();
     });
-    NumberSystem.Octal = new NumberSystem('Octal', function (num) {
+    NumberSystem.oct = new NumberSystem('Octal', function (num) {
         return num.toOctal();
     });
     NumberSystem.ns = {
-        bin: NumberSystem.Binary,
-        binary: NumberSystem.Binary,
-        dec: NumberSystem.Decimal,
-        decimal: NumberSystem.Decimal,
-        hex: NumberSystem.HexaDecimal,
-        hexadecimal: NumberSystem.HexaDecimal,
-        oct: NumberSystem.Octal,
-        octal: NumberSystem.Octal,
+        bin: NumberSystem.bin,
+        binary: NumberSystem.bin,
+        dec: NumberSystem.dec,
+        decimal: NumberSystem.dec,
+        hex: NumberSystem.hex,
+        hexadecimal: NumberSystem.hex,
+        oct: NumberSystem.oct,
+        octal: NumberSystem.oct,
     };
     return NumberSystem;
 }());

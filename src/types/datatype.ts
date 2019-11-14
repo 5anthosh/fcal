@@ -32,6 +32,7 @@ namespace Type {
     public n: Decimal;
     public lf: boolean;
     public ns: NumberSystem;
+
     constructor(value: string | Decimal | number) {
       super();
       if (value instanceof Decimal) {
@@ -39,16 +40,19 @@ namespace Type {
       } else {
         this.n = new Decimal(value);
       }
-      this.ns = NumberSystem.Decimal;
+      this.ns = NumberSystem.dec;
       this.lf = false;
     }
+
     public setSystem(numberSys: NumberSystem): Numberic {
       this.ns = numberSys;
       return this;
     }
+
     public toNumericString(): string {
       return this.ns.to(this.n);
     }
+
     public print(): string {
       return this.toNumericString();
     }
@@ -173,49 +177,56 @@ namespace Type {
    */
   export class BNumber extends Numberic {
     public static ZERO = BNumber.New(new Decimal(0));
+
     public static New(value: string | Decimal | number) {
       return new BNumber(value);
     }
+
     public TYPERANK: TYPERANK;
     public TYPE: DATATYPE;
+
     constructor(value: string | Decimal | number) {
       super(value);
       this.TYPE = DATATYPE.NUMBER;
       this.TYPERANK = TYPERANK.NUMBER;
     }
+
     public isZero(): boolean {
       return this.n.isZero();
     }
+
     public isNegative(): boolean {
       return this.n.isNegative();
     }
+
     public isInteger(): boolean {
       return this.n.isInteger();
     }
+
     public negated(): Numberic {
       return BNumber.New(this.n.negated());
     }
+
     public div(value: Numberic): Numberic {
       return BNumber.New(this.n.div(value.n));
     }
+
     public pow(value: Numberic): Numberic {
       return BNumber.New(this.n.pow(value.n));
     }
+
     public mod(value: Numberic): Numberic {
       return BNumber.New(this.n.modulo(value.n));
     }
+
     public mul(value: Numberic): Numberic {
-      // if (value instanceof BNumber) {
-      // }
       return BNumber.New(this.n.mul(value.n));
-      // return value.mul(value.newNumeric(this.number));
     }
+
     public plus(value: Numberic): Numberic {
-      // if (value instanceof BNumber) {
-      // }
       return BNumber.New(this.n.plus(value.n));
-      // return value.plus(value.newNumeric(this.number));
     }
+
     public New(value: Decimal): Numberic {
       return BNumber.New(value);
     }
@@ -227,38 +238,47 @@ namespace Type {
     public static New(value: string | Decimal): Percentage {
       return new Percentage(value);
     }
+
     private static base = new Decimal(100);
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
+
     constructor(value: string | Decimal) {
       super(value);
       this.TYPE = DATATYPE.PERCENTAGE;
       this.TYPERANK = TYPERANK.PERCENTAGE;
     }
+
     public isZero(): boolean {
       return this.n.isZero();
     }
+
     public isNegative(): boolean {
       return this.n.isNegative();
     }
+
     public isInteger(): boolean {
       return this.n.isInteger();
     }
+
     public negated(): Numberic {
       return Percentage.New(this.n.negated());
     }
+
     public plus(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return Percentage.New(this.n.plus(value.n));
       }
       return Percentage.New(value.n.plus(this.percentageValue(value.n)));
     }
+
     public mul(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return Percentage.New(this.n.mul(value.n));
       }
       return Percentage.New(value.n.mul(this.percentageValue(value.n)));
     }
+
     public div(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return Percentage.New(this.n.div(value.n));
@@ -268,6 +288,7 @@ namespace Type {
       }
       return Percentage.New(this.percentageValue(value.n).div(value.n));
     }
+
     public pow(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return Percentage.New(this.n.pow(value.n));
@@ -277,6 +298,7 @@ namespace Type {
       }
       return Percentage.New(this.percentageValue(value.n).pow(value.n));
     }
+
     public mod(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return Percentage.New(this.n.mod(value.n));
@@ -286,12 +308,15 @@ namespace Type {
       }
       return Percentage.New(this.percentageValue(value.n).mod(value.n));
     }
+
     public percentageValue(value: Decimal): Decimal {
       return value.mul(this.n.div(Percentage.base));
     }
+
     public print(): string {
       return `% ${this.toNumericString()}`;
     }
+
     public New(value: Decimal): Numberic {
       return Percentage.New(value);
     }
@@ -303,6 +328,7 @@ namespace Type {
     public static New(value: string | Decimal, unit: UnitMeta): UnitNumber {
       return new UnitNumber(value, unit);
     }
+
     public static convertToUnit(value: Numberic, unit: UnitMeta): UnitNumber {
       if (value instanceof UnitNumber) {
         const value2 = value as UnitNumber;
@@ -312,9 +338,11 @@ namespace Type {
       }
       return UnitNumber.New(value.n, unit).setSystem(value.ns) as UnitNumber;
     }
+
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
     public unit: UnitMeta;
+
     constructor(value: string | Decimal | number, unit: UnitMeta) {
       super(value);
       this.unit = unit;
@@ -325,18 +353,23 @@ namespace Type {
     public New(value: Decimal): Numberic {
       return new UnitNumber(value, this.unit);
     }
+
     public isZero(): boolean {
       return this.n.isZero();
     }
+
     public isNegative(): boolean {
       return this.n.isNegative();
     }
+
     public isInteger(): boolean {
       return this.n.isInteger();
     }
+
     public negated(): Numberic {
       return this.New(this.n.negated());
     }
+
     public plus(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
@@ -350,6 +383,7 @@ namespace Type {
       }
       return this.New(this.n.plus(value.n));
     }
+
     public mul(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
@@ -363,6 +397,7 @@ namespace Type {
       }
       return this.New(this.n.mul(value.n));
     }
+
     public div(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
@@ -386,6 +421,7 @@ namespace Type {
       }
       return this.New(left.n.div(right.n));
     }
+
     public pow(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
@@ -412,6 +448,7 @@ namespace Type {
 
       return this.New(left.n.pow(right.n));
     }
+
     public mod(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;

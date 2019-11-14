@@ -58,6 +58,10 @@ test('Lex error unexpected token', () => {
   expect(() => {
     Fcal.eval(expression);
   }).toThrow(error);
+
+  expect(() => {
+    Fcal.eval('23km 0');
+  }).toThrowError('Unexpected token 0');
 });
 
 test('PI area of the circle', () => {
@@ -181,4 +185,51 @@ test('Infinity', () => {
   expect(() => {
     Fcal.eval('(0B10010 % of Infinity) mod (2.2323E-3 ^ Infinity)');
   }).toThrowError('Modulus between Infinity is indeterminate');
+});
+
+test('AST print()', () => {
+  const expr = new Fcal().expression('y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)%');
+  expect(expr.getAST()).toStrictEqual(`\
++ (0)ASSIGN 
+|
++---- (1)BINARY  < + +  (56, 57)> 
+|
++-------- (2)BINARY  < + +  (39, 40)> 
+|
++------------ (3)BINARY  < + +  (23, 24)> 
+|
++---------------- (4)BINARY  < * *  (7, 8)> 
+|
++-------------------- (5)VARIABLE PI
+|
++-------------------- (5)BINARY  < ^ ^  (19, 20)> 
+|
++------------------------ (6)UNIT cm 
+|
++---------------------------- (7)VARIABLE radius
+|
++------------------------ (6)LITERAL 2
+|
++---------------- (4)UNIT CONVERT cm 
+|
++-------------------- (5)FUNCTION ==> sinh  
+|
++------------------------ (6)LITERAL 8
+|
++------------ (3)UNIT CONVERT HexaDecimal 
+|
++---------------- (4)FUNCTION ==> log  
+|
++-------------------- (5)LITERAL 23
+|
++-------- (2)PERCENTAGE 
+|
++------------ (3)Grouping 
+|
++---------------- (4)UNARY < - -  (59, 60)> 
+|
++-------------------- (5)UNARY < - -  (60, 61)> 
+|
++------------------------ (6)LITERAL 100
+`);
 });

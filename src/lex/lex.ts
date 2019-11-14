@@ -20,6 +20,7 @@ class Lexer {
     TT.DOUBLE_COLON,
     TT.NEWLINE,
   ];
+
   private static isDigit(char: string): boolean {
     return char >= '0' && char <= '9';
   }
@@ -29,39 +30,47 @@ class Lexer {
       !Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n' && !Lexer.notAlpha.includes(char)
     );
   }
+
   private static isSpace(char: string): boolean {
     return char === '\t' || char === ' ';
   }
+
   private static isBinaryDigit(char: string): boolean {
     return char === '0' || char === '1';
   }
+
   private static isOctalDigit(char: string): boolean {
     return char >= '0' && char <= '8';
   }
+
   private static isHexDigit(char: string): boolean {
     return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
   }
+
   public units: Unit.List;
   private tokens: Token[];
   private source: string;
   private start: number;
   private current: number;
   private phrases: Phrases;
+
   constructor(source: string, phrases: Phrases, untis: Unit.List) {
     // Removing the space around expression
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
-    this.tokens = [];
+    this.tokens = Array<Token>();
     this.phrases = phrases;
     this.units = untis;
   }
+
   public Next(): Token {
     if (this.isAtEnd()) {
       return Token.EOL(this.current);
     }
     return this.scan();
   }
+
   private scan(): Token {
     const char = this.space();
     switch (char) {
@@ -96,19 +105,23 @@ class Lexer {
         return this.string();
     }
   }
+
   private isAtEnd(): boolean {
     return this.current >= this.source.length;
   }
+
   private eat(): string {
     this.current++;
     return this.source.charAt(this.current - 1);
   }
+
   private peek(n: number): string {
     if (this.current + n >= this.source.length) {
       return '\0';
     }
     return this.source.charAt(this.current + n);
   }
+
   private string(): Token {
     while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
       this.eat();
@@ -119,7 +132,7 @@ class Lexer {
       return this.TTWithLiteral(TT.Number, new Type.BNumber(text));
     }
     type = this.phrases.get(text);
-    if (type !== undefined) {
+    if (type) {
       return this.TT(type);
     }
     const unit = this.units.get(text);
@@ -132,6 +145,7 @@ class Lexer {
     }
     return this.TT(TT.NAME);
   }
+
   private number(): Token {
     if (this.peek(0) === 'b' || this.peek(0) === 'B') {
       this.eat();
@@ -142,9 +156,10 @@ class Lexer {
         this.eat();
       }
       const value = new Type.BNumber(this.lexeme());
-      value.setSystem(NumberSystem.Binary);
+      value.setSystem(NumberSystem.bin);
       return this.TTWithLiteral(TT.Number, value);
     }
+
     if (this.peek(0) === 'o' || this.peek(0) === 'O') {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
@@ -154,9 +169,10 @@ class Lexer {
         this.eat();
       }
       const value = new Type.BNumber(this.lexeme());
-      value.setSystem(NumberSystem.Octal);
+      value.setSystem(NumberSystem.oct);
       return this.TTWithLiteral(TT.Number, value);
     }
+
     if (this.peek(0) === 'x' || this.peek(0) === 'X') {
       this.eat();
       if (!Lexer.isHexDigit(this.peek(0))) {
@@ -166,18 +182,21 @@ class Lexer {
         this.eat();
       }
       const value = new Type.BNumber(this.lexeme());
-      value.setSystem(NumberSystem.HexaDecimal);
+      value.setSystem(NumberSystem.hex);
       return this.TTWithLiteral(TT.Number, value);
     }
+
     while (Lexer.isDigit(this.peek(0))) {
       this.eat();
     }
+
     if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();
       }
     }
+
     if (this.peek(0) === 'E' || this.peek(0) === 'e') {
       let c = this.peek(0);
       this.eat();
@@ -192,20 +211,25 @@ class Lexer {
         this.eat();
       }
     }
+
     return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme()));
   }
+
   private TT(type: TT): Token {
     return this.TTWithLiteral(type, null);
   }
+
   private TTWithLiteral(type: TT, literal: any): Token {
     const token = new Token(type, this.lexeme(), literal, this.start, this.current);
     this.start = this.current;
     this.tokens.push(token);
     return token;
   }
+
   private lexeme(): string {
     return this.source.substring(this.start, this.current);
   }
+
   private space(): string {
     let char = this.eat();
     while (Lexer.isSpace(char)) {

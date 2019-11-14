@@ -7,15 +7,18 @@ import { ASTPrinter } from './astPrinter';
 abstract class Expr extends ASTPrinter {
   public start: number;
   public end: number;
+
   constructor(start: number, end: number) {
     super();
     this.start = start;
     this.end = end;
   }
+
   public toString(): string {
     const res = this.print(this);
     return res.substring(0, res.length - 2);
   }
+
   public abstract accept<T>(visitor: Expr.IVisitor<T>): T;
 }
 
@@ -25,12 +28,14 @@ namespace Expr {
     public left: Expr;
     public operator: Token;
     public right: Expr;
+
     constructor(left: Expr, operator: Token, right: Expr, start: number, end: number) {
       super(start, end);
       this.left = left;
       this.operator = operator;
       this.right = right;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitBinaryExpr(this);
     }
@@ -38,10 +43,12 @@ namespace Expr {
 
   export class Grouping extends Expr {
     public expression: Expr;
+
     constructor(expression: Expr, start: number, end: number) {
       super(start, end);
       this.expression = expression;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitGroupingExpr(this);
     }
@@ -50,11 +57,13 @@ namespace Expr {
   export class Assign extends Expr {
     public name: string;
     public value: Expr;
+
     constructor(name: string, value: Expr, start: number, end: number) {
       super(start, end);
       this.name = name;
       this.value = value;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitAssignExpr(this);
     }
@@ -62,10 +71,12 @@ namespace Expr {
 
   export class Variable extends Expr {
     public name: string;
+
     constructor(name: string, start: number, end: number) {
       super(start, end);
       this.name = name;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitVariableExpr(this);
     }
@@ -73,11 +84,13 @@ namespace Expr {
   export class Call extends Expr {
     public name: string;
     public argument: Expr[];
+
     constructor(name: string, argument: Expr[], start: number, end: number) {
       super(start, end);
       this.name = name;
       this.argument = argument;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitCallExpr(this);
     }
@@ -85,10 +98,12 @@ namespace Expr {
 
   export class Literal extends Expr {
     public value: Type;
+
     constructor(value: Type, start: number, end: number) {
       super(start, end);
       this.value = value;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitLiteralExpr(this);
     }
@@ -96,10 +111,12 @@ namespace Expr {
 
   export class Percentage extends Expr {
     public expression: Expr;
+
     constructor(expression: Expr, start: number, end: number) {
       super(start, end);
       this.expression = expression;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitPercentageExpr(this);
     }
@@ -108,11 +125,13 @@ namespace Expr {
   export class UnitExpr extends Expr {
     public expression: Expr;
     public unit: UnitMeta;
+
     constructor(expression: Expr, unit: UnitMeta, start: number, end: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitUnitExpr(this);
     }
@@ -120,11 +139,13 @@ namespace Expr {
   export class UnitorNSConvertionExpr extends Expr {
     public expression: Expr;
     public unit: UnitMeta | NumberSystem;
+
     constructor(expression: Expr, unit: UnitMeta | NumberSystem, start: number, end: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitUnitConvertionExpr(this);
     }
@@ -132,11 +153,13 @@ namespace Expr {
   export class Unary extends Expr {
     public operator: Token;
     public right: Expr;
+
     constructor(operator: Token, right: Expr, start: number, end: number) {
       super(start, end);
       this.operator = operator;
       this.right = right;
     }
+
     public accept<T>(visitor: Expr.IVisitor<T>): T {
       return visitor.visitUnaryExpr(this);
     }

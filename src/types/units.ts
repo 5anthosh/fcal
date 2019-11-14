@@ -10,6 +10,7 @@ class UnitMeta {
   public unitType: string;
   public singular: string;
   public plural: string;
+
   constructor(id: string, ratio: Decimal | callbackFuncFmt, unitType: string) {
     this.id = id;
     this.r = ratio;
@@ -44,9 +45,11 @@ class UnitMeta {
   public setBias(value: Decimal | callbackFuncFmt) {
     this.b = value;
   }
+
   public setPlural(value: string) {
     this.plural = value;
   }
+
   public setSingular(value: string) {
     this.singular = value;
   }
@@ -58,6 +61,7 @@ class UnitMeta {
 class Unit {
   public phrases: string[];
   public meta: UnitMeta;
+
   constructor(id: string, ratio: Decimal | number | string | callbackFuncFmt, unitType: string, phrases: string[]) {
     this.phrases = phrases;
     if (ratio instanceof Decimal || typeof ratio === 'function') {
@@ -66,6 +70,7 @@ class Unit {
     }
     this.meta = new UnitMeta(id, new Decimal(ratio), unitType);
   }
+
   public setBias(value: Decimal | number | string | callbackFuncFmt): Unit {
     if (value instanceof Decimal) {
       this.meta.setBias(value);
@@ -78,10 +83,12 @@ class Unit {
     this.meta.setBias(new Decimal(value));
     return this;
   }
+
   public Plural(value: string): Unit {
     this.meta.setPlural(value);
     return this;
   }
+
   public Singular(value: string): Unit {
     this.meta.setSingular(value);
     return this;
@@ -105,6 +112,7 @@ namespace Unit {
       this.symbolTable = symbolTable;
       this.units = new Map<string, Unit>();
     }
+
     /**
      * Add a new unit
      * @param {Unit} unit
@@ -116,6 +124,7 @@ namespace Unit {
         this.units.set(phrase1, unit);
       }
     }
+
     /**
      * get the unit by its phrase
      * @param {string} phrase

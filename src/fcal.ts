@@ -2,7 +2,7 @@ import { Decimal } from 'decimal.js';
 import { getDefaultFunctions } from './default/functions';
 import { getDefaultUnits } from './default/units';
 import { Constant } from './interpreter/constants';
-import { Environment } from './interpreter/environment';
+import { EnvInputType, Environment } from './interpreter/environment';
 import { FcalFunction, FcalFunctionFmt } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { Entity, SymbolTable } from './interpreter/symboltable';
@@ -36,7 +36,7 @@ export interface IUseUnit {
 }
 
 /**
- * Math expression evaluator
+ * Math expression evaluator.
  * It evaluates various arithmetic operations, percentage operations,
  * variables and functions with units
  */
@@ -117,13 +117,8 @@ class Fcal {
    * useConstants set the constants in fcal
    * @param { { [index: string]: Type | Decimal | number | string } } constants
    */
-  public static useConstants(constants: { [index: string]: Type | Decimal | number | string }): void {
-    for (const key in constants) {
-      if (constants.hasOwnProperty(key)) {
-        const element = constants[key];
-        this.constants.set(key, element);
-      }
-    }
+  public static useConstants(constants: EnvInputType): void {
+    this.constants.use(constants);
   }
 
   public static initialize(): void {
@@ -144,11 +139,15 @@ class Fcal {
       this.setDefaultConstants();
     }
   }
+
+  /*=========================== Private static =================================== */
+
   private static gst: SymbolTable;
   private static units: Unit.List;
   private static functions: FcalFunction.List;
   private static phrases: Phrases;
   private static constants: Constant;
+
   private static getdefaultphrases(): Phrases {
     const phrases = new Phrases(this.gst);
     phrases.push(TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
@@ -161,6 +160,7 @@ class Fcal {
     phrases.push(TT.IN, ['in', 'as']);
     return phrases;
   }
+
   private static setDefaultFunctions(): void {
     this.UseFunctions(getDefaultFunctions());
   }
@@ -182,10 +182,12 @@ class Fcal {
 
   private environment: Environment;
   private lst: SymbolTable;
+
   constructor() {
     this.lst = Fcal.gst.clone();
     this.environment = new Environment(Fcal.functions, this.lst, Fcal.constants);
   }
+
   /**
    * Evaluates given expression
    * @param {string} expression Math expression
@@ -195,6 +197,7 @@ class Fcal {
     source = prefixNewLIne(source);
     return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
   }
+
   /**
    * Create new expression with copy of Fcal.Environment
    * @param {string} source Math  expression
@@ -207,6 +210,7 @@ class Fcal {
     source = prefixNewLIne(source);
     return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env));
   }
+
   /**
    * Create new  Expression in sync with Fcal.Environment
    * @param {string} source Math expression
@@ -216,17 +220,13 @@ class Fcal {
     source = prefixNewLIne(source);
     return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment));
   }
+
   /**
    * create a new variable with value or assign value to variable
-   * @param {{[index:string]: Type | number | string | Decimal}} values vairbles
+   * @param {Object | EnvInputType} values vairbles
    */
-  public setValues(values: { [index: string]: Type | number | string | Decimal }) {
-    for (const key in values) {
-      if (values.hasOwnProperty(key)) {
-        const element = values[key];
-        this.environment.set(key, element);
-      }
-    }
+  public setValues(values: EnvInputType) {
+    this.environment.use(values);
   }
 }
 
@@ -243,9 +243,11 @@ function prefixNewLIne(source: string): string {
  */
 class Expression {
   private interpreter: Interpreter;
+
   constructor(interpeter: Interpreter) {
     this.interpreter = interpeter;
   }
+
   /**
    * Evaluate AST of Math expression
    * @returns {Type}  result of Math expression
@@ -253,14 +255,16 @@ class Expression {
   public evaluate(): Type {
     return this.interpreter.evaluateExpression();
   }
+
   /**
    * Change state of variables
    * if variable is not found,  it will create a new variable
-   * @param {{[index:string]: Type | number | string | Decimal}} values variables
+   * @param {Object | Map} values variables
    */
-  public setValues(values: { [index: string]: Type | number | string | Decimal }): void {
+  public setValues(values: EnvInputType): void {
     this.interpreter.setValues(values);
   }
+
   public getAST(): string {
     return this.interpreter.getAST();
   }
@@ -273,6 +277,7 @@ class Expression {
 class FcalError extends Error {
   public start?: number;
   public end?: number;
+
   constructor(message: string, start?: number, end?: number) {
     super(message);
     this.start = start;

@@ -1,4 +1,3 @@
-import { Decimal } from 'decimal.js';
 import { FcalError } from '../fcal';
 import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
@@ -6,7 +5,7 @@ import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { Phrases } from '../types/phrase';
 import { Unit, UnitMeta } from '../types/units';
-import { Environment } from './environment';
+import { EnvInputType, Environment } from './environment';
 import { FcalFunction } from './function';
 
 class Interpreter implements Expr.IVisitor<Type> {
@@ -21,6 +20,7 @@ class Interpreter implements Expr.IVisitor<Type> {
   public getAST(): string {
     return this.ast.toString();
   }
+
   public visitCallExpr(expr: Expr.Call): Type {
     const name = expr.name;
     let call: FcalFunction | undefined;
@@ -29,7 +29,7 @@ class Interpreter implements Expr.IVisitor<Type> {
       if (call.arity !== -1) {
         if (call.arity !== expr.argument.length) {
           throw new FcalError(
-            `function ${name} Expected ${call.arity} args but got ${expr.argument.length}`,
+            `function ${name} expected ${call.arity} args but got ${expr.argument.length}`,
             expr.start,
             expr.end,
           );
@@ -43,11 +43,13 @@ class Interpreter implements Expr.IVisitor<Type> {
     }
     throw new FcalError(`${name} is not callable`, expr.start, expr.end);
   }
+
   public visitAssignExpr(expr: Expr.Assign): Type {
     const value = this.evaluate(expr.value);
     this.environment.set(expr.name, value);
     return value;
   }
+
   public visitVariableExpr(expr: Expr.Variable): Type {
     return this.environment.get(expr.name);
   }
@@ -68,6 +70,7 @@ class Interpreter implements Expr.IVisitor<Type> {
     }
     throw new FcalError('Expecting numeric value before in', expr.start, expr.end);
   }
+
   public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
@@ -155,14 +158,11 @@ class Interpreter implements Expr.IVisitor<Type> {
     }
     throw new FcalError('Expecting numeric value in percentage', expr.start, expr.end);
   }
-  public setValues(values: { [index: string]: Type | number | string | Decimal }) {
-    for (const key in values) {
-      if (values.hasOwnProperty(key)) {
-        const element = values[key];
-        this.environment.set(key, element);
-      }
-    }
+
+  public setValues(values: EnvInputType) {
+    this.environment.use(values);
   }
+
   private evaluate(expr: Expr): Type {
     const ast = expr.accept(this);
     return ast;

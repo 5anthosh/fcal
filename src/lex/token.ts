@@ -25,6 +25,7 @@ class Token {
   public static EOL(end: number): Token {
     return new Token(TT.EOL, '', null, end, end);
   }
+
   public type: TT;
   public lexeme: string;
   public Literal: any;
@@ -38,6 +39,7 @@ class Token {
     this.end = end;
     this.Literal = literal;
   }
+
   public toString(): string {
     let literal = '';
     if (this.Literal !== null) {

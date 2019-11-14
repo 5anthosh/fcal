@@ -5,6 +5,10 @@ import { Constant } from './constants';
 import { FcalFunction } from './function';
 import { Entity, SymbolTable } from './symboltable';
 
+type ValInputType = string | number | Decimal | Type;
+
+type EnvInputType = { [index: string]: ValInputType } | Map<string, ValInputType>;
+
 /**
  * Represents runtime variable environment
  * It represents state of fcal
@@ -15,11 +19,13 @@ class Environment {
   public readonly functions: FcalFunction.List;
   public readonly symbolTable: SymbolTable;
   public values: Map<string, Type>;
+
   constructor(functions: FcalFunction.List, symbolTable: SymbolTable, constants: Constant) {
     this.values = new Map<string, Type>(constants.values);
     this.functions = functions;
     this.symbolTable = symbolTable;
   }
+
   /**
    * Get the value of variable
    * @param {String} key variable name
@@ -32,12 +38,13 @@ class Environment {
     }
     throw new FcalError(`Undefined variable ${key}`);
   }
+
   /**
    * create or assign a variable with value
    * @param {} key variable name
    * @param value value
    */
-  public set(key: string, value: Type | Decimal | number | string): void {
+  public set(key: string, value: ValInputType): void {
     if (!this.values.has(key)) {
       this.symbolTable.set(key, Entity.VARIABLE);
     }
@@ -47,6 +54,24 @@ class Environment {
     }
     this.values.set(key, Type.BNumber.New(value));
   }
+  /**
+   * import values from  Object or Map
+   * @param {Object | Map} values
+   */
+  public use(values: EnvInputType): void {
+    if (values instanceof Map) {
+      values.forEach((value: ValInputType, key: string) => {
+        this.set(key, value);
+      });
+      return;
+    }
+    for (const key in values) {
+      if (values.hasOwnProperty(key)) {
+        const element = values[key];
+        this.set(key, element);
+      }
+    }
+  }
 }
 
-export { Environment };
+export { Environment, EnvInputType };

@@ -1,5 +1,5 @@
-import { Fcal } from '../fcal';
-import { FcalError } from '../fcal';
+import { Decimal } from 'decimal.js';
+import { Fcal, FcalError } from '../fcal';
 import { Type } from '../types/datatype';
 
 test('Assignment', () => {
@@ -55,4 +55,36 @@ test('Last created variable _', () => {
     expect(fcal.evaluate(expression)).toStrictEqual(new Type.UnitNumber('10', unit));
     expect(fcal.evaluate('_ + 1 week in day')).toStrictEqual(new Type.UnitNumber('17', unit));
   }
+});
+
+test('Set values', () => {
+  const fcal = new Fcal();
+  fcal.setValues({ val: '23', val2: 123, val3: new Decimal(56), val4: Type.BNumber.New(0.34) });
+  const values = new Map<string, string | number | Type | Decimal>();
+  values.set('val5', 3.14);
+  values.set('val', '3942');
+  fcal.setValues(values);
+  expect(fcal.evaluate('val + val2 + val3 + val4 + val5')).toStrictEqual(new Type.BNumber(4124.48));
+});
+
+test('Set values (Sync)', () => {
+  const fcal = new Fcal();
+  const sync = fcal.expressionSync('val + val2 + val3 + val4 + val5');
+  sync.setValues({ val: '23', val2: 123, val3: new Decimal(56), val4: Type.BNumber.New(0.34) });
+  const values = new Map<string, string | number | Type | Decimal>();
+  values.set('val5', 3.14);
+  values.set('val', '3942');
+  fcal.setValues(values);
+  expect(sync.evaluate()).toStrictEqual(new Type.BNumber(4124.48));
+});
+
+test('Set values (no Sync)', () => {
+  const fcal = new Fcal();
+  const sync = fcal.expression('val + val2 + val3 + val4 + val5');
+  sync.setValues({ val: '23', val2: 123, val3: new Decimal(56), val4: Type.BNumber.New(0.34) });
+  const values = new Map<string, string | number | Type | Decimal>();
+  values.set('val5', 3.14);
+  values.set('val', '3942');
+  fcal.setValues(values);
+  expect(() => sync.evaluate()).toThrowError('Undefined variable val5');
 });

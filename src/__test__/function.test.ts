@@ -109,10 +109,43 @@ test('Function already registered', () => {
   }).toThrowError(error);
 });
 
+test('function call from another function', () => {
+  expect(() =>
+    Fcal.UseFunction({
+      arity: 1,
+      func: (env: Environment, args: Type[]) => {
+        return env.functions.call('sin', env, args);
+      },
+      name: 'sudoSin',
+    }),
+  ).not.toThrowError();
+
+  expect(Fcal.eval('sudoSin(23.4)')).toStrictEqual(Fcal.eval('sin(23.4)'));
+
+  expect(() =>
+    Fcal.UseFunction({
+      arity: 1,
+      func: (env: Environment, args: Type[]) => {
+        return env.functions.call('sin123', env, args);
+      },
+      name: 'sudoSin1',
+    }),
+  ).not.toThrowError();
+
+  expect(() => Fcal.eval('sudoSin1(23)')).toThrowError('Function sin123 is not found');
+});
+
+test('function call with differenct args', () => {
+  expect(() => Fcal.eval('sigma(1)')).toThrowError('function sigma expected 2 args but got 1');
+  expect(() => Fcal.eval('log(1,2,3)')).toThrowError('function log expected 1 args but got 3');
+  expect(() => Fcal.eval('sinh()')).toThrowError('function sinh expected 1 args but got 0');
+});
+
 test('Not callable', () => {
   const fcal = new Fcal();
   const error = new Error('PI is not callable');
   error.name = 'FcalError [3, 9]';
+
   expect(() => {
     fcal.evaluate('23*PI(45)*23%');
   }).toThrowError(error);

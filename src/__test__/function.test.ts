@@ -23,6 +23,13 @@ test('Default functions', () => {
 
   const sigexpr = 'sigma(1,100)';
   expect(Fcal.eval(sigexpr)).toStrictEqual(new Type.BNumber(5050));
+
+  expect(Fcal.eval('max() + min()')).toStrictEqual(Type.BNumber.New(0));
+  if (unit2) {
+    expect(Fcal.eval('min(1000, 23, 34, 1 cm, 1%,  2, 4, 008) + max(1 cm , 3 cm, 3 day, -3 , 1.2)')).toStrictEqual(
+      Type.UnitNumber.New(4, unit2),
+    );
+  }
 });
 
 test('Register new function', () => {

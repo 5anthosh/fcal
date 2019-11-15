@@ -193,6 +193,10 @@ test('Infinity', () => {
   }).toThrowError('Division between Infinity is indeterminate');
 
   expect(() => {
+    Fcal.eval('(Infinity * -23) //   (12 * (Infinity))');
+  }).toThrowError('Division between Infinity is indeterminate');
+
+  expect(() => {
     Fcal.eval('(0B10010 % of Infinity) mod (2.2323E-3 ^ Infinity)');
   }).toThrowError('Modulus between Infinity is indeterminate');
 });

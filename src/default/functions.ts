@@ -200,6 +200,42 @@ export function getDefaultFunctions(): IUseFunction[] {
       },
       name: 'sigma',
     },
+    {
+      arity: -1,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        if (args.length > 0) {
+          let max = args[0] as Type.Numberic;
+          for (let index = 1; index < args.length; index++) {
+            const element = args[index] as Type.Numberic;
+            if (element.n.gt(max.n)) {
+              max = element;
+            }
+          }
+          return max;
+        }
+        return Type.BNumber.New(0);
+      },
+      name: 'max',
+    },
+    {
+      arity: -1,
+      // tslint:disable-next-line: variable-name
+      func: (_env: Environment, args: Type[]): Type => {
+        if (args.length > 0) {
+          let min = args[0] as Type.Numberic;
+          for (let index = 1; index < args.length; index++) {
+            const element = args[index] as Type.Numberic;
+            if (element.n.lt(min.n)) {
+              min = element;
+            }
+          }
+          return min;
+        }
+        return Type.BNumber.New(0);
+      },
+      name: 'min',
+    },
   ];
 
   return functions;

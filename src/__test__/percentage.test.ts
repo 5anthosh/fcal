@@ -49,7 +49,7 @@ test('Percentage of', () => {
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('57.80544'));
 });
 test('Percentage of with units', () => {
-  const expression = '24% of ((39sec + 1day in sec) of 23min) of 77* 34 ';
+  const expression = '24% of ((39sec + 1day in sec) of 23 minute) of 77* 34 ';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('124916.110704'));
 });
 

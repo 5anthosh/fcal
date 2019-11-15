@@ -163,7 +163,7 @@ function setTimeUnits(units: IUseUnit[]): void {
       },
       {
         id: Unit.TIMEID,
-        phrases: ['min', 'minute', 'minutes'],
+        phrases: ['minute', 'minutes'],
         plural: 'Minutes',
         ratio: 60,
         singular: 'Minute',

@@ -79,6 +79,10 @@ class Lexer {
       case TT.MINUS:
         return this.TT(TT.MINUS);
       case TT.TIMES:
+        if (this.peek(0) === TT.TIMES) {
+          this.eat();
+          return this.TT(TT.CAP);
+        }
         return this.TT(TT.TIMES);
       case TT.SLASH:
         return this.TT(TT.SLASH);

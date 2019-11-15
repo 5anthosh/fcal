@@ -1,6 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var datatype_1 = require(14);
 function getDefaultFunctions() {
     var functions = [
         {
@@ -197,12 +198,504 @@ function getDefaultFunctions() {
             },
             name: 'sigma',
         },
+        {
+            arity: -1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                if (args.length > 0) {
+                    var max = args[0];
+                    for (var index = 1; index < args.length; index++) {
+                        var element = args[index];
+                        if (element.n.gt(max.n)) {
+                            max = element;
+                        }
+                    }
+                    return max;
+                }
+                return datatype_1.Type.BNumber.ZERO;
+            },
+            name: 'max',
+        },
+        {
+            arity: -1,
+            // tslint:disable-next-line: variable-name
+            func: function (_env, args) {
+                if (args.length > 0) {
+                    var min = args[0];
+                    for (var index = 1; index < args.length; index++) {
+                        var element = args[index];
+                        if (element.n.lt(min.n)) {
+                            min = element;
+                        }
+                    }
+                    return min;
+                }
+                return datatype_1.Type.BNumber.ZERO;
+            },
+            name: 'min',
+        },
     ];
     return functions;
 }
 exports.getDefaultFunctions = getDefaultFunctions;
 
-},{}],2:[function(require,module,exports){
+},{"14":14}],14:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var decimal_js_1 = require(18);
+var numberSystem_1 = require(15);
+var Type = /** @class */ (function () {
+    function Type() {
+    }
+    Type.prototype.toString = function () {
+        return this.print();
+    };
+    return Type;
+}());
+exports.Type = Type;
+var DATATYPE;
+(function (DATATYPE) {
+    DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
+    DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
+    DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
+})(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
+var TYPERANK;
+(function (TYPERANK) {
+    TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
+    TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
+    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
+})(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
+/**
+ * Represents a type of variable or value
+ */
+// tslint:disable-next-line:no-namespace
+(function (Type) {
+    var Numberic = /** @class */ (function (_super) {
+        __extends(Numberic, _super);
+        function Numberic(value) {
+            var _this = _super.call(this) || this;
+            if (value instanceof decimal_js_1.Decimal) {
+                _this.n = value;
+            }
+            else {
+                _this.n = new decimal_js_1.Decimal(value);
+            }
+            _this.ns = numberSystem_1.NumberSystem.dec;
+            _this.lf = false;
+            return _this;
+        }
+        Numberic.prototype.setSystem = function (numberSys) {
+            this.ns = numberSys;
+            return this;
+        };
+        Numberic.prototype.toNumericString = function () {
+            return this.ns.to(this.n);
+        };
+        Numberic.prototype.print = function () {
+            return this.toNumericString();
+        };
+        Numberic.prototype.Add = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    return value.New(this.plus(value).n);
+                }
+                return this.plus(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.plus(this);
+            }
+            return this.New(value.plus(this).n);
+        };
+        Numberic.prototype.Sub = function (value) {
+            return this.Add(value.negated());
+        };
+        Numberic.prototype.times = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    return value.New(this.mul(value).n);
+                }
+                return this.mul(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.mul(this);
+            }
+            return this.New(value.mul(this).n);
+        };
+        Numberic.prototype.divide = function (value) {
+            // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.div(value);
+                    }
+                    return value.New(this.div(value).n);
+                }
+                return this.div(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.div(this);
+            }
+            return this.New(value.div(this).n);
+        };
+        Numberic.prototype.power = function (value) {
+            // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.New(this.pow(value).n);
+                    }
+                    return value.New(this.pow(value).n);
+                }
+                return this.pow(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.pow(this);
+            }
+            return this.New(value.pow(this).n);
+        };
+        Numberic.prototype.modulo = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.New(this.mod(value).n);
+                    }
+                    return value.New(this.mod(value).n);
+                }
+                return this.mod(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.mod(this);
+            }
+            return this.New(value.mod(this).n);
+        };
+        Numberic.prototype.toNumber = function () {
+            return this.n.toNumber();
+        };
+        return Numberic;
+    }(Type));
+    Type.Numberic = Numberic;
+    /**
+     * Basic Number type
+     */
+    var BNumber = /** @class */ (function (_super) {
+        __extends(BNumber, _super);
+        function BNumber(value) {
+            var _this = _super.call(this, value) || this;
+            _this.TYPE = DATATYPE.NUMBER;
+            _this.TYPERANK = TYPERANK.NUMBER;
+            return _this;
+        }
+        BNumber.New = function (value) {
+            return new BNumber(value);
+        };
+        BNumber.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        BNumber.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        BNumber.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        BNumber.prototype.negated = function () {
+            return BNumber.New(this.n.negated());
+        };
+        BNumber.prototype.div = function (value) {
+            return BNumber.New(this.n.div(value.n));
+        };
+        BNumber.prototype.pow = function (value) {
+            return BNumber.New(this.n.pow(value.n));
+        };
+        BNumber.prototype.mod = function (value) {
+            return BNumber.New(this.n.modulo(value.n));
+        };
+        BNumber.prototype.mul = function (value) {
+            return BNumber.New(this.n.mul(value.n));
+        };
+        BNumber.prototype.plus = function (value) {
+            return BNumber.New(this.n.plus(value.n));
+        };
+        BNumber.prototype.New = function (value) {
+            return BNumber.New(value);
+        };
+        BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
+        return BNumber;
+    }(Numberic));
+    Type.BNumber = BNumber;
+    /**
+     * Percentage type
+     */
+    var Percentage = /** @class */ (function (_super) {
+        __extends(Percentage, _super);
+        function Percentage(value) {
+            var _this = _super.call(this, value) || this;
+            _this.TYPE = DATATYPE.PERCENTAGE;
+            _this.TYPERANK = TYPERANK.PERCENTAGE;
+            return _this;
+        }
+        Percentage.New = function (value) {
+            return new Percentage(value);
+        };
+        Percentage.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        Percentage.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        Percentage.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        Percentage.prototype.negated = function () {
+            return Percentage.New(this.n.negated());
+        };
+        Percentage.prototype.plus = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.plus(value.n));
+            }
+            return Percentage.New(value.n.plus(this.percentageValue(value.n)));
+        };
+        Percentage.prototype.mul = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.mul(value.n));
+            }
+            return Percentage.New(value.n.mul(this.percentageValue(value.n)));
+        };
+        Percentage.prototype.div = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.div(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.div(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).div(value.n));
+        };
+        Percentage.prototype.pow = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.pow(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.pow(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).pow(value.n));
+        };
+        Percentage.prototype.mod = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.mod(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.mod(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).mod(value.n));
+        };
+        Percentage.prototype.percentageValue = function (value) {
+            return value.mul(this.n.div(Percentage.base));
+        };
+        Percentage.prototype.print = function () {
+            return "% " + this.toNumericString();
+        };
+        Percentage.prototype.New = function (value) {
+            return Percentage.New(value);
+        };
+        Percentage.base = new decimal_js_1.Decimal(100);
+        return Percentage;
+    }(Numberic));
+    Type.Percentage = Percentage;
+    /**
+     * Number with unit
+     */
+    var UnitNumber = /** @class */ (function (_super) {
+        __extends(UnitNumber, _super);
+        function UnitNumber(value, unit) {
+            var _this = _super.call(this, value) || this;
+            _this.unit = unit;
+            _this.TYPE = DATATYPE.UNIT;
+            _this.TYPERANK = TYPERANK.UNIT;
+            return _this;
+        }
+        UnitNumber.New = function (value, unit) {
+            return new UnitNumber(value, unit);
+        };
+        UnitNumber.convertToUnit = function (value, unit) {
+            if (value instanceof UnitNumber) {
+                var value2 = value;
+                if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
+                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns);
+                }
+            }
+            return UnitNumber.New(value.n, unit).setSystem(value.ns);
+        };
+        UnitNumber.prototype.New = function (value) {
+            return new UnitNumber(value, this.unit);
+        };
+        UnitNumber.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        UnitNumber.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        UnitNumber.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        UnitNumber.prototype.negated = function () {
+            return this.New(this.n.negated());
+        };
+        UnitNumber.prototype.plus = function (value) {
+            if (value instanceof UnitNumber) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.New(this.n.add(right.n));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.New(this.n.add(right.n));
+                }
+                return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
+            }
+            return this.New(this.n.plus(value.n));
+        };
+        UnitNumber.prototype.mul = function (value) {
+            if (value instanceof UnitNumber) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.New(this.n.mul(right.n));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.New(this.n.mul(right.n));
+                }
+                return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
+            }
+            return this.New(this.n.mul(value.n));
+        };
+        UnitNumber.prototype.div = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return new Type.BNumber(left1.n.div(right1.n));
+                }
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.div(right.n));
+                }
+                return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.div(right.n));
+        };
+        UnitNumber.prototype.pow = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return left1.New(left1.n.pow(right1.n));
+                }
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.pow(right.n));
+                }
+                return left1.New(left1.n.pow(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.pow(right.n));
+        };
+        UnitNumber.prototype.mod = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.mod(right1.n));
+                }
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return left1.New(left1.n.mod(right1.n));
+                }
+                return left1.New(left1.n.mod(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.mod(right.n));
+        };
+        UnitNumber.prototype.convert = function (ratio, bias) {
+            return this.n
+                .mul(this.ratio())
+                .add(this.bias())
+                .minus(bias)
+                .div(ratio);
+        };
+        UnitNumber.prototype.ratio = function () {
+            return this.unit.ratio;
+        };
+        UnitNumber.prototype.bias = function () {
+            return this.unit.bias;
+        };
+        UnitNumber.prototype.print = function () {
+            if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
+                return this.toNumericString() + " " + this.unit.singular;
+            }
+            return this.toNumericString() + " " + this.unit.plural;
+        };
+        return UnitNumber;
+    }(Numberic));
+    Type.UnitNumber = UnitNumber;
+})(Type || (Type = {}));
+exports.Type = Type;
+
+},{"15":15,"18":18}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var units_1 = require(17);
@@ -353,7 +846,7 @@ function setTimeUnits(units) {
         },
         {
             id: units_1.Unit.TIMEID,
-            phrases: ['min', 'minute', 'minutes'],
+            phrases: ['minute', 'minutes'],
             plural: 'Minutes',
             ratio: 60,
             singular: 'Minute',
@@ -1105,7 +1598,55 @@ var Entity;
 })(Entity || (Entity = {}));
 exports.Entity = Entity;
 
-},{"3":3}],5:[function(require,module,exports){
+},{"3":3}],4:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var datatype_1 = require(14);
+var symboltable_1 = require(8);
+var Constant = /** @class */ (function () {
+    function Constant(symbolTable) {
+        this.values = new Map();
+        this.symbolTable = symbolTable;
+    }
+    /**
+     * create or assign a constant with value
+     * @param {string} key constatn name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Constant.prototype.set = function (key, value) {
+        if (!this.values.has(key)) {
+            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
+        }
+        if (value instanceof datatype_1.Type) {
+            this.values.set(key, value);
+            return;
+        }
+        this.values.set(key, datatype_1.Type.BNumber.New(value));
+    };
+    /**
+     * import values from Object or map into constants
+     * @param {Object | Map} values
+     */
+    Constant.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
+        }
+    };
+    return Constant;
+}());
+exports.Constant = Constant;
+
+},{"14":14,"8":8}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -1171,55 +1712,7 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"14":14,"3":3,"8":8}],4:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(14);
-var symboltable_1 = require(8);
-var Constant = /** @class */ (function () {
-    function Constant(symbolTable) {
-        this.values = new Map();
-        this.symbolTable = symbolTable;
-    }
-    /**
-     * create or assign a constant with value
-     * @param {string} key constatn name
-     * @param  {Type | Big.Decimal | number | string} value value
-     */
-    Constant.prototype.set = function (key, value) {
-        if (!this.values.has(key)) {
-            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
-        }
-        if (value instanceof datatype_1.Type) {
-            this.values.set(key, value);
-            return;
-        }
-        this.values.set(key, datatype_1.Type.BNumber.New(value));
-    };
-    /**
-     * import values from Object or map into constants
-     * @param {Object | Map} values
-     */
-    Constant.prototype.use = function (values) {
-        var _this = this;
-        if (values instanceof Map) {
-            values.forEach(function (value, key) {
-                _this.set(key, value);
-            });
-            return;
-        }
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.set(key, element);
-            }
-        }
-    };
-    return Constant;
-}());
-exports.Constant = Constant;
-
-},{"14":14,"8":8}],16:[function(require,module,exports){
+},{"14":14,"3":3,"8":8}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var symboltable_1 = require(8);
@@ -6228,463 +6721,7 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"14":14,"18":18,"3":3}],14:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(18);
-var numberSystem_1 = require(15);
-var Type = /** @class */ (function () {
-    function Type() {
-    }
-    Type.prototype.toString = function () {
-        return this.print();
-    };
-    return Type;
-}());
-exports.Type = Type;
-var DATATYPE;
-(function (DATATYPE) {
-    DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
-    DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
-    DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
-})(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
-var TYPERANK;
-(function (TYPERANK) {
-    TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
-    TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
-    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
-})(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
-/**
- * Represents a type of variable or value
- */
-// tslint:disable-next-line:no-namespace
-(function (Type) {
-    var Numberic = /** @class */ (function (_super) {
-        __extends(Numberic, _super);
-        function Numberic(value) {
-            var _this = _super.call(this) || this;
-            if (value instanceof decimal_js_1.Decimal) {
-                _this.n = value;
-            }
-            else {
-                _this.n = new decimal_js_1.Decimal(value);
-            }
-            _this.ns = numberSystem_1.NumberSystem.dec;
-            _this.lf = false;
-            return _this;
-        }
-        Numberic.prototype.setSystem = function (numberSys) {
-            this.ns = numberSys;
-            return this;
-        };
-        Numberic.prototype.toNumericString = function () {
-            return this.ns.to(this.n);
-        };
-        Numberic.prototype.print = function () {
-            return this.toNumericString();
-        };
-        Numberic.prototype.Add = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    return value.New(this.plus(value).n);
-                }
-                return this.plus(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.plus(this);
-            }
-            return this.New(value.plus(this).n);
-        };
-        Numberic.prototype.Sub = function (value) {
-            return this.Add(value.negated());
-        };
-        Numberic.prototype.times = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    return value.New(this.mul(value).n);
-                }
-                return this.mul(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.mul(this);
-            }
-            return this.New(value.mul(this).n);
-        };
-        Numberic.prototype.divide = function (value) {
-            // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.div(value);
-                    }
-                    return value.New(this.div(value).n);
-                }
-                return this.div(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.div(this);
-            }
-            return this.New(value.div(this).n);
-        };
-        Numberic.prototype.power = function (value) {
-            // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.New(this.pow(value).n);
-                    }
-                    return value.New(this.pow(value).n);
-                }
-                return this.pow(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.pow(this);
-            }
-            return this.New(value.pow(this).n);
-        };
-        Numberic.prototype.modulo = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.New(this.mod(value).n);
-                    }
-                    return value.New(this.mod(value).n);
-                }
-                return this.mod(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.mod(this);
-            }
-            return this.New(value.mod(this).n);
-        };
-        Numberic.prototype.toNumber = function () {
-            return this.n.toNumber();
-        };
-        return Numberic;
-    }(Type));
-    Type.Numberic = Numberic;
-    /**
-     * Basic Number type
-     */
-    var BNumber = /** @class */ (function (_super) {
-        __extends(BNumber, _super);
-        function BNumber(value) {
-            var _this = _super.call(this, value) || this;
-            _this.TYPE = DATATYPE.NUMBER;
-            _this.TYPERANK = TYPERANK.NUMBER;
-            return _this;
-        }
-        BNumber.New = function (value) {
-            return new BNumber(value);
-        };
-        BNumber.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        BNumber.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        BNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        BNumber.prototype.negated = function () {
-            return BNumber.New(this.n.negated());
-        };
-        BNumber.prototype.div = function (value) {
-            return BNumber.New(this.n.div(value.n));
-        };
-        BNumber.prototype.pow = function (value) {
-            return BNumber.New(this.n.pow(value.n));
-        };
-        BNumber.prototype.mod = function (value) {
-            return BNumber.New(this.n.modulo(value.n));
-        };
-        BNumber.prototype.mul = function (value) {
-            return BNumber.New(this.n.mul(value.n));
-        };
-        BNumber.prototype.plus = function (value) {
-            return BNumber.New(this.n.plus(value.n));
-        };
-        BNumber.prototype.New = function (value) {
-            return BNumber.New(value);
-        };
-        BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
-        return BNumber;
-    }(Numberic));
-    Type.BNumber = BNumber;
-    /**
-     * Percentage type
-     */
-    var Percentage = /** @class */ (function (_super) {
-        __extends(Percentage, _super);
-        function Percentage(value) {
-            var _this = _super.call(this, value) || this;
-            _this.TYPE = DATATYPE.PERCENTAGE;
-            _this.TYPERANK = TYPERANK.PERCENTAGE;
-            return _this;
-        }
-        Percentage.New = function (value) {
-            return new Percentage(value);
-        };
-        Percentage.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        Percentage.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        Percentage.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        Percentage.prototype.negated = function () {
-            return Percentage.New(this.n.negated());
-        };
-        Percentage.prototype.plus = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.plus(value.n));
-            }
-            return Percentage.New(value.n.plus(this.percentageValue(value.n)));
-        };
-        Percentage.prototype.mul = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.mul(value.n));
-            }
-            return Percentage.New(value.n.mul(this.percentageValue(value.n)));
-        };
-        Percentage.prototype.div = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.div(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.div(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).div(value.n));
-        };
-        Percentage.prototype.pow = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.pow(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.pow(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).pow(value.n));
-        };
-        Percentage.prototype.mod = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.mod(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.mod(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).mod(value.n));
-        };
-        Percentage.prototype.percentageValue = function (value) {
-            return value.mul(this.n.div(Percentage.base));
-        };
-        Percentage.prototype.print = function () {
-            return "% " + this.toNumericString();
-        };
-        Percentage.prototype.New = function (value) {
-            return Percentage.New(value);
-        };
-        Percentage.base = new decimal_js_1.Decimal(100);
-        return Percentage;
-    }(Numberic));
-    Type.Percentage = Percentage;
-    /**
-     * Number with unit
-     */
-    var UnitNumber = /** @class */ (function (_super) {
-        __extends(UnitNumber, _super);
-        function UnitNumber(value, unit) {
-            var _this = _super.call(this, value) || this;
-            _this.unit = unit;
-            _this.TYPE = DATATYPE.UNIT;
-            _this.TYPERANK = TYPERANK.UNIT;
-            return _this;
-        }
-        UnitNumber.New = function (value, unit) {
-            return new UnitNumber(value, unit);
-        };
-        UnitNumber.convertToUnit = function (value, unit) {
-            if (value instanceof UnitNumber) {
-                var value2 = value;
-                if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns);
-                }
-            }
-            return UnitNumber.New(value.n, unit).setSystem(value.ns);
-        };
-        UnitNumber.prototype.New = function (value) {
-            return new UnitNumber(value, this.unit);
-        };
-        UnitNumber.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        UnitNumber.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        UnitNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        UnitNumber.prototype.negated = function () {
-            return this.New(this.n.negated());
-        };
-        UnitNumber.prototype.plus = function (value) {
-            if (value instanceof UnitNumber) {
-                var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.add(right.n));
-                }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.add(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
-            }
-            return this.New(this.n.plus(value.n));
-        };
-        UnitNumber.prototype.mul = function (value) {
-            if (value instanceof UnitNumber) {
-                var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.mul(right.n));
-                }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.mul(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
-            }
-            return this.New(this.n.mul(value.n));
-        };
-        UnitNumber.prototype.div = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return new Type.BNumber(left1.n.div(right1.n));
-                }
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.div(right.n));
-                }
-                return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.div(right.n));
-        };
-        UnitNumber.prototype.pow = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return left1.New(left1.n.pow(right1.n));
-                }
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.pow(right.n));
-                }
-                return left1.New(left1.n.pow(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.pow(right.n));
-        };
-        UnitNumber.prototype.mod = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.mod(right1.n));
-                }
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return left1.New(left1.n.mod(right1.n));
-                }
-                return left1.New(left1.n.mod(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.mod(right.n));
-        };
-        UnitNumber.prototype.convert = function (ratio, bias) {
-            return this.n
-                .mul(this.ratio())
-                .add(this.bias())
-                .minus(bias)
-                .div(ratio);
-        };
-        UnitNumber.prototype.ratio = function () {
-            return this.unit.ratio;
-        };
-        UnitNumber.prototype.bias = function () {
-            return this.unit.bias;
-        };
-        UnitNumber.prototype.print = function () {
-            if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
-                return this.toNumericString() + " " + this.unit.singular;
-            }
-            return this.toNumericString() + " " + this.unit.plural;
-        };
-        return UnitNumber;
-    }(Numberic));
-    Type.UnitNumber = UnitNumber;
-})(Type || (Type = {}));
-exports.Type = Type;
-
-},{"15":15,"18":18}],7:[function(require,module,exports){
+},{"14":14,"18":18,"3":3}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);

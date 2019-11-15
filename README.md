@@ -41,7 +41,7 @@ fcal.evaluate('23 % of 1023'); // 235.29
 fcal.evaluate('200 sec + 120 %'); // 440 Seconds
 
 // Unit convertion
-fcal.evaluate('20 min + 34 day in sec'); // 2938800 Seconds
+fcal.evaluate('20 minutes + 34 day in sec'); // 2938800 Seconds
 
 fcal.evaluate('sin(PI)'); // -1.6167204971158028306e-24
 
@@ -89,7 +89,7 @@ const { Fcal } = require('fcal');
 const { Fcal } = require('fcal');
 
 const fcal = new Fcal();
-var value = fcal.evaluate('102 day in min + abs(-34 day) in sec');
+var value = fcal.evaluate('102 day in minutes + abs(-34 day) in sec');
 
 console.log(value); // 11750400 Seconds
 ```

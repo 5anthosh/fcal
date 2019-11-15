@@ -85,6 +85,10 @@ class Lexer {
         }
         return this.TT(TT.TIMES);
       case TT.SLASH:
+        if (this.peek(0) === TT.SLASH) {
+          this.eat();
+          return this.TT(TT.FLOOR_DIVIDE);
+        }
         return this.TT(TT.SLASH);
       case TT.EQUAL:
         return this.TT(TT.EQUAL);

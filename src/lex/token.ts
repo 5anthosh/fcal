@@ -19,6 +19,7 @@ enum TT {
   CAP = '^',
   NS = 'ns',
   DOUBLE_COLON = ':',
+  FLOOR_DIVIDE = '//',
 }
 
 class Token {

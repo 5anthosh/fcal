@@ -67,7 +67,7 @@ class Parser {
 
   private multiply(): Expr {
     let expr = this.unitConvert();
-    while (this.match([TT.TIMES, TT.SLASH, TT.MOD, TT.OF])) {
+    while (this.match([TT.TIMES, TT.SLASH, TT.MOD, TT.OF, TT.FLOOR_DIVIDE])) {
       const operator = this.previous();
       const right = this.unitConvert();
       expr = new Expr.Binary(expr, operator, right, expr.start, right.end);

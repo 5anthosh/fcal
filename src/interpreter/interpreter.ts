@@ -101,6 +101,13 @@ class Interpreter implements Expr.IVisitor<Type> {
         return left.Sub(right);
       case TT.TIMES:
         return left.times(right);
+      case TT.FLOOR_DIVIDE:
+        if (!left.n.isFinite() && !right.n.isFinite()) {
+          throw new FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
+        }
+        const v = left.divide(right);
+        v.n = v.n.floor();
+        return v;
       case TT.SLASH:
         if (!left.n.isFinite() && !right.n.isFinite()) {
           throw new FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);

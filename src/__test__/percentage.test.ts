@@ -21,6 +21,13 @@ test('Percentage divide and mulitiplication', () => {
 
   const expression1 = '44%/600 ----4% + 10%/0.0003 - 23/2% ';
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('-49.4424'));
+
+  expect(Fcal.eval('23 % // -1000')).toStrictEqual(Type.BNumber.New(0));
+
+  expect(Fcal.eval('16%//10%/5%')).toStrictEqual(Type.Percentage.New(0.2));
+
+  expect(Fcal.eval('120.3% // -1234')).toStrictEqual(Type.BNumber.New(1));
+
   const expression2 =
     '1% + 2% + 3% * 5% - 4% * (1% - 2%) / 3.4% - (-1%) + (+1%) + 1.000% / 1.000% \
     + 1% * (1%) * (0.2%) * (5%) * (-1%) * (--1%) * (-1%) + (1.23423%) ^ (2%) ^ 3% ^ -4% ';

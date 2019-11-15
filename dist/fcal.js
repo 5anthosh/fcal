@@ -205,13 +205,15 @@ exports.getDefaultFunctions = getDefaultFunctions;
 },{}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require("../types/units");
+var units_1 = require(17);
 function getDefaultUnits() {
     var units = new Array();
     setDistanceUnits(units);
     setSpeedUnits(units);
     setTimeUnits(units);
     setTemperatureUnits(units);
+    setMassUnits(units);
+    setDigitalStorageUnits(units);
     return units;
 }
 exports.getDefaultUnits = getDefaultUnits;
@@ -407,8 +409,343 @@ function setTemperatureUnits(units) {
         },
     ]);
 }
+function setMassUnits(units) {
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['gram', 'g'],
+            ratio: 1,
+            type: 'gram',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['tonne'],
+            ratio: 1e6,
+            type: 'tonne',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['kg', 'kilogram'],
+            ratio: 1000,
+            type: 'kilogram',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['milligram', 'mg'],
+            ratio: 0.001,
+            type: 'milligram',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['microgram'],
+            ratio: 1e-6,
+            type: 'microgram',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['imperialton'],
+            ratio: '1.016e+6',
+            type: 'imperialton',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['USton'],
+            ratio: '907185',
+            type: 'USton',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['stone'],
+            ratio: '6350.29',
+            type: 'stone',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['pound'],
+            ratio: '453.592',
+            type: 'pound',
+        },
+        {
+            id: units_1.Unit.MASSID,
+            phrases: ['ounce'],
+            ratio: '28.3495',
+            type: 'ounce',
+        },
+    ]);
+}
+function setDigitalStorageUnits(units) {
+    units.push.apply(units, [
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['bit'],
+            ratio: 1,
+            type: 'bit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['kilobit'],
+            ratio: 1000,
+            type: 'kilobit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['kibibit'],
+            ratio: 1024,
+            type: 'kibibit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['megabit'],
+            ratio: 1e6,
+            type: 'megabit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['mebibit'],
+            ratio: '1.049e+6',
+            type: 'mebibit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['gigabit'],
+            ratio: 1e9,
+            type: 'gigabit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['gibibit'],
+            ratio: '1.074e+9',
+            type: 'gibibit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['terabit'],
+            ratio: 1e12,
+            type: 'terabit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['tebibit'],
+            ratio: '1.1e+12',
+            type: 'tebibit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['petabit'],
+            ratio: 1e15,
+            type: 'petabit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['pebibit'],
+            ratio: '1.126e+15',
+            type: 'pebibit',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['byte'],
+            ratio: 8,
+            type: 'byte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['kilobyte'],
+            ratio: 8000,
+            type: 'kilobyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['kibibyte'],
+            ratio: 8192,
+            type: 'kibibyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['megabyte'],
+            ratio: 8e6,
+            type: 'megabyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['mebibyte'],
+            ratio: '8.389e+6',
+            type: 'mebibyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['gigabyte'],
+            ratio: 8e9,
+            type: 'gigabyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['gibibyte'],
+            ratio: '8.59e+9',
+            type: 'gibibyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['terabyte'],
+            ratio: 8e12,
+            type: 'terabyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['tebibyte'],
+            ratio: '8.796e+12',
+            type: 'tebibyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['petabyte'],
+            ratio: 8e15,
+            type: 'petabyte',
+        },
+        {
+            id: units_1.Unit.DIGITAL,
+            phrases: ['pebibyte'],
+            ratio: '9.007e+15',
+            type: 'pebibyte',
+        },
+    ]);
+}
 
-},{"../types/units":17}],3:[function(require,module,exports){
+},{"17":17}],17:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var decimal_js_1 = require(18);
+var symboltable_1 = require(8);
+var UnitMeta = /** @class */ (function () {
+    function UnitMeta(id, ratio, unitType) {
+        this.id = id;
+        this.r = ratio;
+        this.b = new decimal_js_1.Decimal(0);
+        this.unitType = unitType;
+        this.plural = unitType;
+        this.singular = unitType;
+    }
+    Object.defineProperty(UnitMeta.prototype, "ratio", {
+        get: function () {
+            if (this.r instanceof decimal_js_1.Decimal) {
+                return this.r;
+            }
+            var value = this.r();
+            if (value instanceof decimal_js_1.Decimal) {
+                return value;
+            }
+            return new decimal_js_1.Decimal(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(UnitMeta.prototype, "bias", {
+        get: function () {
+            if (this.b instanceof decimal_js_1.Decimal) {
+                return this.b;
+            }
+            var value = this.b();
+            if (value instanceof decimal_js_1.Decimal) {
+                return value;
+            }
+            return new decimal_js_1.Decimal(value);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    UnitMeta.prototype.setBias = function (value) {
+        this.b = value;
+    };
+    UnitMeta.prototype.setPlural = function (value) {
+        this.plural = value;
+    };
+    UnitMeta.prototype.setSingular = function (value) {
+        this.singular = value;
+    };
+    return UnitMeta;
+}());
+exports.UnitMeta = UnitMeta;
+/**
+ * Represents unit with info
+ */
+var Unit = /** @class */ (function () {
+    function Unit(id, ratio, unitType, phrases) {
+        this.phrases = phrases;
+        if (ratio instanceof decimal_js_1.Decimal || typeof ratio === 'function') {
+            this.meta = new UnitMeta(id, ratio, unitType);
+            return;
+        }
+        this.meta = new UnitMeta(id, new decimal_js_1.Decimal(ratio), unitType);
+    }
+    Unit.prototype.setBias = function (value) {
+        if (value instanceof decimal_js_1.Decimal) {
+            this.meta.setBias(value);
+            return this;
+        }
+        if (typeof value === 'function') {
+            this.meta.setBias(value);
+            return this;
+        }
+        this.meta.setBias(new decimal_js_1.Decimal(value));
+        return this;
+    };
+    Unit.prototype.Plural = function (value) {
+        this.meta.setPlural(value);
+        return this;
+    };
+    Unit.prototype.Singular = function (value) {
+        this.meta.setSingular(value);
+        return this;
+    };
+    return Unit;
+}());
+exports.Unit = Unit;
+// tslint:disable-next-line:no-namespace
+(function (Unit) {
+    Unit.LENGTHID = 'LENGTH';
+    Unit.SPEEDID = 'SPEED';
+    Unit.TIMEID = 'TIME';
+    Unit.TEMPERATUREID = 'TIMERATURE';
+    Unit.MASSID = "MASS";
+    Unit.DIGITAL = "DIGITAL STORAGE ID";
+    /**
+     * List of {Unit} sunits
+     */
+    var List = /** @class */ (function () {
+        function List(symbolTable) {
+            this.symbolTable = symbolTable;
+            this.units = new Map();
+        }
+        /**
+         * Add a new unit
+         * @param {Unit} unit
+         * @throws {FcalError} Error if phrases already exists
+         */
+        List.prototype.push = function (unit) {
+            for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
+                var phrase1 = _a[_i];
+                this.symbolTable.set(phrase1, symboltable_1.Entity.UNIT);
+                this.units.set(phrase1, unit);
+            }
+        };
+        /**
+         * get the unit by its phrase
+         * @param {string} phrase
+         * @returns {UnitMeta | null }
+         */
+        List.prototype.get = function (phrase) {
+            var c = this.units.get(phrase);
+            if (c) {
+                return c.meta;
+            }
+            return null;
+        };
+        return List;
+    }());
+    Unit.List = List;
+})(Unit || (Unit = {}));
+exports.Unit = Unit;
+
+},{"18":18,"8":8}],3:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -424,22 +761,22 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require("decimal.js");
+var decimal_js_1 = require(18);
 exports.Decimal = decimal_js_1.Decimal;
-var functions_1 = require("./default/functions");
-var units_1 = require("./default/units");
-var constants_1 = require("./interpreter/constants");
-var environment_1 = require("./interpreter/environment");
+var functions_1 = require(1);
+var units_1 = require(2);
+var constants_1 = require(4);
+var environment_1 = require(5);
 exports.Environment = environment_1.Environment;
-var function_1 = require("./interpreter/function");
+var function_1 = require(6);
 exports.FcalFunction = function_1.FcalFunction;
-var interpreter_1 = require("./interpreter/interpreter");
-var symboltable_1 = require("./interpreter/symboltable");
-var token_1 = require("./lex/token");
-var datatype_1 = require("./types/datatype");
+var interpreter_1 = require(7);
+var symboltable_1 = require(8);
+var token_1 = require(10);
+var datatype_1 = require(14);
 exports.Type = datatype_1.Type;
-var phrase_1 = require("./types/phrase");
-var units_2 = require("./types/units");
+var phrase_1 = require(16);
+var units_2 = require(17);
 exports.Unit = units_2.Unit;
 /**
  * Math expression evaluator.
@@ -461,7 +798,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * register new fcal Functions
-     * @param {Array<FcalFunction>} functions list of fcal function definitions
+     * @param {Array<FcalFunction | Object>} functions list of fcal function definitions
      */
     Fcal.UseFunctions = function (functions) {
         for (var _i = 0, functions_2 = functions; _i < functions_2.length; _i++) {
@@ -471,7 +808,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Register new Fcal function
-     * @param {FcalFunction} function fcal function definitions
+     * @param {FcalFunction | Object} function fcal function definitions
      */
     Fcal.UseFunction = function (func) {
         Fcal.gst.set(func.name, symboltable_1.Entity.FUNCTION);
@@ -483,7 +820,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Register new units
-     * @param {Array<Unit>} units
+     * @param {Array<Unit | Object>} units
      */
     Fcal.UseUnits = function (units) {
         for (var _i = 0, units_3 = units; _i < units_3.length; _i++) {
@@ -493,7 +830,7 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Register new unit
-     * @param {Unit} unit
+     * @param {Unit | Object} unit
      */
     Fcal.UseUnit = function (unit) {
         if (unit instanceof units_2.Unit) {
@@ -646,8 +983,7 @@ var Expression = /** @class */ (function () {
 }());
 exports.Expression = Expression;
 /**
- * FcalError class
- * it represents Error in Fcal
+ * FcalError represents Error in Fcal
  */
 var FcalError = /** @class */ (function (_super) {
     __extends(FcalError, _super);
@@ -672,60 +1008,109 @@ exports.FcalError = FcalError;
 /***************************************************************/
 Fcal.initialize();
 
-},{"./default/functions":1,"./default/units":2,"./interpreter/constants":4,"./interpreter/environment":5,"./interpreter/function":6,"./interpreter/interpreter":7,"./interpreter/symboltable":8,"./lex/token":10,"./types/datatype":14,"./types/phrase":16,"./types/units":17,"decimal.js":18}],4:[function(require,module,exports){
+},{"1":1,"10":10,"14":14,"16":16,"17":17,"18":18,"2":2,"4":4,"5":5,"6":6,"7":7,"8":8}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require("../types/datatype");
-var symboltable_1 = require("./symboltable");
-var Constant = /** @class */ (function () {
-    function Constant(symbolTable) {
-        this.values = new Map();
-        this.symbolTable = symbolTable;
+var TT;
+(function (TT) {
+    TT["PLUS"] = "+";
+    TT["MINUS"] = "-";
+    TT["TIMES"] = "*";
+    TT["MOD"] = "mod";
+    TT["SLASH"] = "/";
+    TT["Number"] = "number";
+    TT["OPEN_PARAN"] = "(";
+    TT["CLOSE_PARAN"] = ")";
+    TT["NEWLINE"] = "\n";
+    TT["EOL"] = "EOL";
+    TT["IN"] = "in";
+    TT["NAME"] = "name";
+    TT["EQUAL"] = "=";
+    TT["COMMA"] = ",";
+    TT["PERCENTAGE"] = "%";
+    TT["OF"] = "of";
+    TT["UNIT"] = "unit";
+    TT["CAP"] = "^";
+    TT["NS"] = "ns";
+    TT["DOUBLE_COLON"] = ":";
+    TT["FLOOR_DIVIDE"] = "//";
+})(TT || (TT = {}));
+exports.TT = TT;
+var Token = /** @class */ (function () {
+    function Token(type, lexeme, literal, start, end) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.start = start;
+        this.end = end;
+        this.Literal = literal;
     }
-    /**
-     * create or assign a constant with value
-     * @param {string} key constatn name
-     * @param  {Type | Big.Decimal | number | string} value value
-     */
-    Constant.prototype.set = function (key, value) {
-        if (!this.values.has(key)) {
-            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
-        }
-        if (value instanceof datatype_1.Type) {
-            this.values.set(key, value);
-            return;
-        }
-        this.values.set(key, datatype_1.Type.BNumber.New(value));
+    Token.EOL = function (end) {
+        return new Token(TT.EOL, '', null, end, end);
     };
-    /**
-     * import values from Object or map into constants
-     * @param {Object | Map} values
-     */
-    Constant.prototype.use = function (values) {
-        var _this = this;
-        if (values instanceof Map) {
-            values.forEach(function (value, key) {
-                _this.set(key, value);
-            });
-            return;
+    Token.prototype.toString = function () {
+        var literal = '';
+        if (this.Literal !== null) {
+            literal = this.Literal.format();
         }
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.set(key, element);
-            }
-        }
+        return "< " + this.type + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>";
     };
-    return Constant;
+    return Token;
 }());
-exports.Constant = Constant;
+exports.Token = Token;
 
-},{"../types/datatype":14,"./symboltable":8}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require("../fcal");
-var datatype_1 = require("../types/datatype");
-var symboltable_1 = require("./symboltable");
+var fcal_1 = require(3);
+var SymbolTable = /** @class */ (function () {
+    function SymbolTable(entries) {
+        if (entries) {
+            this.registry = new Map(entries);
+            return;
+        }
+        this.registry = new Map();
+        this.registry.set('bin', Entity.NS);
+        this.registry.set('binary', Entity.NS);
+        this.registry.set('dec', Entity.NS);
+        this.registry.set('decimal', Entity.NS);
+        this.registry.set('hex', Entity.NS);
+        this.registry.set('hexadecimal', Entity.NS);
+        this.registry.set('oct', Entity.NS);
+        this.registry.set('octal', Entity.NS);
+    }
+    SymbolTable.prototype.set = function (phrase, entity) {
+        var c = this.registry.get(phrase);
+        if (c) {
+            throw new fcal_1.FcalError(phrase + " is already used in " + c.toLowerCase());
+        }
+        this.registry.set(phrase, entity);
+    };
+    SymbolTable.prototype.get = function (phrase) {
+        return this.registry.get(phrase);
+    };
+    SymbolTable.prototype.clone = function () {
+        return new SymbolTable(this.registry);
+    };
+    return SymbolTable;
+}());
+exports.SymbolTable = SymbolTable;
+var Entity;
+(function (Entity) {
+    Entity["FUNCTION"] = "FUNCTION";
+    Entity["VARIABLE"] = "VARIABLE";
+    Entity["CONSTANT"] = "CONSTANT";
+    Entity["OPERATION_PHRASE"] = "OPERATION PHRASE";
+    Entity["NS"] = "NUMBER SYSTEM";
+    Entity["UNIT"] = "UNIT";
+})(Entity || (Entity = {}));
+exports.Entity = Entity;
+
+},{"3":3}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var datatype_1 = require(14);
+var symboltable_1 = require(8);
 /**
  * Represents runtime variable environment
  * It represents state of fcal
@@ -786,1532 +1171,58 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"../fcal":3,"../types/datatype":14,"./symboltable":8}],6:[function(require,module,exports){
+},{"14":14,"3":3,"8":8}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require("decimal.js");
-var fcal_1 = require("../fcal");
-var datatype_1 = require("../types/datatype");
-/**
- * FcalFunction represents function in fcal
- */
-var FcalFunction = /** @class */ (function () {
-    function FcalFunction(name, arity, func) {
-        this.arity = arity;
-        this.function = func;
-        this.name = name;
-    }
-    /**
-     * call the function
-     * @param {Environment} environment state of fcal
-     * @param {Array<Type>} argument arguments of the function
-     * @returns {Type} function result
-     * @throws {FcalError} Error if function return invalid return type
-     */
-    FcalFunction.prototype.call = function (environment, argument) {
-        var value = this.function(environment, argument);
-        if (!value) {
-            // if function does not return no value then
-            // Assign basic 0 number
-            return datatype_1.Type.BNumber.New(0);
-        }
-        if (typeof value === 'number' || value instanceof decimal_js_1.Decimal) {
-            return datatype_1.Type.BNumber.New(value);
-        }
-        if (!(value instanceof datatype_1.Type)) {
-            throw new fcal_1.FcalError(this.name + " Function Invalid return type,  Expecting Fcal.Type but got " + typeof value);
-        }
-        return value;
-    };
-    return FcalFunction;
-}());
-exports.FcalFunction = FcalFunction;
-/**
- * List of fcal functions
- */
-// tslint:disable-next-line:no-namespace
-(function (FcalFunction) {
-    var List = /** @class */ (function () {
-        function List() {
-            this.functions = new Map();
-        }
-        /**
-         * Add new fcal function
-         * @param {FcalFunction} fcalFunction
-         * @throws {FcalError} Error if function name is already exists
-         */
-        List.prototype.push = function (ff) {
-            if (this.check(ff.name)) {
-                // This is unreachable code , becuase SymbolTable will take of this
-                throw new fcal_1.FcalError(ff.name + " is already registered");
-            }
-            if (ff.arity < -1) {
-                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be greater than or equal to -1 but got " + ff.arity);
-            }
-            if (ff.arity >= 255) {
-                throw new fcal_1.FcalError("Can not register " + ff.name + ", function cannot have more than 254 arguments");
-            }
-            if (ff.arity % 1 !== 0) {
-                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be Integer");
-            }
-            this.functions.set(ff.name, ff);
-        };
-        /**
-         * Call a function by its name
-         * @param {string} name name of the function
-         * @param {Environment} enviroment state of fcal
-         * @param {Array<Type>} argument arguments for the function
-         * @param {Type} Type resullt of the function
-         * @throws {FcalError} Error if function is not found
-         */
-        List.prototype.call = function (name, enviroment, argument) {
-            var fcalFunc = this.get(name);
-            if (fcalFunc) {
-                return fcalFunc.function(enviroment, argument);
-            }
-            throw new fcal_1.FcalError("Function " + name + " is not found");
-        };
-        /**
-         * Get function implemention by its function name
-         * @param {string} name function name
-         * @returns {FcalFunction | undefined} function
-         */
-        List.prototype.get = function (name) {
-            return this.functions.get(name);
-        };
-        /**
-         * check if function is available
-         * @param {name} name function name
-         * @returns {boolean} if function is available
-         */
-        List.prototype.check = function (name) {
-            return this.functions.hasOwnProperty(name);
-        };
-        return List;
-    }());
-    FcalFunction.List = List;
-})(FcalFunction || (FcalFunction = {}));
-exports.FcalFunction = FcalFunction;
-
-},{"../fcal":3,"../types/datatype":14,"decimal.js":18}],7:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require("../fcal");
-var token_1 = require("../lex/token");
-var parser_1 = require("../parser/parser");
-var datatype_1 = require("../types/datatype");
-var units_1 = require("../types/units");
-var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, units, environment) {
-        var parser = new parser_1.Parser(source, phrases, units, environment.symbolTable);
-        this.environment = environment;
-        this.ast = parser.parse();
-    }
-    Interpreter.prototype.getAST = function () {
-        return this.ast.toString();
-    };
-    Interpreter.prototype.visitCallExpr = function (expr) {
-        var name = expr.name;
-        var call;
-        call = this.environment.functions.get(name);
-        if (call) {
-            if (call.arity !== -1) {
-                if (call.arity !== expr.argument.length) {
-                    throw new fcal_1.FcalError("function " + name + " expected " + call.arity + " args but got " + expr.argument.length, expr.start, expr.end);
-                }
-            }
-            var argument = Array();
-            for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
-                var param = _a[_i];
-                argument.push(this.evaluate(param));
-            }
-            return call.call(this.environment, argument);
-        }
-        throw new fcal_1.FcalError(name + " is not callable", expr.start, expr.end);
-    };
-    Interpreter.prototype.visitAssignExpr = function (expr) {
-        var value = this.evaluate(expr.value);
-        this.environment.set(expr.name, value);
-        return value;
-    };
-    Interpreter.prototype.visitVariableExpr = function (expr) {
-        return this.environment.get(expr.name);
-    };
-    Interpreter.prototype.evaluateExpression = function () {
-        var value = this.evaluate(this.ast);
-        this.environment.set('_', value);
-        return value;
-    };
-    Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
-        var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
-            if (expr.unit instanceof units_1.UnitMeta) {
-                return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
-            }
-            return value.setSystem(expr.unit);
-        }
-        throw new fcal_1.FcalError('Expecting numeric value before in', expr.start, expr.end);
-    };
-    Interpreter.prototype.visitUnitExpr = function (expr) {
-        var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.UnitNumber.New(value.n, expr.unit).setSystem(value.ns);
-        }
-        throw new fcal_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
-    };
-    Interpreter.prototype.visitBinaryExpr = function (expr) {
-        var left = this.evaluate(expr.left);
-        var right = this.evaluate(expr.right);
-        switch (expr.operator.type) {
-            case token_1.TT.PLUS:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
-                        // console.log(left.number, right.number);
-                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-                    }
-                }
-                return left.Add(right);
-            case token_1.TT.MINUS:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
-                        // console.log(left.number, right.number)
-                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-                    }
-                }
-                return left.Sub(right);
-            case token_1.TT.TIMES:
-                return left.times(right);
-            case token_1.TT.SLASH:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    throw new fcal_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
-                }
-                return left.divide(right);
-            case token_1.TT.MOD:
-                if (!left.n.isFinite()) {
-                    throw new fcal_1.FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
-                }
-                if (right.isZero()) {
-                    return new datatype_1.Type.BNumber('Infinity');
-                }
-                return left.modulo(right);
-            case token_1.TT.CAP:
-                if (left.isNegative()) {
-                    if (!right.isInteger()) {
-                        throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", expr.left.start, expr.right.end);
-                    }
-                }
-                return left.power(right);
-            case token_1.TT.OF:
-                left = new datatype_1.Type.Percentage(left.n);
-                var per = left;
-                right.n = per.percentageValue(right.n);
-                return right;
-            default:
-                return datatype_1.Type.BNumber.ZERO;
-        }
-    };
-    Interpreter.prototype.visitGroupingExpr = function (expr) {
-        return this.evaluate(expr.expression);
-    };
-    Interpreter.prototype.visitLiteralExpr = function (expr) {
-        return expr.value;
-    };
-    Interpreter.prototype.visitUnaryExpr = function (expr) {
-        var right = this.evaluate(expr.right);
-        if (expr.operator.type === token_1.TT.MINUS) {
-            return right.negated();
-        }
-        return right;
-    };
-    Interpreter.prototype.visitPercentageExpr = function (expr) {
-        var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
-            return datatype_1.Type.Percentage.New(value.n);
-        }
-        throw new fcal_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
-    };
-    Interpreter.prototype.setValues = function (values) {
-        this.environment.use(values);
-    };
-    Interpreter.prototype.evaluate = function (expr) {
-        var ast = expr.accept(this);
-        return ast;
-    };
-    return Interpreter;
-}());
-exports.Interpreter = Interpreter;
-
-},{"../fcal":3,"../lex/token":10,"../parser/parser":13,"../types/datatype":14,"../types/units":17}],8:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require("../fcal");
-var SymbolTable = /** @class */ (function () {
-    function SymbolTable(entries) {
-        if (entries) {
-            this.registry = new Map(entries);
-            return;
-        }
-        this.registry = new Map();
-        this.registry.set('bin', Entity.NS);
-        this.registry.set('binary', Entity.NS);
-        this.registry.set('dec', Entity.NS);
-        this.registry.set('decimal', Entity.NS);
-        this.registry.set('hex', Entity.NS);
-        this.registry.set('hexadecimal', Entity.NS);
-        this.registry.set('oct', Entity.NS);
-        this.registry.set('octal', Entity.NS);
-    }
-    SymbolTable.prototype.set = function (phrase, entity) {
-        var c = this.registry.get(phrase);
-        if (c) {
-            throw new fcal_1.FcalError(phrase + " is already used in " + c.toLowerCase());
-        }
-        this.registry.set(phrase, entity);
-    };
-    SymbolTable.prototype.get = function (phrase) {
-        return this.registry.get(phrase);
-    };
-    SymbolTable.prototype.clone = function () {
-        return new SymbolTable(this.registry);
-    };
-    return SymbolTable;
-}());
-exports.SymbolTable = SymbolTable;
-var Entity;
-(function (Entity) {
-    Entity["FUNCTION"] = "FUNCTION";
-    Entity["VARIABLE"] = "VARIABLE";
-    Entity["CONSTANT"] = "CONSTANT";
-    Entity["OPERATION_PHRASE"] = "OPERATION PHRASE";
-    Entity["NS"] = "NUMBER SYSTEM";
-    Entity["UNIT"] = "UNIT";
-})(Entity || (Entity = {}));
-exports.Entity = Entity;
-
-},{"../fcal":3}],9:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require("../fcal");
-var datatype_1 = require("../types/datatype");
-var numberSystem_1 = require("../types/numberSystem");
-var token_1 = require("./token");
-var Lexer = /** @class */ (function () {
-    function Lexer(source, phrases, untis) {
-        // Removing the space around expression
-        this.source = source.replace(/[ \t]+$/, '');
-        this.start = 0;
-        this.current = 0;
-        this.tokens = Array();
-        this.phrases = phrases;
-        this.units = untis;
-    }
-    Lexer.isDigit = function (char) {
-        return char >= '0' && char <= '9';
-    };
-    Lexer.isAlpha = function (char) {
-        return (!Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n' && !Lexer.notAlpha.includes(char));
-    };
-    Lexer.isSpace = function (char) {
-        return char === '\t' || char === ' ';
-    };
-    Lexer.isBinaryDigit = function (char) {
-        return char === '0' || char === '1';
-    };
-    Lexer.isOctalDigit = function (char) {
-        return char >= '0' && char <= '8';
-    };
-    Lexer.isHexDigit = function (char) {
-        return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
-    };
-    Lexer.prototype.Next = function () {
-        if (this.isAtEnd()) {
-            return token_1.Token.EOL(this.current);
-        }
-        return this.scan();
-    };
-    Lexer.prototype.scan = function () {
-        var char = this.space();
-        switch (char) {
-            case token_1.TT.PLUS:
-                return this.TT(token_1.TT.PLUS);
-            case token_1.TT.MINUS:
-                return this.TT(token_1.TT.MINUS);
-            case token_1.TT.TIMES:
-                return this.TT(token_1.TT.TIMES);
-            case token_1.TT.SLASH:
-                return this.TT(token_1.TT.SLASH);
-            case token_1.TT.EQUAL:
-                return this.TT(token_1.TT.EQUAL);
-            case token_1.TT.COMMA:
-                return this.TT(token_1.TT.COMMA);
-            case token_1.TT.DOUBLE_COLON:
-                return this.TT(token_1.TT.DOUBLE_COLON);
-            case token_1.TT.OPEN_PARAN:
-                return this.TT(token_1.TT.OPEN_PARAN);
-            case token_1.TT.CLOSE_PARAN:
-                return this.TT(token_1.TT.CLOSE_PARAN);
-            case token_1.TT.CAP:
-                return this.TT(token_1.TT.CAP);
-            case token_1.TT.PERCENTAGE:
-                return this.TT(token_1.TT.PERCENTAGE);
-            case token_1.TT.NEWLINE:
-                return this.TT(token_1.TT.NEWLINE);
-            default:
-                if (Lexer.isDigit(char)) {
-                    return this.number();
-                }
-                return this.string();
-        }
-    };
-    Lexer.prototype.isAtEnd = function () {
-        return this.current >= this.source.length;
-    };
-    Lexer.prototype.eat = function () {
-        this.current++;
-        return this.source.charAt(this.current - 1);
-    };
-    Lexer.prototype.peek = function (n) {
-        if (this.current + n >= this.source.length) {
-            return '\0';
-        }
-        return this.source.charAt(this.current + n);
-    };
-    Lexer.prototype.string = function () {
-        while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
-            this.eat();
-        }
-        var text = this.lexeme();
-        var type;
-        if (text === 'Infinity') {
-            return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(text));
-        }
-        type = this.phrases.get(text);
-        if (type) {
-            return this.TT(type);
-        }
-        var unit = this.units.get(text);
-        if (unit) {
-            return this.TTWithLiteral(token_1.TT.UNIT, text);
-        }
-        var ns = numberSystem_1.NumberSystem.get(text);
-        if (ns) {
-            return this.TTWithLiteral(token_1.TT.NS, text);
-        }
-        return this.TT(token_1.TT.NAME);
-    };
-    Lexer.prototype.number = function () {
-        if (this.peek(0) === 'b' || this.peek(0) === 'B') {
-            this.eat();
-            while (Lexer.isDigit(this.peek(0))) {
-                if (!Lexer.isBinaryDigit(this.peek(0))) {
-                    throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in binary number", this.current);
-                }
-                this.eat();
-            }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.bin);
-            return this.TTWithLiteral(token_1.TT.Number, value);
-        }
-        if (this.peek(0) === 'o' || this.peek(0) === 'O') {
-            this.eat();
-            while (Lexer.isDigit(this.peek(0))) {
-                if (!Lexer.isOctalDigit(this.peek(0))) {
-                    throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Octal number", this.current);
-                }
-                this.eat();
-            }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.oct);
-            return this.TTWithLiteral(token_1.TT.Number, value);
-        }
-        if (this.peek(0) === 'x' || this.peek(0) === 'X') {
-            this.eat();
-            if (!Lexer.isHexDigit(this.peek(0))) {
-                throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexa decimal", this.current);
-            }
-            while (Lexer.isHexDigit(this.peek(0))) {
-                this.eat();
-            }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
-            value.setSystem(numberSystem_1.NumberSystem.hex);
-            return this.TTWithLiteral(token_1.TT.Number, value);
-        }
-        while (Lexer.isDigit(this.peek(0))) {
-            this.eat();
-        }
-        if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
-            this.eat();
-            while (Lexer.isDigit(this.peek(0))) {
-                this.eat();
-            }
-        }
-        if (this.peek(0) === 'E' || this.peek(0) === 'e') {
-            var c = this.peek(0);
-            this.eat();
-            if (this.peek(0) === '+' || this.peek(0) === '-') {
-                c = this.peek(0);
-                this.eat();
-            }
-            if (!Lexer.isDigit(this.peek(0))) {
-                throw new fcal_1.FcalError("Expecting number after " + c + " but got '" + this.peek(0) + "'", this.start, this.current);
-            }
-            while (Lexer.isDigit(this.peek(0))) {
-                this.eat();
-            }
-        }
-        return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(this.lexeme()));
-    };
-    Lexer.prototype.TT = function (type) {
-        return this.TTWithLiteral(type, null);
-    };
-    Lexer.prototype.TTWithLiteral = function (type, literal) {
-        var token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
-        this.start = this.current;
-        this.tokens.push(token);
-        return token;
-    };
-    Lexer.prototype.lexeme = function () {
-        return this.source.substring(this.start, this.current);
-    };
-    Lexer.prototype.space = function () {
-        var char = this.eat();
-        while (Lexer.isSpace(char)) {
-            this.start = this.current;
-            char = this.eat();
-        }
-        return char;
-    };
-    Lexer.notAlpha = [
-        token_1.TT.PLUS,
-        token_1.TT.MINUS,
-        token_1.TT.TIMES,
-        token_1.TT.SLASH,
-        token_1.TT.OPEN_PARAN,
-        token_1.TT.CLOSE_PARAN,
-        token_1.TT.CAP,
-        token_1.TT.PERCENTAGE,
-        token_1.TT.EQUAL,
-        token_1.TT.COMMA,
-        token_1.TT.DOUBLE_COLON,
-        token_1.TT.NEWLINE,
-    ];
-    return Lexer;
-}());
-exports.Lexer = Lexer;
-
-},{"../fcal":3,"../types/datatype":14,"../types/numberSystem":15,"./token":10}],10:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var TT;
-(function (TT) {
-    TT["PLUS"] = "+";
-    TT["MINUS"] = "-";
-    TT["TIMES"] = "*";
-    TT["MOD"] = "mod";
-    TT["SLASH"] = "/";
-    TT["Number"] = "number";
-    TT["OPEN_PARAN"] = "(";
-    TT["CLOSE_PARAN"] = ")";
-    TT["NEWLINE"] = "\n";
-    TT["EOL"] = "EOL";
-    TT["IN"] = "in";
-    TT["NAME"] = "name";
-    TT["EQUAL"] = "=";
-    TT["COMMA"] = ",";
-    TT["PERCENTAGE"] = "%";
-    TT["OF"] = "of";
-    TT["UNIT"] = "unit";
-    TT["CAP"] = "^";
-    TT["NS"] = "ns";
-    TT["DOUBLE_COLON"] = ":";
-})(TT || (TT = {}));
-exports.TT = TT;
-var Token = /** @class */ (function () {
-    function Token(type, lexeme, literal, start, end) {
-        this.type = type;
-        this.lexeme = lexeme;
-        this.start = start;
-        this.end = end;
-        this.Literal = literal;
-    }
-    Token.EOL = function (end) {
-        return new Token(TT.EOL, '', null, end, end);
-    };
-    Token.prototype.toString = function () {
-        var literal = '';
-        if (this.Literal !== null) {
-            literal = this.Literal.format();
-        }
-        return "< " + this.type + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>";
-    };
-    return Token;
-}());
-exports.Token = Token;
-
-},{}],11:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require("../types/units");
-var ASTPrinter = /** @class */ (function () {
-    function ASTPrinter() {
-        this.depth = 0;
-    }
-    ASTPrinter.createPrefix = function (depth, type) {
-        return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
-    };
-    ASTPrinter.prototype.visitCallExpr = function (expr) {
-        var str = ASTPrinter.createPrefix(this.depth, 'FUNCTION') + " ==> " + expr.name + " ";
-        this.depth += ASTPrinter.tab;
-        for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
-            var arg = _a[_i];
-            str = str + " \n|\n" + this.evaluate(arg);
-        }
-        this.depth -= ASTPrinter.tab;
-        return str;
-    };
-    ASTPrinter.prototype.visitAssignExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var value = this.evaluate(expr.value);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'ASSIGN') + " " + expr.name + " \n|\n" + value;
-    };
-    ASTPrinter.prototype.visitVariableExpr = function (expr) {
-        return ASTPrinter.createPrefix(this.depth, 'VARIABLE') + " " + expr.name + "\n|\n";
-    };
-    ASTPrinter.prototype.visitUnitExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var expression = this.evaluate(expr.expression);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'UNIT') + " " + expr.unit.unitType + " \n|\n" + expression;
-    };
-    ASTPrinter.prototype.visitUnitConvertionExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var expression = this.evaluate(expr.expression);
-        this.depth -= ASTPrinter.tab;
-        if (expr.unit instanceof units_1.UnitMeta) {
-            return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
-        }
-        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.name + " \n|\n" + expression;
-    };
-    ASTPrinter.prototype.visitBinaryExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var left = this.evaluate(expr.left);
-        var right = this.evaluate(expr.right);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'BINARY') + "  " + expr.operator + " \n|\n" + left + right;
-    };
-    ASTPrinter.prototype.visitGroupingExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var expression = this.evaluate(expr.expression);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'Grouping') + " \n|\n" + expression;
-    };
-    ASTPrinter.prototype.visitLiteralExpr = function (expr) {
-        return ASTPrinter.createPrefix(this.depth, 'LITERAL') + " " + expr.value.print() + "\n|\n";
-    };
-    ASTPrinter.prototype.visitUnaryExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var expression = this.evaluate(expr.right);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'UNARY') + " " + expr.operator + " \n|\n" + expression;
-    };
-    ASTPrinter.prototype.visitPercentageExpr = function (expr) {
-        this.depth += ASTPrinter.tab;
-        var expression = this.evaluate(expr.expression);
-        this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'PERCENTAGE') + " \n|\n" + expression;
-    };
-    ASTPrinter.prototype.print = function (expr) {
-        return this.evaluate(expr);
-    };
-    ASTPrinter.prototype.evaluate = function (expr) {
-        var ast = expr.accept(this);
-        return ast;
-    };
-    ASTPrinter.tab = 2;
-    ASTPrinter.prefixchar = '+';
-    return ASTPrinter;
-}());
-exports.ASTPrinter = ASTPrinter;
-
-},{"../types/units":17}],12:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var astPrinter_1 = require("./astPrinter");
-var Expr = /** @class */ (function (_super) {
-    __extends(Expr, _super);
-    function Expr(start, end) {
-        var _this = _super.call(this) || this;
-        _this.start = start;
-        _this.end = end;
-        return _this;
-    }
-    Expr.prototype.toString = function () {
-        var res = this.print(this);
-        return res.substring(0, res.length - 2);
-    };
-    return Expr;
-}(astPrinter_1.ASTPrinter));
-exports.Expr = Expr;
-// tslint:disable-next-line: no-namespace
-(function (Expr) {
-    var Binary = /** @class */ (function (_super) {
-        __extends(Binary, _super);
-        function Binary(left, operator, right, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.left = left;
-            _this.operator = operator;
-            _this.right = right;
-            return _this;
-        }
-        Binary.prototype.accept = function (visitor) {
-            return visitor.visitBinaryExpr(this);
-        };
-        return Binary;
-    }(Expr));
-    Expr.Binary = Binary;
-    var Grouping = /** @class */ (function (_super) {
-        __extends(Grouping, _super);
-        function Grouping(expression, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.expression = expression;
-            return _this;
-        }
-        Grouping.prototype.accept = function (visitor) {
-            return visitor.visitGroupingExpr(this);
-        };
-        return Grouping;
-    }(Expr));
-    Expr.Grouping = Grouping;
-    var Assign = /** @class */ (function (_super) {
-        __extends(Assign, _super);
-        function Assign(name, value, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            _this.value = value;
-            return _this;
-        }
-        Assign.prototype.accept = function (visitor) {
-            return visitor.visitAssignExpr(this);
-        };
-        return Assign;
-    }(Expr));
-    Expr.Assign = Assign;
-    var Variable = /** @class */ (function (_super) {
-        __extends(Variable, _super);
-        function Variable(name, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            return _this;
-        }
-        Variable.prototype.accept = function (visitor) {
-            return visitor.visitVariableExpr(this);
-        };
-        return Variable;
-    }(Expr));
-    Expr.Variable = Variable;
-    var Call = /** @class */ (function (_super) {
-        __extends(Call, _super);
-        function Call(name, argument, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            _this.argument = argument;
-            return _this;
-        }
-        Call.prototype.accept = function (visitor) {
-            return visitor.visitCallExpr(this);
-        };
-        return Call;
-    }(Expr));
-    Expr.Call = Call;
-    var Literal = /** @class */ (function (_super) {
-        __extends(Literal, _super);
-        function Literal(value, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.value = value;
-            return _this;
-        }
-        Literal.prototype.accept = function (visitor) {
-            return visitor.visitLiteralExpr(this);
-        };
-        return Literal;
-    }(Expr));
-    Expr.Literal = Literal;
-    var Percentage = /** @class */ (function (_super) {
-        __extends(Percentage, _super);
-        function Percentage(expression, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.expression = expression;
-            return _this;
-        }
-        Percentage.prototype.accept = function (visitor) {
-            return visitor.visitPercentageExpr(this);
-        };
-        return Percentage;
-    }(Expr));
-    Expr.Percentage = Percentage;
-    var UnitExpr = /** @class */ (function (_super) {
-        __extends(UnitExpr, _super);
-        function UnitExpr(expression, unit, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.unit = unit;
-            _this.expression = expression;
-            return _this;
-        }
-        UnitExpr.prototype.accept = function (visitor) {
-            return visitor.visitUnitExpr(this);
-        };
-        return UnitExpr;
-    }(Expr));
-    Expr.UnitExpr = UnitExpr;
-    var UnitorNSConvertionExpr = /** @class */ (function (_super) {
-        __extends(UnitorNSConvertionExpr, _super);
-        function UnitorNSConvertionExpr(expression, unit, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.unit = unit;
-            _this.expression = expression;
-            return _this;
-        }
-        UnitorNSConvertionExpr.prototype.accept = function (visitor) {
-            return visitor.visitUnitConvertionExpr(this);
-        };
-        return UnitorNSConvertionExpr;
-    }(Expr));
-    Expr.UnitorNSConvertionExpr = UnitorNSConvertionExpr;
-    var Unary = /** @class */ (function (_super) {
-        __extends(Unary, _super);
-        function Unary(operator, right, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.operator = operator;
-            _this.right = right;
-            return _this;
-        }
-        Unary.prototype.accept = function (visitor) {
-            return visitor.visitUnaryExpr(this);
-        };
-        return Unary;
-    }(Expr));
-    Expr.Unary = Unary;
-})(Expr || (Expr = {}));
-exports.Expr = Expr;
-
-},{"./astPrinter":11}],13:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require("../fcal");
-var lex_1 = require("../lex/lex");
-var token_1 = require("../lex/token");
-var numberSystem_1 = require("../types/numberSystem");
-var expr_1 = require("./expr");
-var Parser = /** @class */ (function () {
-    function Parser(source, phrases, units, symbolTable) {
-        this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases, units);
-        this.ntoken = 0;
-        this.tokens = [];
+var datatype_1 = require(14);
+var symboltable_1 = require(8);
+var Constant = /** @class */ (function () {
+    function Constant(symbolTable) {
+        this.values = new Map();
         this.symbolTable = symbolTable;
     }
-    Parser.prototype.parse = function () {
-        var expr = this.Stmt();
-        return expr;
-    };
-    Parser.prototype.Stmt = function () {
-        var expr = this.assignment();
-        if (this.match([token_1.TT.NEWLINE])) {
-            return expr;
+    /**
+     * create or assign a constant with value
+     * @param {string} key constatn name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Constant.prototype.set = function (key, value) {
+        if (!this.values.has(key)) {
+            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
         }
-        if (this.peek().type === token_1.TT.EOL) {
-            throw new fcal_1.FcalError('Expecting new Line', this.peek().end);
-        }
-        throw new fcal_1.FcalError("Unexpected token " + this.peek().lexeme, this.peek().start, this.peek().end);
-    };
-    Parser.prototype.assignment = function () {
-        var expr = this.expression();
-        if (this.match([token_1.TT.EQUAL, token_1.TT.DOUBLE_COLON])) {
-            var expres = this.assignment();
-            if (expr instanceof expr_1.Expr.Variable) {
-                var name_1 = expr.name;
-                return new expr_1.Expr.Assign(name_1, expres, expr.start, expres.end);
-            }
-            throw new fcal_1.FcalError('Execting variable in left side of assignment', expr.start, expr.end);
-        }
-        return expr;
-    };
-    Parser.prototype.expression = function () {
-        return this.addition();
-    };
-    Parser.prototype.addition = function () {
-        var expr = this.multiply();
-        while (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
-            var operator = this.previous();
-            var right = this.multiply();
-            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
-        }
-        return expr;
-    };
-    Parser.prototype.multiply = function () {
-        var expr = this.unitConvert();
-        while (this.match([token_1.TT.TIMES, token_1.TT.SLASH, token_1.TT.MOD, token_1.TT.OF])) {
-            var operator = this.previous();
-            var right = this.unitConvert();
-            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
-        }
-        return expr;
-    };
-    Parser.prototype.unitConvert = function () {
-        var expr = this.unary();
-        if (this.match([token_1.TT.IN])) {
-            if (this.match([token_1.TT.UNIT])) {
-                var unit = this.previous();
-                var unit2 = this.lexer.units.get(unit.lexeme);
-                if (unit2) {
-                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
-                }
-            }
-            if (this.match([token_1.TT.NS])) {
-                var token = this.previous();
-                var ns = numberSystem_1.NumberSystem.get(token.lexeme);
-                if (ns) {
-                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
-                }
-            }
-            throw new fcal_1.FcalError('Expecting unit after in');
-        }
-        return expr;
-    };
-    Parser.prototype.unary = function () {
-        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
-            var operator = this.previous();
-            var right = this.unary();
-            return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
-        }
-        return this.exponent();
-    };
-    Parser.prototype.exponent = function () {
-        var expr = this.suffix();
-        while (this.match([token_1.TT.CAP])) {
-            var operator = this.previous();
-            var right = this.unary();
-            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
-        }
-        return expr;
-    };
-    Parser.prototype.suffix = function () {
-        var expr = this.call();
-        if (this.match([token_1.TT.PERCENTAGE])) {
-            var operator = this.previous();
-            return new expr_1.Expr.Percentage(expr, expr.start, operator.end);
-        }
-        if (this.match([token_1.TT.UNIT])) {
-            var unit = this.previous();
-            var unit2 = void 0;
-            unit2 = this.lexer.units.get(unit.lexeme);
-            if (unit2) {
-                return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
-            }
-        }
-        return expr;
-    };
-    Parser.prototype.call = function () {
-        var expr = this.term();
-        if (this.match([token_1.TT.OPEN_PARAN])) {
-            if (expr instanceof expr_1.Expr.Variable) {
-                var argument = Array();
-                if (this.peek().type !== token_1.TT.CLOSE_PARAN) {
-                    do {
-                        argument.push(this.expression());
-                    } while (this.match([token_1.TT.COMMA]));
-                }
-                this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after the arguments");
-                return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
-            }
-            throw new fcal_1.FcalError("Not callable", expr.start, this.previous().end);
-        }
-        return expr;
-    };
-    Parser.prototype.term = function () {
-        if (this.match([token_1.TT.Number])) {
-            return new expr_1.Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
-        }
-        if (this.match([token_1.TT.OPEN_PARAN])) {
-            var start = this.previous();
-            var expr = this.expression();
-            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression but found " + this.peek().lexeme);
-            return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
-        }
-        if (this.match([token_1.TT.NAME])) {
-            return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
-        }
-        var lexeme = this.peek().lexeme;
-        var entity = this.symbolTable.get(lexeme);
-        if (entity) {
-            throw new fcal_1.FcalError("Expect expression but found " + lexeme + " [" + entity.toLowerCase() + "]", this.peek().start, this.peek().end);
-        }
-        throw new fcal_1.FcalError("Expect expression but found " + lexeme, this.peek().start, this.peek().end);
-    };
-    Parser.prototype.match = function (types) {
-        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
-            var type = types_1[_i];
-            if (this.check(type)) {
-                this.incr();
-                return true;
-            }
-        }
-        return false;
-    };
-    Parser.prototype.consume = function (type, message) {
-        if (this.check(type)) {
-            this.incr();
+        if (value instanceof datatype_1.Type) {
+            this.values.set(key, value);
             return;
         }
-        throw new fcal_1.FcalError(message, this.peek().start, this.peek().end);
+        this.values.set(key, datatype_1.Type.BNumber.New(value));
     };
-    Parser.prototype.check = function (type) {
-        if (this.isAtEnd()) {
-            return false;
+    /**
+     * import values from Object or map into constants
+     * @param {Object | Map} values
+     */
+    Constant.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
         }
-        return this.peek().type === type;
-    };
-    Parser.prototype.isAtEnd = function () {
-        var token = this.nextToken();
-        return token.type === token_1.TT.EOL;
-    };
-    Parser.prototype.nextToken = function () {
-        if (this.ntoken < this.tokens.length) {
-            return this.tokens[this.ntoken];
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
         }
-        return this.getToken();
     };
-    Parser.prototype.getToken = function () {
-        var token = this.lexer.Next();
-        if (token.type !== token_1.TT.EOL) {
-            this.tokens.push(token);
-        }
-        return token;
-    };
-    Parser.prototype.previous = function () {
-        return this.tokens[this.ntoken - 1];
-    };
-    Parser.prototype.peek = function () {
-        return this.nextToken();
-    };
-    Parser.prototype.incr = function () {
-        this.ntoken++;
-    };
-    return Parser;
+    return Constant;
 }());
-exports.Parser = Parser;
+exports.Constant = Constant;
 
-},{"../fcal":3,"../lex/lex":9,"../lex/token":10,"../types/numberSystem":15,"./expr":12}],14:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require("decimal.js");
-var numberSystem_1 = require("./numberSystem");
-var Type = /** @class */ (function () {
-    function Type() {
-    }
-    Type.prototype.toString = function () {
-        return this.print();
-    };
-    return Type;
-}());
-exports.Type = Type;
-var DATATYPE;
-(function (DATATYPE) {
-    DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
-    DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
-    DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
-})(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
-var TYPERANK;
-(function (TYPERANK) {
-    TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
-    TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
-    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
-})(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
-/**
- * Represents a type of variable or value
- */
-// tslint:disable-next-line:no-namespace
-(function (Type) {
-    var Numberic = /** @class */ (function (_super) {
-        __extends(Numberic, _super);
-        function Numberic(value) {
-            var _this = _super.call(this) || this;
-            if (value instanceof decimal_js_1.Decimal) {
-                _this.n = value;
-            }
-            else {
-                _this.n = new decimal_js_1.Decimal(value);
-            }
-            _this.ns = numberSystem_1.NumberSystem.dec;
-            _this.lf = false;
-            return _this;
-        }
-        Numberic.prototype.setSystem = function (numberSys) {
-            this.ns = numberSys;
-            return this;
-        };
-        Numberic.prototype.toNumericString = function () {
-            return this.ns.to(this.n);
-        };
-        Numberic.prototype.print = function () {
-            return this.toNumericString();
-        };
-        Numberic.prototype.Add = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    return value.New(this.plus(value).n);
-                }
-                return this.plus(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.plus(this);
-            }
-            return this.New(value.plus(this).n);
-        };
-        Numberic.prototype.Sub = function (value) {
-            return this.Add(value.negated());
-        };
-        Numberic.prototype.times = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    return value.New(this.mul(value).n);
-                }
-                return this.mul(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.mul(this);
-            }
-            return this.New(value.mul(this).n);
-        };
-        Numberic.prototype.divide = function (value) {
-            // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.div(value);
-                    }
-                    return value.New(this.div(value).n);
-                }
-                return this.div(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.div(this);
-            }
-            return this.New(value.div(this).n);
-        };
-        Numberic.prototype.power = function (value) {
-            // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.New(this.pow(value).n);
-                    }
-                    return value.New(this.pow(value).n);
-                }
-                return this.pow(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.pow(this);
-            }
-            return this.New(value.pow(this).n);
-        };
-        Numberic.prototype.modulo = function (value) {
-            // check type to see which datatype operation
-            // if both type is same na right variable operation
-            this.lf = true;
-            if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
-                        return this.New(this.mod(value).n);
-                    }
-                    return value.New(this.mod(value).n);
-                }
-                return this.mod(value);
-            }
-            if (value.TYPERANK >= this.TYPERANK) {
-                return value.mod(this);
-            }
-            return this.New(value.mod(this).n);
-        };
-        Numberic.prototype.toNumber = function () {
-            return this.n.toNumber();
-        };
-        return Numberic;
-    }(Type));
-    Type.Numberic = Numberic;
-    /**
-     * Basic Number type
-     */
-    var BNumber = /** @class */ (function (_super) {
-        __extends(BNumber, _super);
-        function BNumber(value) {
-            var _this = _super.call(this, value) || this;
-            _this.TYPE = DATATYPE.NUMBER;
-            _this.TYPERANK = TYPERANK.NUMBER;
-            return _this;
-        }
-        BNumber.New = function (value) {
-            return new BNumber(value);
-        };
-        BNumber.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        BNumber.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        BNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        BNumber.prototype.negated = function () {
-            return BNumber.New(this.n.negated());
-        };
-        BNumber.prototype.div = function (value) {
-            return BNumber.New(this.n.div(value.n));
-        };
-        BNumber.prototype.pow = function (value) {
-            return BNumber.New(this.n.pow(value.n));
-        };
-        BNumber.prototype.mod = function (value) {
-            return BNumber.New(this.n.modulo(value.n));
-        };
-        BNumber.prototype.mul = function (value) {
-            return BNumber.New(this.n.mul(value.n));
-        };
-        BNumber.prototype.plus = function (value) {
-            return BNumber.New(this.n.plus(value.n));
-        };
-        BNumber.prototype.New = function (value) {
-            return BNumber.New(value);
-        };
-        BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
-        return BNumber;
-    }(Numberic));
-    Type.BNumber = BNumber;
-    /**
-     * Percentage type
-     */
-    var Percentage = /** @class */ (function (_super) {
-        __extends(Percentage, _super);
-        function Percentage(value) {
-            var _this = _super.call(this, value) || this;
-            _this.TYPE = DATATYPE.PERCENTAGE;
-            _this.TYPERANK = TYPERANK.PERCENTAGE;
-            return _this;
-        }
-        Percentage.New = function (value) {
-            return new Percentage(value);
-        };
-        Percentage.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        Percentage.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        Percentage.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        Percentage.prototype.negated = function () {
-            return Percentage.New(this.n.negated());
-        };
-        Percentage.prototype.plus = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.plus(value.n));
-            }
-            return Percentage.New(value.n.plus(this.percentageValue(value.n)));
-        };
-        Percentage.prototype.mul = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.mul(value.n));
-            }
-            return Percentage.New(value.n.mul(this.percentageValue(value.n)));
-        };
-        Percentage.prototype.div = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.div(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.div(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).div(value.n));
-        };
-        Percentage.prototype.pow = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.pow(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.pow(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).pow(value.n));
-        };
-        Percentage.prototype.mod = function (value) {
-            if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return Percentage.New(this.n.mod(value.n));
-            }
-            if (value.lf) {
-                return Percentage.New(value.n.mod(this.percentageValue(value.n)));
-            }
-            return Percentage.New(this.percentageValue(value.n).mod(value.n));
-        };
-        Percentage.prototype.percentageValue = function (value) {
-            return value.mul(this.n.div(Percentage.base));
-        };
-        Percentage.prototype.print = function () {
-            return "% " + this.toNumericString();
-        };
-        Percentage.prototype.New = function (value) {
-            return Percentage.New(value);
-        };
-        Percentage.base = new decimal_js_1.Decimal(100);
-        return Percentage;
-    }(Numberic));
-    Type.Percentage = Percentage;
-    /**
-     * Number with unit
-     */
-    var UnitNumber = /** @class */ (function (_super) {
-        __extends(UnitNumber, _super);
-        function UnitNumber(value, unit) {
-            var _this = _super.call(this, value) || this;
-            _this.unit = unit;
-            _this.TYPE = DATATYPE.UNIT;
-            _this.TYPERANK = TYPERANK.UNIT;
-            return _this;
-        }
-        UnitNumber.New = function (value, unit) {
-            return new UnitNumber(value, unit);
-        };
-        UnitNumber.convertToUnit = function (value, unit) {
-            if (value instanceof UnitNumber) {
-                var value2 = value;
-                if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
-                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns);
-                }
-            }
-            return UnitNumber.New(value.n, unit).setSystem(value.ns);
-        };
-        UnitNumber.prototype.New = function (value) {
-            return new UnitNumber(value, this.unit);
-        };
-        UnitNumber.prototype.isZero = function () {
-            return this.n.isZero();
-        };
-        UnitNumber.prototype.isNegative = function () {
-            return this.n.isNegative();
-        };
-        UnitNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
-        UnitNumber.prototype.negated = function () {
-            return this.New(this.n.negated());
-        };
-        UnitNumber.prototype.plus = function (value) {
-            if (value instanceof UnitNumber) {
-                var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.add(right.n));
-                }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.add(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
-            }
-            return this.New(this.n.plus(value.n));
-        };
-        UnitNumber.prototype.mul = function (value) {
-            if (value instanceof UnitNumber) {
-                var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.mul(right.n));
-                }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.mul(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
-            }
-            return this.New(this.n.mul(value.n));
-        };
-        UnitNumber.prototype.div = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return new Type.BNumber(left1.n.div(right1.n));
-                }
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.div(right.n));
-                }
-                return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.div(right.n));
-        };
-        UnitNumber.prototype.pow = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return left1.New(left1.n.pow(right1.n));
-                }
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.pow(right.n));
-                }
-                return left1.New(left1.n.pow(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.pow(right.n));
-        };
-        UnitNumber.prototype.mod = function (value) {
-            var left;
-            var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
-            if (value instanceof UnitNumber) {
-                var left1 = left;
-                var right1 = right;
-                if (left1.unit.id !== right1.unit.id) {
-                    return left1.New(left1.n.mod(right1.n));
-                }
-                if (left1.unit.unitType === right1.unit.unitType) {
-                    return left1.New(left1.n.mod(right1.n));
-                }
-                return left1.New(left1.n.mod(right1.convert(left1.ratio(), left1.bias())));
-            }
-            return this.New(left.n.mod(right.n));
-        };
-        UnitNumber.prototype.convert = function (ratio, bias) {
-            return this.n
-                .mul(this.ratio())
-                .add(this.bias())
-                .minus(bias)
-                .div(ratio);
-        };
-        UnitNumber.prototype.ratio = function () {
-            return this.unit.ratio;
-        };
-        UnitNumber.prototype.bias = function () {
-            return this.unit.bias;
-        };
-        UnitNumber.prototype.print = function () {
-            if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
-                return this.toNumericString() + " " + this.unit.singular;
-            }
-            return this.toNumericString() + " " + this.unit.plural;
-        };
-        return UnitNumber;
-    }(Numberic));
-    Type.UnitNumber = UnitNumber;
-})(Type || (Type = {}));
-exports.Type = Type;
-
-},{"./numberSystem":15,"decimal.js":18}],15:[function(require,module,exports){
+},{"14":14,"8":8}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var NumberSystem = /** @class */ (function () {
-    function NumberSystem(name, to) {
-        this.to = to;
-        this.name = name;
-    }
-    NumberSystem.get = function (ns) {
-        return NumberSystem.ns[ns];
-    };
-    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
-        return num.toString();
-    });
-    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
-        return num.toHexadecimal();
-    });
-    NumberSystem.bin = new NumberSystem('Binary', function (num) {
-        return num.toBinary();
-    });
-    NumberSystem.oct = new NumberSystem('Octal', function (num) {
-        return num.toOctal();
-    });
-    NumberSystem.ns = {
-        bin: NumberSystem.bin,
-        binary: NumberSystem.bin,
-        dec: NumberSystem.dec,
-        decimal: NumberSystem.dec,
-        hex: NumberSystem.hex,
-        hexadecimal: NumberSystem.hex,
-        oct: NumberSystem.oct,
-        octal: NumberSystem.oct,
-    };
-    return NumberSystem;
-}());
-exports.NumberSystem = NumberSystem;
-
-},{}],16:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var symboltable_1 = require("../interpreter/symboltable");
+var symboltable_1 = require(8);
 var Phrases = /** @class */ (function () {
     function Phrases(symbolTable) {
         this.symbolTable = symbolTable;
@@ -2331,140 +1242,7 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"../interpreter/symboltable":8}],17:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require("decimal.js");
-var symboltable_1 = require("../interpreter/symboltable");
-var UnitMeta = /** @class */ (function () {
-    function UnitMeta(id, ratio, unitType) {
-        this.id = id;
-        this.r = ratio;
-        this.b = new decimal_js_1.Decimal(0);
-        this.unitType = unitType;
-        this.plural = unitType;
-        this.singular = unitType;
-    }
-    Object.defineProperty(UnitMeta.prototype, "ratio", {
-        get: function () {
-            if (this.r instanceof decimal_js_1.Decimal) {
-                return this.r;
-            }
-            var value = this.r();
-            if (value instanceof decimal_js_1.Decimal) {
-                return value;
-            }
-            return new decimal_js_1.Decimal(value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(UnitMeta.prototype, "bias", {
-        get: function () {
-            if (this.b instanceof decimal_js_1.Decimal) {
-                return this.b;
-            }
-            var value = this.b();
-            if (value instanceof decimal_js_1.Decimal) {
-                return value;
-            }
-            return new decimal_js_1.Decimal(value);
-        },
-        enumerable: true,
-        configurable: true
-    });
-    UnitMeta.prototype.setBias = function (value) {
-        this.b = value;
-    };
-    UnitMeta.prototype.setPlural = function (value) {
-        this.plural = value;
-    };
-    UnitMeta.prototype.setSingular = function (value) {
-        this.singular = value;
-    };
-    return UnitMeta;
-}());
-exports.UnitMeta = UnitMeta;
-/**
- * Represents unit with info
- */
-var Unit = /** @class */ (function () {
-    function Unit(id, ratio, unitType, phrases) {
-        this.phrases = phrases;
-        if (ratio instanceof decimal_js_1.Decimal || typeof ratio === 'function') {
-            this.meta = new UnitMeta(id, ratio, unitType);
-            return;
-        }
-        this.meta = new UnitMeta(id, new decimal_js_1.Decimal(ratio), unitType);
-    }
-    Unit.prototype.setBias = function (value) {
-        if (value instanceof decimal_js_1.Decimal) {
-            this.meta.setBias(value);
-            return this;
-        }
-        if (typeof value === 'function') {
-            this.meta.setBias(value);
-            return this;
-        }
-        this.meta.setBias(new decimal_js_1.Decimal(value));
-        return this;
-    };
-    Unit.prototype.Plural = function (value) {
-        this.meta.setPlural(value);
-        return this;
-    };
-    Unit.prototype.Singular = function (value) {
-        this.meta.setSingular(value);
-        return this;
-    };
-    return Unit;
-}());
-exports.Unit = Unit;
-// tslint:disable-next-line:no-namespace
-(function (Unit) {
-    Unit.LENGTHID = 'LENGTH';
-    Unit.SPEEDID = 'SPEED';
-    Unit.TIMEID = 'TIME';
-    Unit.TEMPERATUREID = 'TIMERATURE';
-    /**
-     * List of {Unit} sunits
-     */
-    var List = /** @class */ (function () {
-        function List(symbolTable) {
-            this.symbolTable = symbolTable;
-            this.units = new Map();
-        }
-        /**
-         * Add a new unit
-         * @param {Unit} unit
-         * @throws {FcalError} Error if phrases already exists
-         */
-        List.prototype.push = function (unit) {
-            for (var _i = 0, _a = unit.phrases; _i < _a.length; _i++) {
-                var phrase1 = _a[_i];
-                this.symbolTable.set(phrase1, symboltable_1.Entity.UNIT);
-                this.units.set(phrase1, unit);
-            }
-        };
-        /**
-         * get the unit by its phrase
-         * @param {string} phrase
-         * @returns {UnitMeta | null }
-         */
-        List.prototype.get = function (phrase) {
-            var c = this.units.get(phrase);
-            if (c) {
-                return c.meta;
-            }
-            return null;
-        };
-        return List;
-    }());
-    Unit.List = List;
-})(Unit || (Unit = {}));
-exports.Unit = Unit;
-
-},{"../interpreter/symboltable":8,"decimal.js":18}],18:[function(require,module,exports){
+},{"8":8}],18:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -7343,5 +6121,1446 @@ exports.Unit = Unit;
   }
 })(this);
 
-},{}]},{},[3])(3)
+},{}],6:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var decimal_js_1 = require(18);
+var fcal_1 = require(3);
+var datatype_1 = require(14);
+/**
+ * FcalFunction represents function in fcal
+ */
+var FcalFunction = /** @class */ (function () {
+    function FcalFunction(name, arity, func) {
+        this.arity = arity;
+        this.function = func;
+        this.name = name;
+    }
+    /**
+     * call the function
+     * @param {Environment} environment state of fcal
+     * @param {Array<Type>} argument arguments of the function
+     * @returns {Type} function result
+     * @throws {FcalError} Error if function return invalid return type
+     */
+    FcalFunction.prototype.call = function (environment, argument) {
+        var value = this.function(environment, argument);
+        if (!value) {
+            // if function does not return no value then
+            // Assign basic 0 number
+            return datatype_1.Type.BNumber.New(0);
+        }
+        if (typeof value === 'number' || value instanceof decimal_js_1.Decimal) {
+            return datatype_1.Type.BNumber.New(value);
+        }
+        if (!(value instanceof datatype_1.Type)) {
+            throw new fcal_1.FcalError(this.name + " Function Invalid return type,  Expecting Fcal.Type but got " + typeof value);
+        }
+        return value;
+    };
+    return FcalFunction;
+}());
+exports.FcalFunction = FcalFunction;
+/**
+ * List of fcal functions
+ */
+// tslint:disable-next-line:no-namespace
+(function (FcalFunction) {
+    var List = /** @class */ (function () {
+        function List() {
+            this.functions = new Map();
+        }
+        /**
+         * Add new fcal function
+         * @param {FcalFunction} fcalFunction
+         * @throws {FcalError} Error if function name is already exists
+         */
+        List.prototype.push = function (ff) {
+            if (this.check(ff.name)) {
+                // This is unreachable code , becuase SymbolTable will take of this
+                throw new fcal_1.FcalError(ff.name + " is already registered");
+            }
+            if (ff.arity < -1) {
+                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be greater than or equal to -1 but got " + ff.arity);
+            }
+            if (ff.arity >= 255) {
+                throw new fcal_1.FcalError("Can not register " + ff.name + ", function cannot have more than 254 arguments");
+            }
+            if (ff.arity % 1 !== 0) {
+                throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be Integer");
+            }
+            this.functions.set(ff.name, ff);
+        };
+        /**
+         * Call a function by its name
+         * @param {string} name name of the function
+         * @param {Environment} enviroment state of fcal
+         * @param {Array<Type>} argument arguments for the function
+         * @param {Type} Type resullt of the function
+         * @throws {FcalError} Error if function is not found
+         */
+        List.prototype.call = function (name, enviroment, argument) {
+            var fcalFunc = this.get(name);
+            if (fcalFunc) {
+                return fcalFunc.function(enviroment, argument);
+            }
+            throw new fcal_1.FcalError("Function " + name + " is not found");
+        };
+        /**
+         * Get function implemention by its function name
+         * @param {string} name function name
+         * @returns {FcalFunction | undefined} function
+         */
+        List.prototype.get = function (name) {
+            return this.functions.get(name);
+        };
+        /**
+         * check if function is available
+         * @param {name} name function name
+         * @returns {boolean} if function is available
+         */
+        List.prototype.check = function (name) {
+            return this.functions.hasOwnProperty(name);
+        };
+        return List;
+    }());
+    FcalFunction.List = List;
+})(FcalFunction || (FcalFunction = {}));
+exports.FcalFunction = FcalFunction;
+
+},{"14":14,"18":18,"3":3}],14:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var decimal_js_1 = require(18);
+var numberSystem_1 = require(15);
+var Type = /** @class */ (function () {
+    function Type() {
+    }
+    Type.prototype.toString = function () {
+        return this.print();
+    };
+    return Type;
+}());
+exports.Type = Type;
+var DATATYPE;
+(function (DATATYPE) {
+    DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
+    DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
+    DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
+})(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
+var TYPERANK;
+(function (TYPERANK) {
+    TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
+    TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
+    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
+})(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
+/**
+ * Represents a type of variable or value
+ */
+// tslint:disable-next-line:no-namespace
+(function (Type) {
+    var Numberic = /** @class */ (function (_super) {
+        __extends(Numberic, _super);
+        function Numberic(value) {
+            var _this = _super.call(this) || this;
+            if (value instanceof decimal_js_1.Decimal) {
+                _this.n = value;
+            }
+            else {
+                _this.n = new decimal_js_1.Decimal(value);
+            }
+            _this.ns = numberSystem_1.NumberSystem.dec;
+            _this.lf = false;
+            return _this;
+        }
+        Numberic.prototype.setSystem = function (numberSys) {
+            this.ns = numberSys;
+            return this;
+        };
+        Numberic.prototype.toNumericString = function () {
+            return this.ns.to(this.n);
+        };
+        Numberic.prototype.print = function () {
+            return this.toNumericString();
+        };
+        Numberic.prototype.Add = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    return value.New(this.plus(value).n);
+                }
+                return this.plus(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.plus(this);
+            }
+            return this.New(value.plus(this).n);
+        };
+        Numberic.prototype.Sub = function (value) {
+            return this.Add(value.negated());
+        };
+        Numberic.prototype.times = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    return value.New(this.mul(value).n);
+                }
+                return this.mul(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.mul(this);
+            }
+            return this.New(value.mul(this).n);
+        };
+        Numberic.prototype.divide = function (value) {
+            // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.div(value);
+                    }
+                    return value.New(this.div(value).n);
+                }
+                return this.div(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.div(this);
+            }
+            return this.New(value.div(this).n);
+        };
+        Numberic.prototype.power = function (value) {
+            // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.New(this.pow(value).n);
+                    }
+                    return value.New(this.pow(value).n);
+                }
+                return this.pow(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.pow(this);
+            }
+            return this.New(value.pow(this).n);
+        };
+        Numberic.prototype.modulo = function (value) {
+            // check type to see which datatype operation
+            // if both type is same na right variable operation
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                // check typerandk to see which will be the return type
+                if (this.TYPERANK <= value.TYPERANK) {
+                    if (this.TYPERANK === value.TYPERANK) {
+                        return this.New(this.mod(value).n);
+                    }
+                    return value.New(this.mod(value).n);
+                }
+                return this.mod(value);
+            }
+            if (value.TYPERANK >= this.TYPERANK) {
+                return value.mod(this);
+            }
+            return this.New(value.mod(this).n);
+        };
+        Numberic.prototype.toNumber = function () {
+            return this.n.toNumber();
+        };
+        return Numberic;
+    }(Type));
+    Type.Numberic = Numberic;
+    /**
+     * Basic Number type
+     */
+    var BNumber = /** @class */ (function (_super) {
+        __extends(BNumber, _super);
+        function BNumber(value) {
+            var _this = _super.call(this, value) || this;
+            _this.TYPE = DATATYPE.NUMBER;
+            _this.TYPERANK = TYPERANK.NUMBER;
+            return _this;
+        }
+        BNumber.New = function (value) {
+            return new BNumber(value);
+        };
+        BNumber.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        BNumber.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        BNumber.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        BNumber.prototype.negated = function () {
+            return BNumber.New(this.n.negated());
+        };
+        BNumber.prototype.div = function (value) {
+            return BNumber.New(this.n.div(value.n));
+        };
+        BNumber.prototype.pow = function (value) {
+            return BNumber.New(this.n.pow(value.n));
+        };
+        BNumber.prototype.mod = function (value) {
+            return BNumber.New(this.n.modulo(value.n));
+        };
+        BNumber.prototype.mul = function (value) {
+            return BNumber.New(this.n.mul(value.n));
+        };
+        BNumber.prototype.plus = function (value) {
+            return BNumber.New(this.n.plus(value.n));
+        };
+        BNumber.prototype.New = function (value) {
+            return BNumber.New(value);
+        };
+        BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
+        return BNumber;
+    }(Numberic));
+    Type.BNumber = BNumber;
+    /**
+     * Percentage type
+     */
+    var Percentage = /** @class */ (function (_super) {
+        __extends(Percentage, _super);
+        function Percentage(value) {
+            var _this = _super.call(this, value) || this;
+            _this.TYPE = DATATYPE.PERCENTAGE;
+            _this.TYPERANK = TYPERANK.PERCENTAGE;
+            return _this;
+        }
+        Percentage.New = function (value) {
+            return new Percentage(value);
+        };
+        Percentage.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        Percentage.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        Percentage.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        Percentage.prototype.negated = function () {
+            return Percentage.New(this.n.negated());
+        };
+        Percentage.prototype.plus = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.plus(value.n));
+            }
+            return Percentage.New(value.n.plus(this.percentageValue(value.n)));
+        };
+        Percentage.prototype.mul = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.mul(value.n));
+            }
+            return Percentage.New(value.n.mul(this.percentageValue(value.n)));
+        };
+        Percentage.prototype.div = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.div(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.div(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).div(value.n));
+        };
+        Percentage.prototype.pow = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.pow(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.pow(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).pow(value.n));
+        };
+        Percentage.prototype.mod = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return Percentage.New(this.n.mod(value.n));
+            }
+            if (value.lf) {
+                return Percentage.New(value.n.mod(this.percentageValue(value.n)));
+            }
+            return Percentage.New(this.percentageValue(value.n).mod(value.n));
+        };
+        Percentage.prototype.percentageValue = function (value) {
+            return value.mul(this.n.div(Percentage.base));
+        };
+        Percentage.prototype.print = function () {
+            return "% " + this.toNumericString();
+        };
+        Percentage.prototype.New = function (value) {
+            return Percentage.New(value);
+        };
+        Percentage.base = new decimal_js_1.Decimal(100);
+        return Percentage;
+    }(Numberic));
+    Type.Percentage = Percentage;
+    /**
+     * Number with unit
+     */
+    var UnitNumber = /** @class */ (function (_super) {
+        __extends(UnitNumber, _super);
+        function UnitNumber(value, unit) {
+            var _this = _super.call(this, value) || this;
+            _this.unit = unit;
+            _this.TYPE = DATATYPE.UNIT;
+            _this.TYPERANK = TYPERANK.UNIT;
+            return _this;
+        }
+        UnitNumber.New = function (value, unit) {
+            return new UnitNumber(value, unit);
+        };
+        UnitNumber.convertToUnit = function (value, unit) {
+            if (value instanceof UnitNumber) {
+                var value2 = value;
+                if (value2.unit.id === unit.id && value2.unit.unitType !== unit.unitType) {
+                    return UnitNumber.New(value2.convert(unit.ratio, unit.bias), unit).setSystem(value.ns);
+                }
+            }
+            return UnitNumber.New(value.n, unit).setSystem(value.ns);
+        };
+        UnitNumber.prototype.New = function (value) {
+            return new UnitNumber(value, this.unit);
+        };
+        UnitNumber.prototype.isZero = function () {
+            return this.n.isZero();
+        };
+        UnitNumber.prototype.isNegative = function () {
+            return this.n.isNegative();
+        };
+        UnitNumber.prototype.isInteger = function () {
+            return this.n.isInteger();
+        };
+        UnitNumber.prototype.negated = function () {
+            return this.New(this.n.negated());
+        };
+        UnitNumber.prototype.plus = function (value) {
+            if (value instanceof UnitNumber) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.New(this.n.add(right.n));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.New(this.n.add(right.n));
+                }
+                return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
+            }
+            return this.New(this.n.plus(value.n));
+        };
+        UnitNumber.prototype.mul = function (value) {
+            if (value instanceof UnitNumber) {
+                var right = value;
+                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
+                    return this.New(this.n.mul(right.n));
+                }
+                if (this.unit.id !== right.unit.id) {
+                    return right.New(this.n.mul(right.n));
+                }
+                return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
+            }
+            return this.New(this.n.mul(value.n));
+        };
+        UnitNumber.prototype.div = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return new Type.BNumber(left1.n.div(right1.n));
+                }
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.div(right.n));
+                }
+                return new Type.BNumber(left1.n.div(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.div(right.n));
+        };
+        UnitNumber.prototype.pow = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return left1.New(left1.n.pow(right1.n));
+                }
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.pow(right.n));
+                }
+                return left1.New(left1.n.pow(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.pow(right.n));
+        };
+        UnitNumber.prototype.mod = function (value) {
+            var left;
+            var right;
+            if (this.lf) {
+                left = this;
+                right = value;
+            }
+            else {
+                right = this;
+                left = value;
+            }
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id !== right1.unit.id) {
+                    return left1.New(left1.n.mod(right1.n));
+                }
+                if (left1.unit.unitType === right1.unit.unitType) {
+                    return left1.New(left1.n.mod(right1.n));
+                }
+                return left1.New(left1.n.mod(right1.convert(left1.ratio(), left1.bias())));
+            }
+            return this.New(left.n.mod(right.n));
+        };
+        UnitNumber.prototype.convert = function (ratio, bias) {
+            return this.n
+                .mul(this.ratio())
+                .add(this.bias())
+                .minus(bias)
+                .div(ratio);
+        };
+        UnitNumber.prototype.ratio = function () {
+            return this.unit.ratio;
+        };
+        UnitNumber.prototype.bias = function () {
+            return this.unit.bias;
+        };
+        UnitNumber.prototype.print = function () {
+            if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
+                return this.toNumericString() + " " + this.unit.singular;
+            }
+            return this.toNumericString() + " " + this.unit.plural;
+        };
+        return UnitNumber;
+    }(Numberic));
+    Type.UnitNumber = UnitNumber;
+})(Type || (Type = {}));
+exports.Type = Type;
+
+},{"15":15,"18":18}],7:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var token_1 = require(10);
+var parser_1 = require(13);
+var datatype_1 = require(14);
+var units_1 = require(17);
+var Interpreter = /** @class */ (function () {
+    function Interpreter(source, phrases, units, environment) {
+        var parser = new parser_1.Parser(source, phrases, units, environment.symbolTable);
+        this.environment = environment;
+        this.ast = parser.parse();
+    }
+    Interpreter.prototype.getAST = function () {
+        return this.ast.toString();
+    };
+    Interpreter.prototype.visitCallExpr = function (expr) {
+        var name = expr.name;
+        var call;
+        call = this.environment.functions.get(name);
+        if (call) {
+            if (call.arity !== -1) {
+                if (call.arity !== expr.argument.length) {
+                    throw new fcal_1.FcalError("function " + name + " expected " + call.arity + " args but got " + expr.argument.length, expr.start, expr.end);
+                }
+            }
+            var argument = Array();
+            for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
+                var param = _a[_i];
+                argument.push(this.evaluate(param));
+            }
+            return call.call(this.environment, argument);
+        }
+        throw new fcal_1.FcalError(name + " is not callable", expr.start, expr.end);
+    };
+    Interpreter.prototype.visitAssignExpr = function (expr) {
+        var value = this.evaluate(expr.value);
+        this.environment.set(expr.name, value);
+        return value;
+    };
+    Interpreter.prototype.visitVariableExpr = function (expr) {
+        return this.environment.get(expr.name);
+    };
+    Interpreter.prototype.evaluateExpression = function () {
+        var value = this.evaluate(this.ast);
+        this.environment.set('_', value);
+        return value;
+    };
+    Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
+        if (value instanceof datatype_1.Type.Numberic) {
+            if (expr.unit instanceof units_1.UnitMeta) {
+                return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
+            }
+            return value.setSystem(expr.unit);
+        }
+        throw new fcal_1.FcalError('Expecting numeric value before in', expr.start, expr.end);
+    };
+    Interpreter.prototype.visitUnitExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
+        if (value instanceof datatype_1.Type.Numberic) {
+            return datatype_1.Type.UnitNumber.New(value.n, expr.unit).setSystem(value.ns);
+        }
+        throw new fcal_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
+    };
+    Interpreter.prototype.visitBinaryExpr = function (expr) {
+        var left = this.evaluate(expr.left);
+        var right = this.evaluate(expr.right);
+        switch (expr.operator.type) {
+            case token_1.TT.PLUS:
+                if (!left.n.isFinite() && !right.n.isFinite()) {
+                    if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
+                        // console.log(left.number, right.number);
+                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
+                    }
+                }
+                return left.Add(right);
+            case token_1.TT.MINUS:
+                if (!left.n.isFinite() && !right.n.isFinite()) {
+                    if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
+                        // console.log(left.number, right.number)
+                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
+                    }
+                }
+                return left.Sub(right);
+            case token_1.TT.TIMES:
+                return left.times(right);
+            case token_1.TT.FLOOR_DIVIDE:
+                if (!left.n.isFinite() && !right.n.isFinite()) {
+                    throw new fcal_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
+                }
+                var v = left.divide(right);
+                v.n = v.n.floor();
+                return v;
+            case token_1.TT.SLASH:
+                if (!left.n.isFinite() && !right.n.isFinite()) {
+                    throw new fcal_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
+                }
+                return left.divide(right);
+            case token_1.TT.MOD:
+                if (!left.n.isFinite()) {
+                    throw new fcal_1.FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
+                }
+                if (right.isZero()) {
+                    return new datatype_1.Type.BNumber('Infinity');
+                }
+                return left.modulo(right);
+            case token_1.TT.CAP:
+                if (left.isNegative()) {
+                    if (!right.isInteger()) {
+                        throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", expr.left.start, expr.right.end);
+                    }
+                }
+                return left.power(right);
+            case token_1.TT.OF:
+                left = new datatype_1.Type.Percentage(left.n);
+                var per = left;
+                right.n = per.percentageValue(right.n);
+                return right;
+            default:
+                return datatype_1.Type.BNumber.ZERO;
+        }
+    };
+    Interpreter.prototype.visitGroupingExpr = function (expr) {
+        return this.evaluate(expr.expression);
+    };
+    Interpreter.prototype.visitLiteralExpr = function (expr) {
+        return expr.value;
+    };
+    Interpreter.prototype.visitUnaryExpr = function (expr) {
+        var right = this.evaluate(expr.right);
+        if (expr.operator.type === token_1.TT.MINUS) {
+            return right.negated();
+        }
+        return right;
+    };
+    Interpreter.prototype.visitPercentageExpr = function (expr) {
+        var value = this.evaluate(expr.expression);
+        if (value instanceof datatype_1.Type.Numberic) {
+            return datatype_1.Type.Percentage.New(value.n);
+        }
+        throw new fcal_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
+    };
+    Interpreter.prototype.setValues = function (values) {
+        this.environment.use(values);
+    };
+    Interpreter.prototype.evaluate = function (expr) {
+        var ast = expr.accept(this);
+        return ast;
+    };
+    return Interpreter;
+}());
+exports.Interpreter = Interpreter;
+
+},{"10":10,"13":13,"14":14,"17":17,"3":3}],13:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var lex_1 = require(9);
+var token_1 = require(10);
+var numberSystem_1 = require(15);
+var expr_1 = require(12);
+var Parser = /** @class */ (function () {
+    function Parser(source, phrases, units, symbolTable) {
+        this.source = source;
+        this.lexer = new lex_1.Lexer(this.source, phrases, units);
+        this.ntoken = 0;
+        this.tokens = [];
+        this.symbolTable = symbolTable;
+    }
+    Parser.prototype.parse = function () {
+        var expr = this.Stmt();
+        return expr;
+    };
+    Parser.prototype.Stmt = function () {
+        var expr = this.assignment();
+        if (this.match([token_1.TT.NEWLINE])) {
+            return expr;
+        }
+        if (this.peek().type === token_1.TT.EOL) {
+            throw new fcal_1.FcalError('Expecting new Line', this.peek().end);
+        }
+        throw new fcal_1.FcalError("Unexpected token " + this.peek().lexeme, this.peek().start, this.peek().end);
+    };
+    Parser.prototype.assignment = function () {
+        var expr = this.expression();
+        if (this.match([token_1.TT.EQUAL, token_1.TT.DOUBLE_COLON])) {
+            var expres = this.assignment();
+            if (expr instanceof expr_1.Expr.Variable) {
+                var name_1 = expr.name;
+                return new expr_1.Expr.Assign(name_1, expres, expr.start, expres.end);
+            }
+            throw new fcal_1.FcalError('Execting variable in left side of assignment', expr.start, expr.end);
+        }
+        return expr;
+    };
+    Parser.prototype.expression = function () {
+        return this.addition();
+    };
+    Parser.prototype.addition = function () {
+        var expr = this.multiply();
+        while (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
+            var operator = this.previous();
+            var right = this.multiply();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
+    };
+    Parser.prototype.multiply = function () {
+        var expr = this.unitConvert();
+        while (this.match([token_1.TT.TIMES, token_1.TT.SLASH, token_1.TT.MOD, token_1.TT.OF, token_1.TT.FLOOR_DIVIDE])) {
+            var operator = this.previous();
+            var right = this.unitConvert();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
+    };
+    Parser.prototype.unitConvert = function () {
+        var expr = this.unary();
+        if (this.match([token_1.TT.IN])) {
+            if (this.match([token_1.TT.UNIT])) {
+                var unit = this.previous();
+                var unit2 = this.lexer.units.get(unit.lexeme);
+                if (unit2) {
+                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
+                }
+            }
+            if (this.match([token_1.TT.NS])) {
+                var token = this.previous();
+                var ns = numberSystem_1.NumberSystem.get(token.lexeme);
+                if (ns) {
+                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
+                }
+            }
+            throw new fcal_1.FcalError('Expecting unit after in');
+        }
+        return expr;
+    };
+    Parser.prototype.unary = function () {
+        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
+            var operator = this.previous();
+            var right = this.unary();
+            return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
+        }
+        return this.exponent();
+    };
+    Parser.prototype.exponent = function () {
+        var expr = this.suffix();
+        while (this.match([token_1.TT.CAP])) {
+            var operator = this.previous();
+            var right = this.unary();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
+    };
+    Parser.prototype.suffix = function () {
+        var expr = this.call();
+        if (this.match([token_1.TT.PERCENTAGE])) {
+            var operator = this.previous();
+            return new expr_1.Expr.Percentage(expr, expr.start, operator.end);
+        }
+        if (this.match([token_1.TT.UNIT])) {
+            var unit = this.previous();
+            var unit2 = void 0;
+            unit2 = this.lexer.units.get(unit.lexeme);
+            if (unit2) {
+                return new expr_1.Expr.UnitExpr(expr, unit2, expr.start, unit.end);
+            }
+        }
+        return expr;
+    };
+    Parser.prototype.call = function () {
+        var expr = this.term();
+        if (this.match([token_1.TT.OPEN_PARAN])) {
+            if (expr instanceof expr_1.Expr.Variable) {
+                var argument = Array();
+                if (this.peek().type !== token_1.TT.CLOSE_PARAN) {
+                    do {
+                        argument.push(this.expression());
+                    } while (this.match([token_1.TT.COMMA]));
+                }
+                this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after the arguments");
+                return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
+            }
+            throw new fcal_1.FcalError("Not callable", expr.start, this.previous().end);
+        }
+        return expr;
+    };
+    Parser.prototype.term = function () {
+        if (this.match([token_1.TT.Number])) {
+            return new expr_1.Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
+        }
+        if (this.match([token_1.TT.OPEN_PARAN])) {
+            var start = this.previous();
+            var expr = this.expression();
+            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression but found " + this.peek().lexeme);
+            return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
+        }
+        if (this.match([token_1.TT.NAME])) {
+            return new expr_1.Expr.Variable(this.previous().lexeme, this.previous().start, this.previous().end);
+        }
+        var lexeme = this.peek().lexeme;
+        var entity = this.symbolTable.get(lexeme);
+        if (entity) {
+            throw new fcal_1.FcalError("Expect expression but found " + lexeme + " [" + entity.toLowerCase() + "]", this.peek().start, this.peek().end);
+        }
+        throw new fcal_1.FcalError("Expect expression but found " + lexeme, this.peek().start, this.peek().end);
+    };
+    Parser.prototype.match = function (types) {
+        for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {
+            var type = types_1[_i];
+            if (this.check(type)) {
+                this.incr();
+                return true;
+            }
+        }
+        return false;
+    };
+    Parser.prototype.consume = function (type, message) {
+        if (this.check(type)) {
+            this.incr();
+            return;
+        }
+        throw new fcal_1.FcalError(message, this.peek().start, this.peek().end);
+    };
+    Parser.prototype.check = function (type) {
+        if (this.isAtEnd()) {
+            return false;
+        }
+        return this.peek().type === type;
+    };
+    Parser.prototype.isAtEnd = function () {
+        var token = this.nextToken();
+        return token.type === token_1.TT.EOL;
+    };
+    Parser.prototype.nextToken = function () {
+        if (this.ntoken < this.tokens.length) {
+            return this.tokens[this.ntoken];
+        }
+        return this.getToken();
+    };
+    Parser.prototype.getToken = function () {
+        var token = this.lexer.Next();
+        if (token.type !== token_1.TT.EOL) {
+            this.tokens.push(token);
+        }
+        return token;
+    };
+    Parser.prototype.previous = function () {
+        return this.tokens[this.ntoken - 1];
+    };
+    Parser.prototype.peek = function () {
+        return this.nextToken();
+    };
+    Parser.prototype.incr = function () {
+        this.ntoken++;
+    };
+    return Parser;
+}());
+exports.Parser = Parser;
+
+},{"10":10,"12":12,"15":15,"3":3,"9":9}],9:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var datatype_1 = require(14);
+var numberSystem_1 = require(15);
+var token_1 = require(10);
+var Lexer = /** @class */ (function () {
+    function Lexer(source, phrases, untis) {
+        // Removing the space around expression
+        this.source = source.replace(/[ \t]+$/, '');
+        this.start = 0;
+        this.current = 0;
+        this.tokens = Array();
+        this.phrases = phrases;
+        this.units = untis;
+    }
+    Lexer.isDigit = function (char) {
+        return char >= '0' && char <= '9';
+    };
+    Lexer.isAlpha = function (char) {
+        return (!Lexer.isDigit(char) && !this.isSpace(char) && char !== '\0' && char !== '\n' && !Lexer.notAlpha.includes(char));
+    };
+    Lexer.isSpace = function (char) {
+        return char === '\t' || char === ' ';
+    };
+    Lexer.isBinaryDigit = function (char) {
+        return char === '0' || char === '1';
+    };
+    Lexer.isOctalDigit = function (char) {
+        return char >= '0' && char <= '8';
+    };
+    Lexer.isHexDigit = function (char) {
+        return (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F');
+    };
+    Lexer.prototype.Next = function () {
+        if (this.isAtEnd()) {
+            return token_1.Token.EOL(this.current);
+        }
+        return this.scan();
+    };
+    Lexer.prototype.scan = function () {
+        var char = this.space();
+        switch (char) {
+            case token_1.TT.PLUS:
+                return this.TT(token_1.TT.PLUS);
+            case token_1.TT.MINUS:
+                return this.TT(token_1.TT.MINUS);
+            case token_1.TT.TIMES:
+                if (this.peek(0) === token_1.TT.TIMES) {
+                    this.eat();
+                    return this.TT(token_1.TT.CAP);
+                }
+                return this.TT(token_1.TT.TIMES);
+            case token_1.TT.SLASH:
+                if (this.peek(0) === token_1.TT.SLASH) {
+                    this.eat();
+                    return this.TT(token_1.TT.FLOOR_DIVIDE);
+                }
+                return this.TT(token_1.TT.SLASH);
+            case token_1.TT.EQUAL:
+                return this.TT(token_1.TT.EQUAL);
+            case token_1.TT.COMMA:
+                return this.TT(token_1.TT.COMMA);
+            case token_1.TT.DOUBLE_COLON:
+                return this.TT(token_1.TT.DOUBLE_COLON);
+            case token_1.TT.OPEN_PARAN:
+                return this.TT(token_1.TT.OPEN_PARAN);
+            case token_1.TT.CLOSE_PARAN:
+                return this.TT(token_1.TT.CLOSE_PARAN);
+            case token_1.TT.CAP:
+                return this.TT(token_1.TT.CAP);
+            case token_1.TT.PERCENTAGE:
+                return this.TT(token_1.TT.PERCENTAGE);
+            case token_1.TT.NEWLINE:
+                return this.TT(token_1.TT.NEWLINE);
+            default:
+                if (Lexer.isDigit(char)) {
+                    return this.number();
+                }
+                return this.string();
+        }
+    };
+    Lexer.prototype.isAtEnd = function () {
+        return this.current >= this.source.length;
+    };
+    Lexer.prototype.eat = function () {
+        this.current++;
+        return this.source.charAt(this.current - 1);
+    };
+    Lexer.prototype.peek = function (n) {
+        if (this.current + n >= this.source.length) {
+            return '\0';
+        }
+        return this.source.charAt(this.current + n);
+    };
+    Lexer.prototype.string = function () {
+        while (Lexer.isAlpha(this.peek(0)) || Lexer.isDigit(this.peek(0))) {
+            this.eat();
+        }
+        var text = this.lexeme();
+        var type;
+        if (text === 'Infinity') {
+            return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(text));
+        }
+        type = this.phrases.get(text);
+        if (type) {
+            return this.TT(type);
+        }
+        var unit = this.units.get(text);
+        if (unit) {
+            return this.TTWithLiteral(token_1.TT.UNIT, text);
+        }
+        var ns = numberSystem_1.NumberSystem.get(text);
+        if (ns) {
+            return this.TTWithLiteral(token_1.TT.NS, text);
+        }
+        return this.TT(token_1.TT.NAME);
+    };
+    Lexer.prototype.number = function () {
+        if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+            this.eat();
+            while (Lexer.isDigit(this.peek(0))) {
+                if (!Lexer.isBinaryDigit(this.peek(0))) {
+                    throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in binary number", this.current);
+                }
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.bin);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
+        if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+            this.eat();
+            while (Lexer.isDigit(this.peek(0))) {
+                if (!Lexer.isOctalDigit(this.peek(0))) {
+                    throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Octal number", this.current);
+                }
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.oct);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
+        if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+            this.eat();
+            if (!Lexer.isHexDigit(this.peek(0))) {
+                throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexa decimal", this.current);
+            }
+            while (Lexer.isHexDigit(this.peek(0))) {
+                this.eat();
+            }
+            var value = new datatype_1.Type.BNumber(this.lexeme());
+            value.setSystem(numberSystem_1.NumberSystem.hex);
+            return this.TTWithLiteral(token_1.TT.Number, value);
+        }
+        while (Lexer.isDigit(this.peek(0))) {
+            this.eat();
+        }
+        if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
+            this.eat();
+            while (Lexer.isDigit(this.peek(0))) {
+                this.eat();
+            }
+        }
+        if (this.peek(0) === 'E' || this.peek(0) === 'e') {
+            var c = this.peek(0);
+            this.eat();
+            if (this.peek(0) === '+' || this.peek(0) === '-') {
+                c = this.peek(0);
+                this.eat();
+            }
+            if (!Lexer.isDigit(this.peek(0))) {
+                throw new fcal_1.FcalError("Expecting number after " + c + " but got '" + this.peek(0) + "'", this.start, this.current);
+            }
+            while (Lexer.isDigit(this.peek(0))) {
+                this.eat();
+            }
+        }
+        return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(this.lexeme()));
+    };
+    Lexer.prototype.TT = function (type) {
+        return this.TTWithLiteral(type, null);
+    };
+    Lexer.prototype.TTWithLiteral = function (type, literal) {
+        var token = new token_1.Token(type, this.lexeme(), literal, this.start, this.current);
+        this.start = this.current;
+        this.tokens.push(token);
+        return token;
+    };
+    Lexer.prototype.lexeme = function () {
+        return this.source.substring(this.start, this.current);
+    };
+    Lexer.prototype.space = function () {
+        var char = this.eat();
+        while (Lexer.isSpace(char)) {
+            this.start = this.current;
+            char = this.eat();
+        }
+        return char;
+    };
+    Lexer.notAlpha = [
+        token_1.TT.PLUS,
+        token_1.TT.MINUS,
+        token_1.TT.TIMES,
+        token_1.TT.SLASH,
+        token_1.TT.OPEN_PARAN,
+        token_1.TT.CLOSE_PARAN,
+        token_1.TT.CAP,
+        token_1.TT.PERCENTAGE,
+        token_1.TT.EQUAL,
+        token_1.TT.COMMA,
+        token_1.TT.DOUBLE_COLON,
+        token_1.TT.NEWLINE,
+    ];
+    return Lexer;
+}());
+exports.Lexer = Lexer;
+
+},{"10":10,"14":14,"15":15,"3":3}],15:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NumberSystem = /** @class */ (function () {
+    function NumberSystem(name, to) {
+        this.to = to;
+        this.name = name;
+    }
+    NumberSystem.get = function (ns) {
+        return NumberSystem.ns[ns];
+    };
+    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
+        return num.toString();
+    });
+    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
+        return num.toHexadecimal();
+    });
+    NumberSystem.bin = new NumberSystem('Binary', function (num) {
+        return num.toBinary();
+    });
+    NumberSystem.oct = new NumberSystem('Octal', function (num) {
+        return num.toOctal();
+    });
+    NumberSystem.ns = {
+        bin: NumberSystem.bin,
+        binary: NumberSystem.bin,
+        dec: NumberSystem.dec,
+        decimal: NumberSystem.dec,
+        hex: NumberSystem.hex,
+        hexadecimal: NumberSystem.hex,
+        oct: NumberSystem.oct,
+        octal: NumberSystem.oct,
+    };
+    return NumberSystem;
+}());
+exports.NumberSystem = NumberSystem;
+
+},{}],11:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var units_1 = require(17);
+var ASTPrinter = /** @class */ (function () {
+    function ASTPrinter() {
+        this.depth = 0;
+    }
+    ASTPrinter.createPrefix = function (depth, type) {
+        return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
+    };
+    ASTPrinter.prototype.visitCallExpr = function (expr) {
+        var str = ASTPrinter.createPrefix(this.depth, 'FUNCTION') + " ==> " + expr.name + " ";
+        this.depth += ASTPrinter.tab;
+        for (var _i = 0, _a = expr.argument; _i < _a.length; _i++) {
+            var arg = _a[_i];
+            str = str + " \n|\n" + this.evaluate(arg);
+        }
+        this.depth -= ASTPrinter.tab;
+        return str;
+    };
+    ASTPrinter.prototype.visitAssignExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var value = this.evaluate(expr.value);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'ASSIGN') + " " + expr.name + " \n|\n" + value;
+    };
+    ASTPrinter.prototype.visitVariableExpr = function (expr) {
+        return ASTPrinter.createPrefix(this.depth, 'VARIABLE') + " " + expr.name + "\n|\n";
+    };
+    ASTPrinter.prototype.visitUnitExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'UNIT') + " " + expr.unit.unitType + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.visitUnitConvertionExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        if (expr.unit instanceof units_1.UnitMeta) {
+            return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
+        }
+        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.name + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.visitBinaryExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var left = this.evaluate(expr.left);
+        var right = this.evaluate(expr.right);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'BINARY') + "  " + expr.operator + " \n|\n" + left + right;
+    };
+    ASTPrinter.prototype.visitGroupingExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'Grouping') + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.visitLiteralExpr = function (expr) {
+        return ASTPrinter.createPrefix(this.depth, 'LITERAL') + " " + expr.value.print() + "\n|\n";
+    };
+    ASTPrinter.prototype.visitUnaryExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.right);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'UNARY') + " " + expr.operator + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.visitPercentageExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var expression = this.evaluate(expr.expression);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'PERCENTAGE') + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.print = function (expr) {
+        return this.evaluate(expr);
+    };
+    ASTPrinter.prototype.evaluate = function (expr) {
+        var ast = expr.accept(this);
+        return ast;
+    };
+    ASTPrinter.tab = 2;
+    ASTPrinter.prefixchar = '+';
+    return ASTPrinter;
+}());
+exports.ASTPrinter = ASTPrinter;
+
+},{"17":17}],12:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var astPrinter_1 = require(11);
+var Expr = /** @class */ (function (_super) {
+    __extends(Expr, _super);
+    function Expr(start, end) {
+        var _this = _super.call(this) || this;
+        _this.start = start;
+        _this.end = end;
+        return _this;
+    }
+    Expr.prototype.toString = function () {
+        var res = this.print(this);
+        return res.substring(0, res.length - 2);
+    };
+    return Expr;
+}(astPrinter_1.ASTPrinter));
+exports.Expr = Expr;
+// tslint:disable-next-line: no-namespace
+(function (Expr) {
+    var Binary = /** @class */ (function (_super) {
+        __extends(Binary, _super);
+        function Binary(left, operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.left = left;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Binary.prototype.accept = function (visitor) {
+            return visitor.visitBinaryExpr(this);
+        };
+        return Binary;
+    }(Expr));
+    Expr.Binary = Binary;
+    var Grouping = /** @class */ (function (_super) {
+        __extends(Grouping, _super);
+        function Grouping(expression, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.expression = expression;
+            return _this;
+        }
+        Grouping.prototype.accept = function (visitor) {
+            return visitor.visitGroupingExpr(this);
+        };
+        return Grouping;
+    }(Expr));
+    Expr.Grouping = Grouping;
+    var Assign = /** @class */ (function (_super) {
+        __extends(Assign, _super);
+        function Assign(name, value, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            _this.value = value;
+            return _this;
+        }
+        Assign.prototype.accept = function (visitor) {
+            return visitor.visitAssignExpr(this);
+        };
+        return Assign;
+    }(Expr));
+    Expr.Assign = Assign;
+    var Variable = /** @class */ (function (_super) {
+        __extends(Variable, _super);
+        function Variable(name, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            return _this;
+        }
+        Variable.prototype.accept = function (visitor) {
+            return visitor.visitVariableExpr(this);
+        };
+        return Variable;
+    }(Expr));
+    Expr.Variable = Variable;
+    var Call = /** @class */ (function (_super) {
+        __extends(Call, _super);
+        function Call(name, argument, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            _this.argument = argument;
+            return _this;
+        }
+        Call.prototype.accept = function (visitor) {
+            return visitor.visitCallExpr(this);
+        };
+        return Call;
+    }(Expr));
+    Expr.Call = Call;
+    var Literal = /** @class */ (function (_super) {
+        __extends(Literal, _super);
+        function Literal(value, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.value = value;
+            return _this;
+        }
+        Literal.prototype.accept = function (visitor) {
+            return visitor.visitLiteralExpr(this);
+        };
+        return Literal;
+    }(Expr));
+    Expr.Literal = Literal;
+    var Percentage = /** @class */ (function (_super) {
+        __extends(Percentage, _super);
+        function Percentage(expression, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.expression = expression;
+            return _this;
+        }
+        Percentage.prototype.accept = function (visitor) {
+            return visitor.visitPercentageExpr(this);
+        };
+        return Percentage;
+    }(Expr));
+    Expr.Percentage = Percentage;
+    var UnitExpr = /** @class */ (function (_super) {
+        __extends(UnitExpr, _super);
+        function UnitExpr(expression, unit, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.unit = unit;
+            _this.expression = expression;
+            return _this;
+        }
+        UnitExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitExpr(this);
+        };
+        return UnitExpr;
+    }(Expr));
+    Expr.UnitExpr = UnitExpr;
+    var UnitorNSConvertionExpr = /** @class */ (function (_super) {
+        __extends(UnitorNSConvertionExpr, _super);
+        function UnitorNSConvertionExpr(expression, unit, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.unit = unit;
+            _this.expression = expression;
+            return _this;
+        }
+        UnitorNSConvertionExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitConvertionExpr(this);
+        };
+        return UnitorNSConvertionExpr;
+    }(Expr));
+    Expr.UnitorNSConvertionExpr = UnitorNSConvertionExpr;
+    var Unary = /** @class */ (function (_super) {
+        __extends(Unary, _super);
+        function Unary(operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Unary.prototype.accept = function (visitor) {
+            return visitor.visitUnaryExpr(this);
+        };
+        return Unary;
+    }(Expr));
+    Expr.Unary = Unary;
+})(Expr || (Expr = {}));
+exports.Expr = Expr;
+
+},{"11":11}]},{},[3])(3)
 });

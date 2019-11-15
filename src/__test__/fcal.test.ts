@@ -3,7 +3,7 @@ import { Type } from '../types/datatype';
 
 test('Simple arithmetic operation', () => {
   const expression =
-    '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ^ 3 ^ -4 ';
+    '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ** 3 ^ -4 ';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('24.412934840534418202'));
 });
 
@@ -23,13 +23,23 @@ test('Power result in imaginary number', () => {
 test('Phrases', () => {
   const expression =
     '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS 1) + 1.000 / 1.000\
-     + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) pow 3 ^ -4';
+     + 1 * (1) * (0.2) mul (5) * (-1) * (--1) * (-1) + (1.23423) ** (2) pow 3 ^ -4';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('24.412934840534418202'));
 });
 
 test('Modulo Operation', () => {
   const expression = '- (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) + 4 mod 5 mod 45   mod 1 ';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('2.0'));
+});
+
+test('Floor division', () => {
+  expect(Fcal.eval('16//10/5')).toStrictEqual(Type.BNumber.New(0.2));
+  expect(Fcal.eval('-10//3')).toStrictEqual(Type.BNumber.New(-4));
+  const unit = Fcal.getUnit('cm');
+  expect(unit).not.toBeNull();
+  if (unit) {
+    expect(Fcal.eval('-1 cm //5')).toStrictEqual(new Type.UnitNumber(-1, unit));
+  }
 });
 
 test('New line', () => {
@@ -81,7 +91,7 @@ test('Default functions', () => {
   }
 
   const trigno =
-    'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) \
+    'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ** sin(0.23) \
     - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
   const unit2 = Fcal.getUnit('cm');
   expect(unit2).not.toEqual(null);

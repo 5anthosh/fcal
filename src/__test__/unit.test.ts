@@ -20,7 +20,7 @@ test('Time units addition In operator', () => {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('176423', unit));
   }
 });
-
+``
 test('Time units addition as operator', () => {
   const expression = '1 day - 1day*23sec + 23sec + 1hr as sec ';
   const unit = Fcal.getUnit('sec');
@@ -57,11 +57,12 @@ test('units division', () => {
   expect(unit).not.toBeNull();
   if (unit) {
     expect(Fcal.eval('(0x23 km / 0b101 m)  in cm')).toStrictEqual(new Type.UnitNumber(7000, unit));
-
+    expect(Fcal.eval('(45 km / 5.2 km) ')).toStrictEqual(Type.BNumber.New('8.6538461538461538462'));
+    expect(Fcal.eval('(45 km // 5.2 km) ')).toStrictEqual(Type.BNumber.New('8'));
     expect(Fcal.eval('23.23 cm / 3 days')).toStrictEqual(new Type.UnitNumber('7.7433333333333333333', unit));
-
+    expect(Fcal.eval('23.23 cm // 3 days')).toStrictEqual(new Type.UnitNumber('7', unit));
     expect(Fcal.eval('(100 km / 45)  in cm')).toStrictEqual(new Type.UnitNumber('222222.22222222222222', unit));
-
+    expect(Fcal.eval('(100 km // 45)  in cm')).toStrictEqual(new Type.UnitNumber('200000', unit));
     expect(Fcal.eval('(0o127 / 0.4e-2 m)  in cm')).toStrictEqual(new Type.UnitNumber('2175000', unit));
   }
 });
@@ -151,4 +152,15 @@ test('Add already existing unit', () => {
   expect(() => {
     Fcal.UseUnit(new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
   }).toThrowError('month is already used in unit');
+});
+
+test('Mass units', () => {
+  const mgU = Fcal.getUnit('mg');
+  expect(mgU).not.toBeNull();
+  if (mgU) {
+    expect(Fcal.eval('45 kg + 3 tonne in mg')).toStrictEqual(Type.UnitNumber.New(3045000000, mgU));
+    expect(Fcal.eval('1 pound + 2 ounce + 3 USton + 4 stone + 5 imperialton + 6 microgram + 6 g in mg')).toStrictEqual(
+      Type.UnitNumber.New('7827472451.006', mgU),
+    );
+  }
 });

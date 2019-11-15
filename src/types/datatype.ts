@@ -235,7 +235,7 @@ namespace Type {
    * Percentage type
    */
   export class Percentage extends Numberic {
-    public static New(value: string | Decimal): Percentage {
+    public static New(value: string | Decimal | number): Percentage {
       return new Percentage(value);
     }
 
@@ -243,7 +243,7 @@ namespace Type {
     public TYPE: DATATYPE;
     public TYPERANK: TYPERANK;
 
-    constructor(value: string | Decimal) {
+    constructor(value: string | Decimal | number) {
       super(value);
       this.TYPE = DATATYPE.PERCENTAGE;
       this.TYPERANK = TYPERANK.PERCENTAGE;
@@ -325,7 +325,7 @@ namespace Type {
    * Number with unit
    */
   export class UnitNumber extends Numberic {
-    public static New(value: string | Decimal, unit: UnitMeta): UnitNumber {
+    public static New(value: string | Decimal | number, unit: UnitMeta): UnitNumber {
       return new UnitNumber(value, unit);
     }
 

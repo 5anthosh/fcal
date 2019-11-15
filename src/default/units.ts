@@ -7,6 +7,8 @@ export function getDefaultUnits(): IUseUnit[] {
   setSpeedUnits(units);
   setTimeUnits(units);
   setTemperatureUnits(units);
+  setMassUnits(units);
+  setDigitalStorageUnits(units);
   return units;
 }
 
@@ -218,6 +220,212 @@ function setTemperatureUnits(units: IUseUnit[]): void {
         phrases: ['°C', 'C'],
         ratio: 1,
         type: '°C',
+      },
+    ],
+  );
+}
+
+function setMassUnits(units: IUseUnit[]): void {
+  units.push(
+    ...[
+      {
+        id: Unit.MASSID,
+        phrases: ['gram', 'g'],
+        ratio: 1,
+        type: 'gram',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['tonne'],
+        ratio: 1e6,
+        type: 'tonne',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['kg', 'kilogram'],
+        ratio: 1000,
+        type: 'kilogram',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['milligram', 'mg'],
+        ratio: 0.001,
+        type: 'milligram',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['microgram'],
+        ratio: 1e-6,
+        type: 'microgram',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['imperialton'],
+        ratio: '1.016e+6',
+        type: 'imperialton',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['USton'],
+        ratio: '907185',
+        type: 'USton',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['stone'],
+        ratio: '6350.29',
+        type: 'stone',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['pound'],
+        ratio: '453.592',
+        type: 'pound',
+      },
+      {
+        id: Unit.MASSID,
+        phrases: ['ounce'],
+        ratio: '28.3495',
+        type: 'ounce',
+      },
+    ],
+  );
+}
+
+function setDigitalStorageUnits(units: IUseUnit[]): void {
+  units.push(
+    ...[
+      {
+        id: Unit.DIGITAL,
+        phrases: ['bit'],
+        ratio: 1,
+        type: 'bit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['kilobit'],
+        ratio: 1000,
+        type: 'kilobit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['kibibit'],
+        ratio: 1024,
+        type: 'kibibit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['megabit'],
+        ratio: 1e6,
+        type: 'megabit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['mebibit'],
+        ratio: '1.049e+6',
+        type: 'mebibit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['gigabit'],
+        ratio: 1e9,
+        type: 'gigabit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['gibibit'],
+        ratio: '1.074e+9',
+        type: 'gibibit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['terabit'],
+        ratio: 1e12,
+        type: 'terabit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['tebibit'],
+        ratio: '1.1e+12',
+        type: 'tebibit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['petabit'],
+        ratio: 1e15,
+        type: 'petabit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['pebibit'],
+        ratio: '1.126e+15',
+        type: 'pebibit',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['byte'],
+        ratio: 8,
+        type: 'byte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['kilobyte'],
+        ratio: 8000,
+        type: 'kilobyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['kibibyte'],
+        ratio: 8192,
+        type: 'kibibyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['megabyte'],
+        ratio: 8e6,
+        type: 'megabyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['mebibyte'],
+        ratio: '8.389e+6',
+        type: 'mebibyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['gigabyte'],
+        ratio: 8e9,
+        type: 'gigabyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['gibibyte'],
+        ratio: '8.59e+9',
+        type: 'gibibyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['terabyte'],
+        ratio: 8e12,
+        type: 'terabyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['tebibyte'],
+        ratio: '8.796e+12',
+        type: 'tebibyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['petabyte'],
+        ratio: 8e15,
+        type: 'petabyte',
+      },
+      {
+        id: Unit.DIGITAL,
+        phrases: ['pebibyte'],
+        ratio: '9.007e+15',
+        type: 'pebibyte',
       },
     ],
   );

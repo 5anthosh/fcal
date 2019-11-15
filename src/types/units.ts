@@ -114,6 +114,8 @@ namespace Unit {
   export const SPEEDID = 'SPEED';
   export const TIMEID = 'TIME';
   export const TEMPERATUREID = 'TIMERATURE';
+  export const MASSID = "MASS";
+  export const DIGITAL = "DIGITAL STORAGE ID"
 
   /**
    * List of {Unit} sunits

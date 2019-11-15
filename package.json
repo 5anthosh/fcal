@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "rm -rf lib && tsc",
-    "browser": "tsc --target es5 --outDir es5 && browserify es5/fcal.js --standalone fcal -o  dist/fcal.js && uglifyjs --compress --mangle -- dist/fcal.js > dist/fcal.min.js && rm -rf es5",
+    "browser": "tsc --target es5 --outDir es5 && browserify es5/fcal.js --standalone fcal -o  dist/fcal.js -p common-shakeify  -p bundle-collapser/plugin && uglifyjs --compress --mangle -- dist/fcal.js > dist/fcal.min.js && rm -rf es5",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build && npm run browser",
@@ -30,6 +30,8 @@
     "@types/jest": "^24.0.23",
     "@types/node": "^12.12.7",
     "browserify": "^16.5.0",
+    "bundle-collapser": "^1.3.0",
+    "common-shakeify": "^0.6.2",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
     "ts-jest": "^24.1.0",

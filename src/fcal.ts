@@ -28,7 +28,7 @@ class Fcal {
 
   /**
    * register new fcal Functions
-   * @param {Array<FcalFunction>} functions list of fcal function definitions
+   * @param {Array<FcalFunction | Object>} functions list of fcal function definitions
    */
   public static UseFunctions(functions: Array<FcalFunction | IUseFunction>): void {
     for (const func of functions) {
@@ -38,7 +38,7 @@ class Fcal {
 
   /**
    * Register new Fcal function
-   * @param {FcalFunction} function fcal function definitions
+   * @param {FcalFunction | Object} function fcal function definitions
    */
   public static UseFunction(func: FcalFunction | IUseFunction): void {
     Fcal.gst.set(func.name, Entity.FUNCTION);
@@ -51,7 +51,7 @@ class Fcal {
 
   /**
    * Register new units
-   * @param {Array<Unit>} units
+   * @param {Array<Unit | Object>} units
    */
   public static UseUnits(units: Array<Unit | IUseUnit>): void {
     for (const unit of units) {
@@ -61,7 +61,7 @@ class Fcal {
 
   /**
    * Register new unit
-   * @param {Unit} unit
+   * @param {Unit | Object} unit
    */
   public static UseUnit(unit: Unit | IUseUnit): void {
     if (unit instanceof Unit) {
@@ -154,7 +154,7 @@ class Fcal {
     });
   }
 
-  /* =========================Class attributes===============================  */
+  /* ========================= Class attributes ===============================  */
 
   private environment: Environment;
   private lst: SymbolTable;
@@ -218,7 +218,7 @@ function prefixNewLIne(source: string): string {
  * evaluate AST with its state
  */
 class Expression {
-  private interpreter: Interpreter;
+  private readonly interpreter: Interpreter;
 
   constructor(interpeter: Interpreter) {
     this.interpreter = interpeter;
@@ -247,8 +247,7 @@ class Expression {
 }
 
 /**
- * FcalError class
- * it represents Error in Fcal
+ * FcalError represents Error in Fcal
  */
 class FcalError extends Error {
   public start?: number;

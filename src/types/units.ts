@@ -3,6 +3,19 @@ import { Entity, SymbolTable } from '../interpreter/symboltable';
 
 type callbackFuncFmt = () => Decimal | number;
 
+/**
+ * IUseUnit
+ * Interface for UseUnit functions param
+ */
+interface IUseUnit {
+  id: string;
+  type: string;
+  ratio: Decimal | number | string | callbackFuncFmt;
+  bias?: Decimal | number | string | callbackFuncFmt;
+  phrases: string[];
+  singular?: string;
+  plural?: string;
+}
 class UnitMeta {
   public id: string;
   public r: Decimal | callbackFuncFmt;
@@ -140,4 +153,4 @@ namespace Unit {
   }
 }
 
-export { Unit, UnitMeta, callbackFuncFmt };
+export { Unit, UnitMeta, callbackFuncFmt, IUseUnit };

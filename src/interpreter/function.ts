@@ -10,6 +10,16 @@ interface ICallable {
 export type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
 
 /**
+ * IUseFunction
+ * Interface for UseFunction
+ */
+interface IUseFunction {
+  name: string;
+  arity: number;
+  func: FcalFunctionFmt;
+}
+
+/**
  * FcalFunction represents function in fcal
  */
 class FcalFunction implements ICallable {
@@ -122,4 +132,4 @@ namespace FcalFunction {
   }
 }
 
-export { FcalFunction };
+export { FcalFunction, IUseFunction };

@@ -1,4 +1,4 @@
-import { IUseUnit } from '../fcal';
+import { IUseUnit } from '../types/units';
 import { Unit } from '../types/units';
 
 export function getDefaultUnits(): IUseUnit[] {

@@ -3,37 +3,13 @@ import { getDefaultFunctions } from './default/functions';
 import { getDefaultUnits } from './default/units';
 import { Constant } from './interpreter/constants';
 import { EnvInputType, Environment } from './interpreter/environment';
-import { FcalFunction, FcalFunctionFmt } from './interpreter/function';
+import { FcalFunction, IUseFunction } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { Entity, SymbolTable } from './interpreter/symboltable';
 import { TT } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
-import { callbackFuncFmt, Unit, UnitMeta } from './types/units';
-
-/**
- * IUseFunction
- * Interface for UseFunction
- */
-export interface IUseFunction {
-  name: string;
-  arity: number;
-  func: FcalFunctionFmt;
-}
-
-/**
- * IUseUnit
- * Interface for UseUnit functions param
- */
-export interface IUseUnit {
-  id: string;
-  type: string;
-  ratio: Decimal | number | string | callbackFuncFmt;
-  bias?: Decimal | number | string | callbackFuncFmt;
-  phrases: string[];
-  singular?: string;
-  plural?: string;
-}
+import { IUseUnit, Unit, UnitMeta } from './types/units';
 
 /**
  * Math expression evaluator.

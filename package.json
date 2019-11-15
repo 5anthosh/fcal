@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "rm -rf lib && tsc",
-    "browser": "tsc --target es5 --outDir es5 && browserify es5/fcal.js --standalone fcal -o  dist/fcal.js && browserify -p tinyify es5/fcal.js --standalone fcal -o  dist/fcal.min.js && rm -rf es5",
+    "browser": "tsc --target es5 --outDir es5 && browserify es5/fcal.js --standalone fcal -o  dist/fcal.js && uglifyjs --compress --mangle -- dist/fcal.js > dist/fcal.min.js && rm -rf es5",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "prepare": "npm run build && npm run browser",
@@ -32,11 +32,11 @@
     "browserify": "^16.5.0",
     "jest": "^24.9.0",
     "prettier": "^1.19.1",
-    "tinyify": "^2.5.2",
     "ts-jest": "^24.1.0",
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "uglify-js": "^3.6.9"
   },
   "files": [
     "lib/**/*",

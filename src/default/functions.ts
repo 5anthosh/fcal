@@ -1,6 +1,6 @@
 import { Decimal } from 'decimal.js';
-import { IUseFunction } from '../fcal';
 import { Environment } from '../interpreter/environment';
+import { IUseFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
 
 export function getDefaultFunctions(): IUseFunction[] {

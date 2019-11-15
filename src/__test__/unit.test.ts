@@ -1,7 +1,7 @@
 import Decimal from 'decimal.js';
-import { Fcal, IUseUnit } from '../fcal';
+import { Fcal } from '../fcal';
 import { Type } from '../types/datatype';
-import { Unit } from '../types/units';
+import { IUseUnit, Unit } from '../types/units';
 
 test('Time units addition', () => {
   const expression = '1 day + 23sec + 1hr ';

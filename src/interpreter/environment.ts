@@ -18,12 +18,15 @@ class Environment {
   // with key as variable name and value as value
   public readonly functions: FcalFunction.List;
   public readonly symbolTable: SymbolTable;
+  public readonly constants: Constant;
   public values: Map<string, Type>;
 
   constructor(functions: FcalFunction.List, symbolTable: SymbolTable, constants: Constant) {
-    this.values = new Map<string, Type>(constants.values);
+    this.values = new Map<string, Type>();
     this.functions = functions;
     this.symbolTable = symbolTable;
+    this.constants = constants;
+    this.values.set('_', new Type.BNumber(0));
   }
 
   /**
@@ -32,7 +35,7 @@ class Environment {
    * @throws {FcalError} Error if variable is not available
    */
   public get(key: string): Type {
-    const v = this.values.get(key);
+    const v = this.values.get(key) || this.constants.get(key);
     if (v) {
       return v;
     }
@@ -45,6 +48,10 @@ class Environment {
    * @param value value
    */
   public set(key: string, value: ValInputType): void {
+    const en = this.symbolTable.get(key);
+    if (en && en === Entity.CONSTANT) {
+      throw new FcalError(`Can't reassign constant ${key}`);
+    }
     if (!this.values.has(key)) {
       this.symbolTable.set(key, Entity.VARIABLE);
     }

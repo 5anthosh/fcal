@@ -150,7 +150,8 @@ class Fcal {
       E: Type.BNumber.New('2.718281828459045235360287'),
       PI: Type.BNumber.New('3.141592653589793238462645'),
       PI2: Type.BNumber.New('6.2831853071795864769'),
-      _: Type.BNumber.ZERO,
+      false: Type.FBoolean.FALSE,
+      true: Type.FBoolean.TRUE,
     });
   }
 

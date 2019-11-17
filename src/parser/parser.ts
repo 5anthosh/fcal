@@ -52,7 +52,29 @@ class Parser {
   }
 
   private expression(): Expr {
-    return this.addition();
+    return this.equality();
+  }
+  
+  private equality(): Expr {
+    let expr = this.comparison();
+    while (this.match([TT.EQUAL_EQUAL, TT.EQUAL_EQUAL_EQUAL, TT.NOT_EQUAL, TT.NOT_EQUAL_EQUAL])) {
+      const operator = this.previous();
+      const right = this.comparison();
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
+    }
+    return expr;
+  }
+
+  private comparison(): Expr {
+    let expr = this.addition();
+    while (
+      this.match([TT.GREATER, TT.GREATER_EQUAL, TT.GREATER_EQUAL_EQUAL, TT.LESS, TT.LESS_EQUAL, TT.LESS_EQUAL_EQUAL])
+    ) {
+      const operator = this.previous();
+      const right = this.addition();
+      expr = new Expr.Binary(expr, operator, right, expr.start, right.end);
+    }
+    return expr;
   }
 
   private addition(): Expr {
@@ -98,7 +120,7 @@ class Parser {
   }
 
   private unary(): Expr {
-    if (this.match([TT.PLUS, TT.MINUS])) {
+    if (this.match([TT.PLUS, TT.MINUS, TT.NOT])) {
       const operator = this.previous();
       const right = this.unary();
       return new Expr.Unary(operator, right, operator.start, right.end);

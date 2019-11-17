@@ -13,16 +13,16 @@ class Constant {
     this.values = new Map<string, Type>();
     this.symbolTable = symbolTable;
   }
-
+  public get(key: string): Type | undefined {
+    return this.values.get(key);
+  }
   /**
    * create or assign a constant with value
    * @param {string} key constatn name
    * @param  {Type | Big.Decimal | number | string} value value
    */
   public set(key: string, value: Type | Decimal | number | string): void {
-    if (!this.values.has(key)) {
-      this.symbolTable.set(key, Entity.VARIABLE);
-    }
+    this.symbolTable.set(key, Entity.CONSTANT);
     if (value instanceof Type) {
       this.values.set(key, value);
       return;

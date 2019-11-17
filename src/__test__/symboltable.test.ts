@@ -110,7 +110,7 @@ test('create unit with already used phrases', () => {
 
   expect(() => {
     Fcal.UseUnit(new Unit('TEST', 10, 'TEST', ['PI2']));
-  }).toThrowError('PI2 is already used in variable');
+  }).toThrowError('PI2 is already used in constant');
 });
 
 test('create function with already used phrases', () => {

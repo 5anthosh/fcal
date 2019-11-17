@@ -1,4 +1,5 @@
 import { Decimal } from 'decimal.js';
+import { FcalError } from '../fcal';
 import { NumberSystem } from './numberSystem';
 import { UnitMeta } from './units';
 
@@ -32,6 +33,8 @@ namespace Type {
     public n: Decimal;
     public lf: boolean;
     public ns: NumberSystem;
+    public start?: number;
+    public end?: number;
 
     constructor(value: string | Decimal | number) {
       super();
@@ -57,7 +60,62 @@ namespace Type {
       return this.toNumericString();
     }
 
-    public Add(value: Numberic): Numberic {
+    public GT(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.gt(value);
+      }
+      return value.gt(value);
+    }
+    public GTE(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.gte(value);
+      }
+      return value.gte(value);
+    }
+
+    public LT(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.lt(value);
+      }
+      return value.lte(value);
+    }
+
+    public LTE(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.lte(value);
+      }
+      return value.lte(value);
+    }
+
+    public EQ(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.eq(value);
+      }
+      return value.eq(value);
+    }
+
+    public NEQ(value: Numberic): Numberic {
+      this.lf = true;
+      if (this.TYPE >= value.TYPE) {
+        return this.nEq(value);
+      }
+      return value.nEq(value);
+    }
+
+    public Add(value: Numberic, start?: number, end?: number): Numberic {
+      this.start = start;
+      this.end = end;
+      if (!this.n.isFinite() && !value.n.isFinite()) {
+        if (!((this.n.isNegative() && value.n.isNegative()) || (this.n.isPositive() && value.n.isPositive()))) {
+          // console.log(left.number, right.number);
+          throw new FcalError('Subtraction between Infinity is indeterminate', start, end);
+        }
+      }
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.lf = true;
@@ -74,11 +132,13 @@ namespace Type {
       return this.New(value.plus(this).n);
     }
 
-    public Sub(value: Numberic): Numberic {
-      return this.Add(value.negated());
+    public Sub(value: Numberic, start?: number, end?: number): Numberic {
+      return this.Add(value.negated(), start, end);
     }
 
-    public times(value: Numberic): Numberic {
+    public times(value: Numberic, start?: number, end?: number): Numberic {
+      this.start = start;
+      this.end = end;
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.lf = true;
@@ -95,8 +155,12 @@ namespace Type {
       return this.New(value.mul(this).n);
     }
 
-    public divide(value: Numberic): Numberic {
-      // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
+    public divide(value: Numberic, start?: number, end?: number): Numberic {
+      this.start = start;
+      this.end = end;
+      if (!this.n.isFinite() && !value.n.isFinite()) {
+        throw new FcalError('Division between Infinity is indeterminate', start, end);
+      }
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.lf = true;
@@ -116,7 +180,18 @@ namespace Type {
       return this.New(value.div(this).n);
     }
 
-    public power(value: Numberic): Numberic {
+    public power(value: Numberic, start?: number, end?: number): Numberic {
+      this.start = start;
+      this.end = end;
+      if (this.isNegative()) {
+        if (!value.isInteger()) {
+          throw new FcalError(
+            `Pow of operation results in complex number and complex is not supported yet`,
+            start,
+            end,
+          );
+        }
+      }
       // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
       // check type to see which datatype operation
       // if both type is same na right variable operation
@@ -137,7 +212,15 @@ namespace Type {
       return this.New(value.pow(this).n);
     }
 
-    public modulo(value: Numberic): Numberic {
+    public modulo(value: Numberic, start?: number, end?: number): Numberic {
+      this.start = start;
+      this.end = end;
+      if (!this.n.isFinite()) {
+        throw new FcalError('Modulus between Infinity is indeterminate', start, end);
+      }
+      if (value.isZero()) {
+        return new Type.BNumber('Infinity');
+      }
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.lf = true;
@@ -160,7 +243,9 @@ namespace Type {
     public toNumber(): number {
       return this.n.toNumber();
     }
-
+    public not(): Numberic {
+      return new FBoolean(this.n).not();
+    }
     public abstract New(value: Decimal): Numberic;
     public abstract isZero(): boolean;
     public abstract isNegative(): boolean;
@@ -171,6 +256,12 @@ namespace Type {
     public abstract div(value: Numberic): Numberic;
     public abstract pow(value: Numberic): Numberic;
     public abstract mod(value: Numberic): Numberic;
+    public abstract gt(value: Numberic): Numberic;
+    public abstract gte(value: Numberic): Numberic;
+    public abstract lt(value: Numberic): Numberic;
+    public abstract lte(value: Numberic): Numberic;
+    public abstract eq(value: Numberic): Numberic;
+    public abstract nEq(value: Numberic): Numberic;
   }
   /**
    * Basic Number type
@@ -191,6 +282,24 @@ namespace Type {
       this.TYPERANK = TYPERANK.NUMBER;
     }
 
+    public gt(value: Numberic): Numberic {
+      return new FBoolean(this.n.gt(value.n));
+    }
+    public gte(value: Numberic): Numberic {
+      return new FBoolean(this.n.gte(value.n));
+    }
+    public lt(value: Numberic): Numberic {
+      return new FBoolean(this.n.lt(value.n));
+    }
+    public lte(value: Numberic): Numberic {
+      return new FBoolean(this.n.lte(value.n));
+    }
+    public eq(value: Numberic): Numberic {
+      return new FBoolean(this.n.eq(value.n));
+    }
+    public nEq(value: Numberic): Numberic {
+      return this.eq(value).not();
+    }
     public isZero(): boolean {
       return this.n.isZero();
     }
@@ -247,6 +356,54 @@ namespace Type {
       super(value);
       this.TYPE = DATATYPE.PERCENTAGE;
       this.TYPERANK = TYPERANK.PERCENTAGE;
+    }
+    public gt(value: Numberic): Numberic {
+      if (value.TYPE === DATATYPE.PERCENTAGE) {
+        return new FBoolean(this.n.gt(value.n));
+      }
+      if (value.lf) {
+        return new FBoolean(value.n.gt(this.percentageValue(this.n)));
+      }
+      return new FBoolean(this.n.gt(this.percentageValue(value.n)));
+    }
+    public gte(value: Numberic): Numberic {
+      if (value.TYPE === DATATYPE.PERCENTAGE) {
+        return new FBoolean(this.n.gte(value.n));
+      }
+      if (value.lf) {
+        return new FBoolean(value.n.gte(this.percentageValue(this.n)));
+      }
+      return new FBoolean(this.n.gte(this.percentageValue(value.n)));
+    }
+    public lt(value: Numberic): Numberic {
+      if (value.TYPE === DATATYPE.PERCENTAGE) {
+        return new FBoolean(this.n.lt(value.n));
+      }
+      if (value.lf) {
+        return new FBoolean(value.n.lt(this.percentageValue(this.n)));
+      }
+      return new FBoolean(this.n.lt(this.percentageValue(value.n)));
+    }
+    public lte(value: Numberic): Numberic {
+      if (value.TYPE === DATATYPE.PERCENTAGE) {
+        return new FBoolean(this.n.lte(value.n));
+      }
+      if (value.lf) {
+        return new FBoolean(value.n.lte(this.percentageValue(this.n)));
+      }
+      return new FBoolean(this.n.lte(this.percentageValue(value.n)));
+    }
+    public eq(value: Numberic): Numberic {
+      if (value.TYPE === DATATYPE.PERCENTAGE) {
+        return new FBoolean(this.n.eq(value.n));
+      }
+      if (value.lf) {
+        return new FBoolean(value.n.eq(this.percentageValue(this.n)));
+      }
+      return new FBoolean(this.n.eq(this.percentageValue(value.n)));
+    }
+    public nEq(value: Numberic): Numberic {
+      return this.eq(value).not();
     }
 
     public isZero(): boolean {
@@ -370,16 +527,87 @@ namespace Type {
       return this.New(this.n.negated());
     }
 
+    public gt(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      [left, right] = this.lf ? [this, value] : [value, value];
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
+        if (left1.unit.id === right1.unit.id) {
+          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
+        }
+      }
+      return new FBoolean(left.n.gt(right.n));
+    }
+
+    public gte(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      [left, right] = this.lf ? [this, value] : [value, value];
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
+        if (left1.unit.id === right1.unit.id) {
+          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
+        }
+      }
+      return new FBoolean(left.n.gt(right.n));
+    }
+
+    public lt(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      [left, right] = this.lf ? [this, value] : [value, value];
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
+        if (left1.unit.id === right1.unit.id) {
+          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
+        }
+      }
+      return new FBoolean(left.n.gt(right.n));
+    }
+
+    public lte(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      [left, right] = this.lf ? [this, value] : [value, value];
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
+        if (left1.unit.id === right1.unit.id) {
+          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
+        }
+      }
+      return new FBoolean(left.n.gt(right.n));
+    }
+
+    public eq(value: Numberic): Numberic {
+      let left: Numberic;
+      let right: Numberic;
+      [left, right] = this.lf ? [this, value] : [value, value];
+      if (value instanceof UnitNumber) {
+        const left1: UnitNumber = left as UnitNumber;
+        const right1: UnitNumber = right as UnitNumber;
+        if (left1.unit.id === right1.unit.id) {
+          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
+        }
+      }
+      return new FBoolean(left.n.gt(right.n));
+    }
+
+    public nEq(value: Numberic): Numberic {
+      return this.eq(value).not();
+    }
+
     public plus(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
-        if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-          return this.New(this.n.add(right.n));
+        if (this.unit.id === value.unit.id) {
+          return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
         }
-        if (this.unit.id !== right.unit.id) {
-          return right.New(this.n.add(right.n));
-        }
-        return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
+        return value.New(this.n.plus(value.n));
       }
       return this.New(this.n.plus(value.n));
     }
@@ -387,13 +615,10 @@ namespace Type {
     public mul(value: Numberic): Numberic {
       if (value instanceof UnitNumber) {
         const right = value as UnitNumber;
-        if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-          return this.New(this.n.mul(right.n));
+        if (this.unit.id === value.unit.id) {
+          return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
         }
-        if (this.unit.id !== right.unit.id) {
-          return right.New(this.n.mul(right.n));
-        }
-        return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
+        return value.New(this.n.mul(value.n));
       }
       return this.New(this.n.mul(value.n));
     }
@@ -401,13 +626,7 @@ namespace Type {
     public div(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      if (this.lf) {
-        left = this;
-        right = value;
-      } else {
-        right = this;
-        left = value;
-      }
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -425,13 +644,7 @@ namespace Type {
     public pow(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      if (this.lf) {
-        left = this;
-        right = value;
-      } else {
-        right = this;
-        left = value;
-      }
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -453,13 +666,7 @@ namespace Type {
       let left: Numberic;
       let right: Numberic;
 
-      if (this.lf) {
-        left = this;
-        right = value;
-      } else {
-        right = this;
-        left = value;
-      }
+      [left, right] = this.lf ? [this, value] : [value, this];
 
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
@@ -500,6 +707,28 @@ namespace Type {
         return `${this.toNumericString()} ${this.unit.singular}`;
       }
       return `${this.toNumericString()} ${this.unit.plural}`;
+    }
+  }
+
+  export class FBoolean extends BNumber {
+    public static TRUE: FBoolean = new FBoolean(1);
+    public static FALSE: FBoolean = new FBoolean(0);
+    private v: boolean;
+    constructor(value: string | number | Decimal | boolean) {
+      if (typeof value === 'boolean') {
+        super(value ? 1 : 0);
+        this.v = value;
+        return;
+      }
+      super(value);
+      this.v = !this.n.isZero();
+    }
+    public print(): string {
+      return this.v + '';
+    }
+    public not(): BNumber {
+      this.v = !this.v;
+      return this;
     }
   }
 }

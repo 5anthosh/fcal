@@ -33,10 +33,10 @@ test('Undefined variable', () => {
 });
 
 test('test set Values decimal', () => {
-  const expression = 'l * b';
+  const expression = 'l * br';
   const fcal = new Fcal();
   const expr = fcal.expression(expression);
-  expr.setValues({ l: 10, b: 20 });
+  expr.setValues({ l: 10, br: 20 });
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber(200));
 });
 

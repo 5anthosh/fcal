@@ -83,55 +83,42 @@ class Interpreter implements Expr.IVisitor<Type> {
     let left = this.evaluate(expr.left) as Type.BNumber;
     const right = this.evaluate(expr.right) as Type.BNumber;
     switch (expr.operator.type) {
+      case TT.EQUAL_EQUAL:
+        return left.EQ(right);
+      case TT.EQUAL_EQUAL_EQUAL:
+        return new Type.FBoolean(left.n.eq(right.n));
+      case TT.NOT_EQUAL:
+        return left.NEQ(right);
+      case TT.EQUAL_EQUAL_EQUAL:
+        return new Type.FBoolean(!left.n.eq(right.n));
+      case TT.GREATER:
+        return left.GT(right);
+      case TT.GREATER_EQUAL:
+        return left.GTE(right);
+      case TT.GREATER_EQUAL_EQUAL:
+        return new Type.FBoolean(left.n.gte(right.n));
+      case TT.LESS:
+        return left.LT(right);
+      case TT.LESS_EQUAL:
+        return left.LTE(right);
+      case TT.LESS_EQUAL_EQUAL:
+        return new Type.FBoolean(left.n.lte(right.n));
       case TT.PLUS:
-        if (!left.n.isFinite() && !right.n.isFinite()) {
-          if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
-            // console.log(left.number, right.number);
-            throw new FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-          }
-        }
-        return left.Add(right);
+        return left.Add(right, expr.left.start, expr.right.end);
       case TT.MINUS:
-        if (!left.n.isFinite() && !right.n.isFinite()) {
-          if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
-            // console.log(left.number, right.number)
-            throw new FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-          }
-        }
-        return left.Sub(right);
+        return left.Sub(right, expr.left.start, expr.right.end);
       case TT.TIMES:
-        return left.times(right);
+        return left.times(right, expr.left.start, expr.right.end);
       case TT.FLOOR_DIVIDE:
-        if (!left.n.isFinite() && !right.n.isFinite()) {
-          throw new FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
-        }
-        const v = left.divide(right);
+        const v = left.divide(right, expr.left.start, expr.right.end);
         v.n = v.n.floor();
         return v;
       case TT.SLASH:
-        if (!left.n.isFinite() && !right.n.isFinite()) {
-          throw new FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
-        }
-        return left.divide(right);
+        return left.divide(right, expr.left.start, expr.right.end);
       case TT.MOD:
-        if (!left.n.isFinite()) {
-          throw new FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
-        }
-        if (right.isZero()) {
-          return new Type.BNumber('Infinity');
-        }
-        return left.modulo(right);
+        return left.modulo(right, expr.left.start, expr.right.end);
       case TT.CAP:
-        if (left.isNegative()) {
-          if (!right.isInteger()) {
-            throw new FcalError(
-              `Pow of operation results in complex number and complex is not supported yet`,
-              expr.left.start,
-              expr.right.end,
-            );
-          }
-        }
-        return left.power(right);
+        return left.power(right, expr.left.start, expr.right.end);
       case TT.OF:
         left = new Type.Percentage(left.n);
         const per = left as Type.Percentage;
@@ -154,6 +141,9 @@ class Interpreter implements Expr.IVisitor<Type> {
     const right = this.evaluate(expr.right) as Type.BNumber;
     if (expr.operator.type === TT.MINUS) {
       return right.negated();
+    }
+    if (expr.operator.type === TT.NOT) {
+      return new Type.FBoolean(right.n).not();
     }
     return right;
   }

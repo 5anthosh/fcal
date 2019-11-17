@@ -17,6 +17,7 @@ class SymbolTable {
     this.registry.set('hexadecimal', Entity.NS);
     this.registry.set('oct', Entity.NS);
     this.registry.set('octal', Entity.NS);
+    this.registry.set('_', Entity.VARIABLE);
   }
 
   public set(phrase: string, entity: Entity): void {

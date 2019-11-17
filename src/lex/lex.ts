@@ -19,6 +19,10 @@ class Lexer {
     TT.COMMA,
     TT.DOUBLE_COLON,
     TT.NEWLINE,
+    '&',
+    '|',
+    TT.LESS,
+    TT.GREATER,
   ];
 
   private static isDigit(char: string): boolean {
@@ -91,7 +95,45 @@ class Lexer {
         }
         return this.TT(TT.SLASH);
       case TT.EQUAL:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.EQUAL_EQUAL_EQUAL);
+          }
+          return this.TT(TT.EQUAL_EQUAL);
+        }
         return this.TT(TT.EQUAL);
+      case TT.NOT:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.NOT_EQUAL_EQUAL);
+          }
+          return this.TT(TT.NOT_EQUAL);
+        }
+        return this.TT(TT.NOT);
+      case TT.GREATER:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.GREATER_EQUAL_EQUAL);
+          }
+          return this.TT(TT.GREATER_EQUAL);
+        }
+        return this.TT(TT.GREATER);
+      case TT.LESS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.LESS_EQUAL_EQUAL);
+          }
+          return this.TT(TT.LESS_EQUAL);
+        }
+        return this.TT(TT.LESS);
       case TT.COMMA:
         return this.TT(TT.COMMA);
       case TT.DOUBLE_COLON:

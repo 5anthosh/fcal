@@ -20,6 +20,19 @@ enum TT {
   NS = 'ns',
   DOUBLE_COLON = ':',
   FLOOR_DIVIDE = '//',
+  LESS_EQUAL = '<=',
+  GREATER_EQUAL = '>=',
+  LESS_EQUAL_EQUAL = '<==',
+  GREATER_EQUAL_EQUAL = '>==',
+  LESS = '<',
+  GREATER = '>',
+  EQUAL_EQUAL = '==',
+  EQUAL_EQUAL_EQUAL = '===',
+  NOT_EQUAL = '!=',
+  NOT_EQUAL_EQUAL = '!==',
+  NOT = '!',
+  AND = '&&',
+  OR = '||',
 }
 
 class Token {

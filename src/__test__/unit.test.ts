@@ -20,7 +20,6 @@ test('Time units addition In operator', () => {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('176423', unit));
   }
 });
-``
 test('Time units addition as operator', () => {
   const expression = '1 day - 1day*23sec + 23sec + 1hr as sec ';
   const unit = Fcal.getUnit('sec');

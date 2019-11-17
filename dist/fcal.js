@@ -212,7 +212,7 @@ function getDefaultFunctions() {
                     }
                     return max;
                 }
-                return datatype_1.Type.BNumber.ZERO;
+                return datatype_1.Type.BNumber.New(0);
             },
             name: 'max',
         },
@@ -230,7 +230,7 @@ function getDefaultFunctions() {
                     }
                     return min;
                 }
-                return datatype_1.Type.BNumber.ZERO;
+                return datatype_1.Type.BNumber.New(0);
             },
             name: 'min',
         },
@@ -256,6 +256,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require(18);
+var fcal_1 = require(3);
 var numberSystem_1 = require(15);
 var Type = /** @class */ (function () {
     function Type() {
@@ -307,7 +308,15 @@ var TYPERANK;
         Numberic.prototype.print = function () {
             return this.toNumericString();
         };
-        Numberic.prototype.Add = function (value) {
+        Numberic.prototype.Add = function (value, start, end) {
+            this.start = start;
+            this.end = end;
+            if (!this.n.isFinite() && !value.n.isFinite()) {
+                if (!((this.n.isNegative() && value.n.isNegative()) || (this.n.isPositive() && value.n.isPositive()))) {
+                    // console.log(left.number, right.number);
+                    throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', start, end);
+                }
+            }
             // check type to see which datatype operation
             // if both type is same na right variable operation
             this.lf = true;
@@ -323,10 +332,12 @@ var TYPERANK;
             }
             return this.New(value.plus(this).n);
         };
-        Numberic.prototype.Sub = function (value) {
-            return this.Add(value.negated());
+        Numberic.prototype.Sub = function (value, start, end) {
+            return this.Add(value.negated(), start, end);
         };
-        Numberic.prototype.times = function (value) {
+        Numberic.prototype.times = function (value, start, end) {
+            this.start = start;
+            this.end = end;
             // check type to see which datatype operation
             // if both type is same na right variable operation
             this.lf = true;
@@ -342,8 +353,12 @@ var TYPERANK;
             }
             return this.New(value.mul(this).n);
         };
-        Numberic.prototype.divide = function (value) {
-            // console.log(`DIVIDE ${this.number.toString()} ${value.number.toString()}`);
+        Numberic.prototype.divide = function (value, start, end) {
+            this.start = start;
+            this.end = end;
+            if (!this.n.isFinite() && !value.n.isFinite()) {
+                throw new fcal_1.FcalError('Division between Infinity is indeterminate', start, end);
+            }
             // check type to see which datatype operation
             // if both type is same na right variable operation
             this.lf = true;
@@ -362,7 +377,14 @@ var TYPERANK;
             }
             return this.New(value.div(this).n);
         };
-        Numberic.prototype.power = function (value) {
+        Numberic.prototype.power = function (value, start, end) {
+            this.start = start;
+            this.end = end;
+            if (this.isNegative()) {
+                if (!value.isInteger()) {
+                    throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", start, end);
+                }
+            }
             // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
             // check type to see which datatype operation
             // if both type is same na right variable operation
@@ -382,7 +404,15 @@ var TYPERANK;
             }
             return this.New(value.pow(this).n);
         };
-        Numberic.prototype.modulo = function (value) {
+        Numberic.prototype.modulo = function (value, start, end) {
+            this.start = start;
+            this.end = end;
+            if (!this.n.isFinite()) {
+                throw new fcal_1.FcalError('Modulus between Infinity is indeterminate', start, end);
+            }
+            if (value.isZero()) {
+                return new Type.BNumber('Infinity');
+            }
             // check type to see which datatype operation
             // if both type is same na right variable operation
             this.lf = true;
@@ -692,10 +722,25 @@ var TYPERANK;
         return UnitNumber;
     }(Numberic));
     Type.UnitNumber = UnitNumber;
+    var FBoolean = /** @class */ (function (_super) {
+        __extends(FBoolean, _super);
+        function FBoolean(value) {
+            var _this = _super.call(this, value) || this;
+            _this.v = !_this.n.isZero();
+            return _this;
+        }
+        FBoolean.prototype.print = function () {
+            return this.v + '';
+        };
+        FBoolean.TRUE = new FBoolean(1);
+        FBoolean.FALSE = new FBoolean(0);
+        return FBoolean;
+    }(BNumber));
+    Type.FBoolean = FBoolean;
 })(Type || (Type = {}));
 exports.Type = Type;
 
-},{"15":15,"18":18}],2:[function(require,module,exports){
+},{"15":15,"18":18,"3":3}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var units_1 = require(17);
@@ -970,133 +1015,133 @@ function setDigitalStorageUnits(units) {
     units.push.apply(units, [
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['bit'],
+            phrases: ['bit', 'B'],
             ratio: 1,
             type: 'bit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['kilobit'],
+            phrases: ['kilobit', 'kB'],
             ratio: 1000,
             type: 'kilobit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['kibibit'],
+            phrases: ['kibibit', 'kiB'],
             ratio: 1024,
             type: 'kibibit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['megabit'],
+            phrases: ['megabit', 'mB'],
             ratio: 1e6,
             type: 'megabit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['mebibit'],
+            phrases: ['mebibit', 'miB'],
             ratio: '1.049e+6',
             type: 'mebibit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['gigabit'],
+            phrases: ['gigabit', 'gB'],
             ratio: 1e9,
             type: 'gigabit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['gibibit'],
+            phrases: ['gibibit', 'giB'],
             ratio: '1.074e+9',
             type: 'gibibit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['terabit'],
+            phrases: ['terabit', 'tB'],
             ratio: 1e12,
             type: 'terabit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['tebibit'],
+            phrases: ['tebibit', 'tiB'],
             ratio: '1.1e+12',
             type: 'tebibit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['petabit'],
+            phrases: ['petabit', 'pB'],
             ratio: 1e15,
             type: 'petabit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['pebibit'],
+            phrases: ['pebibit', 'piB'],
             ratio: '1.126e+15',
             type: 'pebibit',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['byte'],
+            phrases: ['byte', 'b'],
             ratio: 8,
             type: 'byte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['kilobyte'],
+            phrases: ['kilobyte', 'kb'],
             ratio: 8000,
             type: 'kilobyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['kibibyte'],
+            phrases: ['kibibyte', 'kib'],
             ratio: 8192,
             type: 'kibibyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['megabyte'],
+            phrases: ['megabyte', 'mb'],
             ratio: 8e6,
             type: 'megabyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['mebibyte'],
+            phrases: ['mebibyte', 'mib'],
             ratio: '8.389e+6',
             type: 'mebibyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['gigabyte'],
+            phrases: ['gigabyte', 'gb'],
             ratio: 8e9,
             type: 'gigabyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['gibibyte'],
+            phrases: ['gibibyte', 'gib'],
             ratio: '8.59e+9',
             type: 'gibibyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['terabyte'],
+            phrases: ['terabyte', 'tb'],
             ratio: 8e12,
             type: 'terabyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['tebibyte'],
+            phrases: ['tebibyte', 'tib'],
             ratio: '8.796e+12',
             type: 'tebibyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['petabyte'],
+            phrases: ['petabyte', 'pb'],
             ratio: 8e15,
             type: 'petabyte',
         },
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['pebibyte'],
+            phrases: ['pebibyte', 'pib'],
             ratio: '9.007e+15',
             type: 'pebibyte',
         },
@@ -1198,8 +1243,8 @@ exports.Unit = Unit;
     Unit.SPEEDID = 'SPEED';
     Unit.TIMEID = 'TIME';
     Unit.TEMPERATUREID = 'TIMERATURE';
-    Unit.MASSID = "MASS";
-    Unit.DIGITAL = "DIGITAL STORAGE ID";
+    Unit.MASSID = 'MASS';
+    Unit.DIGITAL = 'DIGITAL STORAGE ID';
     /**
      * List of {Unit} sunits
      */
@@ -1397,7 +1442,8 @@ var Fcal = /** @class */ (function () {
             E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
             PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
             PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
-            _: datatype_1.Type.BNumber.ZERO,
+            false: datatype_1.Type.FBoolean.FALSE,
+            true: datatype_1.Type.FBoolean.TRUE,
         });
     };
     /**
@@ -1527,6 +1573,17 @@ var TT;
     TT["NS"] = "ns";
     TT["DOUBLE_COLON"] = ":";
     TT["FLOOR_DIVIDE"] = "//";
+    TT["LESS_EQUAL"] = "<=";
+    TT["GREATER_EQUAL"] = ">=";
+    TT["LESS"] = "<";
+    TT["GREATER"] = ">";
+    TT["EQUAL_EQUAL"] = "==";
+    TT["EQUAL_EQUAL_EQUAL"] = "===";
+    TT["NOT_EQUAL"] = "!=";
+    TT["NOT_EQUAL_EQUAL"] = "!==";
+    TT["NOT"] = "!";
+    TT["AND"] = "&&";
+    TT["OR"] = "||";
 })(TT || (TT = {}));
 exports.TT = TT;
 var Token = /** @class */ (function () {
@@ -1570,6 +1627,7 @@ var SymbolTable = /** @class */ (function () {
         this.registry.set('hexadecimal', Entity.NS);
         this.registry.set('oct', Entity.NS);
         this.registry.set('octal', Entity.NS);
+        this.registry.set('_', Entity.VARIABLE);
     }
     SymbolTable.prototype.set = function (phrase, entity) {
         var c = this.registry.get(phrase);
@@ -1608,15 +1666,16 @@ var Constant = /** @class */ (function () {
         this.values = new Map();
         this.symbolTable = symbolTable;
     }
+    Constant.prototype.get = function (key) {
+        return this.values.get(key);
+    };
     /**
      * create or assign a constant with value
      * @param {string} key constatn name
      * @param  {Type | Big.Decimal | number | string} value value
      */
     Constant.prototype.set = function (key, value) {
-        if (!this.values.has(key)) {
-            this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
-        }
+        this.symbolTable.set(key, symboltable_1.Entity.CONSTANT);
         if (value instanceof datatype_1.Type) {
             this.values.set(key, value);
             return;
@@ -1658,9 +1717,11 @@ var symboltable_1 = require(8);
  */
 var Environment = /** @class */ (function () {
     function Environment(functions, symbolTable, constants) {
-        this.values = new Map(constants.values);
+        this.values = new Map();
         this.functions = functions;
         this.symbolTable = symbolTable;
+        this.constants = constants;
+        this.values.set('_', new datatype_1.Type.BNumber(0));
     }
     /**
      * Get the value of variable
@@ -1668,7 +1729,7 @@ var Environment = /** @class */ (function () {
      * @throws {FcalError} Error if variable is not available
      */
     Environment.prototype.get = function (key) {
-        var v = this.values.get(key);
+        var v = this.values.get(key) || this.constants.get(key);
         if (v) {
             return v;
         }
@@ -1680,6 +1741,10 @@ var Environment = /** @class */ (function () {
      * @param value value
      */
     Environment.prototype.set = function (key, value) {
+        var en = this.symbolTable.get(key);
+        if (en && en === symboltable_1.Entity.CONSTANT) {
+            throw new fcal_1.FcalError("Can't reassign constant " + key);
+        }
         if (!this.values.has(key)) {
             this.symbolTable.set(key, symboltable_1.Entity.VARIABLE);
         }
@@ -6792,50 +6857,21 @@ var Interpreter = /** @class */ (function () {
         var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
             case token_1.TT.PLUS:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    if (!((left.n.isNegative() && right.n.isNegative()) || (left.n.isPositive() && right.n.isPositive()))) {
-                        // console.log(left.number, right.number);
-                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-                    }
-                }
-                return left.Add(right);
+                return left.Add(right, expr.left.start, expr.right.end);
             case token_1.TT.MINUS:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    if ((left.n.isPositive() && right.n.isPositive()) || (left.n.isNegative() && right.n.isNegative())) {
-                        // console.log(left.number, right.number)
-                        throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', expr.left.start, expr.right.end);
-                    }
-                }
-                return left.Sub(right);
+                return left.Sub(right, expr.left.start, expr.right.end);
             case token_1.TT.TIMES:
-                return left.times(right);
+                return left.times(right, expr.left.start, expr.right.end);
             case token_1.TT.FLOOR_DIVIDE:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    throw new fcal_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
-                }
-                var v = left.divide(right);
+                var v = left.divide(right, expr.left.start, expr.right.end);
                 v.n = v.n.floor();
                 return v;
             case token_1.TT.SLASH:
-                if (!left.n.isFinite() && !right.n.isFinite()) {
-                    throw new fcal_1.FcalError('Division between Infinity is indeterminate', expr.left.start, expr.right.end);
-                }
-                return left.divide(right);
+                return left.divide(right, expr.left.start, expr.right.end);
             case token_1.TT.MOD:
-                if (!left.n.isFinite()) {
-                    throw new fcal_1.FcalError('Modulus between Infinity is indeterminate', expr.left.start, expr.right.end);
-                }
-                if (right.isZero()) {
-                    return new datatype_1.Type.BNumber('Infinity');
-                }
-                return left.modulo(right);
+                return left.modulo(right, expr.left.start, expr.right.end);
             case token_1.TT.CAP:
-                if (left.isNegative()) {
-                    if (!right.isInteger()) {
-                        throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", expr.left.start, expr.right.end);
-                    }
-                }
-                return left.power(right);
+                return left.power(right, expr.left.start, expr.right.end);
             case token_1.TT.OF:
                 left = new datatype_1.Type.Percentage(left.n);
                 var per = left;
@@ -7297,6 +7333,10 @@ var Lexer = /** @class */ (function () {
         token_1.TT.COMMA,
         token_1.TT.DOUBLE_COLON,
         token_1.TT.NEWLINE,
+        '&',
+        '|',
+        token_1.TT.LESS,
+        token_1.TT.GREATER,
     ];
     return Lexer;
 }());

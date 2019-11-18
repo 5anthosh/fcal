@@ -38,8 +38,12 @@ class Parser {
     throw new FcalError(`Unexpected token ${this.peek().lexeme}`, this.peek().start, this.peek().end);
   }
 
+  private expression(): Expr {
+    return this.assignment();
+  }
+
   private assignment(): Expr {
-    const expr = this.expression();
+    const expr = this.logical();
     if (this.match([TT.EQUAL, TT.DOUBLE_COLON])) {
       const expres = this.assignment();
       if (expr instanceof Expr.Variable) {
@@ -49,10 +53,6 @@ class Parser {
       throw new FcalError('Execting variable in left side of assignment', expr.start, expr.end);
     }
     return expr;
-  }
-
-  private expression(): Expr {
-    return this.logical();
   }
 
   private logical(): Expr {
@@ -184,7 +184,7 @@ class Parser {
 
   private term(): Expr {
     if (this.match([TT.Number])) {
-      return new Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
+      return new Expr.Literal(this.previous().literal, this.previous().start, this.previous().end);
     }
     if (this.match([TT.OPEN_PARAN])) {
       const start = this.previous();

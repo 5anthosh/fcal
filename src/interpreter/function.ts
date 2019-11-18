@@ -78,10 +78,6 @@ namespace FcalFunction {
      * @throws {FcalError} Error if function name is already exists
      */
     public push(ff: FcalFunction): void {
-      if (this.check(ff.name)) {
-        // This is unreachable code , becuase SymbolTable will take of this
-        throw new FcalError(`${ff.name} is already registered`);
-      }
       if (ff.arity < -1) {
         throw new FcalError(
           `Can not register ${ff.name}, arity should be greater than or equal to -1 but got ${ff.arity}`,
@@ -119,15 +115,6 @@ namespace FcalFunction {
      */
     public get(name: string): FcalFunction | undefined {
       return this.functions.get(name);
-    }
-
-    /**
-     * check if function is available
-     * @param {name} name function name
-     * @returns {boolean} if function is available
-     */
-    private check(name: string): boolean {
-      return this.functions.hasOwnProperty(name);
     }
   }
 }

@@ -1,6 +1,12 @@
 import { Fcal } from '../fcal';
 import { Type } from '../types/datatype';
 
+test('Run initialize twice', () => {
+  expect(() => {
+    return Fcal.initialize();
+  }).not.toThrowError();
+});
+
 test('Simple arithmetic operation', () => {
   const expression =
     '1 + 2 + 3 * 5 - 4 * (1 - 2) / 3.4 - (-1) + (+1) + 1.000 / 1.000 + 1 * (1) * (0.2) * (5) * (-1) * (--1) * (-1) + (1.23423) ^ (2) ** 3 ^ -4 ';
@@ -50,6 +56,8 @@ test('New line', () => {
 
   const expression1 = '1234+12341324123 * 34 \t \n $';
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
+  expect(() => new Fcal().rawEvaluate('1+')).toThrowError('Expect expression but found ');
+  expect(() => new Fcal().rawEvaluate('1x')).toThrowError("Unexpected '\0' in Hexa decimal");
 });
 
 test('Parser error Expect expression', () => {
@@ -215,48 +223,54 @@ test('Tonumber', () => {
 });
 
 test('AST print()', () => {
-  const expr = new Fcal().expression('y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)%');
+  const expr = new Fcal().expression('5 && ( y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)% )');
   expect(expr.getAST()).toStrictEqual(`\
-+ (0)ASSIGN y 
++ (0)LOGICAL  < && &&  (2, 4)> 
 |
-+---- (1)BINARY  < + +  (56, 57)> 
++---- (1)LITERAL 5
 |
-+-------- (2)BINARY  < + +  (39, 40)> 
++---- (1)Grouping 
 |
-+------------ (3)BINARY  < + +  (23, 24)> 
++-------- (2)ASSIGN y 
 |
-+---------------- (4)BINARY  < * *  (7, 8)> 
++------------ (3)BINARY  < + +  (63, 64)> 
 |
-+-------------------- (5)VARIABLE PI
++---------------- (4)BINARY  < + +  (46, 47)> 
 |
-+-------------------- (5)BINARY  < ^ ^  (19, 20)> 
++-------------------- (5)BINARY  < + +  (30, 31)> 
 |
-+------------------------ (6)UNIT cm 
++------------------------ (6)BINARY  < * *  (14, 15)> 
 |
-+---------------------------- (7)VARIABLE radius
++---------------------------- (7)VARIABLE PI
 |
-+------------------------ (6)LITERAL 2
++---------------------------- (7)BINARY  < ^ ^  (26, 27)> 
 |
-+---------------- (4)UNIT CONVERT cm 
++-------------------------------- (8)UNIT cm 
 |
-+-------------------- (5)FUNCTION ==> sinh  
++------------------------------------ (9)VARIABLE radius
 |
-+------------------------ (6)LITERAL 8
++-------------------------------- (8)LITERAL 2
 |
-+------------ (3)UNIT CONVERT HexaDecimal 
++------------------------ (6)UNIT CONVERT cm 
 |
-+---------------- (4)FUNCTION ==> log  
++---------------------------- (7)FUNCTION ==> sinh  
 |
-+-------------------- (5)LITERAL 23
++-------------------------------- (8)LITERAL 8
 |
-+-------- (2)PERCENTAGE 
++-------------------- (5)UNIT CONVERT HexaDecimal 
 |
-+------------ (3)Grouping 
++------------------------ (6)FUNCTION ==> log  
 |
-+---------------- (4)UNARY < - -  (59, 60)> 
++---------------------------- (7)LITERAL 23
 |
-+-------------------- (5)UNARY < - -  (60, 61)> 
++---------------- (4)PERCENTAGE 
 |
-+------------------------ (6)LITERAL 100
++-------------------- (5)Grouping 
+|
++------------------------ (6)UNARY < - -  (66, 67)> 
+|
++---------------------------- (7)UNARY < - -  (67, 68)> 
+|
++-------------------------------- (8)LITERAL 100
 `);
 });

@@ -189,3 +189,15 @@ test('Units comparison', () => {
   expect(Fcal.eval('63.6 km <=  63.6 sec')).toStrictEqual(new Type.FBoolean(true));
   expect(Fcal.eval('1 kmh <= 0.27777777777777777778mps')).toStrictEqual(new Type.FBoolean(true));
 });
+
+test('Logical and or', () => {
+  expect(() => Fcal.eval('4 & 5')).toThrowError('Unexpected character &');
+  expect(() => Fcal.eval('0x1 cm | 90%')).toThrowError('Unexpected character |');
+
+  expect(Fcal.eval('45 cm && 55 ')).toStrictEqual(Type.BNumber.New(55));
+  expect(Fcal.eval('0 && -23 ')).toStrictEqual(Type.BNumber.New(0));
+  expect(Fcal.eval('-34 && true && -6 ')).toStrictEqual(Type.BNumber.New(-6));
+  expect(Fcal.eval('-88 || 9')).toStrictEqual(Type.BNumber.New(-88));
+  expect(Fcal.eval('false || -9')).toStrictEqual(Type.BNumber.New(-9));
+  expect(Fcal.eval('false || 0 || 0.12')).toStrictEqual(Type.BNumber.New(0.12));
+});

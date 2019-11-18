@@ -82,10 +82,9 @@ class Interpreter implements Expr.IVisitor<Type> {
   public visitLogicalExpr(expr: Expr.Logical): Type {
     const left = this.evaluate(expr.left) as Type.Numberic;
     if (expr.operator.type === TT.AND) {
-      const right = this.evaluate(expr.right) as Type.Numberic;
-      return new Type.FBoolean(left.trusty() && right.trusty());
+      return left.trusty() ? this.evaluate(expr.right) : left;
     }
-    return new Type.FBoolean(left.trusty() || (this.evaluate(expr.right) as Type.Numberic).trusty());
+    return left.trusty() ? left : this.evaluate(expr.right);
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type {

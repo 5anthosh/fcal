@@ -37,12 +37,12 @@ enum TT {
 
 class Token {
   public static EOL(end: number): Token {
-    return new Token(TT.EOL, '', null, end, end);
+    return new Token(TT.EOL, 'EOL', null, end, end);
   }
 
   public type: TT;
   public lexeme: string;
-  public Literal: any;
+  public literal: any;
   public start: number;
   public end: number;
 
@@ -51,15 +51,15 @@ class Token {
     this.lexeme = lexeme;
     this.start = start;
     this.end = end;
-    this.Literal = literal;
+    if (literal === null) {
+      this.literal = '';
+      return;
+    }
+    this.literal = literal;
   }
 
   public toString(): string {
-    let literal = '';
-    if (this.Literal !== null) {
-      literal = this.Literal.format();
-    }
-    return `< ${this.type} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
+    return `< ${this.type} ${this.lexeme} ${this.literal} (${this.start}, ${this.end})>`;
   }
 }
 

@@ -140,13 +140,13 @@ class Lexer {
           this.eat();
           return this.TT(TT.AND);
         }
-        throw new FcalError('Unexpected token &', this.current);
+        throw new FcalError('Unexpected character &', this.current);
       case '|':
         if (this.peek(0) === '|') {
           this.eat();
           return this.TT(TT.OR);
         }
-        throw new FcalError('Unexpected token |', this.current);
+        throw new FcalError('Unexpected character |', this.current);
       case TT.COMMA:
         return this.TT(TT.COMMA);
       case TT.DOUBLE_COLON:

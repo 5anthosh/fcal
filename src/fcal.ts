@@ -98,7 +98,9 @@ class Fcal {
   }
 
   public static initialize(): void {
-    this.gst = new SymbolTable();
+    if (!this.gst) {
+      this.gst = new SymbolTable();
+    }
     if (!this.phrases) {
       this.phrases = this.getdefaultphrases();
     }
@@ -170,11 +172,22 @@ class Fcal {
 
   /**
    * Evaluates given expression
+   * it appends new line character if not present
    * @param {string} expression Math expression
    * @returns {Type} result of expression
    */
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
+    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
+  }
+
+  /**
+   * rawEvaluates given expression
+   * it does not appends new line character if not present
+   * @param {string} expression Math expression
+   * @returns {Type} result of expression
+   */
+  public rawEvaluate(source: string): Type {
     return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
   }
 

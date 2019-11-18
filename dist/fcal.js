@@ -708,7 +708,7 @@ var TYPERANK;
             var _a;
             var left;
             var right;
-            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -722,7 +722,7 @@ var TYPERANK;
             var _a;
             var left;
             var right;
-            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -730,13 +730,13 @@ var TYPERANK;
                     return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
                 }
             }
-            return new FBoolean(left.n.gt(right.n));
+            return new FBoolean(left.n.gte(right.n));
         };
         UnitNumber.prototype.lt = function (value) {
             var _a;
             var left;
             var right;
-            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -744,13 +744,13 @@ var TYPERANK;
                     return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
                 }
             }
-            return new FBoolean(left.n.gt(right.n));
+            return new FBoolean(left.n.lt(right.n));
         };
         UnitNumber.prototype.lte = function (value) {
             var _a;
             var left;
             var right;
-            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -758,13 +758,13 @@ var TYPERANK;
                     return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
                 }
             }
-            return new FBoolean(left.n.gt(right.n));
+            return new FBoolean(left.n.lte(right.n));
         };
         UnitNumber.prototype.eq = function (value) {
             var _a;
             var left;
             var right;
-            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -1562,7 +1562,9 @@ var Fcal = /** @class */ (function () {
         this.constants.use(constants);
     };
     Fcal.initialize = function () {
-        this.gst = new symboltable_1.SymbolTable();
+        if (!this.gst) {
+            this.gst = new symboltable_1.SymbolTable();
+        }
         if (!this.phrases) {
             this.phrases = this.getdefaultphrases();
         }
@@ -1611,11 +1613,21 @@ var Fcal = /** @class */ (function () {
     };
     /**
      * Evaluates given expression
+     * it appends new line character if not present
      * @param {string} expression Math expression
      * @returns {Type} result of expression
      */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
+    };
+    /**
+     * rawEvaluates given expression
+     * it does not appends new line character if not present
+     * @param {string} expression Math expression
+     * @returns {Type} result of expression
+     */
+    Fcal.prototype.rawEvaluate = function (source) {
         return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
     };
     /**
@@ -1757,17 +1769,17 @@ var Token = /** @class */ (function () {
         this.lexeme = lexeme;
         this.start = start;
         this.end = end;
-        this.Literal = literal;
+        if (literal === null) {
+            this.literal = '';
+            return;
+        }
+        this.literal = literal;
     }
     Token.EOL = function (end) {
-        return new Token(TT.EOL, '', null, end, end);
+        return new Token(TT.EOL, 'EOL', null, end, end);
     };
     Token.prototype.toString = function () {
-        var literal = '';
-        if (this.Literal !== null) {
-            literal = this.Literal.format();
-        }
-        return "< " + this.type + " " + this.lexeme + " " + literal + " (" + this.start + ", " + this.end + ")>";
+        return "< " + this.type + " " + this.lexeme + " " + this.literal + " (" + this.start + ", " + this.end + ")>";
     };
     return Token;
 }());
@@ -6899,10 +6911,6 @@ exports.FcalFunction = FcalFunction;
          * @throws {FcalError} Error if function name is already exists
          */
         List.prototype.push = function (ff) {
-            if (this.check(ff.name)) {
-                // This is unreachable code , becuase SymbolTable will take of this
-                throw new fcal_1.FcalError(ff.name + " is already registered");
-            }
             if (ff.arity < -1) {
                 throw new fcal_1.FcalError("Can not register " + ff.name + ", arity should be greater than or equal to -1 but got " + ff.arity);
             }
@@ -6936,14 +6944,6 @@ exports.FcalFunction = FcalFunction;
          */
         List.prototype.get = function (name) {
             return this.functions.get(name);
-        };
-        /**
-         * check if function is available
-         * @param {name} name function name
-         * @returns {boolean} if function is available
-         */
-        List.prototype.check = function (name) {
-            return this.functions.hasOwnProperty(name);
         };
         return List;
     }());
@@ -7020,10 +7020,9 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitLogicalExpr = function (expr) {
         var left = this.evaluate(expr.left);
         if (expr.operator.type === token_1.TT.AND) {
-            var right = this.evaluate(expr.right);
-            return new datatype_1.Type.FBoolean(left.trusty() && right.trusty());
+            return left.trusty() ? this.evaluate(expr.right) : left;
         }
-        return new datatype_1.Type.FBoolean(left.trusty() || this.evaluate(expr.right).trusty());
+        return left.trusty() ? left : this.evaluate(expr.right);
     };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         var left = this.evaluate(expr.left);
@@ -7086,7 +7085,7 @@ var Interpreter = /** @class */ (function () {
             return right.negated();
         }
         if (expr.operator.type === token_1.TT.NOT) {
-            return new datatype_1.Type.FBoolean(right.n).not();
+            return right.not();
         }
         return right;
     };
@@ -7138,8 +7137,11 @@ var Parser = /** @class */ (function () {
         }
         throw new fcal_1.FcalError("Unexpected token " + this.peek().lexeme, this.peek().start, this.peek().end);
     };
+    Parser.prototype.expression = function () {
+        return this.assignment();
+    };
     Parser.prototype.assignment = function () {
-        var expr = this.expression();
+        var expr = this.logical();
         if (this.match([token_1.TT.EQUAL, token_1.TT.DOUBLE_COLON])) {
             var expres = this.assignment();
             if (expr instanceof expr_1.Expr.Variable) {
@@ -7149,9 +7151,6 @@ var Parser = /** @class */ (function () {
             throw new fcal_1.FcalError('Execting variable in left side of assignment', expr.start, expr.end);
         }
         return expr;
-    };
-    Parser.prototype.expression = function () {
-        return this.logical();
     };
     Parser.prototype.logical = function () {
         var expr = this.equality();
@@ -7271,7 +7270,7 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.term = function () {
         if (this.match([token_1.TT.Number])) {
-            return new expr_1.Expr.Literal(this.previous().Literal, this.previous().start, this.previous().end);
+            return new expr_1.Expr.Literal(this.previous().literal, this.previous().start, this.previous().end);
         }
         if (this.match([token_1.TT.OPEN_PARAN])) {
             var start = this.previous();
@@ -7447,13 +7446,13 @@ var Lexer = /** @class */ (function () {
                     this.eat();
                     return this.TT(token_1.TT.AND);
                 }
-                throw new fcal_1.FcalError('Unexpected token &', this.current);
+                throw new fcal_1.FcalError('Unexpected character &', this.current);
             case '|':
                 if (this.peek(0) === '|') {
                     this.eat();
                     return this.TT(token_1.TT.OR);
                 }
-                throw new fcal_1.FcalError('Unexpected token |', this.current);
+                throw new fcal_1.FcalError('Unexpected character |', this.current);
             case token_1.TT.COMMA:
                 return this.TT(token_1.TT.COMMA);
             case token_1.TT.DOUBLE_COLON:

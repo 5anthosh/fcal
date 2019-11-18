@@ -32,7 +32,7 @@ test('Undefined variable', () => {
   }).toThrow(error);
 });
 
-test('test set Values decimal', () => {
+test('Set Values decimal', () => {
   const expression = 'l * br';
   const fcal = new Fcal();
   const expr = fcal.expression(expression);

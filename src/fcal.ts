@@ -126,7 +126,7 @@ class Fcal {
 
   private static getdefaultphrases(): Phrases {
     const phrases = new Phrases(this.gst);
-    phrases.push(TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+    phrases.push(TT.PLUS, ['PLUS', 'WITH', 'ADD']);
     phrases.push(TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
     phrases.push(TT.TIMES, ['TIMES', 'MULTIPLIEDBY', 'mul']);
     phrases.push(TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
@@ -134,6 +134,9 @@ class Fcal {
     phrases.push(TT.MOD, ['mod']);
     phrases.push(TT.OF, ['of']);
     phrases.push(TT.IN, ['in', 'as']);
+    phrases.push(TT.AND, ['and']);
+    phrases.push(TT.OR, ['or']);
+    phrases.push(TT.NOT, ['not']);
     return phrases;
   }
 

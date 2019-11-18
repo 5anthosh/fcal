@@ -37,6 +37,7 @@ test('Invalid unit operations', () => {
   expect(unit).not.toEqual(null);
   if (unit != null) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('24.412934840534418202', unit));
+    expect(Fcal.eval('45 km * 60 day')).toStrictEqual(new Type.UnitNumber(2700, unit));
   }
 });
 
@@ -66,6 +67,22 @@ test('units division', () => {
   }
 });
 
+test('units power and modulo', () => {
+  const unit = Fcal.getUnit('kph');
+  expect(unit).not.toBeNull();
+  const unit1 = Fcal.getUnit('day');
+  expect(unit1).not.toBeNull();
+  const unit2 = Fcal.getUnit('C');
+  expect(unit2).not.toBeNull();
+  if (unit && unit1 && unit2) {
+    expect(Fcal.eval('45 kph ** 2 seconds')).toStrictEqual(new Type.UnitNumber(2025, unit));
+    expect(Fcal.eval('23 days ** 1 weeks')).toStrictEqual(new Type.UnitNumber(3404825447, unit1));
+    expect(Fcal.eval('45 days mod 5 kb')).toStrictEqual(new Type.UnitNumber(0, unit1));
+    expect(Fcal.eval('17 C mod 3 K')).toStrictEqual(new Type.UnitNumber(17, unit2));
+    expect(Fcal.eval('17 C mod 3 ')).toStrictEqual(new Type.UnitNumber(2, unit2));
+    expect(Fcal.eval('78 mod 2 kph ')).toStrictEqual(new Type.UnitNumber(0, unit));
+  }
+});
 test('Singular and Plural units phrases', () => {
   const expression = '0 sec + 1 sec';
   let unit;

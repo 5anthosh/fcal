@@ -16,6 +16,7 @@ interface IUseUnit {
   singular?: string;
   plural?: string;
 }
+
 class UnitMeta {
   public id: string;
   public r: Decimal | callbackFuncFmt;

@@ -53,6 +53,14 @@ class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.name} \n|\n${expression}`;
   }
 
+  public visitLogicalExpr(expr: Expr.Logical): string {
+    this.depth += ASTPrinter.tab;
+    const left = this.evaluate(expr.left);
+    const right = this.evaluate(expr.right);
+    this.depth -= ASTPrinter.tab;
+    return `${ASTPrinter.createPrefix(this.depth, 'LOGICAL')}  ${expr.operator} \n|\n${left}${right}`;
+  }
+
   public visitBinaryExpr(expr: Expr.Binary): string {
     this.depth += ASTPrinter.tab;
     const left = this.evaluate(expr.left);

@@ -79,9 +79,18 @@ class Interpreter implements Expr.IVisitor<Type> {
     throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }
 
+  public visitLogicalExpr(expr: Expr.Logical): Type {
+    const left = this.evaluate(expr.left) as Type.Numberic;
+    if (expr.operator.type === TT.AND) {
+      const right = this.evaluate(expr.right) as Type.Numberic;
+      return new Type.FBoolean(left.trusty() && right.trusty());
+    }
+    return new Type.FBoolean(left.trusty() || (this.evaluate(expr.right) as Type.Numberic).trusty());
+  }
+
   public visitBinaryExpr(expr: Expr.Binary): Type {
-    let left = this.evaluate(expr.left) as Type.BNumber;
-    const right = this.evaluate(expr.right) as Type.BNumber;
+    let left = this.evaluate(expr.left) as Type.Numberic;
+    const right = this.evaluate(expr.right) as Type.Numberic;
     switch (expr.operator.type) {
       case TT.EQUAL_EQUAL:
         return left.EQ(right);
@@ -89,7 +98,7 @@ class Interpreter implements Expr.IVisitor<Type> {
         return new Type.FBoolean(left.n.eq(right.n));
       case TT.NOT_EQUAL:
         return left.NEQ(right);
-      case TT.EQUAL_EQUAL_EQUAL:
+      case TT.NOT_EQUAL_EQUAL:
         return new Type.FBoolean(!left.n.eq(right.n));
       case TT.GREATER:
         return left.GT(right);
@@ -143,7 +152,7 @@ class Interpreter implements Expr.IVisitor<Type> {
       return right.negated();
     }
     if (expr.operator.type === TT.NOT) {
-      return new Type.FBoolean(right.n).not();
+      return right.not();
     }
     return right;
   }

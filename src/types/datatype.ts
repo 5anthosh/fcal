@@ -8,6 +8,7 @@ abstract class Type {
   public abstract TYPERANK: TYPERANK;
   public abstract print(): string;
   public abstract toNumber(): number;
+  public abstract trusty(): boolean;
   public toString(): string {
     return this.print();
   }
@@ -65,14 +66,14 @@ namespace Type {
       if (this.TYPE >= value.TYPE) {
         return this.gt(value);
       }
-      return value.gt(value);
+      return value.gt(this);
     }
     public GTE(value: Numberic): Numberic {
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
         return this.gte(value);
       }
-      return value.gte(value);
+      return value.gte(this);
     }
 
     public LT(value: Numberic): Numberic {
@@ -80,7 +81,7 @@ namespace Type {
       if (this.TYPE >= value.TYPE) {
         return this.lt(value);
       }
-      return value.lte(value);
+      return value.lt(this);
     }
 
     public LTE(value: Numberic): Numberic {
@@ -88,7 +89,7 @@ namespace Type {
       if (this.TYPE >= value.TYPE) {
         return this.lte(value);
       }
-      return value.lte(value);
+      return value.lte(this);
     }
 
     public EQ(value: Numberic): Numberic {
@@ -96,7 +97,7 @@ namespace Type {
       if (this.TYPE >= value.TYPE) {
         return this.eq(value);
       }
-      return value.eq(value);
+      return value.eq(this);
     }
 
     public NEQ(value: Numberic): Numberic {
@@ -104,7 +105,7 @@ namespace Type {
       if (this.TYPE >= value.TYPE) {
         return this.nEq(value);
       }
-      return value.nEq(value);
+      return value.nEq(this);
     }
 
     public Add(value: Numberic, start?: number, end?: number): Numberic {
@@ -184,7 +185,7 @@ namespace Type {
       this.start = start;
       this.end = end;
       if (this.isNegative()) {
-        if (!value.isInteger()) {
+        if (!value.n.isInt()) {
           throw new FcalError(
             `Pow of operation results in complex number and complex is not supported yet`,
             start,
@@ -243,13 +244,17 @@ namespace Type {
     public toNumber(): number {
       return this.n.toNumber();
     }
+
+    public trusty(): boolean {
+      return !this.n.isZero();
+    }
+
     public not(): Numberic {
       return new FBoolean(this.n).not();
     }
     public abstract New(value: Decimal): Numberic;
     public abstract isZero(): boolean;
     public abstract isNegative(): boolean;
-    public abstract isInteger(): boolean;
     public abstract negated(): Numberic;
     public abstract plus(value: Numberic): Numberic;
     public abstract mul(value: Numberic): Numberic;
@@ -308,10 +313,6 @@ namespace Type {
       return this.n.isNegative();
     }
 
-    public isInteger(): boolean {
-      return this.n.isInteger();
-    }
-
     public negated(): Numberic {
       return BNumber.New(this.n.negated());
     }
@@ -362,45 +363,42 @@ namespace Type {
         return new FBoolean(this.n.gt(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.gt(this.percentageValue(this.n)));
+        return new FBoolean(value.n.gt(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.n.gt(this.percentageValue(value.n)));
+      return new FBoolean(this.percentageValue(value.n).gt(value.n));
     }
     public gte(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return new FBoolean(this.n.gte(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.gte(this.percentageValue(this.n)));
+        return new FBoolean(value.n.gte(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.n.gte(this.percentageValue(value.n)));
+      return new FBoolean(this.percentageValue(value.n).gte(value.n));
     }
     public lt(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return new FBoolean(this.n.lt(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.lt(this.percentageValue(this.n)));
+        return new FBoolean(value.n.lt(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.n.lt(this.percentageValue(value.n)));
+      return new FBoolean(this.percentageValue(value.n).lt(value.n));
     }
     public lte(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return new FBoolean(this.n.lte(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.lte(this.percentageValue(this.n)));
+        return new FBoolean(value.n.lte(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.n.lte(this.percentageValue(value.n)));
+      return new FBoolean(this.percentageValue(value.n).lte(value.n));
     }
     public eq(value: Numberic): Numberic {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
         return new FBoolean(this.n.eq(value.n));
       }
-      if (value.lf) {
-        return new FBoolean(value.n.eq(this.percentageValue(this.n)));
-      }
-      return new FBoolean(this.n.eq(this.percentageValue(value.n)));
+      return new FBoolean(value.n.eq(this.percentageValue(value.n)));
     }
     public nEq(value: Numberic): Numberic {
       return this.eq(value).not();
@@ -412,10 +410,6 @@ namespace Type {
 
     public isNegative(): boolean {
       return this.n.isNegative();
-    }
-
-    public isInteger(): boolean {
-      return this.n.isInteger();
     }
 
     public negated(): Numberic {
@@ -519,10 +513,6 @@ namespace Type {
       return this.n.isNegative();
     }
 
-    public isInteger(): boolean {
-      return this.n.isInteger();
-    }
-
     public negated(): Numberic {
       return this.New(this.n.negated());
     }
@@ -530,7 +520,7 @@ namespace Type {
     public gt(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      [left, right] = this.lf ? [this, value] : [value, value];
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -544,7 +534,7 @@ namespace Type {
     public gte(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      [left, right] = this.lf ? [this, value] : [value, value];
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -552,13 +542,13 @@ namespace Type {
           return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
         }
       }
-      return new FBoolean(left.n.gt(right.n));
+      return new FBoolean(left.n.gte(right.n));
     }
 
     public lt(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      [left, right] = this.lf ? [this, value] : [value, value];
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -566,13 +556,13 @@ namespace Type {
           return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
         }
       }
-      return new FBoolean(left.n.gt(right.n));
+      return new FBoolean(left.n.lt(right.n));
     }
 
     public lte(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      [left, right] = this.lf ? [this, value] : [value, value];
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -580,13 +570,13 @@ namespace Type {
           return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
         }
       }
-      return new FBoolean(left.n.gt(right.n));
+      return new FBoolean(left.n.lte(right.n));
     }
 
     public eq(value: Numberic): Numberic {
       let left: Numberic;
       let right: Numberic;
-      [left, right] = this.lf ? [this, value] : [value, value];
+      [left, right] = this.lf ? [this, value] : [value, this];
       if (value instanceof UnitNumber) {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
@@ -594,7 +584,7 @@ namespace Type {
           return new FBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
         }
       }
-      return new FBoolean(left.n.gt(right.n));
+      return new FBoolean(left.n.eq(right.n));
     }
 
     public nEq(value: Numberic): Numberic {
@@ -727,8 +717,7 @@ namespace Type {
       return this.v + '';
     }
     public not(): BNumber {
-      this.v = !this.v;
-      return this;
+      return this.v ? FBoolean.FALSE : FBoolean.TRUE;
     }
   }
 }

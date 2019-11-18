@@ -41,6 +41,23 @@ namespace Expr {
     }
   }
 
+  export class Logical extends Expr {
+    public left: Expr;
+    public operator: Token;
+    public right: Expr;
+
+    constructor(left: Expr, operator: Token, right: Expr, start: number, end: number) {
+      super(start, end);
+      this.left = left;
+      this.operator = operator;
+      this.right = right;
+    }
+
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitLogicalExpr(this);
+    }
+  }
+
   export class Grouping extends Expr {
     public expression: Expr;
 
@@ -176,6 +193,7 @@ namespace Expr {
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;
+    visitLogicalExpr(expr: Expr.Logical): T;
   }
 }
 

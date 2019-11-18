@@ -308,6 +308,48 @@ var TYPERANK;
         Numberic.prototype.print = function () {
             return this.toNumericString();
         };
+        Numberic.prototype.GT = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.gt(value);
+            }
+            return value.gt(this);
+        };
+        Numberic.prototype.GTE = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.gte(value);
+            }
+            return value.gte(this);
+        };
+        Numberic.prototype.LT = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.lt(value);
+            }
+            return value.lt(this);
+        };
+        Numberic.prototype.LTE = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.lte(value);
+            }
+            return value.lte(this);
+        };
+        Numberic.prototype.EQ = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.eq(value);
+            }
+            return value.eq(this);
+        };
+        Numberic.prototype.NEQ = function (value) {
+            this.lf = true;
+            if (this.TYPE >= value.TYPE) {
+                return this.nEq(value);
+            }
+            return value.nEq(this);
+        };
         Numberic.prototype.Add = function (value, start, end) {
             this.start = start;
             this.end = end;
@@ -381,7 +423,7 @@ var TYPERANK;
             this.start = start;
             this.end = end;
             if (this.isNegative()) {
-                if (!value.isInteger()) {
+                if (!value.n.isInt()) {
                     throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", start, end);
                 }
             }
@@ -434,6 +476,12 @@ var TYPERANK;
         Numberic.prototype.toNumber = function () {
             return this.n.toNumber();
         };
+        Numberic.prototype.trusty = function () {
+            return !this.n.isZero();
+        };
+        Numberic.prototype.not = function () {
+            return new FBoolean(this.n).not();
+        };
         return Numberic;
     }(Type));
     Type.Numberic = Numberic;
@@ -451,14 +499,29 @@ var TYPERANK;
         BNumber.New = function (value) {
             return new BNumber(value);
         };
+        BNumber.prototype.gt = function (value) {
+            return new FBoolean(this.n.gt(value.n));
+        };
+        BNumber.prototype.gte = function (value) {
+            return new FBoolean(this.n.gte(value.n));
+        };
+        BNumber.prototype.lt = function (value) {
+            return new FBoolean(this.n.lt(value.n));
+        };
+        BNumber.prototype.lte = function (value) {
+            return new FBoolean(this.n.lte(value.n));
+        };
+        BNumber.prototype.eq = function (value) {
+            return new FBoolean(this.n.eq(value.n));
+        };
+        BNumber.prototype.nEq = function (value) {
+            return this.eq(value).not();
+        };
         BNumber.prototype.isZero = function () {
             return this.n.isZero();
         };
         BNumber.prototype.isNegative = function () {
             return this.n.isNegative();
-        };
-        BNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
         };
         BNumber.prototype.negated = function () {
             return BNumber.New(this.n.negated());
@@ -499,14 +562,56 @@ var TYPERANK;
         Percentage.New = function (value) {
             return new Percentage(value);
         };
+        Percentage.prototype.gt = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return new FBoolean(this.n.gt(value.n));
+            }
+            if (value.lf) {
+                return new FBoolean(value.n.gt(this.percentageValue(value.n)));
+            }
+            return new FBoolean(this.percentageValue(value.n).gt(value.n));
+        };
+        Percentage.prototype.gte = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return new FBoolean(this.n.gte(value.n));
+            }
+            if (value.lf) {
+                return new FBoolean(value.n.gte(this.percentageValue(value.n)));
+            }
+            return new FBoolean(this.percentageValue(value.n).gte(value.n));
+        };
+        Percentage.prototype.lt = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return new FBoolean(this.n.lt(value.n));
+            }
+            if (value.lf) {
+                return new FBoolean(value.n.lt(this.percentageValue(value.n)));
+            }
+            return new FBoolean(this.percentageValue(value.n).lt(value.n));
+        };
+        Percentage.prototype.lte = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return new FBoolean(this.n.lte(value.n));
+            }
+            if (value.lf) {
+                return new FBoolean(value.n.lte(this.percentageValue(value.n)));
+            }
+            return new FBoolean(this.percentageValue(value.n).lte(value.n));
+        };
+        Percentage.prototype.eq = function (value) {
+            if (value.TYPE === DATATYPE.PERCENTAGE) {
+                return new FBoolean(this.n.eq(value.n));
+            }
+            return new FBoolean(value.n.eq(this.percentageValue(value.n)));
+        };
+        Percentage.prototype.nEq = function (value) {
+            return this.eq(value).not();
+        };
         Percentage.prototype.isZero = function () {
             return this.n.isZero();
         };
         Percentage.prototype.isNegative = function () {
             return this.n.isNegative();
-        };
-        Percentage.prototype.isInteger = function () {
-            return this.n.isInteger();
         };
         Percentage.prototype.negated = function () {
             return Percentage.New(this.n.negated());
@@ -596,49 +701,107 @@ var TYPERANK;
         UnitNumber.prototype.isNegative = function () {
             return this.n.isNegative();
         };
-        UnitNumber.prototype.isInteger = function () {
-            return this.n.isInteger();
-        };
         UnitNumber.prototype.negated = function () {
             return this.New(this.n.negated());
+        };
+        UnitNumber.prototype.gt = function (value) {
+            var _a;
+            var left;
+            var right;
+            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id === right1.unit.id) {
+                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
+                }
+            }
+            return new FBoolean(left.n.gt(right.n));
+        };
+        UnitNumber.prototype.gte = function (value) {
+            var _a;
+            var left;
+            var right;
+            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id === right1.unit.id) {
+                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
+                }
+            }
+            return new FBoolean(left.n.gt(right.n));
+        };
+        UnitNumber.prototype.lt = function (value) {
+            var _a;
+            var left;
+            var right;
+            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id === right1.unit.id) {
+                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
+                }
+            }
+            return new FBoolean(left.n.gt(right.n));
+        };
+        UnitNumber.prototype.lte = function (value) {
+            var _a;
+            var left;
+            var right;
+            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id === right1.unit.id) {
+                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
+                }
+            }
+            return new FBoolean(left.n.gt(right.n));
+        };
+        UnitNumber.prototype.eq = function (value) {
+            var _a;
+            var left;
+            var right;
+            _a = this.lf ? [this, value] : [value, value], left = _a[0], right = _a[1];
+            if (value instanceof UnitNumber) {
+                var left1 = left;
+                var right1 = right;
+                if (left1.unit.id === right1.unit.id) {
+                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
+                }
+            }
+            return new FBoolean(left.n.eq(right.n));
+        };
+        UnitNumber.prototype.nEq = function (value) {
+            return this.eq(value).not();
         };
         UnitNumber.prototype.plus = function (value) {
             if (value instanceof UnitNumber) {
                 var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.add(right.n));
+                if (this.unit.id === value.unit.id) {
+                    return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
                 }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.add(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).add(right.n));
+                return value.New(this.n.plus(value.n));
             }
             return this.New(this.n.plus(value.n));
         };
         UnitNumber.prototype.mul = function (value) {
             if (value instanceof UnitNumber) {
                 var right = value;
-                if (this.unit.id === right.unit.id && this.unit.unitType === right.unit.unitType) {
-                    return this.New(this.n.mul(right.n));
+                if (this.unit.id === value.unit.id) {
+                    return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
                 }
-                if (this.unit.id !== right.unit.id) {
-                    return right.New(this.n.mul(right.n));
-                }
-                return right.New(this.convert(right.ratio(), right.bias()).mul(right.n));
+                return value.New(this.n.mul(value.n));
             }
             return this.New(this.n.mul(value.n));
         };
         UnitNumber.prototype.div = function (value) {
+            var _a;
             var left;
             var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -653,16 +816,10 @@ var TYPERANK;
             return this.New(left.n.div(right.n));
         };
         UnitNumber.prototype.pow = function (value) {
+            var _a;
             var left;
             var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -677,16 +834,10 @@ var TYPERANK;
             return this.New(left.n.pow(right.n));
         };
         UnitNumber.prototype.mod = function (value) {
+            var _a;
             var left;
             var right;
-            if (this.lf) {
-                left = this;
-                right = value;
-            }
-            else {
-                right = this;
-                left = value;
-            }
+            _a = this.lf ? [this, value] : [value, this], left = _a[0], right = _a[1];
             if (value instanceof UnitNumber) {
                 var left1 = left;
                 var right1 = right;
@@ -725,12 +876,21 @@ var TYPERANK;
     var FBoolean = /** @class */ (function (_super) {
         __extends(FBoolean, _super);
         function FBoolean(value) {
-            var _this = _super.call(this, value) || this;
+            var _this = this;
+            if (typeof value === 'boolean') {
+                _this = _super.call(this, value ? 1 : 0) || this;
+                _this.v = value;
+                return;
+            }
+            _this = _super.call(this, value) || this;
             _this.v = !_this.n.isZero();
             return _this;
         }
         FBoolean.prototype.print = function () {
             return this.v + '';
+        };
+        FBoolean.prototype.not = function () {
+            return this.v ? FBoolean.FALSE : FBoolean.TRUE;
         };
         FBoolean.TRUE = new FBoolean(1);
         FBoolean.FALSE = new FBoolean(0);
@@ -1421,7 +1581,7 @@ var Fcal = /** @class */ (function () {
     };
     Fcal.getdefaultphrases = function () {
         var phrases = new phrase_1.Phrases(this.gst);
-        phrases.push(token_1.TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+        phrases.push(token_1.TT.PLUS, ['PLUS', 'WITH', 'ADD']);
         phrases.push(token_1.TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
         phrases.push(token_1.TT.TIMES, ['TIMES', 'MULTIPLIEDBY', 'mul']);
         phrases.push(token_1.TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
@@ -1429,6 +1589,9 @@ var Fcal = /** @class */ (function () {
         phrases.push(token_1.TT.MOD, ['mod']);
         phrases.push(token_1.TT.OF, ['of']);
         phrases.push(token_1.TT.IN, ['in', 'as']);
+        phrases.push(token_1.TT.AND, ['and']);
+        phrases.push(token_1.TT.OR, ['or']);
+        phrases.push(token_1.TT.NOT, ['not']);
         return phrases;
     };
     Fcal.setDefaultFunctions = function () {
@@ -1575,6 +1738,8 @@ var TT;
     TT["FLOOR_DIVIDE"] = "//";
     TT["LESS_EQUAL"] = "<=";
     TT["GREATER_EQUAL"] = ">=";
+    TT["LESS_EQUAL_EQUAL"] = "<==";
+    TT["GREATER_EQUAL_EQUAL"] = ">==";
     TT["LESS"] = "<";
     TT["GREATER"] = ">";
     TT["EQUAL_EQUAL"] = "==";
@@ -6852,10 +7017,38 @@ var Interpreter = /** @class */ (function () {
         }
         throw new fcal_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
     };
+    Interpreter.prototype.visitLogicalExpr = function (expr) {
+        var left = this.evaluate(expr.left);
+        if (expr.operator.type === token_1.TT.AND) {
+            var right = this.evaluate(expr.right);
+            return new datatype_1.Type.FBoolean(left.trusty() && right.trusty());
+        }
+        return new datatype_1.Type.FBoolean(left.trusty() || this.evaluate(expr.right).trusty());
+    };
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         var left = this.evaluate(expr.left);
         var right = this.evaluate(expr.right);
         switch (expr.operator.type) {
+            case token_1.TT.EQUAL_EQUAL:
+                return left.EQ(right);
+            case token_1.TT.EQUAL_EQUAL_EQUAL:
+                return new datatype_1.Type.FBoolean(left.n.eq(right.n));
+            case token_1.TT.NOT_EQUAL:
+                return left.NEQ(right);
+            case token_1.TT.NOT_EQUAL_EQUAL:
+                return new datatype_1.Type.FBoolean(!left.n.eq(right.n));
+            case token_1.TT.GREATER:
+                return left.GT(right);
+            case token_1.TT.GREATER_EQUAL:
+                return left.GTE(right);
+            case token_1.TT.GREATER_EQUAL_EQUAL:
+                return new datatype_1.Type.FBoolean(left.n.gte(right.n));
+            case token_1.TT.LESS:
+                return left.LT(right);
+            case token_1.TT.LESS_EQUAL:
+                return left.LTE(right);
+            case token_1.TT.LESS_EQUAL_EQUAL:
+                return new datatype_1.Type.FBoolean(left.n.lte(right.n));
             case token_1.TT.PLUS:
                 return left.Add(right, expr.left.start, expr.right.end);
             case token_1.TT.MINUS:
@@ -6891,6 +7084,9 @@ var Interpreter = /** @class */ (function () {
         var right = this.evaluate(expr.right);
         if (expr.operator.type === token_1.TT.MINUS) {
             return right.negated();
+        }
+        if (expr.operator.type === token_1.TT.NOT) {
+            return new datatype_1.Type.FBoolean(right.n).not();
         }
         return right;
     };
@@ -6955,7 +7151,34 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.expression = function () {
-        return this.addition();
+        return this.logical();
+    };
+    Parser.prototype.logical = function () {
+        var expr = this.equality();
+        while (this.match([token_1.TT.OR, token_1.TT.AND])) {
+            var operator = this.previous();
+            var right = this.equality();
+            expr = new expr_1.Expr.Logical(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
+    };
+    Parser.prototype.equality = function () {
+        var expr = this.comparison();
+        while (this.match([token_1.TT.EQUAL_EQUAL, token_1.TT.EQUAL_EQUAL_EQUAL, token_1.TT.NOT_EQUAL, token_1.TT.NOT_EQUAL_EQUAL])) {
+            var operator = this.previous();
+            var right = this.comparison();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
+    };
+    Parser.prototype.comparison = function () {
+        var expr = this.addition();
+        while (this.match([token_1.TT.GREATER, token_1.TT.GREATER_EQUAL, token_1.TT.GREATER_EQUAL_EQUAL, token_1.TT.LESS, token_1.TT.LESS_EQUAL, token_1.TT.LESS_EQUAL_EQUAL])) {
+            var operator = this.previous();
+            var right = this.addition();
+            expr = new expr_1.Expr.Binary(expr, operator, right, expr.start, right.end);
+        }
+        return expr;
     };
     Parser.prototype.addition = function () {
         var expr = this.multiply();
@@ -6997,7 +7220,7 @@ var Parser = /** @class */ (function () {
         return expr;
     };
     Parser.prototype.unary = function () {
-        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS])) {
+        if (this.match([token_1.TT.PLUS, token_1.TT.MINUS, token_1.TT.NOT])) {
             var operator = this.previous();
             var right = this.unary();
             return new expr_1.Expr.Unary(operator, right, operator.start, right.end);
@@ -7180,7 +7403,57 @@ var Lexer = /** @class */ (function () {
                 }
                 return this.TT(token_1.TT.SLASH);
             case token_1.TT.EQUAL:
+                if (this.peek(0) === token_1.TT.EQUAL) {
+                    this.eat();
+                    if (this.peek(0) === token_1.TT.EQUAL) {
+                        this.eat();
+                        return this.TT(token_1.TT.EQUAL_EQUAL_EQUAL);
+                    }
+                    return this.TT(token_1.TT.EQUAL_EQUAL);
+                }
                 return this.TT(token_1.TT.EQUAL);
+            case token_1.TT.NOT:
+                if (this.peek(0) === token_1.TT.EQUAL) {
+                    this.eat();
+                    if (this.peek(0) === token_1.TT.EQUAL) {
+                        this.eat();
+                        return this.TT(token_1.TT.NOT_EQUAL_EQUAL);
+                    }
+                    return this.TT(token_1.TT.NOT_EQUAL);
+                }
+                return this.TT(token_1.TT.NOT);
+            case token_1.TT.GREATER:
+                if (this.peek(0) === token_1.TT.EQUAL) {
+                    this.eat();
+                    if (this.peek(0) === token_1.TT.EQUAL) {
+                        this.eat();
+                        return this.TT(token_1.TT.GREATER_EQUAL_EQUAL);
+                    }
+                    return this.TT(token_1.TT.GREATER_EQUAL);
+                }
+                return this.TT(token_1.TT.GREATER);
+            case token_1.TT.LESS:
+                if (this.peek(0) === token_1.TT.EQUAL) {
+                    this.eat();
+                    if (this.peek(0) === token_1.TT.EQUAL) {
+                        this.eat();
+                        return this.TT(token_1.TT.LESS_EQUAL_EQUAL);
+                    }
+                    return this.TT(token_1.TT.LESS_EQUAL);
+                }
+                return this.TT(token_1.TT.LESS);
+            case '&':
+                if (this.peek(0) === '&') {
+                    this.eat();
+                    return this.TT(token_1.TT.AND);
+                }
+                throw new fcal_1.FcalError('Unexpected token &', this.current);
+            case '|':
+                if (this.peek(0) === '|') {
+                    this.eat();
+                    return this.TT(token_1.TT.OR);
+                }
+                throw new fcal_1.FcalError('Unexpected token |', this.current);
             case token_1.TT.COMMA:
                 return this.TT(token_1.TT.COMMA);
             case token_1.TT.DOUBLE_COLON:
@@ -7337,6 +7610,7 @@ var Lexer = /** @class */ (function () {
         '|',
         token_1.TT.LESS,
         token_1.TT.GREATER,
+        '!',
     ];
     return Lexer;
 }());
@@ -7423,6 +7697,13 @@ var ASTPrinter = /** @class */ (function () {
             return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
         }
         return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.name + " \n|\n" + expression;
+    };
+    ASTPrinter.prototype.visitLogicalExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var left = this.evaluate(expr.left);
+        var right = this.evaluate(expr.right);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'LOGICAL') + "  " + expr.operator + " \n|\n" + left + right;
     };
     ASTPrinter.prototype.visitBinaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -7514,6 +7795,21 @@ exports.Expr = Expr;
         return Binary;
     }(Expr));
     Expr.Binary = Binary;
+    var Logical = /** @class */ (function (_super) {
+        __extends(Logical, _super);
+        function Logical(left, operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.left = left;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Logical.prototype.accept = function (visitor) {
+            return visitor.visitLogicalExpr(this);
+        };
+        return Logical;
+    }(Expr));
+    Expr.Logical = Logical;
     var Grouping = /** @class */ (function (_super) {
         __extends(Grouping, _super);
         function Grouping(expression, start, end) {

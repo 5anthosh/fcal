@@ -52,9 +52,18 @@ class Parser {
   }
 
   private expression(): Expr {
-    return this.equality();
+    return this.logical();
   }
-  
+
+  private logical(): Expr {
+    let expr = this.equality();
+    while (this.match([TT.OR, TT.AND])) {
+      const operator = this.previous();
+      const right = this.equality();
+      expr = new Expr.Logical(expr, operator, right, expr.start, right.end);
+    }
+    return expr;
+  }
   private equality(): Expr {
     let expr = this.comparison();
     while (this.match([TT.EQUAL_EQUAL, TT.EQUAL_EQUAL_EQUAL, TT.NOT_EQUAL, TT.NOT_EQUAL_EQUAL])) {

@@ -62,8 +62,8 @@ test('Parser error Expect expression', () => {
 });
 
 test('Lex error unexpected token', () => {
-  const expression = '123 mul 123!';
-  const error = new Error('Unexpected token !');
+  const expression = '123 mul 123$';
+  const error = new Error('Unexpected token $');
   error.name = 'FcalError [9, 10]';
   expect(() => {
     Fcal.eval(expression);
@@ -199,6 +199,19 @@ test('Infinity', () => {
   expect(() => {
     Fcal.eval('(0B10010 % of Infinity) mod (2.2323E-3 ^ Infinity)');
   }).toThrowError('Modulus between Infinity is indeterminate');
+});
+
+test('Expected expression', () => {
+  expect(() => {
+    Fcal.eval('4+');
+  }).toThrowError('Expect expression but found \n');
+});
+
+test('Tonumber', () => {
+  expect(Fcal.eval('3434%').toNumber()).toStrictEqual(3434);
+  expect(Fcal.eval('-90cm').toNumber()).toStrictEqual(-90);
+  expect(Fcal.eval('0x1ac in oct').toNumber()).toStrictEqual(428);
+  expect(Fcal.eval('0.34 + 1').toNumber()).toStrictEqual(1.34);
 });
 
 test('AST print()', () => {

@@ -23,6 +23,7 @@ class Lexer {
     '|',
     TT.LESS,
     TT.GREATER,
+    '!',
   ];
 
   private static isDigit(char: string): boolean {
@@ -134,6 +135,18 @@ class Lexer {
           return this.TT(TT.LESS_EQUAL);
         }
         return this.TT(TT.LESS);
+      case '&':
+        if (this.peek(0) === '&') {
+          this.eat();
+          return this.TT(TT.AND);
+        }
+        throw new FcalError('Unexpected token &', this.current);
+      case '|':
+        if (this.peek(0) === '|') {
+          this.eat();
+          return this.TT(TT.OR);
+        }
+        throw new FcalError('Unexpected token |', this.current);
       case TT.COMMA:
         return this.TT(TT.COMMA);
       case TT.DOUBLE_COLON:

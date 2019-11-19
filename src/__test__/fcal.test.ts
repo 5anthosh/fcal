@@ -56,8 +56,9 @@ test('New line', () => {
 
   const expression1 = '1234+12341324123 * 34 \t \n $';
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
-  expect(() => new Fcal().rawEvaluate('1+')).toThrowError('Expect expression but found ');
+  expect(() => new Fcal().rawEvaluate('1+')).toThrowError('Expect expression but found EOL');
   expect(() => new Fcal().rawEvaluate('1x')).toThrowError("Unexpected '\0' in Hexa decimal");
+  expect(() => new Fcal().rawEvaluate('1+2')).toThrowError('Expecting EOL');
 });
 
 test('Parser error Expect expression', () => {
@@ -212,7 +213,7 @@ test('Infinity', () => {
 test('Expected expression', () => {
   expect(() => {
     Fcal.eval('4+');
-  }).toThrowError('Expect expression but found \n');
+  }).toThrowError('Expect expression but found EOL');
 });
 
 test('Tonumber', () => {

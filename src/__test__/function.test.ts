@@ -156,6 +156,8 @@ test('Not callable', () => {
   expect(() => {
     fcal.evaluate('23*PI(45)*23%');
   }).toThrowError(error);
+
+  expect(() => Fcal.eval('67()')).toThrowError('Not callable');
 });
 
 test('Registered function return null value`', () => {

@@ -52,15 +52,11 @@ class Token {
     this.lexeme = lexeme;
     this.start = start;
     this.end = end;
-    if (literal === null) {
-      this.literal = '';
-      return;
-    }
     this.literal = literal;
   }
 
   public toString(): string {
-    return `< ${this.type} ${this.lexeme} ${this.literal} (${this.start}, ${this.end})>`;
+    return `< ${this.type} ${this.lexeme} ${this.literal ? this.literal : ''} (${this.start}, ${this.end})>`;
   }
 }
 

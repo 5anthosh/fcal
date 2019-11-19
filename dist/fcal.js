@@ -1770,17 +1770,13 @@ var Token = /** @class */ (function () {
         this.lexeme = lexeme;
         this.start = start;
         this.end = end;
-        if (literal === null) {
-            this.literal = '';
-            return;
-        }
         this.literal = literal;
     }
     Token.EOL = function (end) {
         return new Token(TT.EOL, 'EOL', null, end, end);
     };
     Token.prototype.toString = function () {
-        return "< " + this.type + " " + this.lexeme + " " + this.literal + " (" + this.start + ", " + this.end + ")>";
+        return "< " + this.type + " " + this.lexeme + " " + (this.literal ? this.literal : '') + " (" + this.start + ", " + this.end + ")>";
     };
     return Token;
 }());
@@ -7141,7 +7137,7 @@ var Parser = /** @class */ (function () {
             return expr;
         }
         if (this.peek().type === token_1.TT.EOL) {
-            throw new fcal_1.FcalError('Expecting new Line', this.peek().end);
+            throw new fcal_1.FcalError('Expecting EOL', this.peek().end);
         }
         throw new fcal_1.FcalError("Unexpected token " + this.peek().lexeme, this.peek().start, this.peek().end);
     };
@@ -7164,7 +7160,7 @@ var Parser = /** @class */ (function () {
         var expr = this.logical();
         if (this.match([token_1.TT.Q])) {
             var texpr = this.ternary();
-            this.consume(token_1.TT.DOUBLE_COLON, "Expecting : but found " + this.peek());
+            this.consume(token_1.TT.DOUBLE_COLON, "Expecting ':' in ternary operation but found " + (this.peek().type === '\n' ? 'EOL' : this.peek().type));
             var fexpr = this.ternary();
             expr = new expr_1.Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
         }
@@ -7304,7 +7300,7 @@ var Parser = /** @class */ (function () {
         if (entity) {
             throw new fcal_1.FcalError("Expect expression but found " + lexeme + " [" + entity.toLowerCase() + "]", this.peek().start, this.peek().end);
         }
-        throw new fcal_1.FcalError("Expect expression but found " + lexeme, this.peek().start, this.peek().end);
+        throw new fcal_1.FcalError("Expect expression but found " + (lexeme === '\n' ? 'EOL' : lexeme), this.peek().start, this.peek().end);
     };
     Parser.prototype.match = function (types) {
         for (var _i = 0, types_1 = types; _i < types_1.length; _i++) {

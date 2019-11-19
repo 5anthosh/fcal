@@ -214,4 +214,5 @@ test('Logical and or', () => {
 test('Test ternary operation', () => {
   expect(Fcal.eval('5?4+34:5')).toStrictEqual(Type.BNumber.New(38));
   expect(Fcal.eval('false?100:(tt = 67.1%)')).toStrictEqual(Type.Percentage.New(67.1));
+  expect(() => Fcal.eval('45?45')).toThrowError("Expecting ':' in ternary operation but found EOL");
 });

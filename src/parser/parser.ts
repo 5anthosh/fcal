@@ -33,7 +33,7 @@ class Parser {
       return expr;
     }
     if (this.peek().type === TT.EOL) {
-      throw new FcalError('Expecting new Line', this.peek().end);
+      throw new FcalError('Expecting EOL', this.peek().end);
     }
     throw new FcalError(`Unexpected token ${this.peek().lexeme}`, this.peek().start, this.peek().end);
   }
@@ -59,7 +59,10 @@ class Parser {
     let expr = this.logical();
     if (this.match([TT.Q])) {
       const texpr = this.ternary();
-      this.consume(TT.DOUBLE_COLON, `Expecting : but found ${this.peek()}`);
+      this.consume(
+        TT.DOUBLE_COLON,
+        `Expecting ':' in ternary operation but found ${this.peek().type === '\n' ? 'EOL' : this.peek().type}`,
+      );
       const fexpr = this.ternary();
       expr = new Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
     }
@@ -216,7 +219,11 @@ class Parser {
         this.peek().end,
       );
     }
-    throw new FcalError(`Expect expression but found ${lexeme}`, this.peek().start, this.peek().end);
+    throw new FcalError(
+      `Expect expression but found ${lexeme === '\n' ? 'EOL' : lexeme}`,
+      this.peek().start,
+      this.peek().end,
+    );
   }
 
   private match(types: TT[]): boolean {

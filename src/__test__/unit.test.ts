@@ -19,6 +19,7 @@ test('Time units addition In operator', () => {
   if (unit != null) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('176423', unit));
   }
+  expect(() => Fcal.eval('45 cm in ')).toThrowError('Expecting unit after in');
 });
 test('Time units addition as operator', () => {
   const expression = '1 day - 1day*23sec + 23sec + 1hr as sec ';
@@ -46,8 +47,9 @@ test('Time units addition In operator', () => {
     '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec';
   const unit = Fcal.getUnit('sec');
   expect(unit).not.toEqual(null);
-  if (unit != null) {
+  if (unit) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('-1897177', unit));
+    expect(Fcal.eval('45 sec * 10 %')).toStrictEqual(new Type.UnitNumber(202.5, unit));
   }
 });
 
@@ -77,6 +79,7 @@ test('units power and modulo', () => {
   if (unit && unit1 && unit2) {
     expect(Fcal.eval('45 kph ** 2 seconds')).toStrictEqual(new Type.UnitNumber(2025, unit));
     expect(Fcal.eval('23 days ** 1 weeks')).toStrictEqual(new Type.UnitNumber(3404825447, unit1));
+    expect(Fcal.eval('(-60 C )** 20')).toStrictEqual(new Type.UnitNumber('3.656158440062976e+35', unit2));
     expect(Fcal.eval('45 days mod 5 kb')).toStrictEqual(new Type.UnitNumber(0, unit1));
     expect(Fcal.eval('17 C mod 3 K')).toStrictEqual(new Type.UnitNumber(17, unit2));
     expect(Fcal.eval('17 C mod 3 ')).toStrictEqual(new Type.UnitNumber(2, unit2));

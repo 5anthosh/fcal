@@ -43,7 +43,7 @@ class Parser {
   }
 
   private assignment(): Expr {
-    const expr = this.logical();
+    const expr = this.ternary();
     if (this.match([TT.EQUAL, TT.DOUBLE_COLON])) {
       const expres = this.assignment();
       if (expr instanceof Expr.Variable) {
@@ -51,6 +51,17 @@ class Parser {
         return new Expr.Assign(name, expres, expr.start, expres.end);
       }
       throw new FcalError('Execting variable in left side of assignment', expr.start, expr.end);
+    }
+    return expr;
+  }
+
+  private ternary(): Expr {
+    let expr = this.logical();
+    if (this.match([TT.Q])) {
+      const texpr = this.ternary();
+      this.consume(TT.DOUBLE_COLON, `Expecting : but found ${this.peek()}`);
+      const fexpr = this.ternary();
+      expr = new Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
     }
     return expr;
   }
@@ -64,6 +75,7 @@ class Parser {
     }
     return expr;
   }
+
   private equality(): Expr {
     let expr = this.comparison();
     while (this.match([TT.EQUAL_EQUAL, TT.EQUAL_EQUAL_EQUAL, TT.NOT_EQUAL, TT.NOT_EQUAL_EQUAL])) {

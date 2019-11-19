@@ -210,3 +210,8 @@ test('Logical and or', () => {
   expect(fcal.evaluate('false || 0 || (kk = 0.384%)')).toStrictEqual(Type.Percentage.New(0.384));
   expect(fcal.evaluate('kk + 5%')).toStrictEqual(Type.Percentage.New(5.384));
 });
+
+test('Test ternary operation', () => {
+  expect(Fcal.eval('5?4+34:5')).toStrictEqual(Type.BNumber.New(38));
+  expect(Fcal.eval('false?100:(tt = 67.1%)')).toStrictEqual(Type.Percentage.New(67.1));
+});

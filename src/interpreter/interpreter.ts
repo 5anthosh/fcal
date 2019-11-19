@@ -79,6 +79,14 @@ class Interpreter implements Expr.IVisitor<Type> {
     throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }
 
+  public visitTernaryExpr(expr: Expr.Ternary): Type {
+    const main = this.evaluate(expr.main) as Type.Numberic;
+    if (main.trusty()) {
+      return this.evaluate(expr.texpr);
+    }
+    return this.evaluate(expr.fexpr);
+  }
+
   public visitLogicalExpr(expr: Expr.Logical): Type {
     const left = this.evaluate(expr.left) as Type.Numberic;
     if (expr.operator.type === TT.AND) {

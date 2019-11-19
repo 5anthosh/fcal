@@ -15,6 +15,15 @@ class ASTPrinter implements Expr.IVisitor<string> {
     this.depth = 0;
   }
 
+  public visitTernaryExpr(expr: Expr.Ternary): string {
+    this.depth += ASTPrinter.tab;
+    const main = this.evaluate(expr.main);
+    const texpr = this.evaluate(expr.texpr);
+    const fexpr = this.evaluate(expr.fexpr);
+    this.depth -= ASTPrinter.tab;
+    return `${ASTPrinter.createPrefix(this.depth, 'TERNARY')}\n|\n${main}${texpr}${fexpr}`;
+  }
+
   public visitCallExpr(expr: Expr.Call): string {
     let str = `${ASTPrinter.createPrefix(this.depth, 'FUNCTION')} ==> ${expr.name} `;
     this.depth += ASTPrinter.tab;

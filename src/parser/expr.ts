@@ -40,6 +40,23 @@ namespace Expr {
     }
   }
 
+  export class Ternary extends Expr {
+    public main: Expr;
+    public texpr: Expr;
+    public fexpr: Expr;
+
+    constructor(main: Expr, texpr: Expr, rexpr: Expr, start?: number, end?: number) {
+      super(start, end);
+      this.main = main;
+      this.texpr = texpr;
+      this.fexpr = rexpr;
+    }
+
+    public accept<T>(visitor: Expr.IVisitor<T>): T {
+      return visitor.visitTernaryExpr(this);
+    }
+  }
+
   export class Logical extends Expr {
     public left: Expr;
     public operator: Token;
@@ -193,6 +210,7 @@ namespace Expr {
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;
     visitLogicalExpr(expr: Expr.Logical): T;
+    visitTernaryExpr(expr: Expr.Ternary): T;
   }
 }
 

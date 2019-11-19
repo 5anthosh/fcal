@@ -24,6 +24,7 @@ class Lexer {
     TT.LESS,
     TT.GREATER,
     '!',
+    TT.Q,
   ];
 
   private static isDigit(char: string): boolean {
@@ -157,6 +158,8 @@ class Lexer {
         return this.TT(TT.CLOSE_PARAN);
       case TT.CAP:
         return this.TT(TT.CAP);
+      case TT.Q:
+        return this.TT(TT.Q);
       case TT.PERCENTAGE:
         return this.TT(TT.PERCENTAGE);
       case TT.NEWLINE:

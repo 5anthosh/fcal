@@ -33,6 +33,7 @@ enum TT {
   NOT = '!',
   AND = '&&',
   OR = '||',
+  Q = '?',
 }
 
 class Token {

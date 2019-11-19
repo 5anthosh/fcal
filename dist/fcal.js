@@ -1761,6 +1761,7 @@ var TT;
     TT["NOT"] = "!";
     TT["AND"] = "&&";
     TT["OR"] = "||";
+    TT["Q"] = "?";
 })(TT || (TT = {}));
 exports.TT = TT;
 var Token = /** @class */ (function () {
@@ -1833,30 +1834,56 @@ var Entity;
 })(Entity || (Entity = {}));
 exports.Entity = Entity;
 
-},{"3":3}],16:[function(require,module,exports){
+},{"3":3}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var datatype_1 = require(14);
 var symboltable_1 = require(8);
-var Phrases = /** @class */ (function () {
-    function Phrases(symbolTable) {
+var Constant = /** @class */ (function () {
+    function Constant(symbolTable) {
+        this.values = new Map();
         this.symbolTable = symbolTable;
-        this.phrases = new Map();
     }
-    Phrases.prototype.push = function (key, phrases) {
-        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
-            var phrase = phrases_1[_i];
-            this.symbolTable.set(phrase.toUpperCase(), symboltable_1.Entity.OPERATION_PHRASE);
-            this.phrases.set(phrase.toUpperCase(), key);
+    Constant.prototype.get = function (key) {
+        return this.values.get(key);
+    };
+    /**
+     * create or assign a constant with value
+     * @param {string} key constatn name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Constant.prototype.set = function (key, value) {
+        this.symbolTable.set(key, symboltable_1.Entity.CONSTANT);
+        if (value instanceof datatype_1.Type) {
+            this.values.set(key, value);
+            return;
+        }
+        this.values.set(key, datatype_1.Type.BNumber.New(value));
+    };
+    /**
+     * import values from Object or map into constants
+     * @param {Object | Map} values
+     */
+    Constant.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
         }
     };
-    Phrases.prototype.get = function (key) {
-        return this.phrases.get(key.toUpperCase());
-    };
-    return Phrases;
+    return Constant;
 }());
-exports.Phrases = Phrases;
+exports.Constant = Constant;
 
-},{"8":8}],5:[function(require,module,exports){
+},{"14":14,"8":8}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -1928,56 +1955,30 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"14":14,"3":3,"8":8}],4:[function(require,module,exports){
+},{"14":14,"3":3,"8":8}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(14);
 var symboltable_1 = require(8);
-var Constant = /** @class */ (function () {
-    function Constant(symbolTable) {
-        this.values = new Map();
+var Phrases = /** @class */ (function () {
+    function Phrases(symbolTable) {
         this.symbolTable = symbolTable;
+        this.phrases = new Map();
     }
-    Constant.prototype.get = function (key) {
-        return this.values.get(key);
-    };
-    /**
-     * create or assign a constant with value
-     * @param {string} key constatn name
-     * @param  {Type | Big.Decimal | number | string} value value
-     */
-    Constant.prototype.set = function (key, value) {
-        this.symbolTable.set(key, symboltable_1.Entity.CONSTANT);
-        if (value instanceof datatype_1.Type) {
-            this.values.set(key, value);
-            return;
-        }
-        this.values.set(key, datatype_1.Type.BNumber.New(value));
-    };
-    /**
-     * import values from Object or map into constants
-     * @param {Object | Map} values
-     */
-    Constant.prototype.use = function (values) {
-        var _this = this;
-        if (values instanceof Map) {
-            values.forEach(function (value, key) {
-                _this.set(key, value);
-            });
-            return;
-        }
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.set(key, element);
-            }
+    Phrases.prototype.push = function (key, phrases) {
+        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
+            var phrase = phrases_1[_i];
+            this.symbolTable.set(phrase.toUpperCase(), symboltable_1.Entity.OPERATION_PHRASE);
+            this.phrases.set(phrase.toUpperCase(), key);
         }
     };
-    return Constant;
+    Phrases.prototype.get = function (key) {
+        return this.phrases.get(key.toUpperCase());
+    };
+    return Phrases;
 }());
-exports.Constant = Constant;
+exports.Phrases = Phrases;
 
-},{"14":14,"8":8}],18:[function(require,module,exports){
+},{"8":8}],18:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -7017,6 +7018,13 @@ var Interpreter = /** @class */ (function () {
         }
         throw new fcal_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
     };
+    Interpreter.prototype.visitTernaryExpr = function (expr) {
+        var main = this.evaluate(expr.main);
+        if (main.trusty()) {
+            return this.evaluate(expr.texpr);
+        }
+        return this.evaluate(expr.fexpr);
+    };
     Interpreter.prototype.visitLogicalExpr = function (expr) {
         var left = this.evaluate(expr.left);
         if (expr.operator.type === token_1.TT.AND) {
@@ -7141,7 +7149,7 @@ var Parser = /** @class */ (function () {
         return this.assignment();
     };
     Parser.prototype.assignment = function () {
-        var expr = this.logical();
+        var expr = this.ternary();
         if (this.match([token_1.TT.EQUAL, token_1.TT.DOUBLE_COLON])) {
             var expres = this.assignment();
             if (expr instanceof expr_1.Expr.Variable) {
@@ -7149,6 +7157,16 @@ var Parser = /** @class */ (function () {
                 return new expr_1.Expr.Assign(name_1, expres, expr.start, expres.end);
             }
             throw new fcal_1.FcalError('Execting variable in left side of assignment', expr.start, expr.end);
+        }
+        return expr;
+    };
+    Parser.prototype.ternary = function () {
+        var expr = this.logical();
+        if (this.match([token_1.TT.Q])) {
+            var texpr = this.ternary();
+            this.consume(token_1.TT.DOUBLE_COLON, "Expecting : but found " + this.peek());
+            var fexpr = this.ternary();
+            expr = new expr_1.Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
         }
         return expr;
     };
@@ -7463,6 +7481,8 @@ var Lexer = /** @class */ (function () {
                 return this.TT(token_1.TT.CLOSE_PARAN);
             case token_1.TT.CAP:
                 return this.TT(token_1.TT.CAP);
+            case token_1.TT.Q:
+                return this.TT(token_1.TT.Q);
             case token_1.TT.PERCENTAGE:
                 return this.TT(token_1.TT.PERCENTAGE);
             case token_1.TT.NEWLINE:
@@ -7610,6 +7630,7 @@ var Lexer = /** @class */ (function () {
         token_1.TT.LESS,
         token_1.TT.GREATER,
         '!',
+        token_1.TT.Q,
     ];
     return Lexer;
 }());
@@ -7662,6 +7683,14 @@ var ASTPrinter = /** @class */ (function () {
     }
     ASTPrinter.createPrefix = function (depth, type) {
         return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
+    };
+    ASTPrinter.prototype.visitTernaryExpr = function (expr) {
+        this.depth += ASTPrinter.tab;
+        var main = this.evaluate(expr.main);
+        var texpr = this.evaluate(expr.texpr);
+        var fexpr = this.evaluate(expr.fexpr);
+        this.depth -= ASTPrinter.tab;
+        return ASTPrinter.createPrefix(this.depth, 'TERNARY') + "\n|\n" + main + texpr + fexpr;
     };
     ASTPrinter.prototype.visitCallExpr = function (expr) {
         var str = ASTPrinter.createPrefix(this.depth, 'FUNCTION') + " ==> " + expr.name + " ";
@@ -7791,6 +7820,21 @@ exports.Expr = Expr;
         return Binary;
     }(Expr));
     Expr.Binary = Binary;
+    var Ternary = /** @class */ (function (_super) {
+        __extends(Ternary, _super);
+        function Ternary(main, texpr, rexpr, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.main = main;
+            _this.texpr = texpr;
+            _this.fexpr = rexpr;
+            return _this;
+        }
+        Ternary.prototype.accept = function (visitor) {
+            return visitor.visitTernaryExpr(this);
+        };
+        return Ternary;
+    }(Expr));
+    Expr.Ternary = Ternary;
     var Logical = /** @class */ (function (_super) {
         __extends(Logical, _super);
         function Logical(left, operator, right, start, end) {

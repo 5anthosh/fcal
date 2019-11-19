@@ -4,18 +4,17 @@ import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 import { ASTPrinter } from './astPrinter';
 
-abstract class Expr extends ASTPrinter {
-  public start: number;
-  public end: number;
+abstract class Expr {
+  public start?: number;
+  public end?: number;
 
-  constructor(start: number, end: number) {
-    super();
+  constructor(start?: number, end?: number) {
     this.start = start;
     this.end = end;
   }
 
   public toString(): string {
-    const res = this.print(this);
+    const res = new ASTPrinter().print(this);
     return res.substring(0, res.length - 2);
   }
 
@@ -29,7 +28,7 @@ namespace Expr {
     public operator: Token;
     public right: Expr;
 
-    constructor(left: Expr, operator: Token, right: Expr, start: number, end: number) {
+    constructor(left: Expr, operator: Token, right: Expr, start?: number, end?: number) {
       super(start, end);
       this.left = left;
       this.operator = operator;
@@ -46,7 +45,7 @@ namespace Expr {
     public operator: Token;
     public right: Expr;
 
-    constructor(left: Expr, operator: Token, right: Expr, start: number, end: number) {
+    constructor(left: Expr, operator: Token, right: Expr, start?: number, end?: number) {
       super(start, end);
       this.left = left;
       this.operator = operator;
@@ -61,7 +60,7 @@ namespace Expr {
   export class Grouping extends Expr {
     public expression: Expr;
 
-    constructor(expression: Expr, start: number, end: number) {
+    constructor(expression: Expr, start?: number, end?: number) {
       super(start, end);
       this.expression = expression;
     }
@@ -75,7 +74,7 @@ namespace Expr {
     public name: string;
     public value: Expr;
 
-    constructor(name: string, value: Expr, start: number, end: number) {
+    constructor(name: string, value: Expr, start?: number, end?: number) {
       super(start, end);
       this.name = name;
       this.value = value;
@@ -89,7 +88,7 @@ namespace Expr {
   export class Variable extends Expr {
     public name: string;
 
-    constructor(name: string, start: number, end: number) {
+    constructor(name: string, start?: number, end?: number) {
       super(start, end);
       this.name = name;
     }
@@ -102,7 +101,7 @@ namespace Expr {
     public name: string;
     public argument: Expr[];
 
-    constructor(name: string, argument: Expr[], start: number, end: number) {
+    constructor(name: string, argument: Expr[], start?: number, end?: number) {
       super(start, end);
       this.name = name;
       this.argument = argument;
@@ -116,7 +115,7 @@ namespace Expr {
   export class Literal extends Expr {
     public value: Type;
 
-    constructor(value: Type, start: number, end: number) {
+    constructor(value: Type, start?: number, end?: number) {
       super(start, end);
       this.value = value;
     }
@@ -129,7 +128,7 @@ namespace Expr {
   export class Percentage extends Expr {
     public expression: Expr;
 
-    constructor(expression: Expr, start: number, end: number) {
+    constructor(expression: Expr, start?: number, end?: number) {
       super(start, end);
       this.expression = expression;
     }
@@ -143,7 +142,7 @@ namespace Expr {
     public expression: Expr;
     public unit: UnitMeta;
 
-    constructor(expression: Expr, unit: UnitMeta, start: number, end: number) {
+    constructor(expression: Expr, unit: UnitMeta, start?: number, end?: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
@@ -157,7 +156,7 @@ namespace Expr {
     public expression: Expr;
     public unit: UnitMeta | NumberSystem;
 
-    constructor(expression: Expr, unit: UnitMeta | NumberSystem, start: number, end: number) {
+    constructor(expression: Expr, unit: UnitMeta | NumberSystem, start?: number, end?: number) {
       super(start, end);
       this.unit = unit;
       this.expression = expression;
@@ -171,7 +170,7 @@ namespace Expr {
     public operator: Token;
     public right: Expr;
 
-    constructor(operator: Token, right: Expr, start: number, end: number) {
+    constructor(operator: Token, right: Expr, start?: number, end?: number) {
       super(start, end);
       this.operator = operator;
       this.right = right;

@@ -222,6 +222,15 @@ test('Tonumber', () => {
   expect(Fcal.eval('0.34 + 1').toNumber()).toStrictEqual(1.34);
 });
 
+test('Fcal getUnit', () => {
+  const cmUnit = Fcal.getUnit('cm');
+  expect(cmUnit).not.toBeNull();
+  if (cmUnit) {
+    expect(cmUnit.unitType).toStrictEqual('cm');
+  }
+  expect(Fcal.getUnit('hasifh')).toBeNull();
+});
+
 test('AST print()', () => {
   const expr = new Fcal().expression('5 && ( y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)% )');
   expect(expr.getAST()).toStrictEqual(`\

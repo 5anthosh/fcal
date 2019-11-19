@@ -1833,56 +1833,30 @@ var Entity;
 })(Entity || (Entity = {}));
 exports.Entity = Entity;
 
-},{"3":3}],4:[function(require,module,exports){
+},{"3":3}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(14);
 var symboltable_1 = require(8);
-var Constant = /** @class */ (function () {
-    function Constant(symbolTable) {
-        this.values = new Map();
+var Phrases = /** @class */ (function () {
+    function Phrases(symbolTable) {
         this.symbolTable = symbolTable;
+        this.phrases = new Map();
     }
-    Constant.prototype.get = function (key) {
-        return this.values.get(key);
-    };
-    /**
-     * create or assign a constant with value
-     * @param {string} key constatn name
-     * @param  {Type | Big.Decimal | number | string} value value
-     */
-    Constant.prototype.set = function (key, value) {
-        this.symbolTable.set(key, symboltable_1.Entity.CONSTANT);
-        if (value instanceof datatype_1.Type) {
-            this.values.set(key, value);
-            return;
-        }
-        this.values.set(key, datatype_1.Type.BNumber.New(value));
-    };
-    /**
-     * import values from Object or map into constants
-     * @param {Object | Map} values
-     */
-    Constant.prototype.use = function (values) {
-        var _this = this;
-        if (values instanceof Map) {
-            values.forEach(function (value, key) {
-                _this.set(key, value);
-            });
-            return;
-        }
-        for (var key in values) {
-            if (values.hasOwnProperty(key)) {
-                var element = values[key];
-                this.set(key, element);
-            }
+    Phrases.prototype.push = function (key, phrases) {
+        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
+            var phrase = phrases_1[_i];
+            this.symbolTable.set(phrase.toUpperCase(), symboltable_1.Entity.OPERATION_PHRASE);
+            this.phrases.set(phrase.toUpperCase(), key);
         }
     };
-    return Constant;
+    Phrases.prototype.get = function (key) {
+        return this.phrases.get(key.toUpperCase());
+    };
+    return Phrases;
 }());
-exports.Constant = Constant;
+exports.Phrases = Phrases;
 
-},{"14":14,"8":8}],5:[function(require,module,exports){
+},{"8":8}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -1954,30 +1928,56 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"14":14,"3":3,"8":8}],16:[function(require,module,exports){
+},{"14":14,"3":3,"8":8}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var datatype_1 = require(14);
 var symboltable_1 = require(8);
-var Phrases = /** @class */ (function () {
-    function Phrases(symbolTable) {
+var Constant = /** @class */ (function () {
+    function Constant(symbolTable) {
+        this.values = new Map();
         this.symbolTable = symbolTable;
-        this.phrases = new Map();
     }
-    Phrases.prototype.push = function (key, phrases) {
-        for (var _i = 0, phrases_1 = phrases; _i < phrases_1.length; _i++) {
-            var phrase = phrases_1[_i];
-            this.symbolTable.set(phrase.toUpperCase(), symboltable_1.Entity.OPERATION_PHRASE);
-            this.phrases.set(phrase.toUpperCase(), key);
+    Constant.prototype.get = function (key) {
+        return this.values.get(key);
+    };
+    /**
+     * create or assign a constant with value
+     * @param {string} key constatn name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Constant.prototype.set = function (key, value) {
+        this.symbolTable.set(key, symboltable_1.Entity.CONSTANT);
+        if (value instanceof datatype_1.Type) {
+            this.values.set(key, value);
+            return;
+        }
+        this.values.set(key, datatype_1.Type.BNumber.New(value));
+    };
+    /**
+     * import values from Object or map into constants
+     * @param {Object | Map} values
+     */
+    Constant.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
         }
     };
-    Phrases.prototype.get = function (key) {
-        return this.phrases.get(key.toUpperCase());
-    };
-    return Phrases;
+    return Constant;
 }());
-exports.Phrases = Phrases;
+exports.Constant = Constant;
 
-},{"8":8}],18:[function(require,module,exports){
+},{"14":14,"8":8}],18:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -7762,20 +7762,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var astPrinter_1 = require(11);
-var Expr = /** @class */ (function (_super) {
-    __extends(Expr, _super);
+var Expr = /** @class */ (function () {
     function Expr(start, end) {
-        var _this = _super.call(this) || this;
-        _this.start = start;
-        _this.end = end;
-        return _this;
+        this.start = start;
+        this.end = end;
     }
     Expr.prototype.toString = function () {
-        var res = this.print(this);
+        var res = new astPrinter_1.ASTPrinter().print(this);
         return res.substring(0, res.length - 2);
     };
     return Expr;
-}(astPrinter_1.ASTPrinter));
+}());
 exports.Expr = Expr;
 // tslint:disable-next-line: no-namespace
 (function (Expr) {

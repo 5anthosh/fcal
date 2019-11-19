@@ -193,11 +193,20 @@ test('Units comparison', () => {
 test('Logical and or', () => {
   expect(() => Fcal.eval('4 & 5')).toThrowError('Unexpected character &');
   expect(() => Fcal.eval('0x1 cm | 90%')).toThrowError('Unexpected character |');
-
-  expect(Fcal.eval('45 cm && 55 ')).toStrictEqual(Type.BNumber.New(55));
-  expect(Fcal.eval('0 && -23 ')).toStrictEqual(Type.BNumber.New(0));
-  expect(Fcal.eval('-34 && true && -6 ')).toStrictEqual(Type.BNumber.New(-6));
+  const cmUnit = Fcal.getUnit('cm');
+  expect(cmUnit).not.toBeNull();
+  if (cmUnit) {
+    expect(Fcal.eval('45 % && 55 cm')).toStrictEqual(Type.UnitNumber.New(55, cmUnit));
+    expect(Fcal.eval('0 cm && -23 ')).toStrictEqual(Type.UnitNumber.New(0, cmUnit));
+    expect(Fcal.eval('false or 0 || 0.12 cm')).toStrictEqual(Type.UnitNumber.New(0.12, cmUnit));
+  }
+  expect(Fcal.eval('-34 && true and -6 ')).toStrictEqual(Type.BNumber.New(-6));
   expect(Fcal.eval('-88 || 9')).toStrictEqual(Type.BNumber.New(-88));
-  expect(Fcal.eval('false || -9')).toStrictEqual(Type.BNumber.New(-9));
-  expect(Fcal.eval('false || 0 || 0.12')).toStrictEqual(Type.BNumber.New(0.12));
+  expect(Fcal.eval('false or -9')).toStrictEqual(Type.BNumber.New(-9));
+
+  const fcal = new Fcal();
+  expect(fcal.evaluate('89 && false && (tt = 3)')).toStrictEqual(Type.FBoolean.FALSE);
+  expect(() => fcal.evaluate('67 * tt')).toThrowError('Undefined variable tt');
+  expect(fcal.evaluate('false || 0 || (kk = 0.384%)')).toStrictEqual(Type.Percentage.New(0.384));
+  expect(fcal.evaluate('kk + 5%')).toStrictEqual(Type.Percentage.New(5.384));
 });

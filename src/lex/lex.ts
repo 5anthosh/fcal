@@ -1,4 +1,5 @@
 import { FcalError } from '../fcal';
+import { Converter } from '../interpreter/converter';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
@@ -59,8 +60,9 @@ class Lexer {
   private start: number;
   private current: number;
   private phrases: Phrases;
+  private cc: Converter;
 
-  constructor(source: string, phrases: Phrases, untis: Unit.List) {
+  constructor(source: string, phrases: Phrases, untis: Unit.List, cc: Converter) {
     // Removing the space around expression
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
@@ -68,6 +70,7 @@ class Lexer {
     this.tokens = Array<Token>();
     this.phrases = phrases;
     this.units = untis;
+    this.cc = cc;
   }
 
   public Next(): Token {
@@ -208,6 +211,10 @@ class Lexer {
     const ns = NumberSystem.get(text);
     if (ns) {
       return this.TTWithLiteral(TT.NS, text);
+    }
+    const cc = this.cc.get(text);
+    if (cc) {
+      return this.TTWithLiteral(TT.CC, text);
     }
     return this.TT(TT.NAME);
   }

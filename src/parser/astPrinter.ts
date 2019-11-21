@@ -1,3 +1,4 @@
+import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 import { Expr } from './expr';
 
@@ -52,14 +53,17 @@ class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'UNIT')} ${expr.unit.unitType} \n|\n${expression}`;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): string {
+  public visitUnitConvertionExpr(expr: Expr.ConvertionExpr): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
-    if (expr.unit instanceof UnitMeta) {
-      return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.unitType} \n|\n${expression}`;
+    if (expr.to instanceof UnitMeta) {
+      return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.name} \n|\n${expression}`;
     }
-    return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.unit.name} \n|\n${expression}`;
+    if (expr.to instanceof NumberSystem) {
+      return `${ASTPrinter.createPrefix(this.depth, 'NUMBERICAL SYSTEM')} ${expr.name} \n|\n${expression}`;
+    }
+    return `${ASTPrinter.createPrefix(this.depth, 'CONVERTER')} ${expr.name} \n|\n${expression}`;
   }
 
   public visitLogicalExpr(expr: Expr.Logical): string {
@@ -82,7 +86,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'Grouping')} \n|\n${expression}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'GROUPING')} \n|\n${expression}`;
   }
 
   public visitLiteralExpr(expr: Expr.Literal): string {

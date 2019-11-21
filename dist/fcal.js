@@ -1,7 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(14);
+var datatype_1 = require(15);
 function getDefaultFunctions() {
     var functions = [
         {
@@ -239,7 +239,7 @@ function getDefaultFunctions() {
 }
 exports.getDefaultFunctions = getDefaultFunctions;
 
-},{"14":14}],14:[function(require,module,exports){
+},{"15":15}],15:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -255,9 +255,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(18);
+var decimal_js_1 = require(19);
 var fcal_1 = require(3);
-var numberSystem_1 = require(15);
+var numberSystem_1 = require(16);
 var Type = /** @class */ (function () {
     function Type() {
     }
@@ -900,10 +900,10 @@ var TYPERANK;
 })(Type || (Type = {}));
 exports.Type = Type;
 
-},{"15":15,"18":18,"3":3}],2:[function(require,module,exports){
+},{"16":16,"19":19,"3":3}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require(17);
+var units_1 = require(18);
 function getDefaultUnits() {
     var units = new Array();
     setDistanceUnits(units);
@@ -1308,11 +1308,11 @@ function setDigitalStorageUnits(units) {
     ]);
 }
 
-},{"17":17}],17:[function(require,module,exports){
+},{"18":18}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(18);
-var symboltable_1 = require(8);
+var decimal_js_1 = require(19);
+var symboltable_1 = require(9);
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
@@ -1443,7 +1443,7 @@ exports.Unit = Unit;
 })(Unit || (Unit = {}));
 exports.Unit = Unit;
 
-},{"18":18,"8":8}],3:[function(require,module,exports){
+},{"19":19,"9":9}],3:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1459,22 +1459,23 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(18);
+var decimal_js_1 = require(19);
 exports.Decimal = decimal_js_1.Decimal;
 var functions_1 = require(1);
 var units_1 = require(2);
 var constants_1 = require(4);
-var environment_1 = require(5);
+var converter_1 = require(5);
+var environment_1 = require(6);
 exports.Environment = environment_1.Environment;
-var function_1 = require(6);
+var function_1 = require(7);
 exports.FcalFunction = function_1.FcalFunction;
-var interpreter_1 = require(7);
-var symboltable_1 = require(8);
-var token_1 = require(10);
-var datatype_1 = require(14);
+var interpreter_1 = require(8);
+var symboltable_1 = require(9);
+var token_1 = require(11);
+var datatype_1 = require(15);
 exports.Type = datatype_1.Type;
-var phrase_1 = require(16);
-var units_2 = require(17);
+var phrase_1 = require(17);
+var units_2 = require(18);
 exports.Unit = units_2.Unit;
 /**
  * Math expression evaluator.
@@ -1561,6 +1562,9 @@ var Fcal = /** @class */ (function () {
     Fcal.useConstants = function (constants) {
         this.constants.use(constants);
     };
+    Fcal.useConverter = function (id, f) {
+        this.c.set(id, f);
+    };
     Fcal.initialize = function () {
         if (!this.gst) {
             this.gst = new symboltable_1.SymbolTable();
@@ -1579,6 +1583,10 @@ var Fcal = /** @class */ (function () {
         if (!this.constants) {
             this.constants = new constants_1.Constant(this.gst);
             this.setDefaultConstants();
+        }
+        if (!this.c) {
+            this.c = new converter_1.Converter(this.gst);
+            this.setDefaultConverter();
         }
     };
     Fcal.getdefaultphrases = function () {
@@ -1611,6 +1619,18 @@ var Fcal = /** @class */ (function () {
             true: datatype_1.Type.FBoolean.TRUE,
         });
     };
+    Fcal.setDefaultConverter = function () {
+        var num = function (v) {
+            return datatype_1.Type.BNumber.New(v.n);
+        };
+        var per = function (v) {
+            return datatype_1.Type.Percentage.New(v.n);
+        };
+        this.useConverter('number', num);
+        this.useConverter('num', num);
+        this.useConverter('percentage', per);
+        this.useConverter('percent', per);
+    };
     /**
      * Evaluates given expression
      * it appends new line character if not present
@@ -1619,7 +1639,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
-        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
     };
     /**
      * rawEvaluates given expression
@@ -1628,7 +1648,7 @@ var Fcal = /** @class */ (function () {
      * @returns {Type} result of expression
      */
     Fcal.prototype.rawEvaluate = function (source) {
-        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
     };
     /**
      * Create new expression with copy of Fcal.Environment
@@ -1640,7 +1660,7 @@ var Fcal = /** @class */ (function () {
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c));
     };
     /**
      * Create new  Expression in sync with Fcal.Environment
@@ -1649,7 +1669,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c));
     };
     /**
      * create a new variable with value or assign value to variable
@@ -1722,7 +1742,7 @@ exports.FcalError = FcalError;
 /***************************************************************/
 Fcal.initialize();
 
-},{"1":1,"10":10,"14":14,"16":16,"17":17,"18":18,"2":2,"4":4,"5":5,"6":6,"7":7,"8":8}],10:[function(require,module,exports){
+},{"1":1,"11":11,"15":15,"17":17,"18":18,"19":19,"2":2,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TT;
@@ -1762,6 +1782,7 @@ var TT;
     TT["AND"] = "&&";
     TT["OR"] = "||";
     TT["Q"] = "?";
+    TT["CC"] = "cc";
 })(TT || (TT = {}));
 exports.TT = TT;
 var Token = /** @class */ (function () {
@@ -1782,7 +1803,7 @@ var Token = /** @class */ (function () {
 }());
 exports.Token = Token;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -1827,14 +1848,15 @@ var Entity;
     Entity["OPERATION_PHRASE"] = "OPERATION PHRASE";
     Entity["NS"] = "NUMBER SYSTEM";
     Entity["UNIT"] = "UNIT";
+    Entity["CONVERTER"] = "CONVERTER";
 })(Entity || (Entity = {}));
 exports.Entity = Entity;
 
 },{"3":3}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(14);
-var symboltable_1 = require(8);
+var datatype_1 = require(15);
+var symboltable_1 = require(9);
 var Constant = /** @class */ (function () {
     function Constant(symbolTable) {
         this.values = new Map();
@@ -1879,12 +1901,32 @@ var Constant = /** @class */ (function () {
 }());
 exports.Constant = Constant;
 
-},{"14":14,"8":8}],5:[function(require,module,exports){
+},{"15":15,"9":9}],5:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var symboltable_1 = require(9);
+var Converter = /** @class */ (function () {
+    function Converter(st) {
+        this.st = st;
+        this.c = new Map();
+    }
+    Converter.prototype.get = function (id) {
+        return this.c.get(id);
+    };
+    Converter.prototype.set = function (id, func) {
+        this.st.set(id, symboltable_1.Entity.CONVERTER);
+        this.c.set(id, func);
+    };
+    return Converter;
+}());
+exports.Converter = Converter;
+
+},{"9":9}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(14);
-var symboltable_1 = require(8);
+var datatype_1 = require(15);
+var symboltable_1 = require(9);
 /**
  * Represents runtime variable environment
  * It represents state of fcal
@@ -1951,10 +1993,10 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"14":14,"3":3,"8":8}],16:[function(require,module,exports){
+},{"15":15,"3":3,"9":9}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var symboltable_1 = require(8);
+var symboltable_1 = require(9);
 var Phrases = /** @class */ (function () {
     function Phrases(symbolTable) {
         this.symbolTable = symbolTable;
@@ -1974,7 +2016,7 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"8":8}],18:[function(require,module,exports){
+},{"9":9}],19:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -6853,12 +6895,12 @@ exports.Phrases = Phrases;
   }
 })(this);
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(18);
+var decimal_js_1 = require(19);
 var fcal_1 = require(3);
-var datatype_1 = require(14);
+var datatype_1 = require(15);
 /**
  * FcalFunction represents function in fcal
  */
@@ -6948,17 +6990,18 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"14":14,"18":18,"3":3}],7:[function(require,module,exports){
+},{"15":15,"19":19,"3":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var token_1 = require(10);
-var parser_1 = require(13);
-var datatype_1 = require(14);
-var units_1 = require(17);
+var token_1 = require(11);
+var parser_1 = require(14);
+var datatype_1 = require(15);
+var numberSystem_1 = require(16);
+var units_1 = require(18);
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, units, environment) {
-        var parser = new parser_1.Parser(source, phrases, units, environment.symbolTable);
+    function Interpreter(source, phrases, units, environment, c) {
+        var parser = new parser_1.Parser(source, phrases, units, c, environment.symbolTable);
         this.environment = environment;
         this.ast = parser.parse();
     }
@@ -7000,10 +7043,13 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (value instanceof datatype_1.Type.Numberic) {
-            if (expr.unit instanceof units_1.UnitMeta) {
-                return datatype_1.Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
+            if (expr.to instanceof units_1.UnitMeta) {
+                return datatype_1.Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
             }
-            return value.setSystem(expr.unit);
+            if (expr.to instanceof numberSystem_1.NumberSystem) {
+                return value.setSystem(expr.to);
+            }
+            return expr.to(value);
         }
         throw new fcal_1.FcalError('Expecting numeric value before in', expr.start, expr.end);
     };
@@ -7111,20 +7157,58 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"10":10,"13":13,"14":14,"17":17,"3":3}],13:[function(require,module,exports){
+},{"11":11,"14":14,"15":15,"16":16,"18":18,"3":3}],16:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NumberSystem = /** @class */ (function () {
+    function NumberSystem(name, to) {
+        this.to = to;
+        this.name = name;
+    }
+    NumberSystem.get = function (ns) {
+        return NumberSystem.ns[ns];
+    };
+    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
+        return num.toString();
+    });
+    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
+        return num.toHexadecimal();
+    });
+    NumberSystem.bin = new NumberSystem('Binary', function (num) {
+        return num.toBinary();
+    });
+    NumberSystem.oct = new NumberSystem('Octal', function (num) {
+        return num.toOctal();
+    });
+    NumberSystem.ns = {
+        bin: NumberSystem.bin,
+        binary: NumberSystem.bin,
+        dec: NumberSystem.dec,
+        decimal: NumberSystem.dec,
+        hex: NumberSystem.hex,
+        hexadecimal: NumberSystem.hex,
+        oct: NumberSystem.oct,
+        octal: NumberSystem.oct,
+    };
+    return NumberSystem;
+}());
+exports.NumberSystem = NumberSystem;
+
+},{}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var lex_1 = require(9);
-var token_1 = require(10);
-var numberSystem_1 = require(15);
-var expr_1 = require(12);
+var lex_1 = require(10);
+var token_1 = require(11);
+var numberSystem_1 = require(16);
+var expr_1 = require(13);
 var Parser = /** @class */ (function () {
-    function Parser(source, phrases, units, symbolTable) {
+    function Parser(source, phrases, units, cc, symbolTable) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases, units);
+        this.lexer = new lex_1.Lexer(this.source, phrases, units, cc);
         this.ntoken = 0;
         this.tokens = [];
+        this.c = cc;
         this.symbolTable = symbolTable;
     }
     Parser.prototype.parse = function () {
@@ -7218,14 +7302,21 @@ var Parser = /** @class */ (function () {
                 var unit = this.previous();
                 var unit2 = this.lexer.units.get(unit.lexeme);
                 if (unit2) {
-                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
+                    return new expr_1.Expr.ConvertionExpr(expr, unit2, unit.lexeme, expr.start, unit.end);
                 }
             }
             if (this.match([token_1.TT.NS])) {
                 var token = this.previous();
                 var ns = numberSystem_1.NumberSystem.get(token.lexeme);
                 if (ns) {
-                    return new expr_1.Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
+                    return new expr_1.Expr.ConvertionExpr(expr, ns, token.lexeme, expr.start, token.end);
+                }
+            }
+            if (this.match([token_1.TT.CC])) {
+                var token = this.previous();
+                var c = this.c.get(token.lexeme);
+                if (c) {
+                    return new expr_1.Expr.ConvertionExpr(expr, c, token.lexeme, expr.start, token.end);
                 }
             }
             throw new fcal_1.FcalError('Expecting unit after in');
@@ -7355,15 +7446,15 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"10":10,"12":12,"15":15,"3":3,"9":9}],9:[function(require,module,exports){
+},{"10":10,"11":11,"13":13,"16":16,"3":3}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(14);
-var numberSystem_1 = require(15);
-var token_1 = require(10);
+var datatype_1 = require(15);
+var numberSystem_1 = require(16);
+var token_1 = require(11);
 var Lexer = /** @class */ (function () {
-    function Lexer(source, phrases, untis) {
+    function Lexer(source, phrases, untis, cc) {
         // Removing the space around expression
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
@@ -7371,6 +7462,7 @@ var Lexer = /** @class */ (function () {
         this.tokens = Array();
         this.phrases = phrases;
         this.units = untis;
+        this.cc = cc;
     }
     Lexer.isDigit = function (char) {
         return char >= '0' && char <= '9';
@@ -7524,6 +7616,10 @@ var Lexer = /** @class */ (function () {
         if (ns) {
             return this.TTWithLiteral(token_1.TT.NS, text);
         }
+        var cc = this.cc.get(text);
+        if (cc) {
+            return this.TTWithLiteral(token_1.TT.CC, text);
+        }
         return this.TT(token_1.TT.NAME);
     };
     Lexer.prototype.number = function () {
@@ -7632,47 +7728,11 @@ var Lexer = /** @class */ (function () {
 }());
 exports.Lexer = Lexer;
 
-},{"10":10,"14":14,"15":15,"3":3}],15:[function(require,module,exports){
+},{"11":11,"15":15,"16":16,"3":3}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var NumberSystem = /** @class */ (function () {
-    function NumberSystem(name, to) {
-        this.to = to;
-        this.name = name;
-    }
-    NumberSystem.get = function (ns) {
-        return NumberSystem.ns[ns];
-    };
-    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
-        return num.toString();
-    });
-    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
-        return num.toHexadecimal();
-    });
-    NumberSystem.bin = new NumberSystem('Binary', function (num) {
-        return num.toBinary();
-    });
-    NumberSystem.oct = new NumberSystem('Octal', function (num) {
-        return num.toOctal();
-    });
-    NumberSystem.ns = {
-        bin: NumberSystem.bin,
-        binary: NumberSystem.bin,
-        dec: NumberSystem.dec,
-        decimal: NumberSystem.dec,
-        hex: NumberSystem.hex,
-        hexadecimal: NumberSystem.hex,
-        oct: NumberSystem.oct,
-        octal: NumberSystem.oct,
-    };
-    return NumberSystem;
-}());
-exports.NumberSystem = NumberSystem;
-
-},{}],11:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require(17);
+var numberSystem_1 = require(16);
+var units_1 = require(18);
 var ASTPrinter = /** @class */ (function () {
     function ASTPrinter() {
         this.depth = 0;
@@ -7717,10 +7777,13 @@ var ASTPrinter = /** @class */ (function () {
         this.depth += ASTPrinter.tab;
         var expression = this.evaluate(expr.expression);
         this.depth -= ASTPrinter.tab;
-        if (expr.unit instanceof units_1.UnitMeta) {
-            return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.unitType + " \n|\n" + expression;
+        if (expr.to instanceof units_1.UnitMeta) {
+            return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.name + " \n|\n" + expression;
         }
-        return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.unit.name + " \n|\n" + expression;
+        if (expr.to instanceof numberSystem_1.NumberSystem) {
+            return ASTPrinter.createPrefix(this.depth, 'NUMBERICAL SYSTEM') + " " + expr.name + " \n|\n" + expression;
+        }
+        return ASTPrinter.createPrefix(this.depth, 'CONVERTER') + " " + expr.name + " \n|\n" + expression;
     };
     ASTPrinter.prototype.visitLogicalExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -7740,7 +7803,7 @@ var ASTPrinter = /** @class */ (function () {
         this.depth += ASTPrinter.tab;
         var expression = this.evaluate(expr.expression);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'Grouping') + " \n|\n" + expression;
+        return ASTPrinter.createPrefix(this.depth, 'GROUPING') + " \n|\n" + expression;
     };
     ASTPrinter.prototype.visitLiteralExpr = function (expr) {
         return ASTPrinter.createPrefix(this.depth, 'LITERAL') + " " + expr.value.print() + "\n|\n";
@@ -7770,7 +7833,7 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{"17":17}],12:[function(require,module,exports){
+},{"16":16,"18":18}],13:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -7786,7 +7849,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var astPrinter_1 = require(11);
+var astPrinter_1 = require(12);
 var Expr = /** @class */ (function () {
     function Expr(start, end) {
         this.start = start;
@@ -7940,20 +8003,21 @@ exports.Expr = Expr;
         return UnitExpr;
     }(Expr));
     Expr.UnitExpr = UnitExpr;
-    var UnitorNSConvertionExpr = /** @class */ (function (_super) {
-        __extends(UnitorNSConvertionExpr, _super);
-        function UnitorNSConvertionExpr(expression, unit, start, end) {
+    var ConvertionExpr = /** @class */ (function (_super) {
+        __extends(ConvertionExpr, _super);
+        function ConvertionExpr(expression, to, name, start, end) {
             var _this = _super.call(this, start, end) || this;
-            _this.unit = unit;
+            _this.to = to;
+            _this.name = name;
             _this.expression = expression;
             return _this;
         }
-        UnitorNSConvertionExpr.prototype.accept = function (visitor) {
+        ConvertionExpr.prototype.accept = function (visitor) {
             return visitor.visitUnitConvertionExpr(this);
         };
-        return UnitorNSConvertionExpr;
+        return ConvertionExpr;
     }(Expr));
-    Expr.UnitorNSConvertionExpr = UnitorNSConvertionExpr;
+    Expr.ConvertionExpr = ConvertionExpr;
     var Unary = /** @class */ (function (_super) {
         __extends(Unary, _super);
         function Unary(operator, right, start, end) {
@@ -7971,5 +8035,5 @@ exports.Expr = Expr;
 })(Expr || (Expr = {}));
 exports.Expr = Expr;
 
-},{"11":11}]},{},[3])(3)
+},{"12":12}]},{},[3])(3)
 });

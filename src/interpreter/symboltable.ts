@@ -43,6 +43,7 @@ enum Entity {
   OPERATION_PHRASE = 'OPERATION PHRASE',
   NS = 'NUMBER SYSTEM',
   UNIT = 'UNIT',
+  CONVERTER = 'CONVERTER',
 }
 
 export { Entity, SymbolTable };

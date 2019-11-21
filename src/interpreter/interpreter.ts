@@ -3,16 +3,18 @@ import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
+import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit, UnitMeta } from '../types/units';
+import { Converter } from './converter';
 import { EnvInputType, Environment } from './environment';
 import { FcalFunction } from './function';
 
 class Interpreter implements Expr.IVisitor<Type> {
   private readonly ast: Expr;
   private readonly environment: Environment;
-  constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment) {
-    const parser = new Parser(source, phrases, units, environment.symbolTable);
+  constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment, c: Converter) {
+    const parser = new Parser(source, phrases, units, c, environment.symbolTable);
     this.environment = environment;
     this.ast = parser.parse();
   }
@@ -60,13 +62,16 @@ class Interpreter implements Expr.IVisitor<Type> {
     return value;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): Type {
+  public visitUnitConvertionExpr(expr: Expr.ConvertionExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
-      if (expr.unit instanceof UnitMeta) {
-        return Type.UnitNumber.convertToUnit(value, expr.unit).setSystem(value.ns);
+      if (expr.to instanceof UnitMeta) {
+        return Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
       }
-      return (value as Type.Numberic).setSystem(expr.unit);
+      if (expr.to instanceof NumberSystem) {
+        return (value as Type.Numberic).setSystem(expr.to);
+      }
+      return expr.to(value);
     }
     throw new FcalError('Expecting numeric value before in', expr.start, expr.end);
   }

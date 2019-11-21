@@ -1,4 +1,5 @@
 import { FcalError } from '../fcal';
+import { Converter } from '../interpreter/converter';
 import { SymbolTable } from '../interpreter/symboltable';
 import { Lexer } from '../lex/lex';
 import { Token, TT } from '../lex/token';
@@ -13,12 +14,14 @@ class Parser {
   private ntoken: number;
   private tokens: Token[];
   private symbolTable: SymbolTable;
+  private c: Converter;
 
-  constructor(source: string, phrases: Phrases, units: Unit.List, symbolTable: SymbolTable) {
+  constructor(source: string, phrases: Phrases, units: Unit.List, cc: Converter, symbolTable: SymbolTable) {
     this.source = source;
-    this.lexer = new Lexer(this.source, phrases, units);
+    this.lexer = new Lexer(this.source, phrases, units, cc);
     this.ntoken = 0;
     this.tokens = [];
+    this.c = cc;
     this.symbolTable = symbolTable;
   }
 
@@ -128,14 +131,21 @@ class Parser {
         const unit = this.previous();
         const unit2 = this.lexer.units.get(unit.lexeme);
         if (unit2) {
-          return new Expr.UnitorNSConvertionExpr(expr, unit2, expr.start, unit.end);
+          return new Expr.ConvertionExpr(expr, unit2, unit.lexeme, expr.start, unit.end);
         }
       }
       if (this.match([TT.NS])) {
         const token = this.previous();
         const ns = NumberSystem.get(token.lexeme);
         if (ns) {
-          return new Expr.UnitorNSConvertionExpr(expr, ns, expr.start, token.end);
+          return new Expr.ConvertionExpr(expr, ns, token.lexeme, expr.start, token.end);
+        }
+      }
+      if (this.match([TT.CC])) {
+        const token = this.previous();
+        const c = this.c.get(token.lexeme);
+        if (c) {
+          return new Expr.ConvertionExpr(expr, c, token.lexeme, expr.start, token.end);
         }
       }
       throw new FcalError('Expecting unit after in');

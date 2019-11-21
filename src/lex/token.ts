@@ -34,6 +34,7 @@ enum TT {
   AND = '&&',
   OR = '||',
   Q = '?',
+  CC = 'cc',
 }
 
 class Token {

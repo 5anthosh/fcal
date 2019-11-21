@@ -1,3 +1,4 @@
+import { converterFuncFmt } from '../interpreter/converter';
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
@@ -169,13 +170,21 @@ namespace Expr {
       return visitor.visitUnitExpr(this);
     }
   }
-  export class UnitorNSConvertionExpr extends Expr {
+  export class ConvertionExpr extends Expr {
     public expression: Expr;
-    public unit: UnitMeta | NumberSystem;
+    public to: UnitMeta | NumberSystem | converterFuncFmt;
+    public name: string;
 
-    constructor(expression: Expr, unit: UnitMeta | NumberSystem, start?: number, end?: number) {
+    constructor(
+      expression: Expr,
+      to: UnitMeta | NumberSystem | converterFuncFmt,
+      name: string,
+      start?: number,
+      end?: number,
+    ) {
       super(start, end);
-      this.unit = unit;
+      this.to = to;
+      this.name = name;
       this.expression = expression;
     }
 
@@ -205,7 +214,7 @@ namespace Expr {
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
-    visitUnitConvertionExpr(expr: Expr.UnitorNSConvertionExpr): T;
+    visitUnitConvertionExpr(expr: Expr.ConvertionExpr): T;
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;

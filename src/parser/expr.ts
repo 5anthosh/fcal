@@ -157,12 +157,14 @@ namespace Expr {
   }
 
   export class UnitExpr extends Expr {
+    public phrase: string;
     public expression: Expr;
     public unit: UnitMeta;
 
-    constructor(expression: Expr, unit: UnitMeta, start?: number, end?: number) {
+    constructor(expression: Expr, phrase: string, unit: UnitMeta, start?: number, end?: number) {
       super(start, end);
       this.unit = unit;
+      this.phrase = phrase;
       this.expression = expression;
     }
 

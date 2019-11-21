@@ -283,6 +283,14 @@ class Expression {
   public getAST(): string {
     return this.interpreter.getAST();
   }
+
+  public toJSON(): string {
+    return this.interpreter.toJSON();
+  }
+
+  public toObj(): object {
+    return this.interpreter.toObj();
+  }
 }
 
 /**

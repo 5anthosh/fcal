@@ -183,7 +183,7 @@ class Parser {
       let unit2;
       unit2 = this.lexer.units.get(unit.lexeme);
       if (unit2) {
-        return new Expr.UnitExpr(expr, unit2, expr.start, unit.end);
+        return new Expr.UnitExpr(expr, unit.lexeme, unit2, expr.start, unit.end);
       }
     }
     return expr;

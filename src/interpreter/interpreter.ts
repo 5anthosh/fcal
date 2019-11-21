@@ -1,4 +1,5 @@
 import { FcalError } from '../fcal';
+import { ToJSON } from '../json/toJSON';
 import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
 import { Parser } from '../parser/parser';
@@ -21,6 +22,14 @@ class Interpreter implements Expr.IVisitor<Type> {
 
   public getAST(): string {
     return this.ast.toString();
+  }
+
+  public toJSON(): string {
+    return new ToJSON(this.ast).toJSON();
+  }
+
+  public toObj(): object {
+    return new ToJSON(this.ast).toObj();
   }
 
   public visitCallExpr(expr: Expr.Call): Type {

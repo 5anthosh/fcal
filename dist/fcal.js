@@ -1,7 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(16);
+var datatype_1 = require(17);
 function getDefaultFunctions() {
     var functions = [
         {
@@ -239,7 +239,7 @@ function getDefaultFunctions() {
 }
 exports.getDefaultFunctions = getDefaultFunctions;
 
-},{"16":16}],16:[function(require,module,exports){
+},{"17":17}],17:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -255,9 +255,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(20);
+var decimal_js_1 = require(21);
 var fcal_1 = require(3);
-var numberSystem_1 = require(17);
+var numberSystem_1 = require(18);
 var Type = /** @class */ (function () {
     function Type() {
     }
@@ -900,10 +900,10 @@ var TYPERANK;
 })(Type || (Type = {}));
 exports.Type = Type;
 
-},{"17":17,"20":20,"3":3}],2:[function(require,module,exports){
+},{"18":18,"21":21,"3":3}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require(19);
+var units_1 = require(20);
 function getDefaultUnits() {
     var units = new Array();
     setDistanceUnits(units);
@@ -1308,10 +1308,10 @@ function setDigitalStorageUnits(units) {
     ]);
 }
 
-},{"19":19}],19:[function(require,module,exports){
+},{"20":20}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(20);
+var decimal_js_1 = require(21);
 var symboltable_1 = require(9);
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
@@ -1443,7 +1443,7 @@ exports.Unit = Unit;
 })(Unit || (Unit = {}));
 exports.Unit = Unit;
 
-},{"20":20,"9":9}],3:[function(require,module,exports){
+},{"21":21,"9":9}],3:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1459,7 +1459,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(20);
+var decimal_js_1 = require(21);
 exports.Decimal = decimal_js_1.Decimal;
 var functions_1 = require(1);
 var units_1 = require(2);
@@ -1471,11 +1471,12 @@ var function_1 = require(7);
 exports.FcalFunction = function_1.FcalFunction;
 var interpreter_1 = require(8);
 var symboltable_1 = require(9);
-var token_1 = require(12);
-var datatype_1 = require(16);
+var JSONParser_1 = require(10);
+var token_1 = require(13);
+var datatype_1 = require(17);
 exports.Type = datatype_1.Type;
-var phrase_1 = require(18);
-var units_2 = require(19);
+var phrase_1 = require(19);
+var units_2 = require(20);
 exports.Unit = units_2.Unit;
 /**
  * Math expression evaluator.
@@ -1678,6 +1679,14 @@ var Fcal = /** @class */ (function () {
     Fcal.prototype.setValues = function (values) {
         this.environment.use(values);
     };
+    Fcal.prototype.fromJSON = function (source) {
+        var parser = new JSONParser_1.JSONParser(source, Fcal.units, Fcal.c);
+        var symbolTable = this.lst.clone();
+        var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
+        env.values = new Map(this.environment.values);
+        source = prefixNewLIne(source);
+        return new Expression(new interpreter_1.Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c));
+    };
     return Fcal;
 }());
 exports.Fcal = Fcal;
@@ -1748,7 +1757,7 @@ exports.FcalError = FcalError;
 /***************************************************************/
 Fcal.initialize();
 
-},{"1":1,"12":12,"16":16,"18":18,"19":19,"2":2,"20":20,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],12:[function(require,module,exports){
+},{"1":1,"10":10,"13":13,"17":17,"19":19,"2":2,"20":20,"21":21,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TT;
@@ -1801,9 +1810,6 @@ var Token = /** @class */ (function () {
     }
     Token.EOL = function (end) {
         return new Token(TT.EOL, 'EOL', null, end, end);
-    };
-    Token.prototype.toString = function () {
-        return "< " + this.type + " " + this.lexeme + " " + (this.literal ? this.literal : '') + " (" + this.start + ", " + this.end + ")>";
     };
     return Token;
 }());
@@ -1861,7 +1867,7 @@ exports.Entity = Entity;
 },{"3":3}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(16);
+var datatype_1 = require(17);
 var symboltable_1 = require(9);
 var Constant = /** @class */ (function () {
     function Constant(symbolTable) {
@@ -1907,7 +1913,7 @@ var Constant = /** @class */ (function () {
 }());
 exports.Constant = Constant;
 
-},{"16":16,"9":9}],5:[function(require,module,exports){
+},{"17":17,"9":9}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var symboltable_1 = require(9);
@@ -1931,7 +1937,7 @@ exports.Converter = Converter;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(16);
+var datatype_1 = require(17);
 var symboltable_1 = require(9);
 /**
  * Represents runtime variable environment
@@ -1999,7 +2005,7 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"16":16,"3":3,"9":9}],18:[function(require,module,exports){
+},{"17":17,"3":3,"9":9}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var symboltable_1 = require(9);
@@ -2022,7 +2028,7 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"9":9}],20:[function(require,module,exports){
+},{"9":9}],21:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -6904,9 +6910,9 @@ exports.Phrases = Phrases;
 },{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(20);
+var decimal_js_1 = require(21);
 var fcal_1 = require(3);
-var datatype_1 = require(16);
+var datatype_1 = require(17);
 /**
  * FcalFunction represents function in fcal
  */
@@ -6996,21 +7002,25 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"16":16,"20":20,"3":3}],8:[function(require,module,exports){
+},{"17":17,"21":21,"3":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var toJSON_1 = require(10);
-var token_1 = require(12);
-var parser_1 = require(15);
-var datatype_1 = require(16);
-var numberSystem_1 = require(17);
-var units_1 = require(19);
+var toJSON_1 = require(11);
+var token_1 = require(13);
+var parser_1 = require(16);
+var datatype_1 = require(17);
+var numberSystem_1 = require(18);
+var units_1 = require(20);
 var Interpreter = /** @class */ (function () {
     function Interpreter(source, phrases, units, environment, c) {
-        var parser = new parser_1.Parser(source, phrases, units, c, environment.symbolTable);
         this.environment = environment;
-        this.ast = parser.parse();
+        if (typeof source === 'string') {
+            var parser = new parser_1.Parser(source, phrases, units, c, environment.symbolTable);
+            this.ast = parser.parse();
+            return;
+        }
+        this.ast = source;
     }
     Interpreter.prototype.getAST = function () {
         return this.ast.toString();
@@ -7170,7 +7180,136 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"10":10,"12":12,"15":15,"16":16,"17":17,"19":19,"3":3}],17:[function(require,module,exports){
+},{"11":11,"13":13,"16":16,"17":17,"18":18,"20":20,"3":3}],10:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var expr_1 = require(15);
+var datatype_1 = require(17);
+var numberSystem_1 = require(18);
+var toJSON_1 = require(11);
+var JSONParser = /** @class */ (function () {
+    function JSONParser(astJSON, units, c) {
+        this.units = units;
+        this.c = c;
+        this.ast = JSON.parse(astJSON);
+    }
+    JSONParser.prototype.parse = function () {
+        return this.createExpr(this.ast);
+    };
+    JSONParser.prototype.createExpr = function (ast) {
+        var type = ast.type;
+        switch (type) {
+            case toJSON_1.JSONTYPES.BINARY:
+                if (ast.right && ast.left && ast.operator) {
+                    var left = this.createExpr(ast.left);
+                    var right = this.createExpr(ast.right);
+                    return new expr_1.Expr.Binary(left, ast.operator, right, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.GROUP:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Grouping(expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.LITERAL:
+                if (ast.value && typeof ast.value === 'string') {
+                    return new expr_1.Expr.Literal(new datatype_1.Type.BNumber(ast.value), ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.UNARY:
+                if (ast.operator && ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Unary(ast.operator, expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.PERCENTAGE:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Percentage(expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.UNIT:
+                if (ast.phrase && ast.value && typeof ast.value !== 'string') {
+                    var unitmeta = this.units.get(ast.phrase);
+                    if (unitmeta) {
+                        var expr = this.createExpr(ast.value);
+                        return new expr_1.Expr.UnitExpr(expr, ast.phrase, unitmeta, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.CONVERSION:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var value = this.createExpr(ast.value);
+                    if (ast.unit) {
+                        var unitMeta = this.units.get(ast.unit);
+                        if (unitMeta) {
+                            return new expr_1.Expr.ConvertionExpr(value, unitMeta, ast.unit, ast.start, ast.end);
+                        }
+                    }
+                    if (ast.ns) {
+                        var ns = numberSystem_1.NumberSystem.get(ast.ns);
+                        if (ns) {
+                            return new expr_1.Expr.ConvertionExpr(value, ns, ast.ns, ast.start, ast.end);
+                        }
+                    }
+                    if (ast.converter) {
+                        var cov = this.c.get(ast.converter);
+                        if (cov) {
+                            return new expr_1.Expr.ConvertionExpr(value, cov, ast.converter, ast.start, ast.end);
+                        }
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.ASSIGN:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var value = this.createExpr(ast.value);
+                    if (ast.variable) {
+                        return new expr_1.Expr.Assign(ast.variable, value, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.VARIABLE:
+                if (ast.name) {
+                    return new expr_1.Expr.Variable(ast.name, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.CALL:
+                if (ast.name) {
+                    var exprs = Array();
+                    if (ast.args) {
+                        for (var _i = 0, _a = ast.args; _i < _a.length; _i++) {
+                            var arg = _a[_i];
+                            exprs.push(this.createExpr(arg));
+                        }
+                        return new expr_1.Expr.Call(ast.name, exprs, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.LOGICAL:
+                if (ast.right && ast.left && ast.operator) {
+                    var left = this.createExpr(ast.left);
+                    var right = this.createExpr(ast.right);
+                    return new expr_1.Expr.Logical(left, ast.operator, right, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.TERNARY:
+                if (ast.main && ast.texpr && ast.fexpr) {
+                    var main = this.createExpr(ast.main);
+                    var texpr = this.createExpr(ast.texpr);
+                    var fexpr = this.createExpr(ast.fexpr);
+                    return new expr_1.Expr.Ternary(main, texpr, fexpr, ast.start, ast.end);
+                }
+                break;
+        }
+        throw new fcal_1.FcalError("Invalid JSON " + ast);
+    };
+    return JSONParser;
+}());
+exports.JSONParser = JSONParser;
+
+},{"11":11,"15":15,"17":17,"18":18,"3":3}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NumberSystem = /** @class */ (function () {
@@ -7207,7 +7346,7 @@ var NumberSystem = /** @class */ (function () {
 }());
 exports.NumberSystem = NumberSystem;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -7221,8 +7360,8 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var numberSystem_1 = require(17);
-var units_1 = require(19);
+var numberSystem_1 = require(18);
+var units_1 = require(20);
 var JSONTYPES;
 (function (JSONTYPES) {
     JSONTYPES["BINARY"] = "binary";
@@ -7238,6 +7377,7 @@ var JSONTYPES;
     JSONTYPES["LOGICAL"] = "logical";
     JSONTYPES["TERNARY"] = "ternary";
 })(JSONTYPES || (JSONTYPES = {}));
+exports.JSONTYPES = JSONTYPES;
 var ToJSON = /** @class */ (function () {
     function ToJSON(ast) {
         this.ast = ast;
@@ -7273,12 +7413,12 @@ var ToJSON = /** @class */ (function () {
     ToJSON.prototype.visitUnitConvertionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (expr.to instanceof units_1.UnitMeta) {
-            return { type: JSONTYPES.CONVERSION, unit: { phrase: expr.name }, value: value };
+            return { type: JSONTYPES.CONVERSION, unit: expr.name, value: value };
         }
         if (expr.to instanceof numberSystem_1.NumberSystem) {
-            return { type: JSONTYPES.CONVERSION, ns: { phrase: expr.name }, value: value };
+            return { type: JSONTYPES.CONVERSION, ns: expr.name, value: value };
         }
-        return { type: JSONTYPES.CONVERSION, converter: { phrase: expr.name, value: value } };
+        return { type: JSONTYPES.CONVERSION, converter: expr.name, value: value };
     };
     ToJSON.prototype.visitAssignExpr = function (expr) {
         return { type: JSONTYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
@@ -7314,14 +7454,14 @@ var ToJSON = /** @class */ (function () {
 }());
 exports.ToJSON = ToJSON;
 
-},{"17":17,"19":19}],15:[function(require,module,exports){
+},{"18":18,"20":20}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var lex_1 = require(11);
-var token_1 = require(12);
-var numberSystem_1 = require(17);
-var expr_1 = require(14);
+var lex_1 = require(12);
+var token_1 = require(13);
+var numberSystem_1 = require(18);
+var expr_1 = require(15);
 var Parser = /** @class */ (function () {
     function Parser(source, phrases, units, cc, symbolTable) {
         this.source = source;
@@ -7566,13 +7706,216 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"11":11,"12":12,"14":14,"17":17,"3":3}],11:[function(require,module,exports){
+},{"12":12,"13":13,"15":15,"18":18,"3":3}],15:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var astPrinter_1 = require(14);
+var Expr = /** @class */ (function () {
+    function Expr(start, end) {
+        this.start = start;
+        this.end = end;
+    }
+    Expr.prototype.toString = function () {
+        var res = new astPrinter_1.ASTPrinter().print(this);
+        return res.substring(0, res.length - 2);
+    };
+    return Expr;
+}());
+exports.Expr = Expr;
+// tslint:disable-next-line: no-namespace
+(function (Expr) {
+    var Binary = /** @class */ (function (_super) {
+        __extends(Binary, _super);
+        function Binary(left, operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.left = left;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Binary.prototype.accept = function (visitor) {
+            return visitor.visitBinaryExpr(this);
+        };
+        return Binary;
+    }(Expr));
+    Expr.Binary = Binary;
+    var Ternary = /** @class */ (function (_super) {
+        __extends(Ternary, _super);
+        function Ternary(main, texpr, rexpr, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.main = main;
+            _this.texpr = texpr;
+            _this.fexpr = rexpr;
+            return _this;
+        }
+        Ternary.prototype.accept = function (visitor) {
+            return visitor.visitTernaryExpr(this);
+        };
+        return Ternary;
+    }(Expr));
+    Expr.Ternary = Ternary;
+    var Logical = /** @class */ (function (_super) {
+        __extends(Logical, _super);
+        function Logical(left, operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.left = left;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Logical.prototype.accept = function (visitor) {
+            return visitor.visitLogicalExpr(this);
+        };
+        return Logical;
+    }(Expr));
+    Expr.Logical = Logical;
+    var Grouping = /** @class */ (function (_super) {
+        __extends(Grouping, _super);
+        function Grouping(expression, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.expression = expression;
+            return _this;
+        }
+        Grouping.prototype.accept = function (visitor) {
+            return visitor.visitGroupingExpr(this);
+        };
+        return Grouping;
+    }(Expr));
+    Expr.Grouping = Grouping;
+    var Assign = /** @class */ (function (_super) {
+        __extends(Assign, _super);
+        function Assign(name, value, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            _this.value = value;
+            return _this;
+        }
+        Assign.prototype.accept = function (visitor) {
+            return visitor.visitAssignExpr(this);
+        };
+        return Assign;
+    }(Expr));
+    Expr.Assign = Assign;
+    var Variable = /** @class */ (function (_super) {
+        __extends(Variable, _super);
+        function Variable(name, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            return _this;
+        }
+        Variable.prototype.accept = function (visitor) {
+            return visitor.visitVariableExpr(this);
+        };
+        return Variable;
+    }(Expr));
+    Expr.Variable = Variable;
+    var Call = /** @class */ (function (_super) {
+        __extends(Call, _super);
+        function Call(name, argument, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.name = name;
+            _this.argument = argument;
+            return _this;
+        }
+        Call.prototype.accept = function (visitor) {
+            return visitor.visitCallExpr(this);
+        };
+        return Call;
+    }(Expr));
+    Expr.Call = Call;
+    var Literal = /** @class */ (function (_super) {
+        __extends(Literal, _super);
+        function Literal(value, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.value = value;
+            return _this;
+        }
+        Literal.prototype.accept = function (visitor) {
+            return visitor.visitLiteralExpr(this);
+        };
+        return Literal;
+    }(Expr));
+    Expr.Literal = Literal;
+    var Percentage = /** @class */ (function (_super) {
+        __extends(Percentage, _super);
+        function Percentage(expression, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.expression = expression;
+            return _this;
+        }
+        Percentage.prototype.accept = function (visitor) {
+            return visitor.visitPercentageExpr(this);
+        };
+        return Percentage;
+    }(Expr));
+    Expr.Percentage = Percentage;
+    var UnitExpr = /** @class */ (function (_super) {
+        __extends(UnitExpr, _super);
+        function UnitExpr(expression, phrase, unit, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.unit = unit;
+            _this.phrase = phrase;
+            _this.expression = expression;
+            return _this;
+        }
+        UnitExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitExpr(this);
+        };
+        return UnitExpr;
+    }(Expr));
+    Expr.UnitExpr = UnitExpr;
+    var ConvertionExpr = /** @class */ (function (_super) {
+        __extends(ConvertionExpr, _super);
+        function ConvertionExpr(expression, to, name, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.to = to;
+            _this.name = name;
+            _this.expression = expression;
+            return _this;
+        }
+        ConvertionExpr.prototype.accept = function (visitor) {
+            return visitor.visitUnitConvertionExpr(this);
+        };
+        return ConvertionExpr;
+    }(Expr));
+    Expr.ConvertionExpr = ConvertionExpr;
+    var Unary = /** @class */ (function (_super) {
+        __extends(Unary, _super);
+        function Unary(operator, right, start, end) {
+            var _this = _super.call(this, start, end) || this;
+            _this.operator = operator;
+            _this.right = right;
+            return _this;
+        }
+        Unary.prototype.accept = function (visitor) {
+            return visitor.visitUnaryExpr(this);
+        };
+        return Unary;
+    }(Expr));
+    Expr.Unary = Unary;
+})(Expr || (Expr = {}));
+exports.Expr = Expr;
+
+},{"14":14}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(16);
-var numberSystem_1 = require(17);
-var token_1 = require(12);
+var datatype_1 = require(17);
+var numberSystem_1 = require(18);
+var token_1 = require(13);
 var Lexer = /** @class */ (function () {
     function Lexer(source, phrases, untis, cc) {
         // Removing the space around expression
@@ -7848,11 +8191,11 @@ var Lexer = /** @class */ (function () {
 }());
 exports.Lexer = Lexer;
 
-},{"12":12,"16":16,"17":17,"3":3}],13:[function(require,module,exports){
+},{"13":13,"17":17,"18":18,"3":3}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var numberSystem_1 = require(17);
-var units_1 = require(19);
+var numberSystem_1 = require(18);
+var units_1 = require(20);
 var ASTPrinter = /** @class */ (function () {
     function ASTPrinter() {
         this.depth = 0;
@@ -7910,14 +8253,14 @@ var ASTPrinter = /** @class */ (function () {
         var left = this.evaluate(expr.left);
         var right = this.evaluate(expr.right);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'LOGICAL') + "  " + expr.operator + " \n|\n" + left + right;
+        return ASTPrinter.createPrefix(this.depth, 'LOGICAL') + "  " + expr.operator.type + " \n|\n" + left + right;
     };
     ASTPrinter.prototype.visitBinaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
         var left = this.evaluate(expr.left);
         var right = this.evaluate(expr.right);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'BINARY') + "  " + expr.operator + " \n|\n" + left + right;
+        return ASTPrinter.createPrefix(this.depth, 'BINARY') + "  " + expr.operator.type + " \n|\n" + left + right;
     };
     ASTPrinter.prototype.visitGroupingExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -7932,7 +8275,7 @@ var ASTPrinter = /** @class */ (function () {
         this.depth += ASTPrinter.tab;
         var expression = this.evaluate(expr.right);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'UNARY') + " " + expr.operator + " \n|\n" + expression;
+        return ASTPrinter.createPrefix(this.depth, 'UNARY') + " " + expr.operator.type + " \n|\n" + expression;
     };
     ASTPrinter.prototype.visitPercentageExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -7953,208 +8296,5 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{"17":17,"19":19}],14:[function(require,module,exports){
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var astPrinter_1 = require(13);
-var Expr = /** @class */ (function () {
-    function Expr(start, end) {
-        this.start = start;
-        this.end = end;
-    }
-    Expr.prototype.toString = function () {
-        var res = new astPrinter_1.ASTPrinter().print(this);
-        return res.substring(0, res.length - 2);
-    };
-    return Expr;
-}());
-exports.Expr = Expr;
-// tslint:disable-next-line: no-namespace
-(function (Expr) {
-    var Binary = /** @class */ (function (_super) {
-        __extends(Binary, _super);
-        function Binary(left, operator, right, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.left = left;
-            _this.operator = operator;
-            _this.right = right;
-            return _this;
-        }
-        Binary.prototype.accept = function (visitor) {
-            return visitor.visitBinaryExpr(this);
-        };
-        return Binary;
-    }(Expr));
-    Expr.Binary = Binary;
-    var Ternary = /** @class */ (function (_super) {
-        __extends(Ternary, _super);
-        function Ternary(main, texpr, rexpr, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.main = main;
-            _this.texpr = texpr;
-            _this.fexpr = rexpr;
-            return _this;
-        }
-        Ternary.prototype.accept = function (visitor) {
-            return visitor.visitTernaryExpr(this);
-        };
-        return Ternary;
-    }(Expr));
-    Expr.Ternary = Ternary;
-    var Logical = /** @class */ (function (_super) {
-        __extends(Logical, _super);
-        function Logical(left, operator, right, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.left = left;
-            _this.operator = operator;
-            _this.right = right;
-            return _this;
-        }
-        Logical.prototype.accept = function (visitor) {
-            return visitor.visitLogicalExpr(this);
-        };
-        return Logical;
-    }(Expr));
-    Expr.Logical = Logical;
-    var Grouping = /** @class */ (function (_super) {
-        __extends(Grouping, _super);
-        function Grouping(expression, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.expression = expression;
-            return _this;
-        }
-        Grouping.prototype.accept = function (visitor) {
-            return visitor.visitGroupingExpr(this);
-        };
-        return Grouping;
-    }(Expr));
-    Expr.Grouping = Grouping;
-    var Assign = /** @class */ (function (_super) {
-        __extends(Assign, _super);
-        function Assign(name, value, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            _this.value = value;
-            return _this;
-        }
-        Assign.prototype.accept = function (visitor) {
-            return visitor.visitAssignExpr(this);
-        };
-        return Assign;
-    }(Expr));
-    Expr.Assign = Assign;
-    var Variable = /** @class */ (function (_super) {
-        __extends(Variable, _super);
-        function Variable(name, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            return _this;
-        }
-        Variable.prototype.accept = function (visitor) {
-            return visitor.visitVariableExpr(this);
-        };
-        return Variable;
-    }(Expr));
-    Expr.Variable = Variable;
-    var Call = /** @class */ (function (_super) {
-        __extends(Call, _super);
-        function Call(name, argument, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.name = name;
-            _this.argument = argument;
-            return _this;
-        }
-        Call.prototype.accept = function (visitor) {
-            return visitor.visitCallExpr(this);
-        };
-        return Call;
-    }(Expr));
-    Expr.Call = Call;
-    var Literal = /** @class */ (function (_super) {
-        __extends(Literal, _super);
-        function Literal(value, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.value = value;
-            return _this;
-        }
-        Literal.prototype.accept = function (visitor) {
-            return visitor.visitLiteralExpr(this);
-        };
-        return Literal;
-    }(Expr));
-    Expr.Literal = Literal;
-    var Percentage = /** @class */ (function (_super) {
-        __extends(Percentage, _super);
-        function Percentage(expression, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.expression = expression;
-            return _this;
-        }
-        Percentage.prototype.accept = function (visitor) {
-            return visitor.visitPercentageExpr(this);
-        };
-        return Percentage;
-    }(Expr));
-    Expr.Percentage = Percentage;
-    var UnitExpr = /** @class */ (function (_super) {
-        __extends(UnitExpr, _super);
-        function UnitExpr(expression, phrase, unit, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.unit = unit;
-            _this.phrase = phrase;
-            _this.expression = expression;
-            return _this;
-        }
-        UnitExpr.prototype.accept = function (visitor) {
-            return visitor.visitUnitExpr(this);
-        };
-        return UnitExpr;
-    }(Expr));
-    Expr.UnitExpr = UnitExpr;
-    var ConvertionExpr = /** @class */ (function (_super) {
-        __extends(ConvertionExpr, _super);
-        function ConvertionExpr(expression, to, name, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.to = to;
-            _this.name = name;
-            _this.expression = expression;
-            return _this;
-        }
-        ConvertionExpr.prototype.accept = function (visitor) {
-            return visitor.visitUnitConvertionExpr(this);
-        };
-        return ConvertionExpr;
-    }(Expr));
-    Expr.ConvertionExpr = ConvertionExpr;
-    var Unary = /** @class */ (function (_super) {
-        __extends(Unary, _super);
-        function Unary(operator, right, start, end) {
-            var _this = _super.call(this, start, end) || this;
-            _this.operator = operator;
-            _this.right = right;
-            return _this;
-        }
-        Unary.prototype.accept = function (visitor) {
-            return visitor.visitUnaryExpr(this);
-        };
-        return Unary;
-    }(Expr));
-    Expr.Unary = Unary;
-})(Expr || (Expr = {}));
-exports.Expr = Expr;
-
-},{"13":13}]},{},[3])(3)
+},{"18":18,"20":20}]},{},[3])(3)
 });

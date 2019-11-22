@@ -35,6 +35,7 @@ interface IJSON {
   fexpr?: IJSON;
   start?: number;
   end?: number;
+  args?: IJSON[];
 }
 
 class ToJSON implements Expr.IVisitor<IJSON> {

@@ -71,7 +71,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     const left = this.evaluate(expr.left);
     const right = this.evaluate(expr.right);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'LOGICAL')}  ${expr.operator} \n|\n${left}${right}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'LOGICAL')}  ${expr.operator.type} \n|\n${left}${right}`;
   }
 
   public visitBinaryExpr(expr: Expr.Binary): string {
@@ -79,7 +79,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     const left = this.evaluate(expr.left);
     const right = this.evaluate(expr.right);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'BINARY')}  ${expr.operator} \n|\n${left}${right}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'BINARY')}  ${expr.operator.type} \n|\n${left}${right}`;
   }
 
   public visitGroupingExpr(expr: Expr.Grouping): string {
@@ -97,7 +97,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.right);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'UNARY')} ${expr.operator} \n|\n${expression}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'UNARY')} ${expr.operator.type} \n|\n${expression}`;
   }
 
   public visitPercentageExpr(expr: Expr.Percentage): string {

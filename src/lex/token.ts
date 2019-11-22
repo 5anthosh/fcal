@@ -55,10 +55,6 @@ class Token {
     this.end = end;
     this.literal = literal;
   }
-
-  public toString(): string {
-    return `< ${this.type} ${this.lexeme} ${this.literal ? this.literal : ''} (${this.start}, ${this.end})>`;
-  }
 }
 
 export { TT, Token };

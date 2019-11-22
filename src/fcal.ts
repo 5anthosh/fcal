@@ -7,6 +7,7 @@ import { EnvInputType, Environment } from './interpreter/environment';
 import { FcalFunction, IUseFunction } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
 import { Entity, SymbolTable } from './interpreter/symboltable';
+import { JSONParser } from './json/JSONParser';
 import { TT } from './lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
@@ -242,6 +243,15 @@ class Fcal {
    */
   public setValues(values: EnvInputType) {
     this.environment.use(values);
+  }
+
+  public fromJSON(source: string) {
+    const parser = new JSONParser(source, Fcal.units, Fcal.c);
+    const symbolTable = this.lst.clone();
+    const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
+    env.values = new Map<string, Type>(this.environment.values);
+    source = prefixNewLIne(source);
+    return new Expression(new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c));
   }
 }
 

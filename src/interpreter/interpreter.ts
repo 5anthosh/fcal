@@ -14,10 +14,14 @@ import { FcalFunction } from './function';
 class Interpreter implements Expr.IVisitor<Type> {
   private readonly ast: Expr;
   private readonly environment: Environment;
-  constructor(source: string, phrases: Phrases, units: Unit.List, environment: Environment, c: Converter) {
-    const parser = new Parser(source, phrases, units, c, environment.symbolTable);
+  constructor(source: string | Expr, phrases: Phrases, units: Unit.List, environment: Environment, c: Converter) {
     this.environment = environment;
-    this.ast = parser.parse();
+    if (typeof source === 'string') {
+      const parser = new Parser(source, phrases, units, c, environment.symbolTable);
+      this.ast = parser.parse();
+      return;
+    }
+    this.ast = source;
   }
 
   public getAST(): string {

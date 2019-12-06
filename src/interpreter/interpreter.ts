@@ -75,7 +75,7 @@ class Interpreter implements Expr.IVisitor<Type> {
     return value;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConvertionExpr): Type {
+  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): Type {
     const value = this.evaluate(expr.expression);
     if (value instanceof Type.Numberic) {
       if (expr.to instanceof UnitMeta) {

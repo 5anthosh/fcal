@@ -84,18 +84,42 @@ class Lexer {
     const char = this.space();
     switch (char) {
       case TT.PLUS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.PLUS_EQUAL);
+        }
         return this.TT(TT.PLUS);
       case TT.MINUS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.MINUS_EQUAL);
+        }
         return this.TT(TT.MINUS);
       case TT.TIMES:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.MULTIPLY_EQUAL);
+        }
         if (this.peek(0) === TT.TIMES) {
           this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.POWER_EQUAL);
+          }
           return this.TT(TT.CAP);
         }
         return this.TT(TT.TIMES);
       case TT.SLASH:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.DIVIDE_EQUAL);
+        }
         if (this.peek(0) === TT.SLASH) {
           this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.FLOOR_DIVIDE_EQUAL);
+          }
           return this.TT(TT.FLOOR_DIVIDE);
         }
         return this.TT(TT.SLASH);
@@ -160,6 +184,10 @@ class Lexer {
       case TT.CLOSE_PARAN:
         return this.TT(TT.CLOSE_PARAN);
       case TT.CAP:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.POWER_EQUAL);
+        }
         return this.TT(TT.CAP);
       case TT.Q:
         return this.TT(TT.Q);

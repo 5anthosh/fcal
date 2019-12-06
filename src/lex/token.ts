@@ -35,6 +35,12 @@ enum TT {
   OR = '||',
   Q = '?',
   CC = 'cc',
+  PLUS_EQUAL = '+=',
+  MINUS_EQUAL = '-=',
+  DIVIDE_EQUAL = '/=',
+  FLOOR_DIVIDE_EQUAL = '//=',
+  MULTIPLY_EQUAL = '*=',
+  POWER_EQUAL = '^=',
 }
 
 class Token {

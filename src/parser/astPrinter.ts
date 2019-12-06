@@ -53,7 +53,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'UNIT')} ${expr.unit.unitType} \n|\n${expression}`;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConvertionExpr): string {
+  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;

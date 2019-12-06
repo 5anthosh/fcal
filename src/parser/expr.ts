@@ -172,7 +172,7 @@ namespace Expr {
       return visitor.visitUnitExpr(this);
     }
   }
-  export class ConvertionExpr extends Expr {
+  export class ConversionExpr extends Expr {
     public expression: Expr;
     public to: UnitMeta | NumberSystem | converterFuncFmt;
     public name: string;
@@ -216,7 +216,7 @@ namespace Expr {
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
-    visitUnitConvertionExpr(expr: Expr.ConvertionExpr): T;
+    visitUnitConvertionExpr(expr: Expr.ConversionExpr): T;
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;

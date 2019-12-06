@@ -70,19 +70,19 @@ class JSONParser {
           if (ast.unit) {
             const unitMeta = this.units.get(ast.unit);
             if (unitMeta) {
-              return new Expr.ConvertionExpr(value, unitMeta, ast.unit, ast.start, ast.end);
+              return new Expr.ConversionExpr(value, unitMeta, ast.unit, ast.start, ast.end);
             }
           }
           if (ast.ns) {
             const ns = NumberSystem.get(ast.ns);
             if (ns) {
-              return new Expr.ConvertionExpr(value, ns, ast.ns, ast.start, ast.end);
+              return new Expr.ConversionExpr(value, ns, ast.ns, ast.start, ast.end);
             }
           }
           if (ast.converter) {
             const cov = this.c.get(ast.converter);
             if (cov) {
-              return new Expr.ConvertionExpr(value, cov, ast.converter, ast.start, ast.end);
+              return new Expr.ConversionExpr(value, cov, ast.converter, ast.start, ast.end);
             }
           }
         }

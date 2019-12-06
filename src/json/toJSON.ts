@@ -46,7 +46,7 @@ class ToJSON implements Expr.IVisitor<IJSON> {
   }
 
   public toJSON(): string {
-    const astObj = this.evaluate(this.ast);
+    const astObj = this.toObj();
     return JSON.stringify(astObj);
   }
 
@@ -81,7 +81,7 @@ class ToJSON implements Expr.IVisitor<IJSON> {
     return { type: JSONTYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConvertionExpr): IJSON {
+  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): IJSON {
     const value = this.evaluate(expr.expression);
     if (expr.to instanceof UnitMeta) {
       return { type: JSONTYPES.CONVERSION, unit: expr.name, value };

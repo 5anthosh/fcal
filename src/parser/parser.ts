@@ -11,7 +11,7 @@ import { Expr } from './expr';
 class Parser {
   public source: string;
   private lexer: Lexer;
-  private ntoken: number;
+  private n: number;
   private tokens: Token[];
   private symbolTable: SymbolTable;
   private c: Converter;
@@ -19,7 +19,7 @@ class Parser {
   constructor(source: string, phrases: Phrases, units: Unit.List, cc: Converter, symbolTable: SymbolTable) {
     this.source = source;
     this.lexer = new Lexer(this.source, phrases, units, cc);
-    this.ntoken = 0;
+    this.n = 0;
     this.tokens = [];
     this.c = cc;
     this.symbolTable = symbolTable;
@@ -48,12 +48,59 @@ class Parser {
   private assignment(): Expr {
     const expr = this.ternary();
     if (this.match([TT.EQUAL, TT.DOUBLE_COLON])) {
-      const expres = this.assignment();
+      const leftExpr = this.assignment();
       if (expr instanceof Expr.Variable) {
         const name = (expr as Expr.Variable).name;
-        return new Expr.Assign(name, expres, expr.start, expres.end);
+        return new Expr.Assign(name, leftExpr, expr.start, leftExpr.end);
       }
-      throw new FcalError('Execting variable in left side of assignment', expr.start, expr.end);
+      throw new FcalError('Expecting variable in left side of assignment', expr.start, expr.end);
+    }
+    if (
+      this.match([
+        TT.PLUS_EQUAL,
+        TT.MINUS_EQUAL,
+        TT.MULTIPLY_EQUAL,
+        TT.DIVIDE_EQUAL,
+        TT.FLOOR_DIVIDE_EQUAL,
+        TT.POWER_EQUAL,
+      ])
+    ) {
+      const operator = this.previous();
+      const leftExpr = this.assignment();
+      if (expr instanceof Expr.Variable) {
+        let tt: TT;
+        switch (operator.type) {
+          case TT.PLUS_EQUAL:
+            tt = TT.PLUS;
+            break;
+          case TT.MINUS_EQUAL:
+            tt = TT.MINUS;
+            break;
+          case TT.MULTIPLY_EQUAL:
+            tt = TT.TIMES;
+            break;
+          case TT.DIVIDE_EQUAL:
+            tt = TT.SLASH;
+            break;
+          case TT.FLOOR_DIVIDE_EQUAL:
+            tt = TT.FLOOR_DIVIDE;
+            break;
+          default:
+            tt = TT.CAP;
+            break;
+        }
+        return new Expr.Assign(
+          (expr as Expr.Variable).name,
+          new Expr.Binary(
+            expr,
+            new Token(tt, operator.lexeme, operator.literal, operator.start, operator.start),
+            leftExpr,
+            expr.start,
+            leftExpr.end,
+          ),
+        );
+      }
+      throw new FcalError('Expecting variable in left side of assignment', expr.start, expr.end);
     }
     return expr;
   }
@@ -131,21 +178,21 @@ class Parser {
         const unit = this.previous();
         const unit2 = this.lexer.units.get(unit.lexeme);
         if (unit2) {
-          return new Expr.ConvertionExpr(expr, unit2, unit.lexeme, expr.start, unit.end);
+          return new Expr.ConversionExpr(expr, unit2, unit.lexeme, expr.start, unit.end);
         }
       }
       if (this.match([TT.NS])) {
         const token = this.previous();
         const ns = NumberSystem.get(token.lexeme);
         if (ns) {
-          return new Expr.ConvertionExpr(expr, ns, token.lexeme, expr.start, token.end);
+          return new Expr.ConversionExpr(expr, ns, token.lexeme, expr.start, token.end);
         }
       }
       if (this.match([TT.CC])) {
         const token = this.previous();
         const c = this.c.get(token.lexeme);
         if (c) {
-          return new Expr.ConvertionExpr(expr, c, token.lexeme, expr.start, token.end);
+          return new Expr.ConversionExpr(expr, c, token.lexeme, expr.start, token.end);
         }
       }
       throw new FcalError('Expecting unit after in');
@@ -267,8 +314,8 @@ class Parser {
   }
 
   private nextToken(): Token {
-    if (this.ntoken < this.tokens.length) {
-      return this.tokens[this.ntoken];
+    if (this.n < this.tokens.length) {
+      return this.tokens[this.n];
     }
     return this.getToken();
   }
@@ -281,13 +328,13 @@ class Parser {
     return token;
   }
   private previous(): Token {
-    return this.tokens[this.ntoken - 1];
+    return this.tokens[this.n - 1];
   }
   private peek(): Token {
     return this.nextToken();
   }
   private incr(): void {
-    this.ntoken++;
+    this.n++;
   }
 }
 

@@ -18,7 +18,7 @@ test('Invalid assignment', () => {
   const expression = '0x3 = 5';
   expect(() => {
     Fcal.eval(expression);
-  }).toThrowError('Execting variable in left side of assignment');
+  }).toThrowError('Expecting variable in left side of assignment');
 });
 
 test('Undefined variable', () => {
@@ -87,4 +87,36 @@ test('Set values (no Sync)', () => {
   values.set('val', '3942');
   fcal.setValues(values);
   expect(() => sync.evaluate()).toThrowError('Undefined variable val5');
+});
+
+test(' Assignment + operator', () => {
+  const fcal = new Fcal();
+  fcal.setValues({ r: 45 });
+  expect(fcal.evaluate('r += 5')).toStrictEqual(Type.BNumber.New(50));
+  expect(fcal.evaluate('r')).toStrictEqual(Type.BNumber.New(50));
+  fcal.setValues({ e: 6.345 });
+  expect(fcal.evaluate('e -= 0.345')).toStrictEqual(Type.BNumber.New(6));
+  expect(fcal.evaluate('e')).toStrictEqual(Type.BNumber.New(6));
+  fcal.setValues({ j: 90 });
+  expect(fcal.evaluate('j /= 9')).toStrictEqual(Type.BNumber.New(10));
+  expect(fcal.evaluate('j')).toStrictEqual(Type.BNumber.New(10));
+  fcal.setValues({ m1: -10 });
+  expect(fcal.evaluate('m1 //= 3')).toStrictEqual(Type.BNumber.New(-4));
+  expect(fcal.evaluate('m1')).toStrictEqual(Type.BNumber.New(-4));
+  fcal.setValues({ m2: 2 });
+  expect(fcal.evaluate('m2 ^= 4')).toStrictEqual(Type.BNumber.New(16));
+  expect(fcal.evaluate('m2')).toStrictEqual(Type.BNumber.New(16));
+  fcal.setValues({ m3: 2 });
+  expect(fcal.evaluate('m3 **= 4')).toStrictEqual(Type.BNumber.New(16));
+  expect(fcal.evaluate('m3')).toStrictEqual(Type.BNumber.New(16));
+  fcal.setValues({ r: 5, e: 6, k: 100, k1: 34, k2: 87, k3: 1 });
+  console.log(fcal.evaluate('r').toString());
+  console.log(fcal.expression('r += e -= k /= k1 //= k2 ^= k3').getAST());
+  expect(fcal.evaluate('r += e -= k /= k1 //= k2 ^= k3')).toStrictEqual(Type.BNumber.New('8.058823529411764'));
+  expect(fcal.evaluate('r')).toStrictEqual(Type.BNumber.New('8.058823529411764'));
+  expect(fcal.evaluate('e')).toStrictEqual(Type.BNumber.New('3.0588235294117645'));
+  expect(fcal.evaluate('k')).toStrictEqual(Type.BNumber.New('2.9411764705882355'));
+  expect(fcal.evaluate('k1')).toStrictEqual(Type.BNumber.New(34));
+  expect(fcal.evaluate('k2')).toStrictEqual(Type.BNumber.New(87));
+  expect(fcal.evaluate('k3')).toStrictEqual(Type.BNumber.New(1));
 });

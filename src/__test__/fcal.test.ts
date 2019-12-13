@@ -57,7 +57,7 @@ test('New line', () => {
   const expression1 = '1234+12341324123 * 34 \t \n $';
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
   expect(() => new Fcal().rawEvaluate('1+')).toThrowError('Expect expression but found EOL');
-  expect(() => new Fcal().rawEvaluate('1x')).toThrowError("Unexpected '\0' in Hexa decimal");
+  expect(() => new Fcal().rawEvaluate('1x')).toThrowError("Unexpected '\0' in Hexadecimal");
   expect(() => new Fcal().rawEvaluate('1+2')).toThrowError('Expecting EOL');
 });
 
@@ -99,13 +99,13 @@ test('Default functions', () => {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('49.390359524782034541', unit));
   }
 
-  const trigno =
+  const trigonometry =
     'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ** sin(0.23) \
     - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
   const unit2 = Fcal.getUnit('cm');
   expect(unit2).not.toEqual(null);
   if (unit2 != null) {
-    expect(Fcal.eval(trigno)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
+    expect(Fcal.eval(trigonometry)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
   }
 });
 
@@ -216,7 +216,7 @@ test('Expected expression', () => {
   }).toThrowError('Expect expression but found EOL');
 });
 
-test('Tonumber', () => {
+test('ToNumber', () => {
   expect(Fcal.eval('3434%').toNumber()).toStrictEqual(3434);
   expect(Fcal.eval('-90cm').toNumber()).toStrictEqual(-90);
   expect(Fcal.eval('0x1ac in oct').toNumber()).toStrictEqual(428);
@@ -275,7 +275,7 @@ test('AST print()', () => {
 |
 +------------------------------------ (9)LITERAL 8
 |
-+------------------------ (6)NUMBERICAL SYSTEM hex 
++------------------------ (6)NUMERICAL SYSTEM hex 
 |
 +---------------------------- (7)FUNCTION ==> log  
 |

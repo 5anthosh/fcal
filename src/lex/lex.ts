@@ -1,5 +1,6 @@
 import { FcalError } from '../fcal';
 import { Converter } from '../interpreter/converter';
+import { Scale } from '../interpreter/scale';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
@@ -12,8 +13,8 @@ class Lexer {
     TT.MINUS,
     TT.TIMES,
     TT.SLASH,
-    TT.OPEN_PARAN,
-    TT.CLOSE_PARAN,
+    TT.OPEN_PAREN,
+    TT.CLOSE_PAREN,
     TT.CAP,
     TT.PERCENTAGE,
     TT.EQUAL,
@@ -61,16 +62,18 @@ class Lexer {
   private current: number;
   private phrases: Phrases;
   private cc: Converter;
+  private scale: Scale;
 
-  constructor(source: string, phrases: Phrases, untis: Unit.List, cc: Converter) {
+  constructor(source: string, phrases: Phrases, units: Unit.List, cc: Converter, scale: Scale) {
     // Removing the space around expression
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = Array<Token>();
     this.phrases = phrases;
-    this.units = untis;
+    this.units = units;
     this.cc = cc;
+    this.scale = scale;
   }
 
   public Next(): Token {
@@ -179,10 +182,10 @@ class Lexer {
         return this.TT(TT.COMMA);
       case TT.DOUBLE_COLON:
         return this.TT(TT.DOUBLE_COLON);
-      case TT.OPEN_PARAN:
-        return this.TT(TT.OPEN_PARAN);
-      case TT.CLOSE_PARAN:
-        return this.TT(TT.CLOSE_PARAN);
+      case TT.OPEN_PAREN:
+        return this.TT(TT.OPEN_PAREN);
+      case TT.CLOSE_PAREN:
+        return this.TT(TT.CLOSE_PAREN);
       case TT.CAP:
         if (this.peek(0) === TT.EQUAL) {
           this.eat();
@@ -232,6 +235,10 @@ class Lexer {
     if (type) {
       return this.TT(type);
     }
+    const s = this.scale.get(text);
+    if (s) {
+      return this.TTWithLiteral(TT.SCALE, text);
+    }
     const unit = this.units.get(text);
     if (unit) {
       return this.TTWithLiteral(TT.UNIT, text);
@@ -277,7 +284,7 @@ class Lexer {
     if (this.peek(0) === 'x' || this.peek(0) === 'X') {
       this.eat();
       if (!Lexer.isHexDigit(this.peek(0))) {
-        throw new FcalError(`Unexpected '${this.peek(0)}' in Hexa decimal`, this.current);
+        throw new FcalError(`Unexpected '${this.peek(0)}' in Hexadecimal`, this.current);
       }
       while (Lexer.isHexDigit(this.peek(0))) {
         this.eat();

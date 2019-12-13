@@ -4,10 +4,10 @@ import { Expr } from './expr';
 
 class ASTPrinter implements Expr.IVisitor<string> {
   private static tab: number = 2;
-  private static prefixchar = '+';
+  private static prefixChar = '+';
 
   private static createPrefix(depth: number, type: string): string {
-    return `${this.prefixchar}${'-'.repeat(depth * this.tab)} (${depth / this.tab})${type}`;
+    return `${this.prefixChar}${'-'.repeat(depth * this.tab)} (${depth / this.tab})${type}`;
   }
 
   private depth: number;
@@ -53,7 +53,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
     return `${ASTPrinter.createPrefix(this.depth, 'UNIT')} ${expr.unit.unitType} \n|\n${expression}`;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): string {
+  public visitConversionExpr(expr: Expr.ConversionExpr): string {
     this.depth += ASTPrinter.tab;
     const expression = this.evaluate(expr.expression);
     this.depth -= ASTPrinter.tab;
@@ -61,7 +61,7 @@ class ASTPrinter implements Expr.IVisitor<string> {
       return `${ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT')} ${expr.name} \n|\n${expression}`;
     }
     if (expr.to instanceof NumberSystem) {
-      return `${ASTPrinter.createPrefix(this.depth, 'NUMBERICAL SYSTEM')} ${expr.name} \n|\n${expression}`;
+      return `${ASTPrinter.createPrefix(this.depth, 'NUMERICAL SYSTEM')} ${expr.name} \n|\n${expression}`;
     }
     return `${ASTPrinter.createPrefix(this.depth, 'CONVERTER')} ${expr.name} \n|\n${expression}`;
   }

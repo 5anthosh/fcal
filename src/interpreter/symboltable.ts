@@ -44,6 +44,7 @@ enum Entity {
   NS = 'NUMBER SYSTEM',
   UNIT = 'UNIT',
   CONVERTER = 'CONVERTER',
+  SCALE = 'SCALE',
 }
 
 export { Entity, SymbolTable };

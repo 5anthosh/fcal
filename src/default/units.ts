@@ -297,7 +297,7 @@ function setDigitalStorageUnits(units: IUseUnit[]): void {
     ...[
       {
         id: Unit.DIGITAL,
-        phrases: ['bit', 'B'],
+        phrases: ['bit'],
         ratio: 1,
         type: 'bit',
       },

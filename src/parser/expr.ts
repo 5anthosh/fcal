@@ -191,7 +191,7 @@ namespace Expr {
     }
 
     public accept<T>(visitor: Expr.IVisitor<T>): T {
-      return visitor.visitUnitConvertionExpr(this);
+      return visitor.visitConversionExpr(this);
     }
   }
   export class Unary extends Expr {
@@ -216,7 +216,7 @@ namespace Expr {
     visitUnaryExpr(expr: Expr.Unary): T;
     visitPercentageExpr(expr: Expr.Percentage): T;
     visitUnitExpr(expr: Expr.UnitExpr): T;
-    visitUnitConvertionExpr(expr: Expr.ConversionExpr): T;
+    visitConversionExpr(expr: Expr.ConversionExpr): T;
     visitAssignExpr(expr: Expr.Assign): T;
     visitVariableExpr(expr: Expr.Variable): T;
     visitCallExpr(expr: Expr.Call): T;

@@ -6,6 +6,7 @@ import { Converter, converterFuncFmt } from './interpreter/converter';
 import { EnvInputType, Environment } from './interpreter/environment';
 import { FcalFunction, IUseFunction } from './interpreter/function';
 import { Interpreter } from './interpreter/interpreter';
+import { Scale } from './interpreter/scale';
 import { Entity, SymbolTable } from './interpreter/symboltable';
 import { JSONParser } from './json/JSONParser';
 import { TT } from './lex/token';
@@ -99,6 +100,14 @@ class Fcal {
     this.constants.use(constants);
   }
 
+  /**
+   * useScales register new scale in fcal
+   * @param { { [index: string]: Type | Decimal | number | string } } scales
+   */
+  public static useScales(scales: EnvInputType): void {
+    this.scale.use(scales);
+  }
+
   public static useConverter(id: string, f: converterFuncFmt): void {
     this.c.set(id, f);
   }
@@ -108,7 +117,7 @@ class Fcal {
       this.gst = new SymbolTable();
     }
     if (!this.phrases) {
-      this.phrases = this.getdefaultphrases();
+      this.phrases = this.getDefaultPhrases();
     }
     if (!this.units) {
       this.units = new Unit.List(Fcal.gst);
@@ -126,6 +135,10 @@ class Fcal {
       this.c = new Converter(this.gst);
       this.setDefaultConverter();
     }
+    if (!this.scale) {
+      this.scale = new Scale(this.gst);
+      this.setDefaultScales();
+    }
   }
 
   /*=========================== Private static =================================== */
@@ -136,8 +149,9 @@ class Fcal {
   private static phrases: Phrases;
   private static constants: Constant;
   private static c: Converter;
+  private static scale: Scale;
 
-  private static getdefaultphrases(): Phrases {
+  private static getDefaultPhrases(): Phrases {
     const phrases = new Phrases(this.gst);
     phrases.push(TT.PLUS, ['PLUS', 'WITH', 'ADD']);
     phrases.push(TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
@@ -170,12 +184,17 @@ class Fcal {
       true: Type.FBoolean.TRUE,
     });
   }
+
+  private static setDefaultScales(): void {
+    this.useScales({ k: 1000, M: 10_00_000, B: 1_00_00_000 });
+  }
+  
   private static setDefaultConverter() {
     const num = (v: Type): Type => {
-      return Type.BNumber.New((v as Type.Numberic).n);
+      return Type.BNumber.New((v as Type.Numeric).n);
     };
     const per = (v: Type): Type => {
-      return Type.Percentage.New((v as Type.Numberic).n);
+      return Type.Percentage.New((v as Type.Numeric).n);
     };
     this.useConverter('number', num);
     this.useConverter('num', num);
@@ -201,7 +220,7 @@ class Fcal {
    */
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
-    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
+    return this.rawEvaluate(source);
   }
 
   /**
@@ -211,7 +230,7 @@ class Fcal {
    * @returns {Type} result of expression
    */
   public rawEvaluate(source: string): Type {
-    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
+    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale).evaluateExpression();
   }
 
   /**
@@ -224,7 +243,7 @@ class Fcal {
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c));
+    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
   }
 
   /**
@@ -234,12 +253,12 @@ class Fcal {
    */
   public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c));
+    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale));
   }
 
   /**
    * create a new variable with value or assign value to variable
-   * @param {Object | EnvInputType} values vairbles
+   * @param {Object | EnvInputType} values variables
    */
   public setValues(values: EnvInputType) {
     this.environment.use(values);
@@ -251,7 +270,7 @@ class Fcal {
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c));
+    return new Expression(new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
   }
 }
 
@@ -269,8 +288,8 @@ function prefixNewLIne(source: string): string {
 class Expression {
   private readonly interpreter: Interpreter;
 
-  constructor(interpeter: Interpreter) {
-    this.interpreter = interpeter;
+  constructor(interpreter: Interpreter) {
+    this.interpreter = interpreter;
   }
 
   /**

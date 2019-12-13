@@ -10,14 +10,22 @@ import { Unit, UnitMeta } from '../types/units';
 import { Converter } from './converter';
 import { EnvInputType, Environment } from './environment';
 import { FcalFunction } from './function';
+import { Scale } from './scale';
 
 class Interpreter implements Expr.IVisitor<Type> {
   private readonly ast: Expr;
   private readonly environment: Environment;
-  constructor(source: string | Expr, phrases: Phrases, units: Unit.List, environment: Environment, c: Converter) {
+  constructor(
+    source: string | Expr,
+    phrases: Phrases,
+    units: Unit.List,
+    environment: Environment,
+    c: Converter,
+    scale: Scale,
+  ) {
     this.environment = environment;
     if (typeof source === 'string') {
-      const parser = new Parser(source, phrases, units, c, environment.symbolTable);
+      const parser = new Parser(source, phrases, units, c, scale, environment.symbolTable);
       this.ast = parser.parse();
       return;
     }
@@ -75,14 +83,14 @@ class Interpreter implements Expr.IVisitor<Type> {
     return value;
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): Type {
+  public visitConversionExpr(expr: Expr.ConversionExpr): Type {
     const value = this.evaluate(expr.expression);
-    if (value instanceof Type.Numberic) {
+    if (value instanceof Type.Numeric) {
       if (expr.to instanceof UnitMeta) {
         return Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
       }
       if (expr.to instanceof NumberSystem) {
-        return (value as Type.Numberic).setSystem(expr.to);
+        return (value as Type.Numeric).setSystem(expr.to);
       }
       return expr.to(value);
     }
@@ -91,14 +99,14 @@ class Interpreter implements Expr.IVisitor<Type> {
 
   public visitUnitExpr(expr: Expr.UnitExpr): Type {
     const value = this.evaluate(expr.expression);
-    if (value instanceof Type.Numberic) {
-      return Type.UnitNumber.New((value as Type.Numberic).n, expr.unit).setSystem(value.ns);
+    if (value instanceof Type.Numeric) {
+      return Type.UnitNumber.New((value as Type.Numeric).n, expr.unit).setSystem(value.ns);
     }
     throw new FcalError('Expecting numeric value before unit', expr.start, expr.end);
   }
 
   public visitTernaryExpr(expr: Expr.Ternary): Type {
-    const main = this.evaluate(expr.main) as Type.Numberic;
+    const main = this.evaluate(expr.main) as Type.Numeric;
     if (main.trusty()) {
       return this.evaluate(expr.texpr);
     }
@@ -106,7 +114,7 @@ class Interpreter implements Expr.IVisitor<Type> {
   }
 
   public visitLogicalExpr(expr: Expr.Logical): Type {
-    const left = this.evaluate(expr.left) as Type.Numberic;
+    const left = this.evaluate(expr.left) as Type.Numeric;
     if (expr.operator.type === TT.AND) {
       return left.trusty() ? this.evaluate(expr.right) : left;
     }
@@ -114,8 +122,8 @@ class Interpreter implements Expr.IVisitor<Type> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type {
-    let left = this.evaluate(expr.left) as Type.Numberic;
-    const right = this.evaluate(expr.right) as Type.Numberic;
+    let left = this.evaluate(expr.left) as Type.Numeric;
+    const right = this.evaluate(expr.right) as Type.Numeric;
     switch (expr.operator.type) {
       case TT.EQUAL_EQUAL:
         return left.EQ(right);
@@ -184,8 +192,8 @@ class Interpreter implements Expr.IVisitor<Type> {
 
   public visitPercentageExpr(expr: Expr.Percentage): Type {
     const value = this.evaluate(expr.expression);
-    if (value instanceof Type.Numberic) {
-      return Type.Percentage.New((value as Type.Numberic).n);
+    if (value instanceof Type.Numeric) {
+      return Type.Percentage.New((value as Type.Numeric).n);
     }
     throw new FcalError('Expecting numeric value in percentage', expr.start, expr.end);
   }

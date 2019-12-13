@@ -3,7 +3,7 @@ import { Expr } from '../parser/expr';
 import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 
-enum JSONTYPES {
+enum JSON_TYPES {
   BINARY = 'binary',
   GROUP = 'group',
   LITERAL = 'literal',
@@ -19,7 +19,7 @@ enum JSONTYPES {
 }
 
 interface IJSON {
-  type: JSONTYPES;
+  type: JSON_TYPES;
   right?: IJSON;
   left?: IJSON;
   operator?: Token;
@@ -58,46 +58,46 @@ class ToJSON implements Expr.IVisitor<IJSON> {
     const right = this.evaluate(expr.right);
     const left = this.evaluate(expr.left);
     const operator = expr.operator;
-    return { type: JSONTYPES.BINARY, right, left, operator };
+    return { type: JSON_TYPES.BINARY, right, left, operator };
   }
 
   public visitGroupingExpr(expr: Expr.Grouping): IJSON {
-    return { type: JSONTYPES.GROUP, value: this.evaluate(expr.expression) };
+    return { type: JSON_TYPES.GROUP, value: this.evaluate(expr.expression) };
   }
 
   public visitLiteralExpr(expr: Expr.Literal): IJSON {
-    return { type: JSONTYPES.LITERAL, value: expr.value.print() };
+    return { type: JSON_TYPES.LITERAL, value: expr.value.print() };
   }
 
   public visitUnaryExpr(expr: Expr.Unary): IJSON {
-    return { type: JSONTYPES.UNARY, operator: expr.operator, value: this.evaluate(expr.right) };
+    return { type: JSON_TYPES.UNARY, operator: expr.operator, value: this.evaluate(expr.right) };
   }
 
   public visitPercentageExpr(expr: Expr.Percentage): IJSON {
-    return { type: JSONTYPES.PERCENTAGE, value: this.evaluate(expr.expression) };
+    return { type: JSON_TYPES.PERCENTAGE, value: this.evaluate(expr.expression) };
   }
 
   public visitUnitExpr(expr: Expr.UnitExpr): IJSON {
-    return { type: JSONTYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
+    return { type: JSON_TYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
   }
 
-  public visitUnitConvertionExpr(expr: Expr.ConversionExpr): IJSON {
+  public visitConversionExpr(expr: Expr.ConversionExpr): IJSON {
     const value = this.evaluate(expr.expression);
     if (expr.to instanceof UnitMeta) {
-      return { type: JSONTYPES.CONVERSION, unit: expr.name, value };
+      return { type: JSON_TYPES.CONVERSION, unit: expr.name, value };
     }
     if (expr.to instanceof NumberSystem) {
-      return { type: JSONTYPES.CONVERSION, ns: expr.name, value };
+      return { type: JSON_TYPES.CONVERSION, ns: expr.name, value };
     }
-    return { type: JSONTYPES.CONVERSION, converter: expr.name, value };
+    return { type: JSON_TYPES.CONVERSION, converter: expr.name, value };
   }
 
   public visitAssignExpr(expr: Expr.Assign): IJSON {
-    return { type: JSONTYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
+    return { type: JSON_TYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
   }
 
   public visitVariableExpr(expr: Expr.Variable): IJSON {
-    return { type: JSONTYPES.VARIABLE, name: expr.name };
+    return { type: JSON_TYPES.VARIABLE, name: expr.name };
   }
 
   public visitCallExpr(expr: Expr.Call): IJSON {
@@ -105,21 +105,21 @@ class ToJSON implements Expr.IVisitor<IJSON> {
     for (const arg of expr.argument) {
       args.push(this.evaluate(arg));
     }
-    return { type: JSONTYPES.CALL, name: expr.name, args };
+    return { type: JSON_TYPES.CALL, name: expr.name, args };
   }
 
   public visitLogicalExpr(expr: Expr.Logical): IJSON {
     const right = this.evaluate(expr.left);
     const left = this.evaluate(expr.left);
     const operator = expr.operator;
-    return { type: JSONTYPES.LOGICAL, right, left, operator };
+    return { type: JSON_TYPES.LOGICAL, right, left, operator };
   }
 
   public visitTernaryExpr(expr: Expr.Ternary): IJSON {
     const texpr = this.evaluate(expr.texpr);
     const fexpr = this.evaluate(expr.fexpr);
     const main = this.evaluate(expr.main);
-    return { type: JSONTYPES.TERNARY, main, texpr, fexpr };
+    return { type: JSON_TYPES.TERNARY, main, texpr, fexpr };
   }
 
   private evaluate(expr: Expr): IJSON {
@@ -128,4 +128,4 @@ class ToJSON implements Expr.IVisitor<IJSON> {
   }
 }
 
-export { ToJSON, JSONTYPES, IJSON };
+export { ToJSON, JSON_TYPES as JSONTYPES, IJSON };

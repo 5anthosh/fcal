@@ -109,11 +109,11 @@ test(' Assignment + operator', () => {
   fcal.setValues({ m3: 2 });
   expect(fcal.evaluate('m3 **= 4')).toStrictEqual(Type.BNumber.New(16));
   expect(fcal.evaluate('m3')).toStrictEqual(Type.BNumber.New(16));
-  fcal.setValues({ r: 5, e: 6, k: 100, k1: 34, k2: 87, k3: 0.5 });
-  expect(fcal.evaluate('r += e -= k /= k1 //= k2 ^= k3')).toStrictEqual(Type.BNumber.New('-22.333333333333333333'));
+  fcal.setValues({ r: 5, e: 6, k0: 100, k1: 34, k2: 87, k3: 0.5 });
+  expect(fcal.evaluate('r += e -= k0 /= k1 //= k2 ^= k3')).toStrictEqual(Type.BNumber.New('-22.333333333333333333'));
   expect(fcal.evaluate('r')).toStrictEqual(Type.BNumber.New('-22.333333333333333333'));
   expect(fcal.evaluate('e')).toStrictEqual(Type.BNumber.New('-27.333333333333333333'));
-  expect(fcal.evaluate('k')).toStrictEqual(Type.BNumber.New('33.333333333333333333'));
+  expect(fcal.evaluate('k0')).toStrictEqual(Type.BNumber.New('33.333333333333333333'));
   expect(fcal.evaluate('k1')).toStrictEqual(Type.BNumber.New(3));
   expect(fcal.evaluate('k2')).toStrictEqual(Type.BNumber.New('9.3273790530888150456'));
   expect(fcal.evaluate('k3')).toStrictEqual(Type.BNumber.New(0.5));

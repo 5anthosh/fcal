@@ -1,8 +1,10 @@
 import { FcalError } from '../fcal';
 import { Converter } from '../interpreter/converter';
+import { Scale } from '../interpreter/scale';
 import { SymbolTable } from '../interpreter/symboltable';
 import { Lexer } from '../lex/lex';
 import { Token, TT } from '../lex/token';
+import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
@@ -15,13 +17,22 @@ class Parser {
   private tokens: Token[];
   private symbolTable: SymbolTable;
   private c: Converter;
+  private scale: Scale;
 
-  constructor(source: string, phrases: Phrases, units: Unit.List, cc: Converter, symbolTable: SymbolTable) {
+  constructor(
+    source: string,
+    phrases: Phrases,
+    units: Unit.List,
+    cc: Converter,
+    scale: Scale,
+    symbolTable: SymbolTable,
+  ) {
     this.source = source;
-    this.lexer = new Lexer(this.source, phrases, units, cc);
+    this.lexer = new Lexer(this.source, phrases, units, cc, scale);
     this.n = 0;
     this.tokens = [];
     this.c = cc;
+    this.scale = scale;
     this.symbolTable = symbolTable;
   }
 
@@ -238,15 +249,15 @@ class Parser {
 
   private call(): Expr {
     const expr = this.term();
-    if (this.match([TT.OPEN_PARAN])) {
+    if (this.match([TT.OPEN_PAREN])) {
       if (expr instanceof Expr.Variable) {
         const argument = Array<Expr>();
-        if (this.peek().type !== TT.CLOSE_PARAN) {
+        if (this.peek().type !== TT.CLOSE_PAREN) {
           do {
             argument.push(this.expression());
           } while (this.match([TT.COMMA]));
         }
-        this.consume(TT.CLOSE_PARAN, "Expect ')' after the arguments");
+        this.consume(TT.CLOSE_PAREN, "Expect ')' after the arguments");
         return new Expr.Call(expr.name, argument, expr.start, this.previous().end);
       }
       throw new FcalError(`Not callable`, expr.start, this.previous().end);
@@ -256,12 +267,22 @@ class Parser {
 
   private term(): Expr {
     if (this.match([TT.Number])) {
-      return new Expr.Literal(this.previous().literal, this.previous().start, this.previous().end);
+      const numToken = this.previous();
+      const num = numToken.literal as Type.BNumber;
+      if (this.match([TT.SCALE])) {
+        const s = this.previous().literal;
+        const scaleC = this.scale.get(s) as Type.Numeric;
+        if (s) {
+          num.n = num.n.mul(scaleC.n);
+          return new Expr.Literal(num, numToken.start, this.previous().end);
+        }
+      }
+      return new Expr.Literal(num, numToken.start, numToken.end);
     }
-    if (this.match([TT.OPEN_PARAN])) {
+    if (this.match([TT.OPEN_PAREN])) {
       const start = this.previous();
       const expr = this.expression();
-      this.consume(TT.CLOSE_PARAN, `Expect ')' after expression but found ${this.peek().lexeme}`);
+      this.consume(TT.CLOSE_PAREN, `Expect ')' after expression but found ${this.peek().lexeme}`);
       return new Expr.Grouping(expr, start.start, this.previous().end);
     }
     if (this.match([TT.NAME])) {

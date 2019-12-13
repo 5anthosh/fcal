@@ -1,7 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(17);
+var datatype_1 = require(18);
 function getDefaultFunctions() {
     var functions = [
         {
@@ -239,7 +239,7 @@ function getDefaultFunctions() {
 }
 exports.getDefaultFunctions = getDefaultFunctions;
 
-},{"17":17}],17:[function(require,module,exports){
+},{"18":18}],18:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -255,9 +255,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(21);
+var decimal_js_1 = require(22);
 var fcal_1 = require(3);
-var numberSystem_1 = require(18);
+var numberSystem_1 = require(19);
 var Type = /** @class */ (function () {
     function Type() {
     }
@@ -284,9 +284,9 @@ var TYPERANK;
  */
 // tslint:disable-next-line:no-namespace
 (function (Type) {
-    var Numberic = /** @class */ (function (_super) {
-        __extends(Numberic, _super);
-        function Numberic(value) {
+    var Numeric = /** @class */ (function (_super) {
+        __extends(Numeric, _super);
+        function Numeric(value) {
             var _this = _super.call(this) || this;
             if (value instanceof decimal_js_1.Decimal) {
                 _this.n = value;
@@ -298,59 +298,59 @@ var TYPERANK;
             _this.lf = false;
             return _this;
         }
-        Numberic.prototype.setSystem = function (numberSys) {
+        Numeric.prototype.setSystem = function (numberSys) {
             this.ns = numberSys;
             return this;
         };
-        Numberic.prototype.toNumericString = function () {
+        Numeric.prototype.toNumericString = function () {
             return this.ns.to(this.n);
         };
-        Numberic.prototype.print = function () {
+        Numeric.prototype.print = function () {
             return this.toNumericString();
         };
-        Numberic.prototype.GT = function (value) {
+        Numeric.prototype.GT = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.gt(value);
             }
             return value.gt(this);
         };
-        Numberic.prototype.GTE = function (value) {
+        Numeric.prototype.GTE = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.gte(value);
             }
             return value.gte(this);
         };
-        Numberic.prototype.LT = function (value) {
+        Numeric.prototype.LT = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.lt(value);
             }
             return value.lt(this);
         };
-        Numberic.prototype.LTE = function (value) {
+        Numeric.prototype.LTE = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.lte(value);
             }
             return value.lte(this);
         };
-        Numberic.prototype.EQ = function (value) {
+        Numeric.prototype.EQ = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.eq(value);
             }
             return value.eq(this);
         };
-        Numberic.prototype.NEQ = function (value) {
+        Numeric.prototype.NEQ = function (value) {
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 return this.nEq(value);
             }
             return value.nEq(this);
         };
-        Numberic.prototype.Add = function (value, start, end) {
+        Numeric.prototype.Add = function (value, start, end) {
             this.start = start;
             this.end = end;
             if (!this.n.isFinite() && !value.n.isFinite()) {
@@ -374,10 +374,10 @@ var TYPERANK;
             }
             return this.New(value.plus(this).n);
         };
-        Numberic.prototype.Sub = function (value, start, end) {
+        Numeric.prototype.Sub = function (value, start, end) {
             return this.Add(value.negated(), start, end);
         };
-        Numberic.prototype.times = function (value, start, end) {
+        Numeric.prototype.times = function (value, start, end) {
             this.start = start;
             this.end = end;
             // check type to see which datatype operation
@@ -395,7 +395,7 @@ var TYPERANK;
             }
             return this.New(value.mul(this).n);
         };
-        Numberic.prototype.divide = function (value, start, end) {
+        Numeric.prototype.divide = function (value, start, end) {
             this.start = start;
             this.end = end;
             if (!this.n.isFinite() && !value.n.isFinite()) {
@@ -419,7 +419,7 @@ var TYPERANK;
             }
             return this.New(value.div(this).n);
         };
-        Numberic.prototype.power = function (value, start, end) {
+        Numeric.prototype.power = function (value, start, end) {
             this.start = start;
             this.end = end;
             if (this.isNegative()) {
@@ -446,7 +446,7 @@ var TYPERANK;
             }
             return this.New(value.pow(this).n);
         };
-        Numberic.prototype.modulo = function (value, start, end) {
+        Numeric.prototype.modulo = function (value, start, end) {
             this.start = start;
             this.end = end;
             if (!this.n.isFinite()) {
@@ -473,18 +473,18 @@ var TYPERANK;
             }
             return this.New(value.mod(this).n);
         };
-        Numberic.prototype.toNumber = function () {
+        Numeric.prototype.toNumber = function () {
             return this.n.toNumber();
         };
-        Numberic.prototype.trusty = function () {
+        Numeric.prototype.trusty = function () {
             return !this.n.isZero();
         };
-        Numberic.prototype.not = function () {
+        Numeric.prototype.not = function () {
             return new FBoolean(this.n).not();
         };
-        return Numberic;
+        return Numeric;
     }(Type));
-    Type.Numberic = Numberic;
+    Type.Numeric = Numeric;
     /**
      * Basic Number type
      */
@@ -546,7 +546,7 @@ var TYPERANK;
         };
         BNumber.ZERO = BNumber.New(new decimal_js_1.Decimal(0));
         return BNumber;
-    }(Numberic));
+    }(Numeric));
     Type.BNumber = BNumber;
     /**
      * Percentage type
@@ -666,7 +666,7 @@ var TYPERANK;
         };
         Percentage.base = new decimal_js_1.Decimal(100);
         return Percentage;
-    }(Numberic));
+    }(Numeric));
     Type.Percentage = Percentage;
     /**
      * Number with unit
@@ -871,7 +871,7 @@ var TYPERANK;
             return this.toNumericString() + " " + this.unit.plural;
         };
         return UnitNumber;
-    }(Numberic));
+    }(Numeric));
     Type.UnitNumber = UnitNumber;
     var FBoolean = /** @class */ (function (_super) {
         __extends(FBoolean, _super);
@@ -900,10 +900,10 @@ var TYPERANK;
 })(Type || (Type = {}));
 exports.Type = Type;
 
-},{"18":18,"21":21,"3":3}],2:[function(require,module,exports){
+},{"19":19,"22":22,"3":3}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var units_1 = require(20);
+var units_1 = require(21);
 function getDefaultUnits() {
     var units = new Array();
     setDistanceUnits(units);
@@ -1175,7 +1175,7 @@ function setDigitalStorageUnits(units) {
     units.push.apply(units, [
         {
             id: units_1.Unit.DIGITAL,
-            phrases: ['bit', 'B'],
+            phrases: ['bit'],
             ratio: 1,
             type: 'bit',
         },
@@ -1308,11 +1308,11 @@ function setDigitalStorageUnits(units) {
     ]);
 }
 
-},{"20":20}],20:[function(require,module,exports){
+},{"21":21}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(21);
-var symboltable_1 = require(9);
+var decimal_js_1 = require(22);
+var symboltable_1 = require(10);
 var UnitMeta = /** @class */ (function () {
     function UnitMeta(id, ratio, unitType) {
         this.id = id;
@@ -1443,7 +1443,7 @@ exports.Unit = Unit;
 })(Unit || (Unit = {}));
 exports.Unit = Unit;
 
-},{"21":21,"9":9}],3:[function(require,module,exports){
+},{"10":10,"22":22}],3:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -1459,7 +1459,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(21);
+var decimal_js_1 = require(22);
 exports.Decimal = decimal_js_1.Decimal;
 var functions_1 = require(1);
 var units_1 = require(2);
@@ -1470,13 +1470,14 @@ exports.Environment = environment_1.Environment;
 var function_1 = require(7);
 exports.FcalFunction = function_1.FcalFunction;
 var interpreter_1 = require(8);
-var symboltable_1 = require(9);
-var JSONParser_1 = require(10);
-var token_1 = require(13);
-var datatype_1 = require(17);
+var scale_1 = require(9);
+var symboltable_1 = require(10);
+var JSONParser_1 = require(11);
+var token_1 = require(14);
+var datatype_1 = require(18);
 exports.Type = datatype_1.Type;
-var phrase_1 = require(19);
-var units_2 = require(20);
+var phrase_1 = require(20);
+var units_2 = require(21);
 exports.Unit = units_2.Unit;
 /**
  * Math expression evaluator.
@@ -1563,6 +1564,13 @@ var Fcal = /** @class */ (function () {
     Fcal.useConstants = function (constants) {
         this.constants.use(constants);
     };
+    /**
+     * useScales register new scale in fcal
+     * @param { { [index: string]: Type | Decimal | number | string } } scales
+     */
+    Fcal.useScales = function (scales) {
+        this.scale.use(scales);
+    };
     Fcal.useConverter = function (id, f) {
         this.c.set(id, f);
     };
@@ -1571,7 +1579,7 @@ var Fcal = /** @class */ (function () {
             this.gst = new symboltable_1.SymbolTable();
         }
         if (!this.phrases) {
-            this.phrases = this.getdefaultphrases();
+            this.phrases = this.getDefaultPhrases();
         }
         if (!this.units) {
             this.units = new units_2.Unit.List(Fcal.gst);
@@ -1589,8 +1597,12 @@ var Fcal = /** @class */ (function () {
             this.c = new converter_1.Converter(this.gst);
             this.setDefaultConverter();
         }
+        if (!this.scale) {
+            this.scale = new scale_1.Scale(this.gst);
+            this.setDefaultScales();
+        }
     };
-    Fcal.getdefaultphrases = function () {
+    Fcal.getDefaultPhrases = function () {
         var phrases = new phrase_1.Phrases(this.gst);
         phrases.push(token_1.TT.PLUS, ['PLUS', 'WITH', 'ADD']);
         phrases.push(token_1.TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
@@ -1620,6 +1632,9 @@ var Fcal = /** @class */ (function () {
             true: datatype_1.Type.FBoolean.TRUE,
         });
     };
+    Fcal.setDefaultScales = function () {
+        this.useScales({ k: 1000, M: 1000000, B: 10000000 });
+    };
     Fcal.setDefaultConverter = function () {
         var num = function (v) {
             return datatype_1.Type.BNumber.New(v.n);
@@ -1640,7 +1655,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.evaluate = function (source) {
         source = prefixNewLIne(source);
-        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
+        return this.rawEvaluate(source);
     };
     /**
      * rawEvaluates given expression
@@ -1649,7 +1664,7 @@ var Fcal = /** @class */ (function () {
      * @returns {Type} result of expression
      */
     Fcal.prototype.rawEvaluate = function (source) {
-        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c).evaluateExpression();
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale).evaluateExpression();
     };
     /**
      * Create new expression with copy of Fcal.Environment
@@ -1661,7 +1676,7 @@ var Fcal = /** @class */ (function () {
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
     };
     /**
      * Create new  Expression in sync with Fcal.Environment
@@ -1670,11 +1685,11 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c));
+        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale));
     };
     /**
      * create a new variable with value or assign value to variable
-     * @param {Object | EnvInputType} values vairbles
+     * @param {Object | EnvInputType} values variables
      */
     Fcal.prototype.setValues = function (values) {
         this.environment.use(values);
@@ -1685,7 +1700,7 @@ var Fcal = /** @class */ (function () {
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c));
+        return new Expression(new interpreter_1.Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
     };
     return Fcal;
 }());
@@ -1701,8 +1716,8 @@ function prefixNewLIne(source) {
  * evaluate AST with its state
  */
 var Expression = /** @class */ (function () {
-    function Expression(interpeter) {
-        this.interpreter = interpeter;
+    function Expression(interpreter) {
+        this.interpreter = interpreter;
     }
     /**
      * Evaluate AST of Math expression
@@ -1757,7 +1772,7 @@ exports.FcalError = FcalError;
 /***************************************************************/
 Fcal.initialize();
 
-},{"1":1,"10":10,"13":13,"17":17,"19":19,"2":2,"20":20,"21":21,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],13:[function(require,module,exports){
+},{"1":1,"10":10,"11":11,"14":14,"18":18,"2":2,"20":20,"21":21,"22":22,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],14:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var TT;
@@ -1768,8 +1783,8 @@ var TT;
     TT["MOD"] = "mod";
     TT["SLASH"] = "/";
     TT["Number"] = "number";
-    TT["OPEN_PARAN"] = "(";
-    TT["CLOSE_PARAN"] = ")";
+    TT["OPEN_PAREN"] = "(";
+    TT["CLOSE_PAREN"] = ")";
     TT["NEWLINE"] = "\n";
     TT["EOL"] = "EOL";
     TT["IN"] = "in";
@@ -1804,6 +1819,7 @@ var TT;
     TT["FLOOR_DIVIDE_EQUAL"] = "//=";
     TT["MULTIPLY_EQUAL"] = "*=";
     TT["POWER_EQUAL"] = "^=";
+    TT["SCALE"] = "scale";
 })(TT || (TT = {}));
 exports.TT = TT;
 var Token = /** @class */ (function () {
@@ -1821,7 +1837,7 @@ var Token = /** @class */ (function () {
 }());
 exports.Token = Token;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -1867,14 +1883,15 @@ var Entity;
     Entity["NS"] = "NUMBER SYSTEM";
     Entity["UNIT"] = "UNIT";
     Entity["CONVERTER"] = "CONVERTER";
+    Entity["SCALE"] = "SCALE";
 })(Entity || (Entity = {}));
 exports.Entity = Entity;
 
 },{"3":3}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var datatype_1 = require(17);
-var symboltable_1 = require(9);
+var datatype_1 = require(18);
+var symboltable_1 = require(10);
 var Constant = /** @class */ (function () {
     function Constant(symbolTable) {
         this.values = new Map();
@@ -1919,10 +1936,10 @@ var Constant = /** @class */ (function () {
 }());
 exports.Constant = Constant;
 
-},{"17":17,"9":9}],5:[function(require,module,exports){
+},{"10":10,"18":18}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var symboltable_1 = require(9);
+var symboltable_1 = require(10);
 var Converter = /** @class */ (function () {
     function Converter(st) {
         this.st = st;
@@ -1939,12 +1956,12 @@ var Converter = /** @class */ (function () {
 }());
 exports.Converter = Converter;
 
-},{"9":9}],6:[function(require,module,exports){
+},{"10":10}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(17);
-var symboltable_1 = require(9);
+var datatype_1 = require(18);
+var symboltable_1 = require(10);
 /**
  * Represents runtime variable environment
  * It represents state of fcal
@@ -2011,10 +2028,62 @@ var Environment = /** @class */ (function () {
 }());
 exports.Environment = Environment;
 
-},{"17":17,"3":3,"9":9}],19:[function(require,module,exports){
+},{"10":10,"18":18,"3":3}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var symboltable_1 = require(9);
+var datatype_1 = require(18);
+var symboltable_1 = require(10);
+/**
+ * Scale is used to define scale of number literal
+ */
+var Scale = /** @class */ (function () {
+    function Scale(symbolTable) {
+        this.values = new Map();
+        this.symbolTable = symbolTable;
+    }
+    Scale.prototype.get = function (key) {
+        return this.values.get(key);
+    };
+    /**
+     * create new scale
+     * @param {string} key scale name
+     * @param  {Type | Big.Decimal | number | string} value value
+     */
+    Scale.prototype.set = function (key, value) {
+        this.symbolTable.set(key, symboltable_1.Entity.SCALE);
+        if (value instanceof datatype_1.Type) {
+            this.values.set(key, value);
+            return;
+        }
+        this.values.set(key, datatype_1.Type.BNumber.New(value));
+    };
+    /**
+     * import values from Object or map into scale
+     * @param {Object | Map} values
+     */
+    Scale.prototype.use = function (values) {
+        var _this = this;
+        if (values instanceof Map) {
+            values.forEach(function (value, key) {
+                _this.set(key, value);
+            });
+            return;
+        }
+        for (var key in values) {
+            if (values.hasOwnProperty(key)) {
+                var element = values[key];
+                this.set(key, element);
+            }
+        }
+    };
+    return Scale;
+}());
+exports.Scale = Scale;
+
+},{"10":10,"18":18}],20:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var symboltable_1 = require(10);
 var Phrases = /** @class */ (function () {
     function Phrases(symbolTable) {
         this.symbolTable = symbolTable;
@@ -2034,7 +2103,7 @@ var Phrases = /** @class */ (function () {
 }());
 exports.Phrases = Phrases;
 
-},{"9":9}],21:[function(require,module,exports){
+},{"10":10}],22:[function(require,module,exports){
 ;(function (globalScope) {
   'use strict';
 
@@ -6916,9 +6985,9 @@ exports.Phrases = Phrases;
 },{}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var decimal_js_1 = require(21);
+var decimal_js_1 = require(22);
 var fcal_1 = require(3);
-var datatype_1 = require(17);
+var datatype_1 = require(18);
 /**
  * FcalFunction represents function in fcal
  */
@@ -7008,21 +7077,21 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"17":17,"21":21,"3":3}],8:[function(require,module,exports){
+},{"18":18,"22":22,"3":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var toJSON_1 = require(11);
-var token_1 = require(13);
-var parser_1 = require(16);
-var datatype_1 = require(17);
-var numberSystem_1 = require(18);
-var units_1 = require(20);
+var toJSON_1 = require(12);
+var token_1 = require(14);
+var parser_1 = require(17);
+var datatype_1 = require(18);
+var numberSystem_1 = require(19);
+var units_1 = require(21);
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, units, environment, c) {
+    function Interpreter(source, phrases, units, environment, c, scale) {
         this.environment = environment;
         if (typeof source === 'string') {
-            var parser = new parser_1.Parser(source, phrases, units, c, environment.symbolTable);
+            var parser = new parser_1.Parser(source, phrases, units, c, scale, environment.symbolTable);
             this.ast = parser.parse();
             return;
         }
@@ -7069,9 +7138,9 @@ var Interpreter = /** @class */ (function () {
         this.environment.set('_', value);
         return value;
     };
-    Interpreter.prototype.visitUnitConvertionExpr = function (expr) {
+    Interpreter.prototype.visitConversionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
+        if (value instanceof datatype_1.Type.Numeric) {
             if (expr.to instanceof units_1.UnitMeta) {
                 return datatype_1.Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
             }
@@ -7084,7 +7153,7 @@ var Interpreter = /** @class */ (function () {
     };
     Interpreter.prototype.visitUnitExpr = function (expr) {
         var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
+        if (value instanceof datatype_1.Type.Numeric) {
             return datatype_1.Type.UnitNumber.New(value.n, expr.unit).setSystem(value.ns);
         }
         throw new fcal_1.FcalError('Expecting numeric value before unit', expr.start, expr.end);
@@ -7170,7 +7239,7 @@ var Interpreter = /** @class */ (function () {
     };
     Interpreter.prototype.visitPercentageExpr = function (expr) {
         var value = this.evaluate(expr.expression);
-        if (value instanceof datatype_1.Type.Numberic) {
+        if (value instanceof datatype_1.Type.Numeric) {
             return datatype_1.Type.Percentage.New(value.n);
         }
         throw new fcal_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
@@ -7186,14 +7255,14 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"11":11,"13":13,"16":16,"17":17,"18":18,"20":20,"3":3}],10:[function(require,module,exports){
+},{"12":12,"14":14,"17":17,"18":18,"19":19,"21":21,"3":3}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var expr_1 = require(15);
-var datatype_1 = require(17);
-var numberSystem_1 = require(18);
-var toJSON_1 = require(11);
+var expr_1 = require(16);
+var datatype_1 = require(18);
+var numberSystem_1 = require(19);
+var toJSON_1 = require(12);
 var JSONParser = /** @class */ (function () {
     function JSONParser(astJSON, units, c) {
         this.units = units;
@@ -7315,7 +7384,7 @@ var JSONParser = /** @class */ (function () {
 }());
 exports.JSONParser = JSONParser;
 
-},{"11":11,"15":15,"17":17,"18":18,"3":3}],18:[function(require,module,exports){
+},{"12":12,"16":16,"18":18,"19":19,"3":3}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NumberSystem = /** @class */ (function () {
@@ -7352,7 +7421,7 @@ var NumberSystem = /** @class */ (function () {
 }());
 exports.NumberSystem = NumberSystem;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -7366,8 +7435,8 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var numberSystem_1 = require(18);
-var units_1 = require(20);
+var numberSystem_1 = require(19);
+var units_1 = require(21);
 var JSONTYPES;
 (function (JSONTYPES) {
     JSONTYPES["BINARY"] = "binary";
@@ -7416,7 +7485,7 @@ var ToJSON = /** @class */ (function () {
     ToJSON.prototype.visitUnitExpr = function (expr) {
         return { type: JSONTYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
     };
-    ToJSON.prototype.visitUnitConvertionExpr = function (expr) {
+    ToJSON.prototype.visitConversionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (expr.to instanceof units_1.UnitMeta) {
             return { type: JSONTYPES.CONVERSION, unit: expr.name, value: value };
@@ -7460,21 +7529,22 @@ var ToJSON = /** @class */ (function () {
 }());
 exports.ToJSON = ToJSON;
 
-},{"18":18,"20":20}],16:[function(require,module,exports){
+},{"19":19,"21":21}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var lex_1 = require(12);
-var token_1 = require(13);
-var numberSystem_1 = require(18);
-var expr_1 = require(15);
+var lex_1 = require(13);
+var token_1 = require(14);
+var numberSystem_1 = require(19);
+var expr_1 = require(16);
 var Parser = /** @class */ (function () {
-    function Parser(source, phrases, units, cc, symbolTable) {
+    function Parser(source, phrases, units, cc, scale, symbolTable) {
         this.source = source;
-        this.lexer = new lex_1.Lexer(this.source, phrases, units, cc);
+        this.lexer = new lex_1.Lexer(this.source, phrases, units, cc, scale);
         this.n = 0;
         this.tokens = [];
         this.c = cc;
+        this.scale = scale;
         this.symbolTable = symbolTable;
     }
     Parser.prototype.parse = function () {
@@ -7660,15 +7730,15 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.call = function () {
         var expr = this.term();
-        if (this.match([token_1.TT.OPEN_PARAN])) {
+        if (this.match([token_1.TT.OPEN_PAREN])) {
             if (expr instanceof expr_1.Expr.Variable) {
                 var argument = Array();
-                if (this.peek().type !== token_1.TT.CLOSE_PARAN) {
+                if (this.peek().type !== token_1.TT.CLOSE_PAREN) {
                     do {
                         argument.push(this.expression());
                     } while (this.match([token_1.TT.COMMA]));
                 }
-                this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after the arguments");
+                this.consume(token_1.TT.CLOSE_PAREN, "Expect ')' after the arguments");
                 return new expr_1.Expr.Call(expr.name, argument, expr.start, this.previous().end);
             }
             throw new fcal_1.FcalError("Not callable", expr.start, this.previous().end);
@@ -7677,12 +7747,22 @@ var Parser = /** @class */ (function () {
     };
     Parser.prototype.term = function () {
         if (this.match([token_1.TT.Number])) {
-            return new expr_1.Expr.Literal(this.previous().literal, this.previous().start, this.previous().end);
+            var numToken = this.previous();
+            var num = numToken.literal;
+            if (this.match([token_1.TT.SCALE])) {
+                var s = this.previous().literal;
+                var scaleC = this.scale.get(s);
+                if (s) {
+                    num.n = num.n.mul(scaleC.n);
+                    return new expr_1.Expr.Literal(num, numToken.start, this.previous().end);
+                }
+            }
+            return new expr_1.Expr.Literal(num, numToken.start, numToken.end);
         }
-        if (this.match([token_1.TT.OPEN_PARAN])) {
+        if (this.match([token_1.TT.OPEN_PAREN])) {
             var start = this.previous();
             var expr = this.expression();
-            this.consume(token_1.TT.CLOSE_PARAN, "Expect ')' after expression but found " + this.peek().lexeme);
+            this.consume(token_1.TT.CLOSE_PAREN, "Expect ')' after expression but found " + this.peek().lexeme);
             return new expr_1.Expr.Grouping(expr, start.start, this.previous().end);
         }
         if (this.match([token_1.TT.NAME])) {
@@ -7748,7 +7828,7 @@ var Parser = /** @class */ (function () {
 }());
 exports.Parser = Parser;
 
-},{"12":12,"13":13,"15":15,"18":18,"3":3}],15:[function(require,module,exports){
+},{"13":13,"14":14,"16":16,"19":19,"3":3}],16:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -7764,7 +7844,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var astPrinter_1 = require(14);
+var astPrinter_1 = require(15);
 var Expr = /** @class */ (function () {
     function Expr(start, end) {
         this.start = start;
@@ -7929,7 +8009,7 @@ exports.Expr = Expr;
             return _this;
         }
         ConversionExpr.prototype.accept = function (visitor) {
-            return visitor.visitUnitConvertionExpr(this);
+            return visitor.visitConversionExpr(this);
         };
         return ConversionExpr;
     }(Expr));
@@ -7951,23 +8031,24 @@ exports.Expr = Expr;
 })(Expr || (Expr = {}));
 exports.Expr = Expr;
 
-},{"14":14}],12:[function(require,module,exports){
+},{"15":15}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
-var datatype_1 = require(17);
-var numberSystem_1 = require(18);
-var token_1 = require(13);
+var datatype_1 = require(18);
+var numberSystem_1 = require(19);
+var token_1 = require(14);
 var Lexer = /** @class */ (function () {
-    function Lexer(source, phrases, untis, cc) {
+    function Lexer(source, phrases, units, cc, scale) {
         // Removing the space around expression
         this.source = source.replace(/[ \t]+$/, '');
         this.start = 0;
         this.current = 0;
         this.tokens = Array();
         this.phrases = phrases;
-        this.units = untis;
+        this.units = units;
         this.cc = cc;
+        this.scale = scale;
     }
     Lexer.isDigit = function (char) {
         return char >= '0' && char <= '9';
@@ -8092,10 +8173,10 @@ var Lexer = /** @class */ (function () {
                 return this.TT(token_1.TT.COMMA);
             case token_1.TT.DOUBLE_COLON:
                 return this.TT(token_1.TT.DOUBLE_COLON);
-            case token_1.TT.OPEN_PARAN:
-                return this.TT(token_1.TT.OPEN_PARAN);
-            case token_1.TT.CLOSE_PARAN:
-                return this.TT(token_1.TT.CLOSE_PARAN);
+            case token_1.TT.OPEN_PAREN:
+                return this.TT(token_1.TT.OPEN_PAREN);
+            case token_1.TT.CLOSE_PAREN:
+                return this.TT(token_1.TT.CLOSE_PAREN);
             case token_1.TT.CAP:
                 if (this.peek(0) === token_1.TT.EQUAL) {
                     this.eat();
@@ -8141,6 +8222,10 @@ var Lexer = /** @class */ (function () {
         if (type) {
             return this.TT(type);
         }
+        var s = this.scale.get(text);
+        if (s) {
+            return this.TTWithLiteral(token_1.TT.SCALE, text);
+        }
         var unit = this.units.get(text);
         if (unit) {
             return this.TTWithLiteral(token_1.TT.UNIT, text);
@@ -8183,7 +8268,7 @@ var Lexer = /** @class */ (function () {
         if (this.peek(0) === 'x' || this.peek(0) === 'X') {
             this.eat();
             if (!Lexer.isHexDigit(this.peek(0))) {
-                throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexa decimal", this.current);
+                throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexadecimal", this.current);
             }
             while (Lexer.isHexDigit(this.peek(0))) {
                 this.eat();
@@ -8242,8 +8327,8 @@ var Lexer = /** @class */ (function () {
         token_1.TT.MINUS,
         token_1.TT.TIMES,
         token_1.TT.SLASH,
-        token_1.TT.OPEN_PARAN,
-        token_1.TT.CLOSE_PARAN,
+        token_1.TT.OPEN_PAREN,
+        token_1.TT.CLOSE_PAREN,
         token_1.TT.CAP,
         token_1.TT.PERCENTAGE,
         token_1.TT.EQUAL,
@@ -8261,17 +8346,17 @@ var Lexer = /** @class */ (function () {
 }());
 exports.Lexer = Lexer;
 
-},{"13":13,"17":17,"18":18,"3":3}],14:[function(require,module,exports){
+},{"14":14,"18":18,"19":19,"3":3}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var numberSystem_1 = require(18);
-var units_1 = require(20);
+var numberSystem_1 = require(19);
+var units_1 = require(21);
 var ASTPrinter = /** @class */ (function () {
     function ASTPrinter() {
         this.depth = 0;
     }
     ASTPrinter.createPrefix = function (depth, type) {
-        return "" + this.prefixchar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
+        return "" + this.prefixChar + '-'.repeat(depth * this.tab) + " (" + depth / this.tab + ")" + type;
     };
     ASTPrinter.prototype.visitTernaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
@@ -8306,7 +8391,7 @@ var ASTPrinter = /** @class */ (function () {
         this.depth -= ASTPrinter.tab;
         return ASTPrinter.createPrefix(this.depth, 'UNIT') + " " + expr.unit.unitType + " \n|\n" + expression;
     };
-    ASTPrinter.prototype.visitUnitConvertionExpr = function (expr) {
+    ASTPrinter.prototype.visitConversionExpr = function (expr) {
         this.depth += ASTPrinter.tab;
         var expression = this.evaluate(expr.expression);
         this.depth -= ASTPrinter.tab;
@@ -8314,7 +8399,7 @@ var ASTPrinter = /** @class */ (function () {
             return ASTPrinter.createPrefix(this.depth, 'UNIT CONVERT') + " " + expr.name + " \n|\n" + expression;
         }
         if (expr.to instanceof numberSystem_1.NumberSystem) {
-            return ASTPrinter.createPrefix(this.depth, 'NUMBERICAL SYSTEM') + " " + expr.name + " \n|\n" + expression;
+            return ASTPrinter.createPrefix(this.depth, 'NUMERICAL SYSTEM') + " " + expr.name + " \n|\n" + expression;
         }
         return ASTPrinter.createPrefix(this.depth, 'CONVERTER') + " " + expr.name + " \n|\n" + expression;
     };
@@ -8361,10 +8446,10 @@ var ASTPrinter = /** @class */ (function () {
         return ast;
     };
     ASTPrinter.tab = 2;
-    ASTPrinter.prefixchar = '+';
+    ASTPrinter.prefixChar = '+';
     return ASTPrinter;
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{"18":18,"20":20}]},{},[3])(3)
+},{"19":19,"21":21}]},{},[3])(3)
 });

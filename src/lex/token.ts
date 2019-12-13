@@ -5,8 +5,8 @@ enum TT {
   MOD = 'mod',
   SLASH = '/',
   Number = 'number',
-  OPEN_PARAN = '(',
-  CLOSE_PARAN = ')',
+  OPEN_PAREN = '(',
+  CLOSE_PAREN = ')',
   NEWLINE = '\n',
   EOL = 'EOL',
   IN = 'in',
@@ -41,6 +41,7 @@ enum TT {
   FLOOR_DIVIDE_EQUAL = '//=',
   MULTIPLY_EQUAL = '*=',
   POWER_EQUAL = '^=',
+  SCALE = 'scale',
 }
 
 class Token {

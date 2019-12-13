@@ -7008,136 +7008,7 @@ exports.FcalFunction = FcalFunction;
 })(FcalFunction || (FcalFunction = {}));
 exports.FcalFunction = FcalFunction;
 
-},{"17":17,"21":21,"3":3}],10:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var fcal_1 = require(3);
-var expr_1 = require(15);
-var datatype_1 = require(17);
-var numberSystem_1 = require(18);
-var toJSON_1 = require(11);
-var JSONParser = /** @class */ (function () {
-    function JSONParser(astJSON, units, c) {
-        this.units = units;
-        this.c = c;
-        this.ast = JSON.parse(astJSON);
-    }
-    JSONParser.prototype.parse = function () {
-        return this.createExpr(this.ast);
-    };
-    JSONParser.prototype.createExpr = function (ast) {
-        var type = ast.type;
-        switch (type) {
-            case toJSON_1.JSONTYPES.BINARY:
-                if (ast.right && ast.left && ast.operator) {
-                    var left = this.createExpr(ast.left);
-                    var right = this.createExpr(ast.right);
-                    return new expr_1.Expr.Binary(left, ast.operator, right, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.GROUP:
-                if (ast.value && typeof ast.value !== 'string') {
-                    var expr = this.createExpr(ast.value);
-                    return new expr_1.Expr.Grouping(expr, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.LITERAL:
-                if (ast.value && typeof ast.value === 'string') {
-                    return new expr_1.Expr.Literal(new datatype_1.Type.BNumber(ast.value), ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.UNARY:
-                if (ast.operator && ast.value && typeof ast.value !== 'string') {
-                    var expr = this.createExpr(ast.value);
-                    return new expr_1.Expr.Unary(ast.operator, expr, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.PERCENTAGE:
-                if (ast.value && typeof ast.value !== 'string') {
-                    var expr = this.createExpr(ast.value);
-                    return new expr_1.Expr.Percentage(expr, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.UNIT:
-                if (ast.phrase && ast.value && typeof ast.value !== 'string') {
-                    var unitmeta = this.units.get(ast.phrase);
-                    if (unitmeta) {
-                        var expr = this.createExpr(ast.value);
-                        return new expr_1.Expr.UnitExpr(expr, ast.phrase, unitmeta, ast.start, ast.end);
-                    }
-                }
-                break;
-            case toJSON_1.JSONTYPES.CONVERSION:
-                if (ast.value && typeof ast.value !== 'string') {
-                    var value = this.createExpr(ast.value);
-                    if (ast.unit) {
-                        var unitMeta = this.units.get(ast.unit);
-                        if (unitMeta) {
-                            return new expr_1.Expr.ConversionExpr(value, unitMeta, ast.unit, ast.start, ast.end);
-                        }
-                    }
-                    if (ast.ns) {
-                        var ns = numberSystem_1.NumberSystem.get(ast.ns);
-                        if (ns) {
-                            return new expr_1.Expr.ConversionExpr(value, ns, ast.ns, ast.start, ast.end);
-                        }
-                    }
-                    if (ast.converter) {
-                        var cov = this.c.get(ast.converter);
-                        if (cov) {
-                            return new expr_1.Expr.ConversionExpr(value, cov, ast.converter, ast.start, ast.end);
-                        }
-                    }
-                }
-                break;
-            case toJSON_1.JSONTYPES.ASSIGN:
-                if (ast.value && typeof ast.value !== 'string') {
-                    var value = this.createExpr(ast.value);
-                    if (ast.variable) {
-                        return new expr_1.Expr.Assign(ast.variable, value, ast.start, ast.end);
-                    }
-                }
-                break;
-            case toJSON_1.JSONTYPES.VARIABLE:
-                if (ast.name) {
-                    return new expr_1.Expr.Variable(ast.name, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.CALL:
-                if (ast.name) {
-                    var exprs = Array();
-                    if (ast.args) {
-                        for (var _i = 0, _a = ast.args; _i < _a.length; _i++) {
-                            var arg = _a[_i];
-                            exprs.push(this.createExpr(arg));
-                        }
-                        return new expr_1.Expr.Call(ast.name, exprs, ast.start, ast.end);
-                    }
-                }
-                break;
-            case toJSON_1.JSONTYPES.LOGICAL:
-                if (ast.right && ast.left && ast.operator) {
-                    var left = this.createExpr(ast.left);
-                    var right = this.createExpr(ast.right);
-                    return new expr_1.Expr.Logical(left, ast.operator, right, ast.start, ast.end);
-                }
-                break;
-            case toJSON_1.JSONTYPES.TERNARY:
-                if (ast.main && ast.texpr && ast.fexpr) {
-                    var main = this.createExpr(ast.main);
-                    var texpr = this.createExpr(ast.texpr);
-                    var fexpr = this.createExpr(ast.fexpr);
-                    return new expr_1.Expr.Ternary(main, texpr, fexpr, ast.start, ast.end);
-                }
-                break;
-        }
-        throw new fcal_1.FcalError("Invalid JSON " + ast);
-    };
-    return JSONParser;
-}());
-exports.JSONParser = JSONParser;
-
-},{"11":11,"15":15,"17":17,"18":18,"3":3}],8:[function(require,module,exports){
+},{"17":17,"21":21,"3":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);
@@ -7315,7 +7186,136 @@ var Interpreter = /** @class */ (function () {
 }());
 exports.Interpreter = Interpreter;
 
-},{"11":11,"13":13,"16":16,"17":17,"18":18,"20":20,"3":3}],18:[function(require,module,exports){
+},{"11":11,"13":13,"16":16,"17":17,"18":18,"20":20,"3":3}],10:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
+var expr_1 = require(15);
+var datatype_1 = require(17);
+var numberSystem_1 = require(18);
+var toJSON_1 = require(11);
+var JSONParser = /** @class */ (function () {
+    function JSONParser(astJSON, units, c) {
+        this.units = units;
+        this.c = c;
+        this.ast = JSON.parse(astJSON);
+    }
+    JSONParser.prototype.parse = function () {
+        return this.createExpr(this.ast);
+    };
+    JSONParser.prototype.createExpr = function (ast) {
+        var type = ast.type;
+        switch (type) {
+            case toJSON_1.JSONTYPES.BINARY:
+                if (ast.right && ast.left && ast.operator) {
+                    var left = this.createExpr(ast.left);
+                    var right = this.createExpr(ast.right);
+                    return new expr_1.Expr.Binary(left, ast.operator, right, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.GROUP:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Grouping(expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.LITERAL:
+                if (ast.value && typeof ast.value === 'string') {
+                    return new expr_1.Expr.Literal(new datatype_1.Type.BNumber(ast.value), ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.UNARY:
+                if (ast.operator && ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Unary(ast.operator, expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.PERCENTAGE:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var expr = this.createExpr(ast.value);
+                    return new expr_1.Expr.Percentage(expr, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.UNIT:
+                if (ast.phrase && ast.value && typeof ast.value !== 'string') {
+                    var unitmeta = this.units.get(ast.phrase);
+                    if (unitmeta) {
+                        var expr = this.createExpr(ast.value);
+                        return new expr_1.Expr.UnitExpr(expr, ast.phrase, unitmeta, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.CONVERSION:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var value = this.createExpr(ast.value);
+                    if (ast.unit) {
+                        var unitMeta = this.units.get(ast.unit);
+                        if (unitMeta) {
+                            return new expr_1.Expr.ConversionExpr(value, unitMeta, ast.unit, ast.start, ast.end);
+                        }
+                    }
+                    if (ast.ns) {
+                        var ns = numberSystem_1.NumberSystem.get(ast.ns);
+                        if (ns) {
+                            return new expr_1.Expr.ConversionExpr(value, ns, ast.ns, ast.start, ast.end);
+                        }
+                    }
+                    if (ast.converter) {
+                        var cov = this.c.get(ast.converter);
+                        if (cov) {
+                            return new expr_1.Expr.ConversionExpr(value, cov, ast.converter, ast.start, ast.end);
+                        }
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.ASSIGN:
+                if (ast.value && typeof ast.value !== 'string') {
+                    var value = this.createExpr(ast.value);
+                    if (ast.variable) {
+                        return new expr_1.Expr.Assign(ast.variable, value, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.VARIABLE:
+                if (ast.name) {
+                    return new expr_1.Expr.Variable(ast.name, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.CALL:
+                if (ast.name) {
+                    var exprs = Array();
+                    if (ast.args) {
+                        for (var _i = 0, _a = ast.args; _i < _a.length; _i++) {
+                            var arg = _a[_i];
+                            exprs.push(this.createExpr(arg));
+                        }
+                        return new expr_1.Expr.Call(ast.name, exprs, ast.start, ast.end);
+                    }
+                }
+                break;
+            case toJSON_1.JSONTYPES.LOGICAL:
+                if (ast.right && ast.left && ast.operator) {
+                    var left = this.createExpr(ast.left);
+                    var right = this.createExpr(ast.right);
+                    return new expr_1.Expr.Logical(left, ast.operator, right, ast.start, ast.end);
+                }
+                break;
+            case toJSON_1.JSONTYPES.TERNARY:
+                if (ast.main && ast.texpr && ast.fexpr) {
+                    var main = this.createExpr(ast.main);
+                    var texpr = this.createExpr(ast.texpr);
+                    var fexpr = this.createExpr(ast.fexpr);
+                    return new expr_1.Expr.Ternary(main, texpr, fexpr, ast.start, ast.end);
+                }
+                break;
+        }
+        throw new fcal_1.FcalError("Invalid JSON " + ast);
+    };
+    return JSONParser;
+}());
+exports.JSONParser = JSONParser;
+
+},{"11":11,"15":15,"17":17,"18":18,"3":3}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var NumberSystem = /** @class */ (function () {

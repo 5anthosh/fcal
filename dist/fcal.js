@@ -273,12 +273,12 @@ var DATATYPE;
     DATATYPE[DATATYPE["UNIT"] = 1] = "UNIT";
     DATATYPE[DATATYPE["PERCENTAGE"] = 2] = "PERCENTAGE";
 })(DATATYPE = exports.DATATYPE || (exports.DATATYPE = {}));
-var TYPERANK;
-(function (TYPERANK) {
-    TYPERANK[TYPERANK["PERCENTAGE"] = 0] = "PERCENTAGE";
-    TYPERANK[TYPERANK["NUMBER"] = 1] = "NUMBER";
-    TYPERANK[TYPERANK["UNIT"] = 2] = "UNIT";
-})(TYPERANK = exports.TYPERANK || (exports.TYPERANK = {}));
+var TYPE_RANK;
+(function (TYPE_RANK) {
+    TYPE_RANK[TYPE_RANK["PERCENTAGE"] = 0] = "PERCENTAGE";
+    TYPE_RANK[TYPE_RANK["NUMBER"] = 1] = "NUMBER";
+    TYPE_RANK[TYPE_RANK["UNIT"] = 2] = "UNIT";
+})(TYPE_RANK = exports.TYPE_RANK || (exports.TYPE_RANK = {}));
 /**
  * Represents a type of variable or value
  */
@@ -364,12 +364,12 @@ var TYPERANK;
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
+                if (this.TYPE_RANK <= value.TYPE_RANK) {
                     return value.New(this.plus(value).n);
                 }
                 return this.plus(value);
             }
-            if (value.TYPERANK >= this.TYPERANK) {
+            if (value.TYPE_RANK >= this.TYPE_RANK) {
                 return value.plus(this);
             }
             return this.New(value.plus(this).n);
@@ -385,12 +385,12 @@ var TYPERANK;
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
+                if (this.TYPE_RANK <= value.TYPE_RANK) {
                     return value.New(this.mul(value).n);
                 }
                 return this.mul(value);
             }
-            if (value.TYPERANK >= this.TYPERANK) {
+            if (value.TYPE_RANK >= this.TYPE_RANK) {
                 return value.mul(this);
             }
             return this.New(value.mul(this).n);
@@ -406,15 +406,15 @@ var TYPERANK;
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
+                if (this.TYPE_RANK <= value.TYPE_RANK) {
+                    if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.div(value);
                     }
                     return value.New(this.div(value).n);
                 }
                 return this.div(value);
             }
-            if (value.TYPERANK >= this.TYPERANK) {
+            if (value.TYPE_RANK >= this.TYPE_RANK) {
                 return value.div(this);
             }
             return this.New(value.div(this).n);
@@ -433,15 +433,15 @@ var TYPERANK;
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
+                if (this.TYPE_RANK <= value.TYPE_RANK) {
+                    if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.New(this.pow(value).n);
                     }
                     return value.New(this.pow(value).n);
                 }
                 return this.pow(value);
             }
-            if (value.TYPERANK >= this.TYPERANK) {
+            if (value.TYPE_RANK >= this.TYPE_RANK) {
                 return value.pow(this);
             }
             return this.New(value.pow(this).n);
@@ -460,15 +460,15 @@ var TYPERANK;
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
                 // check typerandk to see which will be the return type
-                if (this.TYPERANK <= value.TYPERANK) {
-                    if (this.TYPERANK === value.TYPERANK) {
+                if (this.TYPE_RANK <= value.TYPE_RANK) {
+                    if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.New(this.mod(value).n);
                     }
                     return value.New(this.mod(value).n);
                 }
                 return this.mod(value);
             }
-            if (value.TYPERANK >= this.TYPERANK) {
+            if (value.TYPE_RANK >= this.TYPE_RANK) {
                 return value.mod(this);
             }
             return this.New(value.mod(this).n);
@@ -493,7 +493,7 @@ var TYPERANK;
         function BNumber(value) {
             var _this = _super.call(this, value) || this;
             _this.TYPE = DATATYPE.NUMBER;
-            _this.TYPERANK = TYPERANK.NUMBER;
+            _this.TYPE_RANK = TYPE_RANK.NUMBER;
             return _this;
         }
         BNumber.New = function (value) {
@@ -556,7 +556,7 @@ var TYPERANK;
         function Percentage(value) {
             var _this = _super.call(this, value) || this;
             _this.TYPE = DATATYPE.PERCENTAGE;
-            _this.TYPERANK = TYPERANK.PERCENTAGE;
+            _this.TYPE_RANK = TYPE_RANK.PERCENTAGE;
             return _this;
         }
         Percentage.New = function (value) {
@@ -677,7 +677,7 @@ var TYPERANK;
             var _this = _super.call(this, value) || this;
             _this.unit = unit;
             _this.TYPE = DATATYPE.UNIT;
-            _this.TYPERANK = TYPERANK.UNIT;
+            _this.TYPE_RANK = TYPE_RANK.UNIT;
             return _this;
         }
         UnitNumber.New = function (value, unit) {
@@ -7437,22 +7437,22 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var numberSystem_1 = require(19);
 var units_1 = require(21);
-var JSONTYPES;
-(function (JSONTYPES) {
-    JSONTYPES["BINARY"] = "binary";
-    JSONTYPES["GROUP"] = "group";
-    JSONTYPES["LITERAL"] = "literal";
-    JSONTYPES["UNARY"] = "unary";
-    JSONTYPES["PERCENTAGE"] = "percentage";
-    JSONTYPES["UNIT"] = "unit";
-    JSONTYPES["CONVERSION"] = "conversion";
-    JSONTYPES["ASSIGN"] = "assign";
-    JSONTYPES["VARIABLE"] = "variable";
-    JSONTYPES["CALL"] = "call";
-    JSONTYPES["LOGICAL"] = "logical";
-    JSONTYPES["TERNARY"] = "ternary";
-})(JSONTYPES || (JSONTYPES = {}));
-exports.JSONTYPES = JSONTYPES;
+var JSON_TYPES;
+(function (JSON_TYPES) {
+    JSON_TYPES["BINARY"] = "binary";
+    JSON_TYPES["GROUP"] = "group";
+    JSON_TYPES["LITERAL"] = "literal";
+    JSON_TYPES["UNARY"] = "unary";
+    JSON_TYPES["PERCENTAGE"] = "percentage";
+    JSON_TYPES["UNIT"] = "unit";
+    JSON_TYPES["CONVERSION"] = "conversion";
+    JSON_TYPES["ASSIGN"] = "assign";
+    JSON_TYPES["VARIABLE"] = "variable";
+    JSON_TYPES["CALL"] = "call";
+    JSON_TYPES["LOGICAL"] = "logical";
+    JSON_TYPES["TERNARY"] = "ternary";
+})(JSON_TYPES || (JSON_TYPES = {}));
+exports.JSONTYPES = JSON_TYPES;
 var ToJSON = /** @class */ (function () {
     function ToJSON(ast) {
         this.ast = ast;
@@ -7468,38 +7468,38 @@ var ToJSON = /** @class */ (function () {
         var right = this.evaluate(expr.right);
         var left = this.evaluate(expr.left);
         var operator = expr.operator;
-        return { type: JSONTYPES.BINARY, right: right, left: left, operator: operator };
+        return { type: JSON_TYPES.BINARY, right: right, left: left, operator: operator };
     };
     ToJSON.prototype.visitGroupingExpr = function (expr) {
-        return { type: JSONTYPES.GROUP, value: this.evaluate(expr.expression) };
+        return { type: JSON_TYPES.GROUP, value: this.evaluate(expr.expression) };
     };
     ToJSON.prototype.visitLiteralExpr = function (expr) {
-        return { type: JSONTYPES.LITERAL, value: expr.value.print() };
+        return { type: JSON_TYPES.LITERAL, value: expr.value.print() };
     };
     ToJSON.prototype.visitUnaryExpr = function (expr) {
-        return { type: JSONTYPES.UNARY, operator: expr.operator, value: this.evaluate(expr.right) };
+        return { type: JSON_TYPES.UNARY, operator: expr.operator, value: this.evaluate(expr.right) };
     };
     ToJSON.prototype.visitPercentageExpr = function (expr) {
-        return { type: JSONTYPES.PERCENTAGE, value: this.evaluate(expr.expression) };
+        return { type: JSON_TYPES.PERCENTAGE, value: this.evaluate(expr.expression) };
     };
     ToJSON.prototype.visitUnitExpr = function (expr) {
-        return { type: JSONTYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
+        return { type: JSON_TYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
     };
     ToJSON.prototype.visitConversionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
         if (expr.to instanceof units_1.UnitMeta) {
-            return { type: JSONTYPES.CONVERSION, unit: expr.name, value: value };
+            return { type: JSON_TYPES.CONVERSION, unit: expr.name, value: value };
         }
         if (expr.to instanceof numberSystem_1.NumberSystem) {
-            return { type: JSONTYPES.CONVERSION, ns: expr.name, value: value };
+            return { type: JSON_TYPES.CONVERSION, ns: expr.name, value: value };
         }
-        return { type: JSONTYPES.CONVERSION, converter: expr.name, value: value };
+        return { type: JSON_TYPES.CONVERSION, converter: expr.name, value: value };
     };
     ToJSON.prototype.visitAssignExpr = function (expr) {
-        return { type: JSONTYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
+        return { type: JSON_TYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
     };
     ToJSON.prototype.visitVariableExpr = function (expr) {
-        return { type: JSONTYPES.VARIABLE, name: expr.name };
+        return { type: JSON_TYPES.VARIABLE, name: expr.name };
     };
     ToJSON.prototype.visitCallExpr = function (expr) {
         var args = Array();
@@ -7507,19 +7507,19 @@ var ToJSON = /** @class */ (function () {
             var arg = _a[_i];
             args.push(this.evaluate(arg));
         }
-        return { type: JSONTYPES.CALL, name: expr.name, args: args };
+        return { type: JSON_TYPES.CALL, name: expr.name, args: args };
     };
     ToJSON.prototype.visitLogicalExpr = function (expr) {
         var right = this.evaluate(expr.left);
         var left = this.evaluate(expr.left);
         var operator = expr.operator;
-        return { type: JSONTYPES.LOGICAL, right: right, left: left, operator: operator };
+        return { type: JSON_TYPES.LOGICAL, right: right, left: left, operator: operator };
     };
     ToJSON.prototype.visitTernaryExpr = function (expr) {
         var texpr = this.evaluate(expr.texpr);
         var fexpr = this.evaluate(expr.fexpr);
         var main = this.evaluate(expr.main);
-        return { type: JSONTYPES.TERNARY, main: main, texpr: texpr, fexpr: fexpr };
+        return { type: JSON_TYPES.TERNARY, main: main, texpr: texpr, fexpr: fexpr };
     };
     ToJSON.prototype.evaluate = function (expr) {
         var ast = expr.accept(this);

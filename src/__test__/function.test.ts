@@ -35,7 +35,7 @@ test('Default functions', () => {
 test('Register new function', () => {
   // tslint:disable-next-line: only-arrow-functions variable-name
   const func = new FcalFunction('asdfasdf123', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
+    const value = param[0] as Type.Numeric;
     return value.New(value.n.sinh());
   });
   const error = new Error('asdfasdf123 is already registered');
@@ -106,7 +106,7 @@ test('Register function with number return ', () => {
 test('Function already registered', () => {
   // tslint:disable-next-line: only-arrow-functions variable-name
   const func = new FcalFunction('abs', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
+    const value = param[0] as Type.Numeric;
     return value.New(value.n.abs());
   });
   const error = new Error('abs is already used in function');

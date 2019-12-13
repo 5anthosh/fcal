@@ -14,7 +14,7 @@ class Scale {
     this.values = new Map<string, Type>();
     this.symbolTable = symbolTable;
   }
-  
+
   public get(key: string): Type | undefined {
     return this.values.get(key);
   }

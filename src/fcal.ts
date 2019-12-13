@@ -188,7 +188,7 @@ class Fcal {
   private static setDefaultScales(): void {
     this.useScales({ k: 1000, M: 10_00_000, B: 1_00_00_000 });
   }
-  
+
   private static setDefaultConverter() {
     const num = (v: Type): Type => {
       return Type.BNumber.New((v as Type.Numeric).n);

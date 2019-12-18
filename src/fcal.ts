@@ -320,6 +320,10 @@ class Expression {
   public toObj(): object {
     return this.interpreter.toObj();
   }
+
+  public toString(): string {
+    return this.getAST();
+  }
 }
 
 /**

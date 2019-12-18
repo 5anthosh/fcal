@@ -18,7 +18,7 @@ class Constant {
   }
   /**
    * create or assign a constant with value
-   * @param {string} key constatn name
+   * @param {string} key constants name
    * @param  {Type | Big.Decimal | number | string} value value
    */
   public set(key: string, value: Type | Decimal | number | string): void {

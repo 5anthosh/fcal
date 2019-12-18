@@ -128,4 +128,4 @@ class ToJSON implements Expr.IVisitor<IJSON> {
   }
 }
 
-export { ToJSON, JSON_TYPES as JSONTYPES, IJSON };
+export { ToJSON, JSON_TYPES, IJSON };

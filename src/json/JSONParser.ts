@@ -4,7 +4,7 @@ import { Expr } from '../parser/expr';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Unit } from '../types/units';
-import { IJSON, JSONTYPES } from './toJSON';
+import { IJSON, JSON_TYPES } from './toJSON';
 
 class JSONParser {
   private units: Unit.List;
@@ -24,38 +24,38 @@ class JSONParser {
   private createExpr(ast: IJSON): Expr {
     const type = ast.type;
     switch (type) {
-      case JSONTYPES.BINARY:
+      case JSON_TYPES.BINARY:
         if (ast.right && ast.left && ast.operator) {
           const left = this.createExpr(ast.left);
           const right = this.createExpr(ast.right);
           return new Expr.Binary(left, ast.operator, right, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.GROUP:
+      case JSON_TYPES.GROUP:
         if (ast.value && typeof ast.value !== 'string') {
           const expr = this.createExpr(ast.value);
           return new Expr.Grouping(expr, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.LITERAL:
+      case JSON_TYPES.LITERAL:
         if (ast.value && typeof ast.value === 'string') {
           return new Expr.Literal(new Type.BNumber(ast.value), ast.start, ast.end);
         }
         break;
-      case JSONTYPES.UNARY:
+      case JSON_TYPES.UNARY:
         if (ast.operator && ast.value && typeof ast.value !== 'string') {
           const expr = this.createExpr(ast.value);
           return new Expr.Unary(ast.operator, expr, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.PERCENTAGE:
+      case JSON_TYPES.PERCENTAGE:
         if (ast.value && typeof ast.value !== 'string') {
           const expr = this.createExpr(ast.value);
 
           return new Expr.Percentage(expr, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.UNIT:
+      case JSON_TYPES.UNIT:
         if (ast.phrase && ast.value && typeof ast.value !== 'string') {
           const unitmeta = this.units.get(ast.phrase);
           if (unitmeta) {
@@ -64,7 +64,7 @@ class JSONParser {
           }
         }
         break;
-      case JSONTYPES.CONVERSION:
+      case JSON_TYPES.CONVERSION:
         if (ast.value && typeof ast.value !== 'string') {
           const value = this.createExpr(ast.value);
           if (ast.unit) {
@@ -87,7 +87,7 @@ class JSONParser {
           }
         }
         break;
-      case JSONTYPES.ASSIGN:
+      case JSON_TYPES.ASSIGN:
         if (ast.value && typeof ast.value !== 'string') {
           const value = this.createExpr(ast.value);
           if (ast.variable) {
@@ -95,12 +95,12 @@ class JSONParser {
           }
         }
         break;
-      case JSONTYPES.VARIABLE:
+      case JSON_TYPES.VARIABLE:
         if (ast.name) {
           return new Expr.Variable(ast.name, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.CALL:
+      case JSON_TYPES.CALL:
         if (ast.name) {
           const exprs = Array<Expr>();
           if (ast.args) {
@@ -111,14 +111,14 @@ class JSONParser {
           }
         }
         break;
-      case JSONTYPES.LOGICAL:
+      case JSON_TYPES.LOGICAL:
         if (ast.right && ast.left && ast.operator) {
           const left = this.createExpr(ast.left);
           const right = this.createExpr(ast.right);
           return new Expr.Logical(left, ast.operator, right, ast.start, ast.end);
         }
         break;
-      case JSONTYPES.TERNARY:
+      case JSON_TYPES.TERNARY:
         if (ast.main && ast.texpr && ast.fexpr) {
           const main = this.createExpr(ast.main);
           const texpr = this.createExpr(ast.texpr);

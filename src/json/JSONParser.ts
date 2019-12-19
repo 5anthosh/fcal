@@ -4,12 +4,12 @@ import { Expr } from '../parser/expr';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Unit } from '../types/units';
-import { IJSON, JSON_TYPES } from './toJSON';
+import { InterfaceJSON, JSON_TYPES } from './toJSON';
 
 class JSONParser {
   private units: Unit.List;
   private c: Converter;
-  private ast: IJSON;
+  private ast: InterfaceJSON;
 
   constructor(astJSON: string, units: Unit.List, c: Converter) {
     this.units = units;
@@ -21,7 +21,7 @@ class JSONParser {
     return this.createExpr(this.ast);
   }
 
-  private createExpr(ast: IJSON): Expr {
+  private createExpr(ast: InterfaceJSON): Expr {
     const type = ast.type;
     switch (type) {
       case JSON_TYPES.BINARY:
@@ -57,10 +57,10 @@ class JSONParser {
         break;
       case JSON_TYPES.UNIT:
         if (ast.phrase && ast.value && typeof ast.value !== 'string') {
-          const unitmeta = this.units.get(ast.phrase);
-          if (unitmeta) {
+          const unitMeta = this.units.get(ast.phrase);
+          if (unitMeta) {
             const expr = this.createExpr(ast.value);
-            return new Expr.UnitExpr(expr, ast.phrase, unitmeta, ast.start, ast.end);
+            return new Expr.UnitExpr(expr, ast.phrase, unitMeta, ast.start, ast.end);
           }
         }
         break;
@@ -119,11 +119,11 @@ class JSONParser {
         }
         break;
       case JSON_TYPES.TERNARY:
-        if (ast.main && ast.texpr && ast.fexpr) {
+        if (ast.main && ast.trueExpr && ast.falseExpr) {
           const main = this.createExpr(ast.main);
-          const texpr = this.createExpr(ast.texpr);
-          const fexpr = this.createExpr(ast.fexpr);
-          return new Expr.Ternary(main, texpr, fexpr, ast.start, ast.end);
+          const trueExpr = this.createExpr(ast.trueExpr);
+          const falseExpr = this.createExpr(ast.falseExpr);
+          return new Expr.Ternary(main, trueExpr, falseExpr, ast.start, ast.end);
         }
         break;
     }

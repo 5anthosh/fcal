@@ -19,10 +19,10 @@ class ASTPrinter implements Expr.IVisitor<string> {
   public visitTernaryExpr(expr: Expr.Ternary): string {
     this.depth += ASTPrinter.tab;
     const main = this.evaluate(expr.main);
-    const texpr = this.evaluate(expr.texpr);
-    const fexpr = this.evaluate(expr.fexpr);
+    const trueExpr = this.evaluate(expr.trueExpr);
+    const falseExpr = this.evaluate(expr.falseExpr);
     this.depth -= ASTPrinter.tab;
-    return `${ASTPrinter.createPrefix(this.depth, 'TERNARY')}\n|\n${main}${texpr}${fexpr}`;
+    return `${ASTPrinter.createPrefix(this.depth, 'TERNARY')}\n|\n${main}${trueExpr}${falseExpr}`;
   }
 
   public visitCallExpr(expr: Expr.Call): string {

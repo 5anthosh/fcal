@@ -15,6 +15,7 @@ import { Scale } from './scale';
 class Interpreter implements Expr.IVisitor<Type> {
   private readonly ast: Expr;
   private readonly environment: Environment;
+  private readonly source?: string;
   constructor(
     source: string | Expr,
     phrases: Phrases,
@@ -27,6 +28,7 @@ class Interpreter implements Expr.IVisitor<Type> {
     if (typeof source === 'string') {
       const parser = new Parser(source, phrases, units, c, scale, environment.symbolTable);
       this.ast = parser.parse();
+      this.source = source;
       return;
     }
     this.ast = source;
@@ -74,13 +76,20 @@ class Interpreter implements Expr.IVisitor<Type> {
   }
 
   public visitVariableExpr(expr: Expr.Variable): Type {
-    return this.environment.get(expr.name);
+    return this.environment.get(expr.name, expr.start, expr.end);
   }
 
   public evaluateExpression(): Type {
-    const value = this.evaluate(this.ast);
-    this.environment.set('_', value);
-    return value;
+    try {
+      const value = this.evaluate(this.ast);
+      this.environment.set('_', value);
+      return value;
+    } catch (e) {
+      if (e instanceof FcalError) {
+        e.source = this.source;
+      }
+      throw e;
+    }
   }
 
   public visitConversionExpr(expr: Expr.ConversionExpr): Type {
@@ -108,9 +117,9 @@ class Interpreter implements Expr.IVisitor<Type> {
   public visitTernaryExpr(expr: Expr.Ternary): Type {
     const main = this.evaluate(expr.main) as Type.Numeric;
     if (main.trusty()) {
-      return this.evaluate(expr.texpr);
+      return this.evaluate(expr.trueExpr);
     }
-    return this.evaluate(expr.fexpr);
+    return this.evaluate(expr.falseExpr);
   }
 
   public visitLogicalExpr(expr: Expr.Logical): Type {

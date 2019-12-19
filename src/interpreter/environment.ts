@@ -34,12 +34,12 @@ class Environment {
    * @param {String} key variable name
    * @throws {FcalError} Error if variable is not available
    */
-  public get(key: string): Type {
+  public get(key: string, start?: number, end?: number): Type {
     const v = this.values.get(key) || this.constants.get(key);
     if (v) {
       return v;
     }
-    throw new FcalError(`Undefined variable ${key}`);
+    throw new FcalError(`Undefined variable ${key}`, start, end);
   }
 
   /**

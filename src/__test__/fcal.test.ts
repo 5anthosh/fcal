@@ -18,14 +18,6 @@ test('Divide By Zero', () => {
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('Infinity'));
 });
 
-test('Power result in imaginary number', () => {
-  const expression = '(-2)^2.5';
-  const error = 'Pow of operation results in complex number and complex is not supported yet';
-  expect(() => {
-    Fcal.eval(expression);
-  }).toThrow(error);
-});
-
 test('Phrases', () => {
   const expression =
     '1 add 2 ADd 3 mUl 5 MINUS 4 * (1 - 2) DIVIDE 3.4 - (-1) + (PLUS 1) + 1.000 / 1.000\
@@ -131,29 +123,6 @@ test('Expression Sync', () => {
   expect(expr.evaluate()).toStrictEqual(new Type.BNumber('131.94689145077131601'));
 });
 
-test('Invalid number literal', () => {
-  const expression = '1E + 23';
-  const error = new Error("Expecting number after E but got ' '");
-  error.name = 'FcalError [0, 2]';
-  expect(() => {
-    Fcal.eval(expression);
-  }).toThrowError(error);
-
-  const expression1 = '1.23e';
-  const error1 = new Error("Expecting number after e but got '\n'");
-  error1.name = 'FcalError [0, 5]';
-  expect(() => {
-    Fcal.eval(expression1);
-  }).toThrowError(error1);
-
-  const expression2 = '23.45E+*34';
-  const error2 = new Error("Expecting number after + but got '*'");
-  error2.name = 'FcalError [0, 7]';
-  expect(() => {
-    Fcal.eval(expression2);
-  }).toThrowError(error2);
-});
-
 test('Temperature', () => {
   const expression = '23432 F + 0.2 C * 9 F / 4 K';
   let unit = Fcal.getUnit('F');
@@ -188,32 +157,6 @@ test('Infinity', () => {
   const expression =
     'Infinity + Infinity - (-Infinity) + (1/0)% of 342 * Infinity + 23 / +++ Infinity + 23/0/0 + 45 mod 0xaa / 0.00';
   expect(Fcal.eval(expression).toString()).toStrictEqual('Infinity');
-
-  expect(() => {
-    Fcal.eval('---Infinity + 1/0');
-  }).toThrowError('Subtraction between Infinity is indeterminate');
-
-  expect(() => {
-    Fcal.eval('---Infinity - -(45 * 234 mod 0o0)');
-  }).toThrowError('Subtraction between Infinity is indeterminate');
-
-  expect(() => {
-    Fcal.eval('(Infinity * -23) / (12 * (Infinity))');
-  }).toThrowError('Division between Infinity is indeterminate');
-
-  expect(() => {
-    Fcal.eval('(Infinity * -23) //   (12 * (Infinity))');
-  }).toThrowError('Division between Infinity is indeterminate');
-
-  expect(() => {
-    Fcal.eval('(0B10010 % of Infinity) mod (2.2323E-3 ^ Infinity)');
-  }).toThrowError('Modulus between Infinity is indeterminate');
-});
-
-test('Expected expression', () => {
-  expect(() => {
-    Fcal.eval('4+');
-  }).toThrowError('Expect expression but found EOL');
 });
 
 test('ToNumber', () => {

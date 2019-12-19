@@ -313,7 +313,11 @@ class Lexer {
         this.eat();
       }
       if (!Lexer.isDigit(this.peek(0))) {
-        throw new FcalError(`Expecting number after ${c} but got '${this.peek(0)}'`, this.start, this.current);
+        let peekValue = this.peek(0);
+        if (peekValue === '\n') {
+          peekValue = 'EOL';
+        }
+        throw new FcalError(`Expecting number after ${c} but got '${peekValue}'`, this.start, this.current);
       }
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();

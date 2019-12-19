@@ -121,7 +121,7 @@ namespace Type {
       // if both type is same na right variable operation
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
-        // check typerandk to see which will be the return type
+        // check type rank to see which will be the return type
         if (this.TYPE_RANK <= value.TYPE_RANK) {
           return value.New(this.plus(value).n);
         }
@@ -144,7 +144,7 @@ namespace Type {
       // if both type is same na right variable operation
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
-        // check typerandk to see which will be the return type
+        // check type rank to see which will be the return type
         if (this.TYPE_RANK <= value.TYPE_RANK) {
           return value.New(this.mul(value).n);
         }
@@ -166,7 +166,7 @@ namespace Type {
       // if both type is same na right variable operation
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
-        // check typerandk to see which will be the return type
+        // check type rank to see which will be the return type
         if (this.TYPE_RANK <= value.TYPE_RANK) {
           if (this.TYPE_RANK === value.TYPE_RANK) {
             return this.div(value);
@@ -187,7 +187,7 @@ namespace Type {
       if (this.isNegative()) {
         if (!value.n.isInt()) {
           throw new FcalError(
-            `Pow of operation results in complex number and complex is not supported yet`,
+            `Pow of operation results in complex number and complex number is not supported yet`,
             start,
             end,
           );
@@ -198,7 +198,7 @@ namespace Type {
       // if both type is same na right variable operation
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
-        // check typerandk to see which will be the return type
+        // check type rank to see which will be the return type
         if (this.TYPE_RANK <= value.TYPE_RANK) {
           if (this.TYPE_RANK === value.TYPE_RANK) {
             return this.New(this.pow(value).n);
@@ -217,7 +217,7 @@ namespace Type {
       this.start = start;
       this.end = end;
       if (!this.n.isFinite()) {
-        throw new FcalError('Modulus between Infinity is indeterminate', start, end);
+        throw new FcalError('Modulus with Infinity is indeterminate', start, end);
       }
       if (value.isZero()) {
         return new Type.BNumber('Infinity');
@@ -226,7 +226,7 @@ namespace Type {
       // if both type is same na right variable operation
       this.lf = true;
       if (this.TYPE >= value.TYPE) {
-        // check typerandk to see which will be the return type
+        // check type rank to see which will be the return type
         if (this.TYPE_RANK <= value.TYPE_RANK) {
           if (this.TYPE_RANK === value.TYPE_RANK) {
             return this.New(this.mod(value).n);

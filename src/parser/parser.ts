@@ -37,8 +37,15 @@ class Parser {
   }
 
   public parse(): Expr {
-    const expr = this.Stmt();
-    return expr;
+    try {
+      const expr = this.Stmt();
+      return expr;
+    } catch (E) {
+      if (E instanceof FcalError) {
+        E.source = this.source;
+      }
+      throw E;
+    }
   }
 
   private Stmt(): Expr {
@@ -119,13 +126,13 @@ class Parser {
   private ternary(): Expr {
     let expr = this.logical();
     if (this.match([TT.Q])) {
-      const texpr = this.ternary();
+      const trueExpr = this.ternary();
       this.consume(
         TT.DOUBLE_COLON,
         `Expecting ':' in ternary operation but found ${this.peek().type === '\n' ? 'EOL' : this.peek().type}`,
       );
-      const fexpr = this.ternary();
-      expr = new Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
+      const falseExpr = this.ternary();
+      expr = new Expr.Ternary(expr, trueExpr, falseExpr, expr.start, falseExpr.end);
     }
     return expr;
   }

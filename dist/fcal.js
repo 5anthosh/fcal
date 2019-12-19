@@ -363,7 +363,7 @@ var TYPE_RANK;
             // if both type is same na right variable operation
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
+                // check type rank to see which will be the return type
                 if (this.TYPE_RANK <= value.TYPE_RANK) {
                     return value.New(this.plus(value).n);
                 }
@@ -384,7 +384,7 @@ var TYPE_RANK;
             // if both type is same na right variable operation
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
+                // check type rank to see which will be the return type
                 if (this.TYPE_RANK <= value.TYPE_RANK) {
                     return value.New(this.mul(value).n);
                 }
@@ -405,7 +405,7 @@ var TYPE_RANK;
             // if both type is same na right variable operation
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
+                // check type rank to see which will be the return type
                 if (this.TYPE_RANK <= value.TYPE_RANK) {
                     if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.div(value);
@@ -424,7 +424,7 @@ var TYPE_RANK;
             this.end = end;
             if (this.isNegative()) {
                 if (!value.n.isInt()) {
-                    throw new fcal_1.FcalError("Pow of operation results in complex number and complex is not supported yet", start, end);
+                    throw new fcal_1.FcalError("Pow of operation results in complex number and complex number is not supported yet", start, end);
                 }
             }
             // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
@@ -432,7 +432,7 @@ var TYPE_RANK;
             // if both type is same na right variable operation
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
+                // check type rank to see which will be the return type
                 if (this.TYPE_RANK <= value.TYPE_RANK) {
                     if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.New(this.pow(value).n);
@@ -450,7 +450,7 @@ var TYPE_RANK;
             this.start = start;
             this.end = end;
             if (!this.n.isFinite()) {
-                throw new fcal_1.FcalError('Modulus between Infinity is indeterminate', start, end);
+                throw new fcal_1.FcalError('Modulus with Infinity is indeterminate', start, end);
             }
             if (value.isZero()) {
                 return new Type.BNumber('Infinity');
@@ -459,7 +459,7 @@ var TYPE_RANK;
             // if both type is same na right variable operation
             this.lf = true;
             if (this.TYPE >= value.TYPE) {
-                // check typerandk to see which will be the return type
+                // check type rank to see which will be the return type
                 if (this.TYPE_RANK <= value.TYPE_RANK) {
                     if (this.TYPE_RANK === value.TYPE_RANK) {
                         return this.New(this.mod(value).n);
@@ -1743,6 +1743,9 @@ var Expression = /** @class */ (function () {
     Expression.prototype.toObj = function () {
         return this.interpreter.toObj();
     };
+    Expression.prototype.toString = function () {
+        return this.getAST();
+    };
     return Expression;
 }());
 exports.Expression = Expression;
@@ -1766,6 +1769,21 @@ var FcalError = /** @class */ (function (_super) {
         _this.name = "FcalError [" + _this.start + ", " + _this.end + "]";
         return _this;
     }
+    FcalError.mark = function (start, end) {
+        return '^'.repeat(start === end ? 1 : end - start).padStart(end, '.');
+    };
+    /**
+     * info gets more information about FcalError
+     */
+    FcalError.prototype.info = function () {
+        var values = Array();
+        values.push("err: " + this.message + "\n");
+        if (this.source !== undefined && this.start !== undefined && this.end !== undefined) {
+            values.push("| " + this.source);
+            values.push("| " + FcalError.mark(this.start, this.end) + "\n");
+        }
+        return values.join('');
+    };
     return FcalError;
 }(Error));
 exports.FcalError = FcalError;
@@ -1902,7 +1920,7 @@ var Constant = /** @class */ (function () {
     };
     /**
      * create or assign a constant with value
-     * @param {string} key constatn name
+     * @param {string} key constants name
      * @param  {Type | Big.Decimal | number | string} value value
      */
     Constant.prototype.set = function (key, value) {
@@ -1979,12 +1997,12 @@ var Environment = /** @class */ (function () {
      * @param {String} key variable name
      * @throws {FcalError} Error if variable is not available
      */
-    Environment.prototype.get = function (key) {
+    Environment.prototype.get = function (key, start, end) {
         var v = this.values.get(key) || this.constants.get(key);
         if (v) {
             return v;
         }
-        throw new fcal_1.FcalError("Undefined variable " + key);
+        throw new fcal_1.FcalError("Undefined variable " + key, start, end);
     };
     /**
      * create or assign a variable with value
@@ -7093,6 +7111,7 @@ var Interpreter = /** @class */ (function () {
         if (typeof source === 'string') {
             var parser = new parser_1.Parser(source, phrases, units, c, scale, environment.symbolTable);
             this.ast = parser.parse();
+            this.source = source;
             return;
         }
         this.ast = source;
@@ -7131,12 +7150,20 @@ var Interpreter = /** @class */ (function () {
         return value;
     };
     Interpreter.prototype.visitVariableExpr = function (expr) {
-        return this.environment.get(expr.name);
+        return this.environment.get(expr.name, expr.start, expr.end);
     };
     Interpreter.prototype.evaluateExpression = function () {
-        var value = this.evaluate(this.ast);
-        this.environment.set('_', value);
-        return value;
+        try {
+            var value = this.evaluate(this.ast);
+            this.environment.set('_', value);
+            return value;
+        }
+        catch (e) {
+            if (e instanceof fcal_1.FcalError) {
+                e.source = this.source;
+            }
+            throw e;
+        }
     };
     Interpreter.prototype.visitConversionExpr = function (expr) {
         var value = this.evaluate(expr.expression);
@@ -7161,9 +7188,9 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitTernaryExpr = function (expr) {
         var main = this.evaluate(expr.main);
         if (main.trusty()) {
-            return this.evaluate(expr.texpr);
+            return this.evaluate(expr.trueExpr);
         }
-        return this.evaluate(expr.fexpr);
+        return this.evaluate(expr.falseExpr);
     };
     Interpreter.prototype.visitLogicalExpr = function (expr) {
         var left = this.evaluate(expr.left);
@@ -7275,46 +7302,46 @@ var JSONParser = /** @class */ (function () {
     JSONParser.prototype.createExpr = function (ast) {
         var type = ast.type;
         switch (type) {
-            case toJSON_1.JSONTYPES.BINARY:
+            case toJSON_1.JSON_TYPES.BINARY:
                 if (ast.right && ast.left && ast.operator) {
                     var left = this.createExpr(ast.left);
                     var right = this.createExpr(ast.right);
                     return new expr_1.Expr.Binary(left, ast.operator, right, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.GROUP:
+            case toJSON_1.JSON_TYPES.GROUP:
                 if (ast.value && typeof ast.value !== 'string') {
                     var expr = this.createExpr(ast.value);
                     return new expr_1.Expr.Grouping(expr, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.LITERAL:
+            case toJSON_1.JSON_TYPES.LITERAL:
                 if (ast.value && typeof ast.value === 'string') {
                     return new expr_1.Expr.Literal(new datatype_1.Type.BNumber(ast.value), ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.UNARY:
+            case toJSON_1.JSON_TYPES.UNARY:
                 if (ast.operator && ast.value && typeof ast.value !== 'string') {
                     var expr = this.createExpr(ast.value);
                     return new expr_1.Expr.Unary(ast.operator, expr, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.PERCENTAGE:
+            case toJSON_1.JSON_TYPES.PERCENTAGE:
                 if (ast.value && typeof ast.value !== 'string') {
                     var expr = this.createExpr(ast.value);
                     return new expr_1.Expr.Percentage(expr, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.UNIT:
+            case toJSON_1.JSON_TYPES.UNIT:
                 if (ast.phrase && ast.value && typeof ast.value !== 'string') {
-                    var unitmeta = this.units.get(ast.phrase);
-                    if (unitmeta) {
+                    var unitMeta = this.units.get(ast.phrase);
+                    if (unitMeta) {
                         var expr = this.createExpr(ast.value);
-                        return new expr_1.Expr.UnitExpr(expr, ast.phrase, unitmeta, ast.start, ast.end);
+                        return new expr_1.Expr.UnitExpr(expr, ast.phrase, unitMeta, ast.start, ast.end);
                     }
                 }
                 break;
-            case toJSON_1.JSONTYPES.CONVERSION:
+            case toJSON_1.JSON_TYPES.CONVERSION:
                 if (ast.value && typeof ast.value !== 'string') {
                     var value = this.createExpr(ast.value);
                     if (ast.unit) {
@@ -7337,7 +7364,7 @@ var JSONParser = /** @class */ (function () {
                     }
                 }
                 break;
-            case toJSON_1.JSONTYPES.ASSIGN:
+            case toJSON_1.JSON_TYPES.ASSIGN:
                 if (ast.value && typeof ast.value !== 'string') {
                     var value = this.createExpr(ast.value);
                     if (ast.variable) {
@@ -7345,12 +7372,12 @@ var JSONParser = /** @class */ (function () {
                     }
                 }
                 break;
-            case toJSON_1.JSONTYPES.VARIABLE:
+            case toJSON_1.JSON_TYPES.VARIABLE:
                 if (ast.name) {
                     return new expr_1.Expr.Variable(ast.name, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.CALL:
+            case toJSON_1.JSON_TYPES.CALL:
                 if (ast.name) {
                     var exprs = Array();
                     if (ast.args) {
@@ -7362,19 +7389,19 @@ var JSONParser = /** @class */ (function () {
                     }
                 }
                 break;
-            case toJSON_1.JSONTYPES.LOGICAL:
+            case toJSON_1.JSON_TYPES.LOGICAL:
                 if (ast.right && ast.left && ast.operator) {
                     var left = this.createExpr(ast.left);
                     var right = this.createExpr(ast.right);
                     return new expr_1.Expr.Logical(left, ast.operator, right, ast.start, ast.end);
                 }
                 break;
-            case toJSON_1.JSONTYPES.TERNARY:
-                if (ast.main && ast.texpr && ast.fexpr) {
+            case toJSON_1.JSON_TYPES.TERNARY:
+                if (ast.main && ast.trueExpr && ast.falseExpr) {
                     var main = this.createExpr(ast.main);
-                    var texpr = this.createExpr(ast.texpr);
-                    var fexpr = this.createExpr(ast.fexpr);
-                    return new expr_1.Expr.Ternary(main, texpr, fexpr, ast.start, ast.end);
+                    var trueExpr = this.createExpr(ast.trueExpr);
+                    var falseExpr = this.createExpr(ast.falseExpr);
+                    return new expr_1.Expr.Ternary(main, trueExpr, falseExpr, ast.start, ast.end);
                 }
                 break;
         }
@@ -7452,7 +7479,7 @@ var JSON_TYPES;
     JSON_TYPES["LOGICAL"] = "logical";
     JSON_TYPES["TERNARY"] = "ternary";
 })(JSON_TYPES || (JSON_TYPES = {}));
-exports.JSONTYPES = JSON_TYPES;
+exports.JSON_TYPES = JSON_TYPES;
 var ToJSON = /** @class */ (function () {
     function ToJSON(ast) {
         this.ast = ast;
@@ -7516,10 +7543,10 @@ var ToJSON = /** @class */ (function () {
         return { type: JSON_TYPES.LOGICAL, right: right, left: left, operator: operator };
     };
     ToJSON.prototype.visitTernaryExpr = function (expr) {
-        var texpr = this.evaluate(expr.texpr);
-        var fexpr = this.evaluate(expr.fexpr);
+        var trueExpr = this.evaluate(expr.trueExpr);
+        var falseExpr = this.evaluate(expr.falseExpr);
         var main = this.evaluate(expr.main);
-        return { type: JSON_TYPES.TERNARY, main: main, texpr: texpr, fexpr: fexpr };
+        return { type: JSON_TYPES.TERNARY, main: main, trueExpr: trueExpr, falseExpr: falseExpr };
     };
     ToJSON.prototype.evaluate = function (expr) {
         var ast = expr.accept(this);
@@ -7548,8 +7575,16 @@ var Parser = /** @class */ (function () {
         this.symbolTable = symbolTable;
     }
     Parser.prototype.parse = function () {
-        var expr = this.Stmt();
-        return expr;
+        try {
+            var expr = this.Stmt();
+            return expr;
+        }
+        catch (E) {
+            if (E instanceof fcal_1.FcalError) {
+                E.source = this.source;
+            }
+            throw E;
+        }
     };
     Parser.prototype.Stmt = function () {
         var expr = this.assignment();
@@ -7615,10 +7650,10 @@ var Parser = /** @class */ (function () {
     Parser.prototype.ternary = function () {
         var expr = this.logical();
         if (this.match([token_1.TT.Q])) {
-            var texpr = this.ternary();
+            var trueExpr = this.ternary();
             this.consume(token_1.TT.DOUBLE_COLON, "Expecting ':' in ternary operation but found " + (this.peek().type === '\n' ? 'EOL' : this.peek().type));
-            var fexpr = this.ternary();
-            expr = new expr_1.Expr.Ternary(expr, texpr, fexpr, expr.start, fexpr.end);
+            var falseExpr = this.ternary();
+            expr = new expr_1.Expr.Ternary(expr, trueExpr, falseExpr, expr.start, falseExpr.end);
         }
         return expr;
     };
@@ -7876,11 +7911,11 @@ exports.Expr = Expr;
     Expr.Binary = Binary;
     var Ternary = /** @class */ (function (_super) {
         __extends(Ternary, _super);
-        function Ternary(main, texpr, rexpr, start, end) {
+        function Ternary(main, trueExpr, falseExpr, start, end) {
             var _this = _super.call(this, start, end) || this;
             _this.main = main;
-            _this.texpr = texpr;
-            _this.fexpr = rexpr;
+            _this.trueExpr = trueExpr;
+            _this.falseExpr = falseExpr;
             return _this;
         }
         Ternary.prototype.accept = function (visitor) {
@@ -8294,7 +8329,11 @@ var Lexer = /** @class */ (function () {
                 this.eat();
             }
             if (!Lexer.isDigit(this.peek(0))) {
-                throw new fcal_1.FcalError("Expecting number after " + c + " but got '" + this.peek(0) + "'", this.start, this.current);
+                var peekValue = this.peek(0);
+                if (peekValue === '\n') {
+                    peekValue = 'EOL';
+                }
+                throw new fcal_1.FcalError("Expecting number after " + c + " but got '" + peekValue + "'", this.start, this.current);
             }
             while (Lexer.isDigit(this.peek(0))) {
                 this.eat();
@@ -8361,10 +8400,10 @@ var ASTPrinter = /** @class */ (function () {
     ASTPrinter.prototype.visitTernaryExpr = function (expr) {
         this.depth += ASTPrinter.tab;
         var main = this.evaluate(expr.main);
-        var texpr = this.evaluate(expr.texpr);
-        var fexpr = this.evaluate(expr.fexpr);
+        var trueExpr = this.evaluate(expr.trueExpr);
+        var falseExpr = this.evaluate(expr.falseExpr);
         this.depth -= ASTPrinter.tab;
-        return ASTPrinter.createPrefix(this.depth, 'TERNARY') + "\n|\n" + main + texpr + fexpr;
+        return ASTPrinter.createPrefix(this.depth, 'TERNARY') + "\n|\n" + main + trueExpr + falseExpr;
     };
     ASTPrinter.prototype.visitCallExpr = function (expr) {
         var str = ASTPrinter.createPrefix(this.depth, 'FUNCTION') + " ==> " + expr.name + " ";

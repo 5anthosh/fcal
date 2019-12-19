@@ -43,14 +43,14 @@ namespace Expr {
 
   export class Ternary extends Expr {
     public main: Expr;
-    public texpr: Expr;
-    public fexpr: Expr;
+    public trueExpr: Expr;
+    public falseExpr: Expr;
 
-    constructor(main: Expr, texpr: Expr, rexpr: Expr, start?: number, end?: number) {
+    constructor(main: Expr, trueExpr: Expr, falseExpr: Expr, start?: number, end?: number) {
       super(start, end);
       this.main = main;
-      this.texpr = texpr;
-      this.fexpr = rexpr;
+      this.trueExpr = trueExpr;
+      this.falseExpr = falseExpr;
     }
 
     public accept<T>(visitor: Expr.IVisitor<T>): T {

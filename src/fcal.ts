@@ -330,6 +330,10 @@ class Expression {
  * FcalError represents Error in Fcal
  */
 class FcalError extends Error {
+  private static mark(start: number, end: number): string {
+    return '^'.repeat(start === end ? 1 : end - start).padStart(end, '.');
+  }
+  public source?: string;
   public start?: number;
   public end?: number;
 
@@ -346,6 +350,18 @@ class FcalError extends Error {
       this.end = start;
     }
     this.name = `FcalError [${this.start}, ${this.end}]`;
+  }
+  /**
+   * info gets more information about FcalError
+   */
+  public info(): string {
+    const values: string[] = Array<string>();
+    values.push(`err: ${this.message}\n`);
+    if (this.source !== undefined && this.start !== undefined && this.end !== undefined) {
+      values.push(`| ${this.source}`);
+      values.push(`| ${FcalError.mark(this.start, this.end)}\n`);
+    }
+    return values.join('');
   }
 }
 

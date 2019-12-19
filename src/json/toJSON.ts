@@ -18,27 +18,28 @@ enum JSON_TYPES {
   TERNARY = 'ternary',
 }
 
-interface IJSON {
+// tslint:disable-next-line: interface-name
+interface InterfaceJSON {
   type: JSON_TYPES;
-  right?: IJSON;
-  left?: IJSON;
+  right?: InterfaceJSON;
+  left?: InterfaceJSON;
   operator?: Token;
-  value?: IJSON | string;
+  value?: InterfaceJSON | string;
   phrase?: string;
   unit?: string;
   ns?: string;
   converter?: string;
   variable?: string;
   name?: string;
-  main?: IJSON;
-  texpr?: IJSON;
-  fexpr?: IJSON;
+  main?: InterfaceJSON;
+  trueExpr?: InterfaceJSON;
+  falseExpr?: InterfaceJSON;
   start?: number;
   end?: number;
-  args?: IJSON[];
+  args?: InterfaceJSON[];
 }
 
-class ToJSON implements Expr.IVisitor<IJSON> {
+class ToJSON implements Expr.IVisitor<InterfaceJSON> {
   private ast: Expr;
 
   constructor(ast: Expr) {
@@ -54,34 +55,34 @@ class ToJSON implements Expr.IVisitor<IJSON> {
     return this.evaluate(this.ast);
   }
 
-  public visitBinaryExpr(expr: Expr.Binary): IJSON {
+  public visitBinaryExpr(expr: Expr.Binary): InterfaceJSON {
     const right = this.evaluate(expr.right);
     const left = this.evaluate(expr.left);
     const operator = expr.operator;
     return { type: JSON_TYPES.BINARY, right, left, operator };
   }
 
-  public visitGroupingExpr(expr: Expr.Grouping): IJSON {
+  public visitGroupingExpr(expr: Expr.Grouping): InterfaceJSON {
     return { type: JSON_TYPES.GROUP, value: this.evaluate(expr.expression) };
   }
 
-  public visitLiteralExpr(expr: Expr.Literal): IJSON {
+  public visitLiteralExpr(expr: Expr.Literal): InterfaceJSON {
     return { type: JSON_TYPES.LITERAL, value: expr.value.print() };
   }
 
-  public visitUnaryExpr(expr: Expr.Unary): IJSON {
+  public visitUnaryExpr(expr: Expr.Unary): InterfaceJSON {
     return { type: JSON_TYPES.UNARY, operator: expr.operator, value: this.evaluate(expr.right) };
   }
 
-  public visitPercentageExpr(expr: Expr.Percentage): IJSON {
+  public visitPercentageExpr(expr: Expr.Percentage): InterfaceJSON {
     return { type: JSON_TYPES.PERCENTAGE, value: this.evaluate(expr.expression) };
   }
 
-  public visitUnitExpr(expr: Expr.UnitExpr): IJSON {
+  public visitUnitExpr(expr: Expr.UnitExpr): InterfaceJSON {
     return { type: JSON_TYPES.UNIT, phrase: expr.phrase, value: this.evaluate(expr.expression) };
   }
 
-  public visitConversionExpr(expr: Expr.ConversionExpr): IJSON {
+  public visitConversionExpr(expr: Expr.ConversionExpr): InterfaceJSON {
     const value = this.evaluate(expr.expression);
     if (expr.to instanceof UnitMeta) {
       return { type: JSON_TYPES.CONVERSION, unit: expr.name, value };
@@ -92,40 +93,40 @@ class ToJSON implements Expr.IVisitor<IJSON> {
     return { type: JSON_TYPES.CONVERSION, converter: expr.name, value };
   }
 
-  public visitAssignExpr(expr: Expr.Assign): IJSON {
+  public visitAssignExpr(expr: Expr.Assign): InterfaceJSON {
     return { type: JSON_TYPES.ASSIGN, variable: expr.name, value: this.evaluate(expr.value) };
   }
 
-  public visitVariableExpr(expr: Expr.Variable): IJSON {
+  public visitVariableExpr(expr: Expr.Variable): InterfaceJSON {
     return { type: JSON_TYPES.VARIABLE, name: expr.name };
   }
 
-  public visitCallExpr(expr: Expr.Call): IJSON {
-    const args = Array<IJSON>();
+  public visitCallExpr(expr: Expr.Call): InterfaceJSON {
+    const args = Array<InterfaceJSON>();
     for (const arg of expr.argument) {
       args.push(this.evaluate(arg));
     }
     return { type: JSON_TYPES.CALL, name: expr.name, args };
   }
 
-  public visitLogicalExpr(expr: Expr.Logical): IJSON {
+  public visitLogicalExpr(expr: Expr.Logical): InterfaceJSON {
     const right = this.evaluate(expr.left);
     const left = this.evaluate(expr.left);
     const operator = expr.operator;
     return { type: JSON_TYPES.LOGICAL, right, left, operator };
   }
 
-  public visitTernaryExpr(expr: Expr.Ternary): IJSON {
-    const texpr = this.evaluate(expr.texpr);
-    const fexpr = this.evaluate(expr.fexpr);
+  public visitTernaryExpr(expr: Expr.Ternary): InterfaceJSON {
+    const trueExpr = this.evaluate(expr.trueExpr);
+    const falseExpr = this.evaluate(expr.falseExpr);
     const main = this.evaluate(expr.main);
-    return { type: JSON_TYPES.TERNARY, main, texpr, fexpr };
+    return { type: JSON_TYPES.TERNARY, main, trueExpr, falseExpr };
   }
 
-  private evaluate(expr: Expr): IJSON {
+  private evaluate(expr: Expr): InterfaceJSON {
     const ast = expr.accept(this);
     return { start: expr.start, end: expr.end, ...ast };
   }
 }
 
-export { ToJSON, JSON_TYPES, IJSON };
+export { ToJSON, JSON_TYPES, InterfaceJSON };

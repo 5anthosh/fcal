@@ -108,6 +108,44 @@ var value = fcal.evaluate('1024 m + 6.1%');
 console.log(value); // 1086.464 Meters
 ```
 
+### Scales
+
+You can use Thousand `k`, million `M` and billion `B` scales.
+
+```js
+var value = Fcal.eval('-0x14 M');
+console.log(value); //-20000000
+```
+
+### Logical operation
+
+Fcal support various logical operations
+
+```js
+var value = Fcal.eval('234 cm > 1 m and true ? 34: 100');
+console.log(value); // 34
+```
+
+### Syntax errors
+
+Fcal will throw exception if there is error with formula expression
+
+```js
+try {
+  var value = Fcal.eval('343 + 23.45E+*34');
+} catch (e) {
+  if (e instanceof FcalError) {
+    console.log(e.info());
+  }
+}
+
+/*
+err: Expecting number after + but got '*'
+| 343 + 23.45E+*34
+| ......^^^^^^^
+*/
+```
+
 ### Using expression
 
 You can change state of expression , re evaluate it

@@ -186,7 +186,10 @@ class Fcal {
   }
 
   private static setDefaultScales(): void {
-    this.useScales({ k: 1000, M: 10_00_000, B: 1_00_00_000 });
+    const thousand = 1000;
+    const million = 10_00_000;
+    const billion = 1_00_00_000;
+    this.useScales({ k: thousand, M: million, B: billion, thousand, million, billion });
   }
 
   private static setDefaultConverter() {

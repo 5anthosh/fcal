@@ -5,6 +5,10 @@ test('Number Literal', () => {
   expect(Fcal.eval('-7k')).toStrictEqual(Type.BNumber.New(-7000));
   expect(Fcal.eval('-0x14 M')).toStrictEqual(Type.BNumber.New(-200_00_000));
   expect(Fcal.eval('0b0 B + 0')).toStrictEqual(Type.BNumber.New(0));
+
+  expect(Fcal.eval('-7 thousand')).toStrictEqual(Type.BNumber.New(-7000));
+  expect(Fcal.eval('-0x14 million')).toStrictEqual(Type.BNumber.New(-200_00_000));
+  expect(Fcal.eval('0b0 billion + 0')).toStrictEqual(Type.BNumber.New(0));
 });
 
 test('Units', () => {

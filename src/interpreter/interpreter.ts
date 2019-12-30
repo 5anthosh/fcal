@@ -8,13 +8,13 @@ import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit, UnitMeta } from '../types/units';
 import { Converter } from './converter';
-import { EnvInputType, Environment } from './environment';
+import { Environment } from './environment';
 import { FcalFunction } from './function';
 import { Scale } from './scale';
 
 class Interpreter implements Expr.IVisitor<Type> {
+  public readonly environment: Environment;
   private readonly ast: Expr;
-  private readonly environment: Environment;
   private readonly source?: string;
   constructor(
     source: string | Expr,
@@ -206,11 +206,6 @@ class Interpreter implements Expr.IVisitor<Type> {
     }
     throw new FcalError('Expecting numeric value in percentage', expr.start, expr.end);
   }
-
-  public setValues(values: EnvInputType) {
-    this.environment.use(values);
-  }
-
   private evaluate(expr: Expr): Type {
     const ast = expr.accept(this);
     return ast;

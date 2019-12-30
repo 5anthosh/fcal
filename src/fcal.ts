@@ -264,7 +264,12 @@ class Fcal {
     this.environment.use(values);
   }
 
-  public fromJSON(source: string) {
+  /**
+   * Import expression from JSON
+   * @param {string} source json
+   * @returns {Expression}
+   */
+  public fromJSON(source: string): Expression {
     const parser = new JSONParser(source, Fcal.units, Fcal.c);
     const symbolTable = this.lst.clone();
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
@@ -306,7 +311,7 @@ class Expression {
    * @param {Object | Map} values variables
    */
   public setValues(values: EnvInputType): void {
-    this.interpreter.setValues(values);
+    this.interpreter.environment.use(values);
   }
 
   public getAST(): string {

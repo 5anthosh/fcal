@@ -105,7 +105,7 @@ test('Singular and Plural units phrases', () => {
 
 test('Add new unit type to Existing Unit', () => {
   Fcal.UseUnit(
-    new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months'])
+    new Unit(Unit.TIME_ID, 2592000, 'month', ['month', 'months'])
       .Singular('month')
       .Plural('months')
       .setBias((): number => 0),
@@ -118,7 +118,7 @@ test('Add new unit type to Existing Unit', () => {
   expect(() =>
     Fcal.UseUnit({
       bias: (): Decimal => new Decimal(0),
-      id: Unit.LENGTHID,
+      id: Unit.LENGTH_ID,
       phrases: ['news', 'news2'],
       ratio: 1.2,
       type: 'new-length',
@@ -169,7 +169,7 @@ test('Create whole new unit', () => {
 
 test('Add already existing unit', () => {
   expect(() => {
-    Fcal.UseUnit(new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
+    Fcal.UseUnit(new Unit(Unit.TIME_ID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
   }).toThrowError('month is already used in unit');
 });
 

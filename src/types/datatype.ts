@@ -3,17 +3,6 @@ import { FcalError } from '../fcal';
 import { NumberSystem } from './numberSystem';
 import { UnitMeta } from './units';
 
-abstract class Type {
-  public abstract TYPE: DATATYPE;
-  public abstract TYPE_RANK: TYPE_RANK;
-  public abstract print(): string;
-  public abstract toNumber(): number;
-  public abstract trusty(): boolean;
-  public toString(): string {
-    return this.print();
-  }
-}
-
 export enum DATATYPE {
   NUMBER,
   UNIT,
@@ -23,6 +12,17 @@ export enum TYPE_RANK {
   PERCENTAGE,
   NUMBER,
   UNIT,
+}
+abstract class Type {
+  public static typeVsStr: { [index in DATATYPE]: string } = { 0: 'number', 1: 'unit', 2: 'percentage' };
+  public abstract TYPE: DATATYPE;
+  public abstract TYPE_RANK: TYPE_RANK;
+  public abstract print(): string;
+  public abstract toNumber(): number;
+  public abstract trusty(): boolean;
+  public toString(): string {
+    return this.print();
+  }
 }
 
 /**
@@ -34,8 +34,6 @@ namespace Type {
     public n: Decimal;
     public lf: boolean;
     public ns: NumberSystem;
-    public start?: number;
-    public end?: number;
 
     constructor(value: string | Decimal | number) {
       super();
@@ -108,13 +106,11 @@ namespace Type {
       return value.nEq(this);
     }
 
-    public Add(value: Numeric, start?: number, end?: number): Numeric {
-      this.start = start;
-      this.end = end;
+    public Add(value: Numeric): Numeric {
       if (!this.n.isFinite() && !value.n.isFinite()) {
         if (!((this.n.isNegative() && value.n.isNegative()) || (this.n.isPositive() && value.n.isPositive()))) {
           // console.log(left.number, right.number);
-          throw new FcalError('Subtraction between Infinity is indeterminate', start, end);
+          throw new FcalError('Subtraction between Infinity is indeterminate');
         }
       }
       // check type to see which datatype operation
@@ -133,13 +129,11 @@ namespace Type {
       return this.New(value.plus(this).n);
     }
 
-    public Sub(value: Numeric, start?: number, end?: number): Numeric {
-      return this.Add(value.negated(), start, end);
+    public Sub(value: Numeric): Numeric {
+      return this.Add(value.negated());
     }
 
-    public times(value: Numeric, start?: number, end?: number): Numeric {
-      this.start = start;
-      this.end = end;
+    public times(value: Numeric): Numeric {
       // check type to see which datatype operation
       // if both type is same na right variable operation
       this.lf = true;
@@ -156,11 +150,9 @@ namespace Type {
       return this.New(value.mul(this).n);
     }
 
-    public divide(value: Numeric, start?: number, end?: number): Numeric {
-      this.start = start;
-      this.end = end;
+    public divide(value: Numeric): Numeric {
       if (!this.n.isFinite() && !value.n.isFinite()) {
-        throw new FcalError('Division between Infinity is indeterminate', start, end);
+        throw new FcalError('Division between Infinity is indeterminate');
       }
       // check type to see which datatype operation
       // if both type is same na right variable operation
@@ -181,16 +173,10 @@ namespace Type {
       return this.New(value.div(this).n);
     }
 
-    public power(value: Numeric, start?: number, end?: number): Numeric {
-      this.start = start;
-      this.end = end;
+    public power(value: Numeric): Numeric {
       if (this.isNegative()) {
         if (!value.n.isInt()) {
-          throw new FcalError(
-            `Pow of operation results in complex number and complex number is not supported yet`,
-            start,
-            end,
-          );
+          throw new FcalError(`Pow of operation results in complex number and complex number is not supported yet`);
         }
       }
       // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
@@ -213,11 +199,9 @@ namespace Type {
       return this.New(value.pow(this).n);
     }
 
-    public modulo(value: Numeric, start?: number, end?: number): Numeric {
-      this.start = start;
-      this.end = end;
+    public modulo(value: Numeric): Numeric {
       if (!this.n.isFinite()) {
-        throw new FcalError('Modulus with Infinity is indeterminate', start, end);
+        throw new FcalError('Modulus with Infinity is indeterminate');
       }
       if (value.isZero()) {
         return new Type.BNumber('Infinity');

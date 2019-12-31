@@ -253,6 +253,52 @@ test('Change value of Constant', () => {
     if (e instanceof FcalError) {
       expect(e.info()).toStrictEqual(`\
 err: ${errorMessage}
+| ${expression}
+| ^^^^^^^^^^^
+`);
+    }
+  }
+});
+
+test('Strict mode units', () => {
+  const expression = '23% + 34 cm + 5 byte';
+  const errorMessage = "Unexpected '+' operation between different units (LENGTH, DIGITAL STORAGE)";
+  const fcal = new Fcal();
+  fcal.setStrict(true);
+  expect(() => {
+    fcal.evaluate(expression);
+  }).toThrowError(errorMessage);
+  try {
+    fcal.evaluate(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ^^^^^^^^^^^^^^^^^^^^
+`);
+    }
+  }
+});
+
+test('Strict mode types', () => {
+  const expression = '23% + 34 cm + 1';
+  const errorMessage = "Unexpected '+' operation between different types (unit, number)";
+  const fcal = new Fcal();
+  fcal.setStrict(true);
+  expect(() => {
+    fcal.evaluate(expression);
+  }).toThrowError(errorMessage);
+  try {
+    fcal.evaluate(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ^^^^^^^^^^^^^^^
 `);
     }
   }

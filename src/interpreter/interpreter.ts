@@ -16,6 +16,7 @@ class Interpreter implements Expr.IVisitor<Type> {
   public readonly environment: Environment;
   private readonly ast: Expr;
   private readonly source?: string;
+  private strict: boolean;
   constructor(
     source: string | Expr,
     phrases: Phrases,
@@ -23,8 +24,10 @@ class Interpreter implements Expr.IVisitor<Type> {
     environment: Environment,
     c: Converter,
     scale: Scale,
+    strict: boolean,
   ) {
     this.environment = environment;
+    this.strict = strict;
     if (typeof source === 'string') {
       const parser = new Parser(source, phrases, units, c, scale, environment.symbolTable);
       this.ast = parser.parse();
@@ -133,6 +136,9 @@ class Interpreter implements Expr.IVisitor<Type> {
   public visitBinaryExpr(expr: Expr.Binary): Type {
     let left = this.evaluate(expr.left) as Type.Numeric;
     const right = this.evaluate(expr.right) as Type.Numeric;
+    if (this.strict) {
+      this.checkInvalidOperation(expr.operator.type, [left, right]);
+    }
     switch (expr.operator.type) {
       case TT.EQUAL_EQUAL:
         return left.EQ(right);
@@ -155,21 +161,21 @@ class Interpreter implements Expr.IVisitor<Type> {
       case TT.LESS_EQUAL_EQUAL:
         return new Type.FBoolean(left.n.lte(right.n));
       case TT.PLUS:
-        return left.Add(right, expr.left.start, expr.right.end);
+        return left.Add(right);
       case TT.MINUS:
-        return left.Sub(right, expr.left.start, expr.right.end);
+        return left.Sub(right);
       case TT.TIMES:
-        return left.times(right, expr.left.start, expr.right.end);
+        return left.times(right);
       case TT.FLOOR_DIVIDE:
-        const v = left.divide(right, expr.left.start, expr.right.end);
+        const v = left.divide(right);
         v.n = v.n.floor();
         return v;
       case TT.SLASH:
-        return left.divide(right, expr.left.start, expr.right.end);
+        return left.divide(right);
       case TT.MOD:
-        return left.modulo(right, expr.left.start, expr.right.end);
+        return left.modulo(right);
       case TT.CAP:
-        return left.power(right, expr.left.start, expr.right.end);
+        return left.power(right);
       case TT.OF:
         left = new Type.Percentage(left.n);
         const per = left as Type.Percentage;
@@ -207,8 +213,48 @@ class Interpreter implements Expr.IVisitor<Type> {
     throw new FcalError('Expecting numeric value in percentage', expr.start, expr.end);
   }
   private evaluate(expr: Expr): Type {
-    const ast = expr.accept(this);
+    const ast = expr.eval(this);
     return ast;
+  }
+  private checkInvalidOperation(operation: TT, values: Type[]): void {
+    let checkValue;
+    for (const value of values) {
+      if (value instanceof Type.Percentage) {
+        continue;
+      }
+      if (!checkValue) {
+        checkValue = value;
+        continue;
+      }
+      if (checkValue.TYPE !== value.TYPE) {
+        switch (operation) {
+          case TT.TIMES:
+          case TT.SLASH:
+          case TT.FLOOR_DIVIDE:
+          case TT.MOD:
+          case TT.PERCENTAGE:
+          case TT.CAP:
+          case TT.LESS_EQUAL_EQUAL:
+          case TT.GREATER_EQUAL_EQUAL:
+          case TT.EQUAL_EQUAL_EQUAL:
+          case TT.NOT_EQUAL_EQUAL:
+            continue;
+          default:
+            throw new FcalError(
+              `Unexpected '${operation}' operation between different types (${Type.typeVsStr[checkValue.TYPE]}, ${
+                Type.typeVsStr[value.TYPE]
+              })`,
+            );
+        }
+      }
+      if (checkValue instanceof Type.UnitNumber && value instanceof Type.UnitNumber) {
+        if (checkValue.unit.id !== value.unit.id) {
+          throw new FcalError(
+            `Unexpected '${operation}' operation between different units (${checkValue.unit.id}, ${value.unit.id})`,
+          );
+        }
+      }
+    }
   }
 }
 

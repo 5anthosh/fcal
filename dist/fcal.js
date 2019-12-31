@@ -258,15 +258,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var decimal_js_1 = require(22);
 var fcal_1 = require(3);
 var numberSystem_1 = require(19);
-var Type = /** @class */ (function () {
-    function Type() {
-    }
-    Type.prototype.toString = function () {
-        return this.print();
-    };
-    return Type;
-}());
-exports.Type = Type;
 var DATATYPE;
 (function (DATATYPE) {
     DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
@@ -279,6 +270,16 @@ var TYPE_RANK;
     TYPE_RANK[TYPE_RANK["NUMBER"] = 1] = "NUMBER";
     TYPE_RANK[TYPE_RANK["UNIT"] = 2] = "UNIT";
 })(TYPE_RANK = exports.TYPE_RANK || (exports.TYPE_RANK = {}));
+var Type = /** @class */ (function () {
+    function Type() {
+    }
+    Type.prototype.toString = function () {
+        return this.print();
+    };
+    Type.typeVsStr = { 0: 'number', 1: 'unit', 2: 'percentage' };
+    return Type;
+}());
+exports.Type = Type;
 /**
  * Represents a type of variable or value
  */
@@ -350,13 +351,11 @@ var TYPE_RANK;
             }
             return value.nEq(this);
         };
-        Numeric.prototype.Add = function (value, start, end) {
-            this.start = start;
-            this.end = end;
+        Numeric.prototype.Add = function (value) {
             if (!this.n.isFinite() && !value.n.isFinite()) {
                 if (!((this.n.isNegative() && value.n.isNegative()) || (this.n.isPositive() && value.n.isPositive()))) {
                     // console.log(left.number, right.number);
-                    throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate', start, end);
+                    throw new fcal_1.FcalError('Subtraction between Infinity is indeterminate');
                 }
             }
             // check type to see which datatype operation
@@ -374,12 +373,10 @@ var TYPE_RANK;
             }
             return this.New(value.plus(this).n);
         };
-        Numeric.prototype.Sub = function (value, start, end) {
-            return this.Add(value.negated(), start, end);
+        Numeric.prototype.Sub = function (value) {
+            return this.Add(value.negated());
         };
-        Numeric.prototype.times = function (value, start, end) {
-            this.start = start;
-            this.end = end;
+        Numeric.prototype.times = function (value) {
             // check type to see which datatype operation
             // if both type is same na right variable operation
             this.lf = true;
@@ -395,11 +392,9 @@ var TYPE_RANK;
             }
             return this.New(value.mul(this).n);
         };
-        Numeric.prototype.divide = function (value, start, end) {
-            this.start = start;
-            this.end = end;
+        Numeric.prototype.divide = function (value) {
             if (!this.n.isFinite() && !value.n.isFinite()) {
-                throw new fcal_1.FcalError('Division between Infinity is indeterminate', start, end);
+                throw new fcal_1.FcalError('Division between Infinity is indeterminate');
             }
             // check type to see which datatype operation
             // if both type is same na right variable operation
@@ -419,12 +414,10 @@ var TYPE_RANK;
             }
             return this.New(value.div(this).n);
         };
-        Numeric.prototype.power = function (value, start, end) {
-            this.start = start;
-            this.end = end;
+        Numeric.prototype.power = function (value) {
             if (this.isNegative()) {
                 if (!value.n.isInt()) {
-                    throw new fcal_1.FcalError("Pow of operation results in complex number and complex number is not supported yet", start, end);
+                    throw new fcal_1.FcalError("Pow of operation results in complex number and complex number is not supported yet");
                 }
             }
             // console.log(`CAP ${this.number.toString()} ${value.number.toString()}`);
@@ -446,11 +439,9 @@ var TYPE_RANK;
             }
             return this.New(value.pow(this).n);
         };
-        Numeric.prototype.modulo = function (value, start, end) {
-            this.start = start;
-            this.end = end;
+        Numeric.prototype.modulo = function (value) {
             if (!this.n.isFinite()) {
-                throw new fcal_1.FcalError('Modulus with Infinity is indeterminate', start, end);
+                throw new fcal_1.FcalError('Modulus with Infinity is indeterminate');
             }
             if (value.isZero()) {
                 return new Type.BNumber('Infinity');
@@ -918,7 +909,7 @@ exports.getDefaultUnits = getDefaultUnits;
 function setDistanceUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['cm', 'centimeter'],
             plural: 'Centimeters',
             ratio: 1,
@@ -926,7 +917,7 @@ function setDistanceUnits(units) {
             type: 'cm',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['m', 'meter'],
             plural: 'Meters',
             ratio: 100,
@@ -934,7 +925,7 @@ function setDistanceUnits(units) {
             type: 'm',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['mm', 'milimeter'],
             plural: 'Milimeters',
             ratio: 0.1,
@@ -942,7 +933,7 @@ function setDistanceUnits(units) {
             type: 'mm',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['km'],
             plural: 'Kilometers',
             ratio: 100000,
@@ -950,7 +941,7 @@ function setDistanceUnits(units) {
             type: 'km',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['inch'],
             plural: 'Inches',
             ratio: 2.54,
@@ -958,7 +949,7 @@ function setDistanceUnits(units) {
             type: 'inch',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['ft'],
             plural: 'Feet',
             ratio: 30.48,
@@ -966,7 +957,7 @@ function setDistanceUnits(units) {
             type: 'foot/feet',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['yd', 'yard'],
             plural: 'Yards',
             ratio: 91.44,
@@ -974,7 +965,7 @@ function setDistanceUnits(units) {
             type: 'yard',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['mi'],
             plural: 'Miles',
             ratio: 160934.4,
@@ -982,7 +973,7 @@ function setDistanceUnits(units) {
             type: 'mile',
         },
         {
-            id: units_1.Unit.LENGTHID,
+            id: units_1.Unit.LENGTH_ID,
             phrases: ['nmi'],
             ratio: 185200,
             type: 'nautical mile (nmi)',
@@ -992,31 +983,31 @@ function setDistanceUnits(units) {
 function setSpeedUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.SPEEDID,
+            id: units_1.Unit.SPEED_ID,
             phrases: ['kmh', 'kmph', 'khm', 'kph'],
             ratio: 1,
             type: 'km/h',
         },
         {
-            id: units_1.Unit.SPEEDID,
+            id: units_1.Unit.SPEED_ID,
             phrases: ['mph'],
             ratio: 1.609344,
             type: 'miles/h',
         },
         {
-            id: units_1.Unit.SPEEDID,
+            id: units_1.Unit.SPEED_ID,
             phrases: ['mps'],
             ratio: 3.6,
             type: 'm/s',
         },
         {
-            id: units_1.Unit.SPEEDID,
+            id: units_1.Unit.SPEED_ID,
             phrases: ['fps'],
             ratio: 1.097,
             type: 'ft/s',
         },
         {
-            id: units_1.Unit.SPEEDID,
+            id: units_1.Unit.SPEED_ID,
             phrases: ['kts', 'knots'],
             ratio: 1.852,
             type: 'kt',
@@ -1026,7 +1017,7 @@ function setSpeedUnits(units) {
 function setTimeUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['nsec', 'nanosecond', 'nanoseconds'],
             plural: 'Nanoseconds',
             ratio: 1e-9,
@@ -1034,7 +1025,7 @@ function setTimeUnits(units) {
             type: 'nsec',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['msec', 'microsecond', 'microseconds'],
             plural: 'Microseconds',
             ratio: 1e-6,
@@ -1042,7 +1033,7 @@ function setTimeUnits(units) {
             type: 'msec',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['sec', 'second', 'seconds'],
             plural: 'Seconds',
             ratio: 1,
@@ -1050,7 +1041,7 @@ function setTimeUnits(units) {
             type: 'second',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['minute', 'minutes'],
             plural: 'Minutes',
             ratio: 60,
@@ -1058,7 +1049,7 @@ function setTimeUnits(units) {
             type: 'minute',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['hr', 'hour', 'hours'],
             plural: 'Hours',
             ratio: 3600,
@@ -1066,7 +1057,7 @@ function setTimeUnits(units) {
             type: 'hour',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['day', 'days'],
             plural: 'Days',
             ratio: 86400,
@@ -1074,7 +1065,7 @@ function setTimeUnits(units) {
             type: 'day',
         },
         {
-            id: units_1.Unit.TIMEID,
+            id: units_1.Unit.TIME_ID,
             phrases: ['week', 'weeks'],
             plural: 'Weeks',
             ratio: 604800,
@@ -1086,21 +1077,21 @@ function setTimeUnits(units) {
 function setTemperatureUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.TEMPERATUREID,
+            id: units_1.Unit.TEMPERATURE_ID,
             phrases: ['K', 'kelvin'],
             ratio: 1,
             type: 'K',
         },
         {
             bias: '255.3722222222222',
-            id: units_1.Unit.TEMPERATUREID,
+            id: units_1.Unit.TEMPERATURE_ID,
             phrases: ['°F', 'F'],
             ratio: '0.55555555555555555556',
             type: '°F',
         },
         {
             bias: 273.15,
-            id: units_1.Unit.TEMPERATUREID,
+            id: units_1.Unit.TEMPERATURE_ID,
             phrases: ['°C', 'C'],
             ratio: 1,
             type: '°C',
@@ -1110,61 +1101,61 @@ function setTemperatureUnits(units) {
 function setMassUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['gram', 'g'],
             ratio: 1,
             type: 'gram',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['tonne'],
             ratio: 1e6,
             type: 'tonne',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['kg', 'kilogram'],
             ratio: 1000,
             type: 'kilogram',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['milligram', 'mg'],
             ratio: 0.001,
             type: 'milligram',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['microgram'],
             ratio: 1e-6,
             type: 'microgram',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['imperialton'],
             ratio: '1.016e+6',
             type: 'imperialton',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['USton'],
             ratio: '907185',
             type: 'USton',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['stone'],
             ratio: '6350.29',
             type: 'stone',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['pound'],
             ratio: '453.592',
             type: 'pound',
         },
         {
-            id: units_1.Unit.MASSID,
+            id: units_1.Unit.MASS_ID,
             phrases: ['ounce'],
             ratio: '28.3495',
             type: 'ounce',
@@ -1174,133 +1165,133 @@ function setMassUnits(units) {
 function setDigitalStorageUnits(units) {
     units.push.apply(units, [
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['bit'],
             ratio: 1,
             type: 'bit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['kilobit', 'kB'],
             ratio: 1000,
             type: 'kilobit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['kibibit', 'kiB'],
             ratio: 1024,
             type: 'kibibit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['megabit', 'mB'],
             ratio: 1e6,
             type: 'megabit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['mebibit', 'miB'],
             ratio: '1.049e+6',
             type: 'mebibit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['gigabit', 'gB'],
             ratio: 1e9,
             type: 'gigabit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['gibibit', 'giB'],
             ratio: '1.074e+9',
             type: 'gibibit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['terabit', 'tB'],
             ratio: 1e12,
             type: 'terabit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['tebibit', 'tiB'],
             ratio: '1.1e+12',
             type: 'tebibit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['petabit', 'pB'],
             ratio: 1e15,
             type: 'petabit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['pebibit', 'piB'],
             ratio: '1.126e+15',
             type: 'pebibit',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['byte', 'b'],
             ratio: 8,
             type: 'byte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['kilobyte', 'kb'],
             ratio: 8000,
             type: 'kilobyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['kibibyte', 'kib'],
             ratio: 8192,
             type: 'kibibyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['megabyte', 'mb'],
             ratio: 8e6,
             type: 'megabyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['mebibyte', 'mib'],
             ratio: '8.389e+6',
             type: 'mebibyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['gigabyte', 'gb'],
             ratio: 8e9,
             type: 'gigabyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['gibibyte', 'gib'],
             ratio: '8.59e+9',
             type: 'gibibyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['terabyte', 'tb'],
             ratio: 8e12,
             type: 'terabyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['tebibyte', 'tib'],
             ratio: '8.796e+12',
             type: 'tebibyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['petabyte', 'pb'],
             ratio: 8e15,
             type: 'petabyte',
         },
         {
-            id: units_1.Unit.DIGITAL,
+            id: units_1.Unit.DIGITAL_ID,
             phrases: ['pebibyte', 'pib'],
             ratio: '9.007e+15',
             type: 'pebibyte',
@@ -1399,12 +1390,12 @@ var Unit = /** @class */ (function () {
 exports.Unit = Unit;
 // tslint:disable-next-line:no-namespace
 (function (Unit) {
-    Unit.LENGTHID = 'LENGTH';
-    Unit.SPEEDID = 'SPEED';
-    Unit.TIMEID = 'TIME';
-    Unit.TEMPERATUREID = 'TIMERATURE';
-    Unit.MASSID = 'MASS';
-    Unit.DIGITAL = 'DIGITAL STORAGE ID';
+    Unit.LENGTH_ID = 'LENGTH';
+    Unit.SPEED_ID = 'SPEED';
+    Unit.TIME_ID = 'TIME';
+    Unit.TEMPERATURE_ID = 'TEMPERATURE';
+    Unit.MASS_ID = 'MASS';
+    Unit.DIGITAL_ID = 'DIGITAL STORAGE';
     /**
      * List of {Unit} sunits
      */
@@ -1487,6 +1478,7 @@ exports.Unit = units_2.Unit;
 var Fcal = /** @class */ (function () {
     function Fcal() {
         this.lst = Fcal.gst.clone();
+        this.strict = false;
         this.environment = new environment_1.Environment(Fcal.functions, this.lst, Fcal.constants);
     }
     /**
@@ -1569,10 +1561,10 @@ var Fcal = /** @class */ (function () {
      * @param { { [index: string]: Type | Decimal | number | string } } scales
      */
     Fcal.useScales = function (scales) {
-        this.scale.use(scales);
+        this.scales.use(scales);
     };
     Fcal.useConverter = function (id, f) {
-        this.c.set(id, f);
+        this.converters.set(id, f);
     };
     Fcal.initialize = function () {
         if (!this.gst) {
@@ -1593,12 +1585,12 @@ var Fcal = /** @class */ (function () {
             this.constants = new constants_1.Constant(this.gst);
             this.setDefaultConstants();
         }
-        if (!this.c) {
-            this.c = new converter_1.Converter(this.gst);
+        if (!this.converters) {
+            this.converters = new converter_1.Converter(this.gst);
             this.setDefaultConverter();
         }
-        if (!this.scale) {
-            this.scale = new scale_1.Scale(this.gst);
+        if (!this.scales) {
+            this.scales = new scale_1.Scale(this.gst);
             this.setDefaultScales();
         }
     };
@@ -1633,7 +1625,10 @@ var Fcal = /** @class */ (function () {
         });
     };
     Fcal.setDefaultScales = function () {
-        this.useScales({ k: 1000, M: 1000000, B: 10000000 });
+        var thousand = 1000;
+        var million = 1000000;
+        var billion = 10000000;
+        this.useScales({ k: thousand, M: million, B: billion, thousand: thousand, million: million, billion: billion });
     };
     Fcal.setDefaultConverter = function () {
         var num = function (v) {
@@ -1664,7 +1659,7 @@ var Fcal = /** @class */ (function () {
      * @returns {Type} result of expression
      */
     Fcal.prototype.rawEvaluate = function (source) {
-        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale).evaluateExpression();
+        return new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.converters, Fcal.scales, this.strict).evaluateExpression();
     };
     /**
      * Create new expression with copy of Fcal.Environment
@@ -1676,7 +1671,7 @@ var Fcal = /** @class */ (function () {
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
+        return new Expression(new interpreter_1.Interpreter(source /* expression */, Fcal.phrases, Fcal.units, env /* environment */, Fcal.converters /* converters */, Fcal.scales, this.strict));
     };
     /**
      * Create new  Expression in sync with Fcal.Environment
@@ -1685,7 +1680,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.expressionSync = function (source) {
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale));
+        return new Expression(new interpreter_1.Interpreter(source /* expression */, Fcal.phrases /* environment */, Fcal.units, this.environment, Fcal.converters /* converters */, Fcal.scales, this.strict));
     };
     /**
      * create a new variable with value or assign value to variable
@@ -1694,13 +1689,25 @@ var Fcal = /** @class */ (function () {
     Fcal.prototype.setValues = function (values) {
         this.environment.use(values);
     };
+    /**
+     * Import expression from JSON
+     * @param {string} source json
+     * @returns {Expression}
+     */
     Fcal.prototype.fromJSON = function (source) {
-        var parser = new JSONParser_1.JSONParser(source, Fcal.units, Fcal.c);
+        var parser = new JSONParser_1.JSONParser(source, Fcal.units, Fcal.converters);
         var symbolTable = this.lst.clone();
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
-        return new Expression(new interpreter_1.Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
+        return new Expression(new interpreter_1.Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.converters, Fcal.scales, this.strict));
+    };
+    /**
+     * Set strict mode
+     * @param v
+     */
+    Fcal.prototype.setStrict = function (v) {
+        this.strict = v;
     };
     return Fcal;
 }());
@@ -1732,7 +1739,7 @@ var Expression = /** @class */ (function () {
      * @param {Object | Map} values variables
      */
     Expression.prototype.setValues = function (values) {
-        this.interpreter.setValues(values);
+        this.interpreter.environment.use(values);
     };
     Expression.prototype.getAST = function () {
         return this.interpreter.getAST();
@@ -7106,8 +7113,9 @@ var datatype_1 = require(18);
 var numberSystem_1 = require(19);
 var units_1 = require(21);
 var Interpreter = /** @class */ (function () {
-    function Interpreter(source, phrases, units, environment, c, scale) {
+    function Interpreter(source, phrases, units, environment, c, scale, strict) {
         this.environment = environment;
+        this.strict = strict;
         if (typeof source === 'string') {
             var parser = new parser_1.Parser(source, phrases, units, c, scale, environment.symbolTable);
             this.ast = parser.parse();
@@ -7202,6 +7210,9 @@ var Interpreter = /** @class */ (function () {
     Interpreter.prototype.visitBinaryExpr = function (expr) {
         var left = this.evaluate(expr.left);
         var right = this.evaluate(expr.right);
+        if (this.strict) {
+            this.checkInvalidOperation(expr.operator.type, [left, right]);
+        }
         switch (expr.operator.type) {
             case token_1.TT.EQUAL_EQUAL:
                 return left.EQ(right);
@@ -7224,21 +7235,21 @@ var Interpreter = /** @class */ (function () {
             case token_1.TT.LESS_EQUAL_EQUAL:
                 return new datatype_1.Type.FBoolean(left.n.lte(right.n));
             case token_1.TT.PLUS:
-                return left.Add(right, expr.left.start, expr.right.end);
+                return left.Add(right);
             case token_1.TT.MINUS:
-                return left.Sub(right, expr.left.start, expr.right.end);
+                return left.Sub(right);
             case token_1.TT.TIMES:
-                return left.times(right, expr.left.start, expr.right.end);
+                return left.times(right);
             case token_1.TT.FLOOR_DIVIDE:
-                var v = left.divide(right, expr.left.start, expr.right.end);
+                var v = left.divide(right);
                 v.n = v.n.floor();
                 return v;
             case token_1.TT.SLASH:
-                return left.divide(right, expr.left.start, expr.right.end);
+                return left.divide(right);
             case token_1.TT.MOD:
-                return left.modulo(right, expr.left.start, expr.right.end);
+                return left.modulo(right);
             case token_1.TT.CAP:
-                return left.power(right, expr.left.start, expr.right.end);
+                return left.power(right);
             case token_1.TT.OF:
                 left = new datatype_1.Type.Percentage(left.n);
                 var per = left;
@@ -7271,12 +7282,44 @@ var Interpreter = /** @class */ (function () {
         }
         throw new fcal_1.FcalError('Expecting numeric value in percentage', expr.start, expr.end);
     };
-    Interpreter.prototype.setValues = function (values) {
-        this.environment.use(values);
-    };
     Interpreter.prototype.evaluate = function (expr) {
-        var ast = expr.accept(this);
+        var ast = expr.eval(this);
         return ast;
+    };
+    Interpreter.prototype.checkInvalidOperation = function (operation, values) {
+        var checkValue;
+        for (var _i = 0, values_1 = values; _i < values_1.length; _i++) {
+            var value = values_1[_i];
+            if (value instanceof datatype_1.Type.Percentage) {
+                continue;
+            }
+            if (!checkValue) {
+                checkValue = value;
+                continue;
+            }
+            if (checkValue.TYPE !== value.TYPE) {
+                switch (operation) {
+                    case token_1.TT.TIMES:
+                    case token_1.TT.SLASH:
+                    case token_1.TT.FLOOR_DIVIDE:
+                    case token_1.TT.MOD:
+                    case token_1.TT.PERCENTAGE:
+                    case token_1.TT.CAP:
+                    case token_1.TT.LESS_EQUAL_EQUAL:
+                    case token_1.TT.GREATER_EQUAL_EQUAL:
+                    case token_1.TT.EQUAL_EQUAL_EQUAL:
+                    case token_1.TT.NOT_EQUAL_EQUAL:
+                        continue;
+                    default:
+                        throw new fcal_1.FcalError("Unexpected '" + operation + "' operation between different types (" + datatype_1.Type.typeVsStr[checkValue.TYPE] + ", " + datatype_1.Type.typeVsStr[value.TYPE] + ")");
+                }
+            }
+            if (checkValue instanceof datatype_1.Type.UnitNumber && value instanceof datatype_1.Type.UnitNumber) {
+                if (checkValue.unit.id !== value.unit.id) {
+                    throw new fcal_1.FcalError("Unexpected '" + operation + "' operation between different units (" + checkValue.unit.id + ", " + value.unit.id + ")");
+                }
+            }
+        }
     };
     return Interpreter;
 }());
@@ -7879,6 +7922,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+var fcal_1 = require(3);
 var astPrinter_1 = require(15);
 var Expr = /** @class */ (function () {
     function Expr(start, end) {
@@ -7888,6 +7932,22 @@ var Expr = /** @class */ (function () {
     Expr.prototype.toString = function () {
         var res = new astPrinter_1.ASTPrinter().print(this);
         return res.substring(0, res.length - 2);
+    };
+    Expr.prototype.eval = function (visitor) {
+        try {
+            return this.accept(visitor);
+        }
+        catch (e) {
+            if (e instanceof fcal_1.FcalError) {
+                if (e.start === undefined) {
+                    e.start = this.start;
+                }
+                if (e.end === undefined) {
+                    e.end = this.end;
+                }
+            }
+            throw e;
+        }
     };
     return Expr;
 }());
@@ -8066,7 +8126,7 @@ exports.Expr = Expr;
 })(Expr || (Expr = {}));
 exports.Expr = Expr;
 
-},{"15":15}],13:[function(require,module,exports){
+},{"15":15,"3":3}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(3);

@@ -1,3 +1,4 @@
+import { FcalError } from '../fcal';
 import { converterFuncFmt } from '../interpreter/converter';
 import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
@@ -17,6 +18,22 @@ abstract class Expr {
   public toString(): string {
     const res = new ASTPrinter().print(this);
     return res.substring(0, res.length - 2);
+  }
+
+  public eval<T>(visitor: Expr.IVisitor<T>): T {
+    try {
+      return this.accept(visitor);
+    } catch (e) {
+      if (e instanceof FcalError) {
+        if (e.start === undefined) {
+          e.start = this.start;
+        }
+        if (e.end === undefined) {
+          e.end = this.end;
+        }
+      }
+      throw e;
+    }
   }
 
   public abstract accept<T>(visitor: Expr.IVisitor<T>): T;

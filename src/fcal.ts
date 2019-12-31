@@ -105,11 +105,11 @@ class Fcal {
    * @param { { [index: string]: Type | Decimal | number | string } } scales
    */
   public static useScales(scales: EnvInputType): void {
-    this.scale.use(scales);
+    this.scales.use(scales);
   }
 
   public static useConverter(id: string, f: converterFuncFmt): void {
-    this.c.set(id, f);
+    this.converters.set(id, f);
   }
 
   public static initialize(): void {
@@ -131,12 +131,12 @@ class Fcal {
       this.constants = new Constant(this.gst);
       this.setDefaultConstants();
     }
-    if (!this.c) {
-      this.c = new Converter(this.gst);
+    if (!this.converters) {
+      this.converters = new Converter(this.gst);
       this.setDefaultConverter();
     }
-    if (!this.scale) {
-      this.scale = new Scale(this.gst);
+    if (!this.scales) {
+      this.scales = new Scale(this.gst);
       this.setDefaultScales();
     }
   }
@@ -148,8 +148,8 @@ class Fcal {
   private static functions: FcalFunction.List;
   private static phrases: Phrases;
   private static constants: Constant;
-  private static c: Converter;
-  private static scale: Scale;
+  private static converters: Converter;
+  private static scales: Scale;
 
   private static getDefaultPhrases(): Phrases {
     const phrases = new Phrases(this.gst);
@@ -209,9 +209,11 @@ class Fcal {
 
   private environment: Environment;
   private lst: SymbolTable;
+  private strict: boolean;
 
   constructor() {
     this.lst = Fcal.gst.clone();
+    this.strict = false;
     this.environment = new Environment(Fcal.functions, this.lst, Fcal.constants);
   }
 
@@ -233,7 +235,15 @@ class Fcal {
    * @returns {Type} result of expression
    */
   public rawEvaluate(source: string): Type {
-    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale).evaluateExpression();
+    return new Interpreter(
+      source,
+      Fcal.phrases,
+      Fcal.units,
+      this.environment,
+      Fcal.converters,
+      Fcal.scales,
+      this.strict,
+    ).evaluateExpression();
   }
 
   /**
@@ -246,7 +256,17 @@ class Fcal {
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
+    return new Expression(
+      new Interpreter(
+        source /* expression */,
+        Fcal.phrases,
+        Fcal.units,
+        env /* environment */,
+        Fcal.converters /* converters */,
+        Fcal.scales,
+        this.strict,
+      ),
+    );
   }
 
   /**
@@ -256,7 +276,17 @@ class Fcal {
    */
   public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment, Fcal.c, Fcal.scale));
+    return new Expression(
+      new Interpreter(
+        source /* expression */,
+        Fcal.phrases /* environment */,
+        Fcal.units,
+        this.environment,
+        Fcal.converters /* converters */,
+        Fcal.scales,
+        this.strict,
+      ),
+    );
   }
 
   /**
@@ -273,12 +303,21 @@ class Fcal {
    * @returns {Expression}
    */
   public fromJSON(source: string): Expression {
-    const parser = new JSONParser(source, Fcal.units, Fcal.c);
+    const parser = new JSONParser(source, Fcal.units, Fcal.converters);
     const symbolTable = this.lst.clone();
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.c, Fcal.scale));
+    return new Expression(
+      new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.converters, Fcal.scales, this.strict),
+    );
+  }
+  /**
+   * Set strict mode
+   * @param v
+   */
+  public setStrict(v: boolean): void {
+    this.strict = v;
   }
 }
 

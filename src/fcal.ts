@@ -1,15 +1,15 @@
 import { Decimal } from 'decimal.js';
 import { getDefaultFunctions } from './default/functions';
 import { getDefaultUnits } from './default/units';
-import { Constant } from './interpreter/constants';
-import { Converter, converterFuncFmt } from './interpreter/converter';
-import { EnvInputType, Environment } from './interpreter/environment';
-import { FcalFunction, IUseFunction } from './interpreter/function';
-import { Interpreter } from './interpreter/interpreter';
-import { Scale } from './interpreter/scale';
-import { Entity, SymbolTable } from './interpreter/symboltable';
+import { Constant } from './evaluator/constants';
+import { Converter, converterFuncFmt } from './evaluator/converter';
+import { EnvInputType, Environment } from './evaluator/environment';
+import { Evaluator } from './evaluator/evaluator';
+import { FcalFunction, IUseFunction } from './evaluator/function';
+import { Scale } from './evaluator/scale';
+import { Entity, SymbolTable } from './evaluator/symboltable';
 import { JSONParser } from './json/JSONParser';
-import { TT } from './lex/token';
+import { TT } from './parser/lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { IUseUnit, Unit, UnitMeta } from './types/units';
@@ -235,7 +235,7 @@ class Fcal {
    * @returns {Type} result of expression
    */
   public rawEvaluate(source: string): Type {
-    return new Interpreter(
+    return new Evaluator(
       source,
       Fcal.phrases,
       Fcal.units,
@@ -257,7 +257,7 @@ class Fcal {
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
     return new Expression(
-      new Interpreter(
+      new Evaluator(
         source /* expression */,
         Fcal.phrases,
         Fcal.units,
@@ -277,7 +277,7 @@ class Fcal {
   public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
     return new Expression(
-      new Interpreter(
+      new Evaluator(
         source /* expression */,
         Fcal.phrases /* environment */,
         Fcal.units,
@@ -309,7 +309,7 @@ class Fcal {
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
     return new Expression(
-      new Interpreter(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.converters, Fcal.scales, this.strict),
+      new Evaluator(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.converters, Fcal.scales, this.strict),
     );
   }
   /**
@@ -333,10 +333,10 @@ function prefixNewLIne(source: string): string {
  * evaluate AST with its state
  */
 class Expression {
-  private readonly interpreter: Interpreter;
+  private readonly evaluator: Evaluator;
 
-  constructor(interpreter: Interpreter) {
-    this.interpreter = interpreter;
+  constructor(evaluator: Evaluator) {
+    this.evaluator = evaluator;
   }
 
   /**
@@ -344,7 +344,7 @@ class Expression {
    * @returns {Type}  result of Math expression
    */
   public evaluate(): Type {
-    return this.interpreter.evaluateExpression();
+    return this.evaluator.evaluateExpression();
   }
 
   /**
@@ -353,19 +353,19 @@ class Expression {
    * @param {Object | Map} values variables
    */
   public setValues(values: EnvInputType): void {
-    this.interpreter.environment.use(values);
+    this.evaluator.environment.use(values);
   }
 
   public getAST(): string {
-    return this.interpreter.getAST();
+    return this.evaluator.getAST();
   }
 
   public toJSON(): string {
-    return this.interpreter.toJSON();
+    return this.evaluator.toJSON();
   }
 
   public toObj(): object {
-    return this.interpreter.toObj();
+    return this.evaluator.toObj();
   }
 
   public toString(): string {
@@ -417,3 +417,4 @@ class FcalError extends Error {
 Fcal.initialize();
 
 export { Fcal, FcalError, Expression, FcalFunction, Environment, Unit, Type, Decimal };
+

@@ -1,8 +1,8 @@
 import Decimal from 'decimal.js';
 import { Fcal } from '../fcal';
-import { FcalFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
 import { Unit } from '../types/units';
+import { FcalFunction } from '../evaluator/function';
 
 test('create variable with already used phrases', () => {
   expect(() => {

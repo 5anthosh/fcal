@@ -1,10 +1,10 @@
+import { converterFuncFmt } from '../evaluator/converter';
 import { FcalError } from '../fcal';
-import { converterFuncFmt } from '../interpreter/converter';
-import { Token } from '../lex/token';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 import { ASTPrinter } from './astPrinter';
+import { Token } from './lex/token';
 
 abstract class Expr {
   public start?: number;
@@ -243,3 +243,4 @@ namespace Expr {
 }
 
 export { Expr };
+

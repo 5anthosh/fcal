@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { Entity, SymbolTable } from '../interpreter/symboltable';
+import { Entity, SymbolTable } from '../evaluator/symboltable';
 
 type callbackFuncFmt = () => Decimal | number;
 

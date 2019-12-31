@@ -27,7 +27,7 @@ class FcalFunction implements ICallable {
   public readonly arity: number;
   // name of the function
   public readonly name: string;
-  // function implemention
+  // function implementation
   public readonly function: FcalFunctionFmt;
 
   constructor(name: string, arity: number, func: FcalFunctionFmt) {
@@ -95,21 +95,21 @@ namespace FcalFunction {
     /**
      * Call a function by its name
      * @param {string} name name of the function
-     * @param {Environment} enviroment state of fcal
+     * @param {Environment} environment state of fcal
      * @param {Array<Type>} argument arguments for the function
-     * @param {Type} Type resullt of the function
+     * @param {Type} Type result of the function
      * @throws {FcalError} Error if function is not found
      */
-    public call(name: string, enviroment: Environment, argument: Type[]): Type | number | Decimal {
+    public call(name: string, environment: Environment, argument: Type[]): Type | number | Decimal {
       const fcalFunc = this.get(name);
       if (fcalFunc) {
-        return fcalFunc.function(enviroment, argument);
+        return fcalFunc.function(environment, argument);
       }
       throw new FcalError(`Function ${name} is not found`);
     }
 
     /**
-     * Get function implemention by its function name
+     * Get function implementation by its function name
      * @param {string} name function name
      * @returns {FcalFunction | undefined} function
      */

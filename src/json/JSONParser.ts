@@ -1,5 +1,5 @@
+import { Converter } from '../evaluator/converter';
 import { FcalError } from '../fcal';
-import { Converter } from '../interpreter/converter';
 import { Expr } from '../parser/expr';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
@@ -132,3 +132,4 @@ class JSONParser {
 }
 
 export { JSONParser };
+

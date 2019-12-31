@@ -118,3 +118,4 @@ class ASTPrinter implements Expr.IVisitor<string> {
 }
 
 export { ASTPrinter };
+

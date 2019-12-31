@@ -1,10 +1,10 @@
-import { FcalError } from '../fcal';
-import { Converter } from '../interpreter/converter';
-import { Scale } from '../interpreter/scale';
-import { Type } from '../types/datatype';
-import { NumberSystem } from '../types/numberSystem';
-import { Phrases } from '../types/phrase';
-import { Unit } from '../types/units';
+import { Converter } from '../../evaluator/converter';
+import { Scale } from '../../evaluator/scale';
+import { FcalError } from '../../fcal';
+import { Type } from '../../types/datatype';
+import { NumberSystem } from '../../types/numberSystem';
+import { Phrases } from '../../types/phrase';
+import { Unit } from '../../types/units';
 import { Token, TT } from './token';
 
 class Lexer {
@@ -353,3 +353,4 @@ class Lexer {
 }
 
 export { Lexer };
+

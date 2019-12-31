@@ -1,5 +1,5 @@
-import { Token } from '../lex/token';
 import { Expr } from '../parser/expr';
+import { Token } from '../parser/lex/token';
 import { NumberSystem } from '../types/numberSystem';
 import { UnitMeta } from '../types/units';
 
@@ -130,3 +130,4 @@ class ToJSON implements Expr.IVisitor<InterfaceJSON> {
 }
 
 export { ToJSON, JSON_TYPES, InterfaceJSON };
+

@@ -1,5 +1,5 @@
-import { Entity, SymbolTable } from '../interpreter/symboltable';
-import { TT } from '../lex/token';
+import { Entity, SymbolTable } from '../evaluator/symboltable';
+import { TT } from '../parser/lex/token';
 
 class Phrases {
   public phrases: Map<string, TT>;

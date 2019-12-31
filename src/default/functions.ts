@@ -1,6 +1,6 @@
 import { Decimal } from 'decimal.js';
-import { Environment } from '../interpreter/environment';
-import { IUseFunction } from '../interpreter/function';
+import { Environment } from '../evaluator/environment';
+import { IUseFunction } from '../evaluator/function';
 import { Type } from '../types/datatype';
 
 export function getDefaultFunctions(): IUseFunction[] {

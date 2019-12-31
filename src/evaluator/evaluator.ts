@@ -1,7 +1,7 @@
 import { FcalError } from '../fcal';
 import { ToJSON } from '../json/toJSON';
-import { TT } from '../lex/token';
 import { Expr } from '../parser/expr';
+import { TT } from '../parser/lex/token';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
@@ -12,7 +12,7 @@ import { Environment } from './environment';
 import { FcalFunction } from './function';
 import { Scale } from './scale';
 
-class Interpreter implements Expr.IVisitor<Type> {
+class Evaluator implements Expr.IVisitor<Type> {
   public readonly environment: Environment;
   private readonly ast: Expr;
   private readonly source?: string;
@@ -258,4 +258,5 @@ class Interpreter implements Expr.IVisitor<Type> {
   }
 }
 
-export { Interpreter };
+export { Evaluator };
+

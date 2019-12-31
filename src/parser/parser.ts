@@ -1,14 +1,14 @@
+import { Converter } from '../evaluator/converter';
+import { Scale } from '../evaluator/scale';
+import { SymbolTable } from '../evaluator/symboltable';
 import { FcalError } from '../fcal';
-import { Converter } from '../interpreter/converter';
-import { Scale } from '../interpreter/scale';
-import { SymbolTable } from '../interpreter/symboltable';
-import { Lexer } from '../lex/lex';
-import { Token, TT } from '../lex/token';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
 import { Phrases } from '../types/phrase';
 import { Unit } from '../types/units';
 import { Expr } from './expr';
+import { Lexer } from './lex/lex';
+import { Token, TT } from './lex/token';
 
 class Parser {
   public source: string;
@@ -367,3 +367,4 @@ class Parser {
 }
 
 export { Parser };
+

@@ -146,6 +146,27 @@ err: Expecting number after + but got '*'
 */
 ```
 
+#### Strict mode
+
+By default, fcal will not throw exception if you try to use operations between different types or different units
+
+```js
+const fcal = new Fcal();
+fcal.setStrict(true)
+try {
+  var value = fcal.evaluate('23% + 34 cm + 1');
+} catch (e) {
+  if (e instanceof FcalError) {
+    console.log(e.info());
+  }
+
+/*
+err: Unexpected '+' operation between different types (unit, number)
+| 23% + 34 cm + 1
+| ^^^^^^^^^^^^^^^
+*/
+```
+
 ### Using expression
 
 You can change state of expression , re evaluate it

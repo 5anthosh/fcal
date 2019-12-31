@@ -132,4 +132,3 @@ class JSONParser {
 }
 
 export { JSONParser };
-

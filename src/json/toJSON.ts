@@ -130,4 +130,3 @@ class ToJSON implements Expr.IVisitor<InterfaceJSON> {
 }
 
 export { ToJSON, JSON_TYPES, InterfaceJSON };
-

@@ -259,4 +259,3 @@ class Evaluator implements Expr.IVisitor<Type> {
 }
 
 export { Evaluator };
-

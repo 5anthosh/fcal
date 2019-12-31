@@ -417,4 +417,3 @@ class FcalError extends Error {
 Fcal.initialize();
 
 export { Fcal, FcalError, Expression, FcalFunction, Environment, Unit, Type, Decimal };
-

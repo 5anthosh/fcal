@@ -353,4 +353,3 @@ class Lexer {
 }
 
 export { Lexer };
-

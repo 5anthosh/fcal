@@ -1,4 +1,5 @@
 import { Fcal, FcalError } from '../fcal';
+import { Type } from '../types/datatype';
 
 test('Power result in imaginary number', () => {
   const expression = '34 cm  + (-2)^2.5';
@@ -302,4 +303,42 @@ err: ${errorMessage}
 `);
     }
   }
+});
+
+test('Strict mode types (Not) ', () => {
+  let expression = '(23% + 34 cm * 1) as num';
+  const fcal = new Fcal();
+  fcal.setStrict(true);
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
+  expression = '(23% + 34 cm / 1) as num';
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
+  expression = '(23% + 34 cm // 1) as num';
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
+
+  expression = '(23% + 34 cm mod 1) as num';
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(0));
+
+  expression = '(23% + 34 cm ^ 1) as num';
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
+
+  expression = '(23% + 34 cm ^ 1) as num';
+  expect(() => {
+    fcal.evaluate(expression);
+  }).not.toThrowError();
+  expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
 });

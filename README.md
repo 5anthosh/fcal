@@ -147,9 +147,9 @@ console.log(value); // 34
 
 ### Syntax errors
 
-Fcal will throw exception if there is error with formula expression
+Fcal will throw exception if there is error with expression
 
-For more error context, use info method in FcalError
+For more error context, use _info_ method in _FcalError_
 
 ```js
 try {

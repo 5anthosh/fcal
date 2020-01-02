@@ -471,7 +471,7 @@ exports.Type = Type;
             return !this.n.isZero();
         };
         Numeric.prototype.not = function () {
-            return new FBoolean(this.n).not();
+            return new FcalBoolean(this.n).not();
         };
         return Numeric;
     }(Type));
@@ -491,19 +491,19 @@ exports.Type = Type;
             return new BNumber(value);
         };
         BNumber.prototype.gt = function (value) {
-            return new FBoolean(this.n.gt(value.n));
+            return new FcalBoolean(this.n.gt(value.n));
         };
         BNumber.prototype.gte = function (value) {
-            return new FBoolean(this.n.gte(value.n));
+            return new FcalBoolean(this.n.gte(value.n));
         };
         BNumber.prototype.lt = function (value) {
-            return new FBoolean(this.n.lt(value.n));
+            return new FcalBoolean(this.n.lt(value.n));
         };
         BNumber.prototype.lte = function (value) {
-            return new FBoolean(this.n.lte(value.n));
+            return new FcalBoolean(this.n.lte(value.n));
         };
         BNumber.prototype.eq = function (value) {
-            return new FBoolean(this.n.eq(value.n));
+            return new FcalBoolean(this.n.eq(value.n));
         };
         BNumber.prototype.nEq = function (value) {
             return this.eq(value).not();
@@ -555,45 +555,45 @@ exports.Type = Type;
         };
         Percentage.prototype.gt = function (value) {
             if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return new FBoolean(this.n.gt(value.n));
+                return new FcalBoolean(this.n.gt(value.n));
             }
             if (value.lf) {
-                return new FBoolean(value.n.gt(this.percentageValue(value.n)));
+                return new FcalBoolean(value.n.gt(this.percentageValue(value.n)));
             }
-            return new FBoolean(this.percentageValue(value.n).gt(value.n));
+            return new FcalBoolean(this.percentageValue(value.n).gt(value.n));
         };
         Percentage.prototype.gte = function (value) {
             if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return new FBoolean(this.n.gte(value.n));
+                return new FcalBoolean(this.n.gte(value.n));
             }
             if (value.lf) {
-                return new FBoolean(value.n.gte(this.percentageValue(value.n)));
+                return new FcalBoolean(value.n.gte(this.percentageValue(value.n)));
             }
-            return new FBoolean(this.percentageValue(value.n).gte(value.n));
+            return new FcalBoolean(this.percentageValue(value.n).gte(value.n));
         };
         Percentage.prototype.lt = function (value) {
             if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return new FBoolean(this.n.lt(value.n));
+                return new FcalBoolean(this.n.lt(value.n));
             }
             if (value.lf) {
-                return new FBoolean(value.n.lt(this.percentageValue(value.n)));
+                return new FcalBoolean(value.n.lt(this.percentageValue(value.n)));
             }
-            return new FBoolean(this.percentageValue(value.n).lt(value.n));
+            return new FcalBoolean(this.percentageValue(value.n).lt(value.n));
         };
         Percentage.prototype.lte = function (value) {
             if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return new FBoolean(this.n.lte(value.n));
+                return new FcalBoolean(this.n.lte(value.n));
             }
             if (value.lf) {
-                return new FBoolean(value.n.lte(this.percentageValue(value.n)));
+                return new FcalBoolean(value.n.lte(this.percentageValue(value.n)));
             }
-            return new FBoolean(this.percentageValue(value.n).lte(value.n));
+            return new FcalBoolean(this.percentageValue(value.n).lte(value.n));
         };
         Percentage.prototype.eq = function (value) {
             if (value.TYPE === DATATYPE.PERCENTAGE) {
-                return new FBoolean(this.n.eq(value.n));
+                return new FcalBoolean(this.n.eq(value.n));
             }
-            return new FBoolean(value.n.eq(this.percentageValue(value.n)));
+            return new FcalBoolean(value.n.eq(this.percentageValue(value.n)));
         };
         Percentage.prototype.nEq = function (value) {
             return this.eq(value).not();
@@ -704,10 +704,10 @@ exports.Type = Type;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id === right1.unit.id) {
-                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
+                    return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
                 }
             }
-            return new FBoolean(left.n.gt(right.n));
+            return new FcalBoolean(left.n.gt(right.n));
         };
         UnitNumber.prototype.gte = function (value) {
             var _a;
@@ -718,10 +718,10 @@ exports.Type = Type;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id === right1.unit.id) {
-                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
+                    return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
                 }
             }
-            return new FBoolean(left.n.gte(right.n));
+            return new FcalBoolean(left.n.gte(right.n));
         };
         UnitNumber.prototype.lt = function (value) {
             var _a;
@@ -732,10 +732,10 @@ exports.Type = Type;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id === right1.unit.id) {
-                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
+                    return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
                 }
             }
-            return new FBoolean(left.n.lt(right.n));
+            return new FcalBoolean(left.n.lt(right.n));
         };
         UnitNumber.prototype.lte = function (value) {
             var _a;
@@ -746,10 +746,10 @@ exports.Type = Type;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id === right1.unit.id) {
-                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
+                    return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
                 }
             }
-            return new FBoolean(left.n.lte(right.n));
+            return new FcalBoolean(left.n.lte(right.n));
         };
         UnitNumber.prototype.eq = function (value) {
             var _a;
@@ -760,10 +760,10 @@ exports.Type = Type;
                 var left1 = left;
                 var right1 = right;
                 if (left1.unit.id === right1.unit.id) {
-                    return new FBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
+                    return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
                 }
             }
-            return new FBoolean(left.n.eq(right.n));
+            return new FcalBoolean(left.n.eq(right.n));
         };
         UnitNumber.prototype.nEq = function (value) {
             return this.eq(value).not();
@@ -864,9 +864,9 @@ exports.Type = Type;
         return UnitNumber;
     }(Numeric));
     Type.UnitNumber = UnitNumber;
-    var FBoolean = /** @class */ (function (_super) {
-        __extends(FBoolean, _super);
-        function FBoolean(value) {
+    var FcalBoolean = /** @class */ (function (_super) {
+        __extends(FcalBoolean, _super);
+        function FcalBoolean(value) {
             var _this = this;
             if (typeof value === 'boolean') {
                 _this = _super.call(this, value ? 1 : 0) || this;
@@ -877,17 +877,17 @@ exports.Type = Type;
             _this.v = !_this.n.isZero();
             return _this;
         }
-        FBoolean.prototype.print = function () {
+        FcalBoolean.prototype.print = function () {
             return this.v + '';
         };
-        FBoolean.prototype.not = function () {
-            return this.v ? FBoolean.FALSE : FBoolean.TRUE;
+        FcalBoolean.prototype.not = function () {
+            return this.v ? FcalBoolean.FALSE : FcalBoolean.TRUE;
         };
-        FBoolean.TRUE = new FBoolean(1);
-        FBoolean.FALSE = new FBoolean(0);
-        return FBoolean;
+        FcalBoolean.TRUE = new FcalBoolean(1);
+        FcalBoolean.FALSE = new FcalBoolean(0);
+        return FcalBoolean;
     }(BNumber));
-    Type.FBoolean = FBoolean;
+    Type.FcalBoolean = FcalBoolean;
 })(Type || (Type = {}));
 exports.Type = Type;
 
@@ -1811,8 +1811,8 @@ var Fcal = /** @class */ (function () {
             E: datatype_1.Type.BNumber.New('2.718281828459045235360287'),
             PI: datatype_1.Type.BNumber.New('3.141592653589793238462645'),
             PI2: datatype_1.Type.BNumber.New('6.2831853071795864769'),
-            false: datatype_1.Type.FBoolean.FALSE,
-            true: datatype_1.Type.FBoolean.TRUE,
+            false: datatype_1.Type.FcalBoolean.FALSE,
+            true: datatype_1.Type.FcalBoolean.TRUE,
         });
     };
     Fcal.setDefaultScales = function () {
@@ -2103,23 +2103,23 @@ var Evaluator = /** @class */ (function () {
             case token_1.TT.EQUAL_EQUAL:
                 return left.EQ(right);
             case token_1.TT.EQUAL_EQUAL_EQUAL:
-                return new datatype_1.Type.FBoolean(left.n.eq(right.n));
+                return new datatype_1.Type.FcalBoolean(left.n.eq(right.n));
             case token_1.TT.NOT_EQUAL:
                 return left.NEQ(right);
             case token_1.TT.NOT_EQUAL_EQUAL:
-                return new datatype_1.Type.FBoolean(!left.n.eq(right.n));
+                return new datatype_1.Type.FcalBoolean(!left.n.eq(right.n));
             case token_1.TT.GREATER:
                 return left.GT(right);
             case token_1.TT.GREATER_EQUAL:
                 return left.GTE(right);
             case token_1.TT.GREATER_EQUAL_EQUAL:
-                return new datatype_1.Type.FBoolean(left.n.gte(right.n));
+                return new datatype_1.Type.FcalBoolean(left.n.gte(right.n));
             case token_1.TT.LESS:
                 return left.LT(right);
             case token_1.TT.LESS_EQUAL:
                 return left.LTE(right);
             case token_1.TT.LESS_EQUAL_EQUAL:
-                return new datatype_1.Type.FBoolean(left.n.lte(right.n));
+                return new datatype_1.Type.FcalBoolean(left.n.lte(right.n));
             case token_1.TT.PLUS:
                 return left.Add(right);
             case token_1.TT.MINUS:
@@ -2137,10 +2137,28 @@ var Evaluator = /** @class */ (function () {
             case token_1.TT.CAP:
                 return left.power(right);
             case token_1.TT.OF:
-                left = new datatype_1.Type.Percentage(left.n);
-                var per = left;
-                right.n = per.percentageValue(right.n);
-                return right;
+                // check whether boolean involved in percentage operation
+                if (left instanceof datatype_1.Type.FcalBoolean || right instanceof datatype_1.Type.FcalBoolean) {
+                    throw new fcal_1.FcalError('Unexpected Boolean in percentage operation');
+                }
+                if ((left instanceof datatype_1.Type.BNumber && right instanceof datatype_1.Type.BNumber) ||
+                    (left instanceof datatype_1.Type.Percentage && right instanceof datatype_1.Type.Percentage)) {
+                    return new datatype_1.Type.Percentage(left.n.div(right.n).mul(100));
+                }
+                if (left instanceof datatype_1.Type.UnitNumber && right instanceof datatype_1.Type.UnitNumber) {
+                    if (left.unit.id === right.unit.id) {
+                        return new datatype_1.Type.Percentage(datatype_1.Type.UnitNumber.convertToUnit(left, right.unit)
+                            .n.div(right.n)
+                            .mul(100));
+                    }
+                    return new datatype_1.Type.Percentage(left.n.div(right.n).mul(100));
+                }
+                if (left instanceof datatype_1.Type.Percentage) {
+                    var per = left;
+                    right.n = per.percentageValue(right.n);
+                    return right;
+                }
+                throw new fcal_1.FcalError("Expecting Percentage type in left side of percentage operation but got (" + datatype_1.Type.typeVsStr[left.TYPE] + ", " + datatype_1.Type.typeVsStr[right.TYPE] + ")");
             default:
                 return datatype_1.Type.BNumber.ZERO;
         }
@@ -2202,118 +2220,19 @@ var Evaluator = /** @class */ (function () {
             }
             if (checkValue instanceof datatype_1.Type.UnitNumber && value instanceof datatype_1.Type.UnitNumber) {
                 if (checkValue.unit.id !== value.unit.id) {
-                    throw new fcal_1.FcalError("Unexpected '" + operation + "' operation between different units (" + checkValue.unit.id + ", " + value.unit.id + ")");
+                    this.throwUnexpectedUnits(operation, checkValue.unit.id, value.unit.id);
                 }
             }
         }
+    };
+    Evaluator.prototype.throwUnexpectedUnits = function (operation, leftID, rightID) {
+        throw new fcal_1.FcalError("Unexpected '" + operation + "' operation between different units (" + leftID + ", " + rightID + ")");
     };
     return Evaluator;
 }());
 exports.Evaluator = Evaluator;
 
-},{"10":10,"12":12,"16":16,"17":17,"18":18,"19":19,"21":21}],16:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var TT;
-(function (TT) {
-    TT["PLUS"] = "+";
-    TT["MINUS"] = "-";
-    TT["TIMES"] = "*";
-    TT["MOD"] = "mod";
-    TT["SLASH"] = "/";
-    TT["Number"] = "number";
-    TT["OPEN_PAREN"] = "(";
-    TT["CLOSE_PAREN"] = ")";
-    TT["NEWLINE"] = "\n";
-    TT["EOL"] = "EOL";
-    TT["IN"] = "in";
-    TT["NAME"] = "name";
-    TT["EQUAL"] = "=";
-    TT["COMMA"] = ",";
-    TT["PERCENTAGE"] = "%";
-    TT["OF"] = "of";
-    TT["UNIT"] = "unit";
-    TT["CAP"] = "^";
-    TT["NS"] = "ns";
-    TT["DOUBLE_COLON"] = ":";
-    TT["FLOOR_DIVIDE"] = "//";
-    TT["LESS_EQUAL"] = "<=";
-    TT["GREATER_EQUAL"] = ">=";
-    TT["LESS_EQUAL_EQUAL"] = "<==";
-    TT["GREATER_EQUAL_EQUAL"] = ">==";
-    TT["LESS"] = "<";
-    TT["GREATER"] = ">";
-    TT["EQUAL_EQUAL"] = "==";
-    TT["EQUAL_EQUAL_EQUAL"] = "===";
-    TT["NOT_EQUAL"] = "!=";
-    TT["NOT_EQUAL_EQUAL"] = "!==";
-    TT["NOT"] = "!";
-    TT["AND"] = "&&";
-    TT["OR"] = "||";
-    TT["Q"] = "?";
-    TT["CC"] = "cc";
-    TT["PLUS_EQUAL"] = "+=";
-    TT["MINUS_EQUAL"] = "-=";
-    TT["DIVIDE_EQUAL"] = "/=";
-    TT["FLOOR_DIVIDE_EQUAL"] = "//=";
-    TT["MULTIPLY_EQUAL"] = "*=";
-    TT["POWER_EQUAL"] = "^=";
-    TT["SCALE"] = "scale";
-})(TT || (TT = {}));
-exports.TT = TT;
-var Token = /** @class */ (function () {
-    function Token(type, lexeme, literal, start, end) {
-        this.type = type;
-        this.lexeme = lexeme;
-        this.start = start;
-        this.end = end;
-        this.literal = literal;
-    }
-    Token.EOL = function (end) {
-        return new Token(TT.EOL, 'EOL', null, end, end);
-    };
-    return Token;
-}());
-exports.Token = Token;
-
-},{}],19:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var NumberSystem = /** @class */ (function () {
-    function NumberSystem(name, to) {
-        this.to = to;
-        this.name = name;
-    }
-    NumberSystem.get = function (ns) {
-        return NumberSystem.ns[ns];
-    };
-    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
-        return num.toString();
-    });
-    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
-        return num.toHexadecimal();
-    });
-    NumberSystem.bin = new NumberSystem('Binary', function (num) {
-        return num.toBinary();
-    });
-    NumberSystem.oct = new NumberSystem('Octal', function (num) {
-        return num.toOctal();
-    });
-    NumberSystem.ns = {
-        bin: NumberSystem.bin,
-        binary: NumberSystem.bin,
-        dec: NumberSystem.dec,
-        decimal: NumberSystem.dec,
-        hex: NumberSystem.hex,
-        hexadecimal: NumberSystem.hex,
-        oct: NumberSystem.oct,
-        octal: NumberSystem.oct,
-    };
-    return NumberSystem;
-}());
-exports.NumberSystem = NumberSystem;
-
-},{}],12:[function(require,module,exports){
+},{"10":10,"12":12,"16":16,"17":17,"18":18,"19":19,"21":21}],12:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -2421,7 +2340,109 @@ var ToJSON = /** @class */ (function () {
 }());
 exports.ToJSON = ToJSON;
 
-},{"19":19,"21":21}],17:[function(require,module,exports){
+},{"19":19,"21":21}],19:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NumberSystem = /** @class */ (function () {
+    function NumberSystem(name, to) {
+        this.to = to;
+        this.name = name;
+    }
+    NumberSystem.get = function (ns) {
+        return NumberSystem.ns[ns];
+    };
+    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
+        return num.toString();
+    });
+    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
+        return num.toHexadecimal();
+    });
+    NumberSystem.bin = new NumberSystem('Binary', function (num) {
+        return num.toBinary();
+    });
+    NumberSystem.oct = new NumberSystem('Octal', function (num) {
+        return num.toOctal();
+    });
+    NumberSystem.ns = {
+        bin: NumberSystem.bin,
+        binary: NumberSystem.bin,
+        dec: NumberSystem.dec,
+        decimal: NumberSystem.dec,
+        hex: NumberSystem.hex,
+        hexadecimal: NumberSystem.hex,
+        oct: NumberSystem.oct,
+        octal: NumberSystem.oct,
+    };
+    return NumberSystem;
+}());
+exports.NumberSystem = NumberSystem;
+
+},{}],16:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var TT;
+(function (TT) {
+    TT["PLUS"] = "+";
+    TT["MINUS"] = "-";
+    TT["TIMES"] = "*";
+    TT["MOD"] = "mod";
+    TT["SLASH"] = "/";
+    TT["Number"] = "number";
+    TT["OPEN_PAREN"] = "(";
+    TT["CLOSE_PAREN"] = ")";
+    TT["NEWLINE"] = "\n";
+    TT["EOL"] = "EOL";
+    TT["IN"] = "in";
+    TT["NAME"] = "name";
+    TT["EQUAL"] = "=";
+    TT["COMMA"] = ",";
+    TT["PERCENTAGE"] = "%";
+    TT["OF"] = "of";
+    TT["UNIT"] = "unit";
+    TT["CAP"] = "^";
+    TT["NS"] = "ns";
+    TT["DOUBLE_COLON"] = ":";
+    TT["FLOOR_DIVIDE"] = "//";
+    TT["LESS_EQUAL"] = "<=";
+    TT["GREATER_EQUAL"] = ">=";
+    TT["LESS_EQUAL_EQUAL"] = "<==";
+    TT["GREATER_EQUAL_EQUAL"] = ">==";
+    TT["LESS"] = "<";
+    TT["GREATER"] = ">";
+    TT["EQUAL_EQUAL"] = "==";
+    TT["EQUAL_EQUAL_EQUAL"] = "===";
+    TT["NOT_EQUAL"] = "!=";
+    TT["NOT_EQUAL_EQUAL"] = "!==";
+    TT["NOT"] = "!";
+    TT["AND"] = "&&";
+    TT["OR"] = "||";
+    TT["Q"] = "?";
+    TT["CC"] = "cc";
+    TT["PLUS_EQUAL"] = "+=";
+    TT["MINUS_EQUAL"] = "-=";
+    TT["DIVIDE_EQUAL"] = "/=";
+    TT["FLOOR_DIVIDE_EQUAL"] = "//=";
+    TT["MULTIPLY_EQUAL"] = "*=";
+    TT["POWER_EQUAL"] = "^=";
+    TT["SCALE"] = "scale";
+})(TT || (TT = {}));
+exports.TT = TT;
+var Token = /** @class */ (function () {
+    function Token(type, lexeme, literal, start, end) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.start = start;
+        this.end = end;
+        this.literal = literal;
+    }
+    Token.EOL = function (end) {
+        return new Token(TT.EOL, 'EOL', null, end, end);
+    };
+    return Token;
+}());
+exports.Token = Token;
+
+},{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(10);

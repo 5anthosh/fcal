@@ -283,7 +283,7 @@ err: ${errorMessage}
   }
 });
 
-test('Strict mode types', () => {
+test('Strict mode types 2', () => {
   const expression = '23% + 34 cm + 1';
   const errorMessage = "Unexpected '+' operation between different types (unit, number)";
   const fcal = new Fcal();
@@ -341,4 +341,66 @@ test('Strict mode types (Not) ', () => {
     fcal.evaluate(expression);
   }).not.toThrowError();
   expect(fcal.evaluate(expression)).toStrictEqual(Type.BNumber.New(41.82));
+});
+
+test('Boolean in percentage operation', () => {
+  const expression = ' 34 + 4 + 5 * ( false of 34) + 100';
+  const errorMessage = 'Unexpected Boolean in percentage operation';
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ................^^^^^^^^^^^
+`);
+    }
+  }
+});
+
+test('Percentage value in left side ', () => {
+  const expression = ' 34 + 4 + 5 * (34 of 100 cm) + 100';
+  const errorMessage = 'Expecting Percentage type in left side of percentage operation but got (number, unit)';
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...............^^^^^^^^^^^^
+`);
+    }
+  }
+});
+
+test('Percentage value with different units', () => {
+  const expression = ' 34 + 4 + 5 * (34cm of 100 F) + 100';
+  const errorMessage = `Unexpected 'of' operation between different units (LENGTH, TEMPERATURE)`;
+  const fcal = new Fcal();
+  fcal.setStrict(true);
+  expect(() => {
+    fcal.evaluate(expression);
+  }).toThrowError(errorMessage);
+  try {
+    fcal.evaluate(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...............^^^^^^^^^^^^^
+`);
+    }
+  }
 });

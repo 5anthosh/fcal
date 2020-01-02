@@ -15,7 +15,7 @@ test('Percentage sub', () => {
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
 });
 
-test('Percentage divide and mulitiplication', () => {
+test('Percentage divide and multiplication', () => {
   const expression = '-24%*34 + (30 - 2*+(-2))%*24 ';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('-81.6'));
 
@@ -45,12 +45,12 @@ test('Percentage power and modulo', () => {
 });
 
 test('Percentage of', () => {
-  const expression = '24% of ((39 + 1) of 23) of 77* 34 ';
+  const expression = '(24% of ((39 + 1)% of 23))% of 77* 34 ';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('57.80544'));
 });
 test('Percentage of with units', () => {
   const expression = '24% of ((39sec + 1day in sec) of 23 minute) of 77* 34 ';
-  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('124916.110704'));
+  expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('10.03113872210460556'));
 });
 
 test('Percentage sub variable', () => {
@@ -63,4 +63,14 @@ test('Percentage sub variable', () => {
   expect(fcal.evaluate('f2 = (1000+23)% ')).toStrictEqual(new Type.Percentage('1023'));
   const expression1 = '-f1% - f2 - f3 ';
   expect(fcal.evaluate(expression1)).toStrictEqual(new Type.Percentage('-1257.25'));
+});
+
+test('Percentage with units 2', () => {
+  expect(Fcal.eval('(39 sec + 1 day in sec) of 23 minute')).toStrictEqual(new Type.Percentage('6263.6956521739130435'));
+  expect(Fcal.eval('24% of ((39 + 1) of 23) of 77* 34')).toStrictEqual(new Type.BNumber('361.284'));
+  expect(Fcal.eval('34 cm of 14 C')).toStrictEqual(new Type.Percentage('242.85714285714285714'));
+});
+
+test('Percentage with percentage values', () => {
+  expect(Fcal.eval('100 + 45% of 23.5%')).toStrictEqual(new Type.BNumber('291.48936170212765957'));
 });

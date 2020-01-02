@@ -234,7 +234,7 @@ namespace Type {
     }
 
     public not(): Numeric {
-      return new FBoolean(this.n).not();
+      return new FcalBoolean(this.n).not();
     }
     public abstract New(value: Decimal): Numeric;
     public abstract isZero(): boolean;
@@ -272,19 +272,19 @@ namespace Type {
     }
 
     public gt(value: Numeric): Numeric {
-      return new FBoolean(this.n.gt(value.n));
+      return new FcalBoolean(this.n.gt(value.n));
     }
     public gte(value: Numeric): Numeric {
-      return new FBoolean(this.n.gte(value.n));
+      return new FcalBoolean(this.n.gte(value.n));
     }
     public lt(value: Numeric): Numeric {
-      return new FBoolean(this.n.lt(value.n));
+      return new FcalBoolean(this.n.lt(value.n));
     }
     public lte(value: Numeric): Numeric {
-      return new FBoolean(this.n.lte(value.n));
+      return new FcalBoolean(this.n.lte(value.n));
     }
     public eq(value: Numeric): Numeric {
-      return new FBoolean(this.n.eq(value.n));
+      return new FcalBoolean(this.n.eq(value.n));
     }
     public nEq(value: Numeric): Numeric {
       return this.eq(value).not();
@@ -344,45 +344,45 @@ namespace Type {
     }
     public gt(value: Numeric): Numeric {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return new FBoolean(this.n.gt(value.n));
+        return new FcalBoolean(this.n.gt(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.gt(this.percentageValue(value.n)));
+        return new FcalBoolean(value.n.gt(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.percentageValue(value.n).gt(value.n));
+      return new FcalBoolean(this.percentageValue(value.n).gt(value.n));
     }
     public gte(value: Numeric): Numeric {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return new FBoolean(this.n.gte(value.n));
+        return new FcalBoolean(this.n.gte(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.gte(this.percentageValue(value.n)));
+        return new FcalBoolean(value.n.gte(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.percentageValue(value.n).gte(value.n));
+      return new FcalBoolean(this.percentageValue(value.n).gte(value.n));
     }
     public lt(value: Numeric): Numeric {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return new FBoolean(this.n.lt(value.n));
+        return new FcalBoolean(this.n.lt(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.lt(this.percentageValue(value.n)));
+        return new FcalBoolean(value.n.lt(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.percentageValue(value.n).lt(value.n));
+      return new FcalBoolean(this.percentageValue(value.n).lt(value.n));
     }
     public lte(value: Numeric): Numeric {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return new FBoolean(this.n.lte(value.n));
+        return new FcalBoolean(this.n.lte(value.n));
       }
       if (value.lf) {
-        return new FBoolean(value.n.lte(this.percentageValue(value.n)));
+        return new FcalBoolean(value.n.lte(this.percentageValue(value.n)));
       }
-      return new FBoolean(this.percentageValue(value.n).lte(value.n));
+      return new FcalBoolean(this.percentageValue(value.n).lte(value.n));
     }
     public eq(value: Numeric): Numeric {
       if (value.TYPE === DATATYPE.PERCENTAGE) {
-        return new FBoolean(this.n.eq(value.n));
+        return new FcalBoolean(this.n.eq(value.n));
       }
-      return new FBoolean(value.n.eq(this.percentageValue(value.n)));
+      return new FcalBoolean(value.n.eq(this.percentageValue(value.n)));
     }
     public nEq(value: Numeric): Numeric {
       return this.eq(value).not();
@@ -509,10 +509,10 @@ namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.id === right1.unit.id) {
-          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
+          return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).gt(right1.n));
         }
       }
-      return new FBoolean(left.n.gt(right.n));
+      return new FcalBoolean(left.n.gt(right.n));
     }
 
     public gte(value: Numeric): Numeric {
@@ -523,10 +523,10 @@ namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.id === right1.unit.id) {
-          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
+          return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).gte(right1.n));
         }
       }
-      return new FBoolean(left.n.gte(right.n));
+      return new FcalBoolean(left.n.gte(right.n));
     }
 
     public lt(value: Numeric): Numeric {
@@ -537,10 +537,10 @@ namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.id === right1.unit.id) {
-          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
+          return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).lt(right1.n));
         }
       }
-      return new FBoolean(left.n.lt(right.n));
+      return new FcalBoolean(left.n.lt(right.n));
     }
 
     public lte(value: Numeric): Numeric {
@@ -551,10 +551,10 @@ namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.id === right1.unit.id) {
-          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
+          return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).lte(right1.n));
         }
       }
-      return new FBoolean(left.n.lte(right.n));
+      return new FcalBoolean(left.n.lte(right.n));
     }
 
     public eq(value: Numeric): Numeric {
@@ -565,10 +565,10 @@ namespace Type {
         const left1: UnitNumber = left as UnitNumber;
         const right1: UnitNumber = right as UnitNumber;
         if (left1.unit.id === right1.unit.id) {
-          return new FBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
+          return new FcalBoolean(left1.convert(right1.ratio(), right1.bias()).eq(right1.n));
         }
       }
-      return new FBoolean(left.n.eq(right.n));
+      return new FcalBoolean(left.n.eq(right.n));
     }
 
     public nEq(value: Numeric): Numeric {
@@ -684,9 +684,9 @@ namespace Type {
     }
   }
 
-  export class FBoolean extends BNumber {
-    public static TRUE: FBoolean = new FBoolean(1);
-    public static FALSE: FBoolean = new FBoolean(0);
+  export class FcalBoolean extends BNumber {
+    public static TRUE: FcalBoolean = new FcalBoolean(1);
+    public static FALSE: FcalBoolean = new FcalBoolean(0);
     private v: boolean;
     constructor(value: string | number | Decimal | boolean) {
       if (typeof value === 'boolean') {
@@ -701,7 +701,7 @@ namespace Type {
       return this.v + '';
     }
     public not(): BNumber {
-      return this.v ? FBoolean.FALSE : FBoolean.TRUE;
+      return this.v ? FcalBoolean.FALSE : FcalBoolean.TRUE;
     }
   }
 }

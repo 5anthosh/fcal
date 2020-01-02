@@ -40,7 +40,7 @@ fcal.evaluate('23 % of 1023'); // 235.29
 
 fcal.evaluate('200 sec + 120 %'); // 440 Seconds
 
-// Unit convertion
+// Unit conversion
 fcal.evaluate('20 minutes + 34 day in sec'); // 2938800 Seconds
 
 fcal.evaluate('sin(PI)'); // -1.6167204971158028306e-24

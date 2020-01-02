@@ -134,7 +134,7 @@ class Evaluator implements Expr.IVisitor<Type> {
   }
 
   public visitBinaryExpr(expr: Expr.Binary): Type {
-    let left = this.evaluate(expr.left) as Type.Numeric;
+    const left = this.evaluate(expr.left) as Type.Numeric;
     const right = this.evaluate(expr.right) as Type.Numeric;
     if (this.strict) {
       this.checkInvalidOperation(expr.operator.type, [left, right]);
@@ -143,23 +143,23 @@ class Evaluator implements Expr.IVisitor<Type> {
       case TT.EQUAL_EQUAL:
         return left.EQ(right);
       case TT.EQUAL_EQUAL_EQUAL:
-        return new Type.FBoolean(left.n.eq(right.n));
+        return new Type.FcalBoolean(left.n.eq(right.n));
       case TT.NOT_EQUAL:
         return left.NEQ(right);
       case TT.NOT_EQUAL_EQUAL:
-        return new Type.FBoolean(!left.n.eq(right.n));
+        return new Type.FcalBoolean(!left.n.eq(right.n));
       case TT.GREATER:
         return left.GT(right);
       case TT.GREATER_EQUAL:
         return left.GTE(right);
       case TT.GREATER_EQUAL_EQUAL:
-        return new Type.FBoolean(left.n.gte(right.n));
+        return new Type.FcalBoolean(left.n.gte(right.n));
       case TT.LESS:
         return left.LT(right);
       case TT.LESS_EQUAL:
         return left.LTE(right);
       case TT.LESS_EQUAL_EQUAL:
-        return new Type.FBoolean(left.n.lte(right.n));
+        return new Type.FcalBoolean(left.n.lte(right.n));
       case TT.PLUS:
         return left.Add(right);
       case TT.MINUS:
@@ -177,10 +177,36 @@ class Evaluator implements Expr.IVisitor<Type> {
       case TT.CAP:
         return left.power(right);
       case TT.OF:
-        left = new Type.Percentage(left.n);
-        const per = left as Type.Percentage;
-        right.n = per.percentageValue(right.n);
-        return right;
+        // check whether boolean involved in percentage operation
+        if (left instanceof Type.FcalBoolean || right instanceof Type.FcalBoolean) {
+          throw new FcalError('Unexpected Boolean in percentage operation');
+        }
+        if (
+          (left instanceof Type.BNumber && right instanceof Type.BNumber) ||
+          (left instanceof Type.Percentage && right instanceof Type.Percentage)
+        ) {
+          return new Type.Percentage(left.n.div(right.n).mul(100));
+        }
+        if (left instanceof Type.UnitNumber && right instanceof Type.UnitNumber) {
+          if (left.unit.id === right.unit.id) {
+            return new Type.Percentage(
+              Type.UnitNumber.convertToUnit(left, right.unit)
+                .n.div(right.n)
+                .mul(100),
+            );
+          }
+          return new Type.Percentage(left.n.div(right.n).mul(100));
+        }
+        if (left instanceof Type.Percentage) {
+          const per = left as Type.Percentage;
+          right.n = per.percentageValue(right.n);
+          return right;
+        }
+        throw new FcalError(
+          `Expecting Percentage type in left side of percentage operation but got (${Type.typeVsStr[left.TYPE]}, ${
+            Type.typeVsStr[right.TYPE]
+          })`,
+        );
       default:
         return Type.BNumber.ZERO;
     }
@@ -249,12 +275,13 @@ class Evaluator implements Expr.IVisitor<Type> {
       }
       if (checkValue instanceof Type.UnitNumber && value instanceof Type.UnitNumber) {
         if (checkValue.unit.id !== value.unit.id) {
-          throw new FcalError(
-            `Unexpected '${operation}' operation between different units (${checkValue.unit.id}, ${value.unit.id})`,
-          );
+          this.throwUnexpectedUnits(operation, checkValue.unit.id, value.unit.id);
         }
       }
     }
+  }
+  private throwUnexpectedUnits(operation: TT, leftID: string, rightID: string): never {
+    throw new FcalError(`Unexpected '${operation}' operation between different units (${leftID}, ${rightID})`);
   }
 }
 

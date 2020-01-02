@@ -1,6 +1,6 @@
 import { Decimal } from 'decimal.js';
-import { Environment } from '../interpreter/environment';
-import { IUseFunction } from '../interpreter/function';
+import { Environment } from '../evaluator/environment';
+import { IUseFunction } from '../evaluator/function';
 import { Type } from '../types/datatype';
 
 export function getDefaultFunctions(): IUseFunction[] {
@@ -9,7 +9,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.abs());
       },
       name: 'abs',
@@ -18,7 +18,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.sqrt());
       },
 
@@ -28,7 +28,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.cbrt());
       },
       name: 'cbrt',
@@ -37,7 +37,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.log());
       },
       name: 'log',
@@ -46,7 +46,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.ln());
       },
       name: 'ln',
@@ -55,7 +55,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.round());
       },
       name: 'round',
@@ -64,7 +64,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.floor());
       },
       name: 'floor',
@@ -73,7 +73,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.ceil());
       },
       name: 'ceil',
@@ -82,7 +82,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.cos());
       },
       name: 'cos',
@@ -91,7 +91,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.acos());
       },
       name: 'acos',
@@ -100,7 +100,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.cosh());
       },
       name: 'cosh',
@@ -109,7 +109,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.acosh());
       },
       name: 'acosh',
@@ -118,7 +118,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.sin());
       },
       name: 'sin',
@@ -127,7 +127,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.asin());
       },
       name: 'asin',
@@ -136,7 +136,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.sinh());
       },
       name: 'sinh',
@@ -145,7 +145,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.asinh());
       },
       name: 'asinh',
@@ -154,7 +154,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.tan());
       },
       name: 'tan',
@@ -163,7 +163,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.atan());
       },
       name: 'atan',
@@ -172,7 +172,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.tanh());
       },
       name: 'tanh',
@@ -181,7 +181,7 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 1,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
-        const value = args[0] as Type.Numberic;
+        const value = args[0] as Type.Numeric;
         return value.New(value.n.atanh());
       },
       name: 'atanh',
@@ -190,8 +190,8 @@ export function getDefaultFunctions(): IUseFunction[] {
       arity: 2,
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Decimal => {
-        const start = args[0] as Type.Numberic;
-        const end = args[1] as Type.Numberic;
+        const start = args[0] as Type.Numeric;
+        const end = args[1] as Type.Numeric;
         start.n = start.n.minus(1);
         return end.n
           .mul(end.n.plus(1))
@@ -205,9 +205,9 @@ export function getDefaultFunctions(): IUseFunction[] {
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
         if (args.length > 0) {
-          let max = args[0] as Type.Numberic;
+          let max = args[0] as Type.Numeric;
           for (let index = 1; index < args.length; index++) {
-            const element = args[index] as Type.Numberic;
+            const element = args[index] as Type.Numeric;
             if (element.n.gt(max.n)) {
               max = element;
             }
@@ -223,9 +223,9 @@ export function getDefaultFunctions(): IUseFunction[] {
       // tslint:disable-next-line: variable-name
       func: (_env: Environment, args: Type[]): Type => {
         if (args.length > 0) {
-          let min = args[0] as Type.Numberic;
+          let min = args[0] as Type.Numeric;
           for (let index = 1; index < args.length; index++) {
-            const element = args[index] as Type.Numberic;
+            const element = args[index] as Type.Numeric;
             if (element.n.lt(min.n)) {
               min = element;
             }

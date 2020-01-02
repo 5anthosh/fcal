@@ -3,3 +3,4 @@ package-lock.json
 coverage
 .vscode
 lib
+example.json

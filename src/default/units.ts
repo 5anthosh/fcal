@@ -16,7 +16,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['cm', 'centimeter'],
         plural: 'Centimeters',
         ratio: 1,
@@ -25,7 +25,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['m', 'meter'],
         plural: 'Meters',
         ratio: 100,
@@ -34,7 +34,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['mm', 'milimeter'],
         plural: 'Milimeters',
         ratio: 0.1,
@@ -43,7 +43,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['km'],
         plural: 'Kilometers',
         ratio: 100000,
@@ -52,7 +52,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['inch'],
         plural: 'Inches',
         ratio: 2.54,
@@ -61,7 +61,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['ft'],
         plural: 'Feet',
         ratio: 30.48,
@@ -70,7 +70,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['yd', 'yard'],
         plural: 'Yards',
         ratio: 91.44,
@@ -79,7 +79,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['mi'],
         plural: 'Miles',
         ratio: 160934.4,
@@ -88,7 +88,7 @@ function setDistanceUnits(units: IUseUnit[]): void {
       },
 
       {
-        id: Unit.LENGTHID,
+        id: Unit.LENGTH_ID,
         phrases: ['nmi'],
         ratio: 185200,
         type: 'nautical mile (nmi)',
@@ -101,31 +101,31 @@ function setSpeedUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.SPEEDID,
+        id: Unit.SPEED_ID,
         phrases: ['kmh', 'kmph', 'khm', 'kph'],
         ratio: 1,
         type: 'km/h',
       },
       {
-        id: Unit.SPEEDID,
+        id: Unit.SPEED_ID,
         phrases: ['mph'],
         ratio: 1.609344,
         type: 'miles/h',
       },
       {
-        id: Unit.SPEEDID,
+        id: Unit.SPEED_ID,
         phrases: ['mps'],
         ratio: 3.6,
         type: 'm/s',
       },
       {
-        id: Unit.SPEEDID,
+        id: Unit.SPEED_ID,
         phrases: ['fps'],
         ratio: 1.097,
         type: 'ft/s',
       },
       {
-        id: Unit.SPEEDID,
+        id: Unit.SPEED_ID,
         phrases: ['kts', 'knots'],
         ratio: 1.852,
         type: 'kt',
@@ -138,7 +138,7 @@ function setTimeUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['nsec', 'nanosecond', 'nanoseconds'],
         plural: 'Nanoseconds',
         ratio: 1e-9,
@@ -146,7 +146,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'nsec',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['msec', 'microsecond', 'microseconds'],
         plural: 'Microseconds',
         ratio: 1e-6,
@@ -154,7 +154,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'msec',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['sec', 'second', 'seconds'],
         plural: 'Seconds',
         ratio: 1,
@@ -162,7 +162,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'second',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['minute', 'minutes'],
         plural: 'Minutes',
         ratio: 60,
@@ -170,7 +170,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'minute',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['hr', 'hour', 'hours'],
         plural: 'Hours',
         ratio: 3600,
@@ -178,7 +178,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'hour',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['day', 'days'],
         plural: 'Days',
         ratio: 86400,
@@ -186,7 +186,7 @@ function setTimeUnits(units: IUseUnit[]): void {
         type: 'day',
       },
       {
-        id: Unit.TIMEID,
+        id: Unit.TIME_ID,
         phrases: ['week', 'weeks'],
         plural: 'Weeks',
         ratio: 604800,
@@ -201,7 +201,7 @@ function setTemperatureUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.TEMPERATUREID,
+        id: Unit.TEMPERATURE_ID,
         phrases: ['K', 'kelvin'],
         ratio: 1,
         type: 'K',
@@ -209,14 +209,14 @@ function setTemperatureUnits(units: IUseUnit[]): void {
 
       {
         bias: '255.3722222222222',
-        id: Unit.TEMPERATUREID,
+        id: Unit.TEMPERATURE_ID,
         phrases: ['°F', 'F'],
         ratio: '0.55555555555555555556',
         type: '°F',
       },
       {
         bias: 273.15,
-        id: Unit.TEMPERATUREID,
+        id: Unit.TEMPERATURE_ID,
         phrases: ['°C', 'C'],
         ratio: 1,
         type: '°C',
@@ -229,61 +229,61 @@ function setMassUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['gram', 'g'],
         ratio: 1,
         type: 'gram',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['tonne'],
         ratio: 1e6,
         type: 'tonne',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['kg', 'kilogram'],
         ratio: 1000,
         type: 'kilogram',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['milligram', 'mg'],
         ratio: 0.001,
         type: 'milligram',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['microgram'],
         ratio: 1e-6,
         type: 'microgram',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['imperialton'],
         ratio: '1.016e+6',
         type: 'imperialton',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['USton'],
         ratio: '907185',
         type: 'USton',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['stone'],
         ratio: '6350.29',
         type: 'stone',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['pound'],
         ratio: '453.592',
         type: 'pound',
       },
       {
-        id: Unit.MASSID,
+        id: Unit.MASS_ID,
         phrases: ['ounce'],
         ratio: '28.3495',
         type: 'ounce',
@@ -296,134 +296,134 @@ function setDigitalStorageUnits(units: IUseUnit[]): void {
   units.push(
     ...[
       {
-        id: Unit.DIGITAL,
+        id: Unit.DIGITAL_ID,
         phrases: ['bit'],
         ratio: 1,
         type: 'bit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['kilobit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['kilobit', 'kB'],
         ratio: 1000,
         type: 'kilobit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['kibibit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['kibibit', 'kiB'],
         ratio: 1024,
         type: 'kibibit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['megabit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['megabit', 'mB'],
         ratio: 1e6,
         type: 'megabit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['mebibit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['mebibit', 'miB'],
         ratio: '1.049e+6',
         type: 'mebibit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['gigabit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['gigabit', 'gB'],
         ratio: 1e9,
         type: 'gigabit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['gibibit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['gibibit', 'giB'],
         ratio: '1.074e+9',
         type: 'gibibit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['terabit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['terabit', 'tB'],
         ratio: 1e12,
         type: 'terabit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['tebibit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['tebibit', 'tiB'],
         ratio: '1.1e+12',
         type: 'tebibit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['petabit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['petabit', 'pB'],
         ratio: 1e15,
         type: 'petabit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['pebibit'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['pebibit', 'piB'],
         ratio: '1.126e+15',
         type: 'pebibit',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['byte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['byte', 'b'],
         ratio: 8,
         type: 'byte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['kilobyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['kilobyte', 'kb'],
         ratio: 8000,
         type: 'kilobyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['kibibyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['kibibyte', 'kib'],
         ratio: 8192,
         type: 'kibibyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['megabyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['megabyte', 'mb'],
         ratio: 8e6,
         type: 'megabyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['mebibyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['mebibyte', 'mib'],
         ratio: '8.389e+6',
         type: 'mebibyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['gigabyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['gigabyte', 'gb'],
         ratio: 8e9,
         type: 'gigabyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['gibibyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['gibibyte', 'gib'],
         ratio: '8.59e+9',
         type: 'gibibyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['terabyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['terabyte', 'tb'],
         ratio: 8e12,
         type: 'terabyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['tebibyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['tebibyte', 'tib'],
         ratio: '8.796e+12',
         type: 'tebibyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['petabyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['petabyte', 'pb'],
         ratio: 8e15,
         type: 'petabyte',
       },
       {
-        id: Unit.DIGITAL,
-        phrases: ['pebibyte'],
+        id: Unit.DIGITAL_ID,
+        phrases: ['pebibyte', 'pib'],
         ratio: '9.007e+15',
         type: 'pebibyte',
       },

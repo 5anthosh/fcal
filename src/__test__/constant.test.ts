@@ -21,5 +21,9 @@ test('create new Constant', () => {
 test('create already created constant', () => {
   expect(() => {
     Fcal.useConstants({ c1: 2355 });
-  }).not.toThrowError();
+  }).toThrowError('c1 is already used in constant');
+});
+
+test('Reassign the constants', () => {
+  expect(() => Fcal.eval('PI = 45')).toThrowError("Can't reassign constant PI");
 });

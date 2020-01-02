@@ -1,5 +1,5 @@
 import { Decimal } from 'decimal.js';
-import { Entity, SymbolTable } from '../interpreter/symboltable';
+import { Entity, SymbolTable } from '../evaluator/symboltable';
 
 type callbackFuncFmt = () => Decimal | number;
 
@@ -16,6 +16,7 @@ interface IUseUnit {
   singular?: string;
   plural?: string;
 }
+
 class UnitMeta {
   public id: string;
   public r: Decimal | callbackFuncFmt;
@@ -110,12 +111,12 @@ class Unit {
 
 // tslint:disable-next-line:no-namespace
 namespace Unit {
-  export const LENGTHID = 'LENGTH';
-  export const SPEEDID = 'SPEED';
-  export const TIMEID = 'TIME';
-  export const TEMPERATUREID = 'TIMERATURE';
-  export const MASSID = "MASS";
-  export const DIGITAL = "DIGITAL STORAGE ID"
+  export const LENGTH_ID = 'LENGTH';
+  export const SPEED_ID = 'SPEED';
+  export const TIME_ID = 'TIME';
+  export const TEMPERATURE_ID = 'TEMPERATURE';
+  export const MASS_ID = 'MASS';
+  export const DIGITAL_ID = 'DIGITAL STORAGE';
 
   /**
    * List of {Unit} sunits

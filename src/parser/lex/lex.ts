@@ -1,8 +1,10 @@
-import { FcalError } from '../fcal';
-import { Type } from '../types/datatype';
-import { NumberSystem } from '../types/numberSystem';
-import { Phrases } from '../types/phrase';
-import { Unit } from '../types/units';
+import { Converter } from '../../evaluator/converter';
+import { Scale } from '../../evaluator/scale';
+import { FcalError } from '../../fcal';
+import { Type } from '../../types/datatype';
+import { NumberSystem } from '../../types/numberSystem';
+import { Phrases } from '../../types/phrase';
+import { Unit } from '../../types/units';
 import { Token, TT } from './token';
 
 class Lexer {
@@ -11,14 +13,20 @@ class Lexer {
     TT.MINUS,
     TT.TIMES,
     TT.SLASH,
-    TT.OPEN_PARAN,
-    TT.CLOSE_PARAN,
+    TT.OPEN_PAREN,
+    TT.CLOSE_PAREN,
     TT.CAP,
     TT.PERCENTAGE,
     TT.EQUAL,
     TT.COMMA,
     TT.DOUBLE_COLON,
     TT.NEWLINE,
+    '&',
+    '|',
+    TT.LESS,
+    TT.GREATER,
+    '!',
+    TT.Q,
   ];
 
   private static isDigit(char: string): boolean {
@@ -53,15 +61,19 @@ class Lexer {
   private start: number;
   private current: number;
   private phrases: Phrases;
+  private cc: Converter;
+  private scale: Scale;
 
-  constructor(source: string, phrases: Phrases, untis: Unit.List) {
+  constructor(source: string, phrases: Phrases, units: Unit.List, cc: Converter, scale: Scale) {
     // Removing the space around expression
     this.source = source.replace(/[ \t]+$/, '');
     this.start = 0;
     this.current = 0;
     this.tokens = Array<Token>();
     this.phrases = phrases;
-    this.units = untis;
+    this.units = units;
+    this.cc = cc;
+    this.scale = scale;
   }
 
   public Next(): Token {
@@ -75,33 +87,113 @@ class Lexer {
     const char = this.space();
     switch (char) {
       case TT.PLUS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.PLUS_EQUAL);
+        }
         return this.TT(TT.PLUS);
       case TT.MINUS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.MINUS_EQUAL);
+        }
         return this.TT(TT.MINUS);
       case TT.TIMES:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.MULTIPLY_EQUAL);
+        }
         if (this.peek(0) === TT.TIMES) {
           this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.POWER_EQUAL);
+          }
           return this.TT(TT.CAP);
         }
         return this.TT(TT.TIMES);
       case TT.SLASH:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.DIVIDE_EQUAL);
+        }
         if (this.peek(0) === TT.SLASH) {
           this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.FLOOR_DIVIDE_EQUAL);
+          }
           return this.TT(TT.FLOOR_DIVIDE);
         }
         return this.TT(TT.SLASH);
       case TT.EQUAL:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.EQUAL_EQUAL_EQUAL);
+          }
+          return this.TT(TT.EQUAL_EQUAL);
+        }
         return this.TT(TT.EQUAL);
+      case TT.NOT:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.NOT_EQUAL_EQUAL);
+          }
+          return this.TT(TT.NOT_EQUAL);
+        }
+        return this.TT(TT.NOT);
+      case TT.GREATER:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.GREATER_EQUAL_EQUAL);
+          }
+          return this.TT(TT.GREATER_EQUAL);
+        }
+        return this.TT(TT.GREATER);
+      case TT.LESS:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          if (this.peek(0) === TT.EQUAL) {
+            this.eat();
+            return this.TT(TT.LESS_EQUAL_EQUAL);
+          }
+          return this.TT(TT.LESS_EQUAL);
+        }
+        return this.TT(TT.LESS);
+      case '&':
+        if (this.peek(0) === '&') {
+          this.eat();
+          return this.TT(TT.AND);
+        }
+        throw new FcalError('Unexpected character &', this.current);
+      case '|':
+        if (this.peek(0) === '|') {
+          this.eat();
+          return this.TT(TT.OR);
+        }
+        throw new FcalError('Unexpected character |', this.current);
       case TT.COMMA:
         return this.TT(TT.COMMA);
       case TT.DOUBLE_COLON:
         return this.TT(TT.DOUBLE_COLON);
-      case TT.OPEN_PARAN:
-        return this.TT(TT.OPEN_PARAN);
-      case TT.CLOSE_PARAN:
-        return this.TT(TT.CLOSE_PARAN);
+      case TT.OPEN_PAREN:
+        return this.TT(TT.OPEN_PAREN);
+      case TT.CLOSE_PAREN:
+        return this.TT(TT.CLOSE_PAREN);
       case TT.CAP:
+        if (this.peek(0) === TT.EQUAL) {
+          this.eat();
+          return this.TT(TT.POWER_EQUAL);
+        }
         return this.TT(TT.CAP);
+      case TT.Q:
+        return this.TT(TT.Q);
       case TT.PERCENTAGE:
         return this.TT(TT.PERCENTAGE);
       case TT.NEWLINE:
@@ -143,6 +235,10 @@ class Lexer {
     if (type) {
       return this.TT(type);
     }
+    const s = this.scale.get(text);
+    if (s) {
+      return this.TTWithLiteral(TT.SCALE, text);
+    }
     const unit = this.units.get(text);
     if (unit) {
       return this.TTWithLiteral(TT.UNIT, text);
@@ -151,57 +247,80 @@ class Lexer {
     if (ns) {
       return this.TTWithLiteral(TT.NS, text);
     }
+    const cc = this.cc.get(text);
+    if (cc) {
+      return this.TTWithLiteral(TT.CC, text);
+    }
     return this.TT(TT.NAME);
   }
 
   private number(): Token {
-    if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+    if (this.previous() === '0' && (this.peek(0) === 'b' || this.peek(0) === 'B')) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isBinaryDigit(this.peek(0))) {
           throw new FcalError(`Unexpected '${this.peek(0)}' in binary number`, this.current);
         }
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isBinaryDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.bin);
       return this.TTWithLiteral(TT.Number, value);
     }
 
-    if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+    if (this.previous() === '0' && (this.peek(0) === 'o' || this.peek(0) === 'O')) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isOctalDigit(this.peek(0))) {
           throw new FcalError(`Unexpected '${this.peek(0)}' in Octal number`, this.current);
         }
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isOctalDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.oct);
       return this.TTWithLiteral(TT.Number, value);
     }
 
-    if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+    if (this.previous() === '0' && (this.peek(0) === 'x' || this.peek(0) === 'X')) {
       this.eat();
       if (!Lexer.isHexDigit(this.peek(0))) {
-        throw new FcalError(`Unexpected '${this.peek(0)}' in Hexa decimal`, this.current);
+        throw new FcalError(`Unexpected '${this.peek(0)}' in Hexadecimal`, this.current);
       }
       while (Lexer.isHexDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isHexDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.hex);
       return this.TTWithLiteral(TT.Number, value);
     }
 
+    if (this.peek(0) === '_') {
+      this.eat();
+    }
+
     while (Lexer.isDigit(this.peek(0))) {
       this.eat();
+      if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+        this.eat();
+      }
     }
 
     if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+          this.eat();
+        }
       }
     }
 
@@ -213,14 +332,21 @@ class Lexer {
         this.eat();
       }
       if (!Lexer.isDigit(this.peek(0))) {
-        throw new FcalError(`Expecting number after ${c} but got '${this.peek(0)}'`, this.start, this.current);
+        let peekValue = this.peek(0);
+        if (peekValue === '\n') {
+          peekValue = 'EOL';
+        }
+        throw new FcalError(`Expecting number after ${c} but got '${peekValue}'`, this.start, this.current);
       }
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+          this.eat();
+        }
       }
     }
 
-    return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme()));
+    return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme().replace(/_/g, '')));
   }
 
   private TT(type: TT): Token {
@@ -245,6 +371,13 @@ class Lexer {
       char = this.eat();
     }
     return char;
+  }
+
+  private previous(): string {
+    if (this.current > 0) {
+      return this.source.charAt(this.current - 1);
+    }
+    return '\0';
   }
 }
 

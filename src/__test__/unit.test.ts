@@ -19,8 +19,8 @@ test('Time units addition In operator', () => {
   if (unit != null) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('176423', unit));
   }
+  expect(() => Fcal.eval('45 cm in ')).toThrowError('Expecting unit after in');
 });
-``
 test('Time units addition as operator', () => {
   const expression = '1 day - 1day*23sec + 23sec + 1hr as sec ';
   const unit = Fcal.getUnit('sec');
@@ -38,6 +38,7 @@ test('Invalid unit operations', () => {
   expect(unit).not.toEqual(null);
   if (unit != null) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('24.412934840534418202', unit));
+    expect(Fcal.eval('45 km * 60 day')).toStrictEqual(new Type.UnitNumber(2700, unit));
   }
 });
 
@@ -46,8 +47,9 @@ test('Time units addition In operator', () => {
     '1 day - 1day*23sec + 23sec + 1hr in sec + 1 sec / 1sec - 1sec * 1sec + 1sec ^ 1sec - 3sec mod 2sec';
   const unit = Fcal.getUnit('sec');
   expect(unit).not.toEqual(null);
-  if (unit != null) {
+  if (unit) {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('-1897177', unit));
+    expect(Fcal.eval('45 sec * 10 %')).toStrictEqual(new Type.UnitNumber(202.5, unit));
   }
 });
 
@@ -67,6 +69,23 @@ test('units division', () => {
   }
 });
 
+test('units power and modulo', () => {
+  const unit = Fcal.getUnit('kph');
+  expect(unit).not.toBeNull();
+  const unit1 = Fcal.getUnit('day');
+  expect(unit1).not.toBeNull();
+  const unit2 = Fcal.getUnit('C');
+  expect(unit2).not.toBeNull();
+  if (unit && unit1 && unit2) {
+    expect(Fcal.eval('45 kph ** 2 seconds')).toStrictEqual(new Type.UnitNumber(2025, unit));
+    expect(Fcal.eval('23 days ** 1 weeks')).toStrictEqual(new Type.UnitNumber(3404825447, unit1));
+    expect(Fcal.eval('(-60 C )** 20')).toStrictEqual(new Type.UnitNumber('3.656158440062976e+35', unit2));
+    expect(Fcal.eval('45 days mod 5 kb')).toStrictEqual(new Type.UnitNumber(0, unit1));
+    expect(Fcal.eval('17 C mod 3 K')).toStrictEqual(new Type.UnitNumber(17, unit2));
+    expect(Fcal.eval('17 C mod 3 ')).toStrictEqual(new Type.UnitNumber(2, unit2));
+    expect(Fcal.eval('78 mod 2 kph ')).toStrictEqual(new Type.UnitNumber(0, unit));
+  }
+});
 test('Singular and Plural units phrases', () => {
   const expression = '0 sec + 1 sec';
   let unit;
@@ -86,7 +105,7 @@ test('Singular and Plural units phrases', () => {
 
 test('Add new unit type to Existing Unit', () => {
   Fcal.UseUnit(
-    new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months'])
+    new Unit(Unit.TIME_ID, 2592000, 'month', ['month', 'months'])
       .Singular('month')
       .Plural('months')
       .setBias((): number => 0),
@@ -99,7 +118,7 @@ test('Add new unit type to Existing Unit', () => {
   expect(() =>
     Fcal.UseUnit({
       bias: (): Decimal => new Decimal(0),
-      id: Unit.LENGTHID,
+      id: Unit.LENGTH_ID,
       phrases: ['news', 'news2'],
       ratio: 1.2,
       type: 'new-length',
@@ -150,7 +169,7 @@ test('Create whole new unit', () => {
 
 test('Add already existing unit', () => {
   expect(() => {
-    Fcal.UseUnit(new Unit(Unit.TIMEID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
+    Fcal.UseUnit(new Unit(Unit.TIME_ID, 2592000, 'month', ['month', 'months']).Singular('month').Plural('months'));
   }).toThrowError('month is already used in unit');
 });
 

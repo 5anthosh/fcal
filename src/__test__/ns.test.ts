@@ -26,7 +26,7 @@ test('Invalid number literal (Number system)', () => {
   }).toThrowError("Unexpected '9' in Octal number");
   expect(() => {
     Fcal.eval('0xz11122aaa');
-  }).toThrowError("Unexpected 'z' in Hexa decimal");
+  }).toThrowError("Unexpected 'z' in Hexadecimal");
 
   expect(() => {
     Fcal.eval('0x123011z11122aaa');

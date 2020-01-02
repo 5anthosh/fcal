@@ -5,8 +5,8 @@ enum TT {
   MOD = 'mod',
   SLASH = '/',
   Number = 'number',
-  OPEN_PARAN = '(',
-  CLOSE_PARAN = ')',
+  OPEN_PAREN = '(',
+  CLOSE_PAREN = ')',
   NEWLINE = '\n',
   EOL = 'EOL',
   IN = 'in',
@@ -20,16 +20,38 @@ enum TT {
   NS = 'ns',
   DOUBLE_COLON = ':',
   FLOOR_DIVIDE = '//',
+  LESS_EQUAL = '<=',
+  GREATER_EQUAL = '>=',
+  LESS_EQUAL_EQUAL = '<==',
+  GREATER_EQUAL_EQUAL = '>==',
+  LESS = '<',
+  GREATER = '>',
+  EQUAL_EQUAL = '==',
+  EQUAL_EQUAL_EQUAL = '===',
+  NOT_EQUAL = '!=',
+  NOT_EQUAL_EQUAL = '!==',
+  NOT = '!',
+  AND = '&&',
+  OR = '||',
+  Q = '?',
+  CC = 'cc',
+  PLUS_EQUAL = '+=',
+  MINUS_EQUAL = '-=',
+  DIVIDE_EQUAL = '/=',
+  FLOOR_DIVIDE_EQUAL = '//=',
+  MULTIPLY_EQUAL = '*=',
+  POWER_EQUAL = '^=',
+  SCALE = 'scale',
 }
 
 class Token {
   public static EOL(end: number): Token {
-    return new Token(TT.EOL, '', null, end, end);
+    return new Token(TT.EOL, 'EOL', null, end, end);
   }
 
   public type: TT;
   public lexeme: string;
-  public Literal: any;
+  public literal: any;
   public start: number;
   public end: number;
 
@@ -38,15 +60,7 @@ class Token {
     this.lexeme = lexeme;
     this.start = start;
     this.end = end;
-    this.Literal = literal;
-  }
-
-  public toString(): string {
-    let literal = '';
-    if (this.Literal !== null) {
-      literal = this.Literal.format();
-    }
-    return `< ${this.type} ${this.lexeme} ${literal} (${this.start}, ${this.end})>`;
+    this.literal = literal;
   }
 }
 

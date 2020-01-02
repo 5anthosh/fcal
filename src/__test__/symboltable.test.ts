@@ -1,8 +1,8 @@
 import Decimal from 'decimal.js';
 import { Fcal } from '../fcal';
-import { FcalFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
 import { Unit } from '../types/units';
+import { FcalFunction } from '../evaluator/function';
 
 test('create variable with already used phrases', () => {
   expect(() => {
@@ -23,6 +23,10 @@ test('create variable with already used phrases', () => {
   expect(() => {
     Fcal.eval('E : 0.34E4');
   }).not.toThrowError('sin is already used in constant');
+
+  expect(() => {
+    Fcal.eval('num : 0.34E4');
+  }).toThrowError('Expect expression but found num [converter]');
 });
 
 test('create variable with already used phrases (Fcal obj using variables)', () => {
@@ -48,6 +52,11 @@ test('create variable with already used phrases (Fcal obj using variables)', () 
     const fcal = new Fcal();
     fcal.setValues({ E: new Decimal(0) });
   }).not.toThrowError('E is already used in variable');
+
+  expect(() => {
+    const fcal = new Fcal();
+    fcal.setValues({ number: new Decimal(0) });
+  }).toThrowError('number is already used in converter');
 });
 
 test('create variable with already used phrases (Fcal obj using variables)', () => {
@@ -73,6 +82,11 @@ test('create variable with already used phrases (Fcal obj using variables)', () 
     const exp = new Fcal().expression('mpc * 90');
     exp.setValues({ E: new Decimal(0) });
   }).not.toThrowError('E is already used in variable');
+
+  expect(() => {
+    const exp = new Fcal().expression('mpc * 90');
+    exp.setValues({ percentage: new Decimal(0) });
+  }).toThrowError('percentage is already used in converter');
 });
 
 test('set phrase after create variable using fcal obj )', () => {
@@ -110,7 +124,11 @@ test('create unit with already used phrases', () => {
 
   expect(() => {
     Fcal.UseUnit(new Unit('TEST', 10, 'TEST', ['PI2']));
-  }).toThrowError('PI2 is already used in variable');
+  }).toThrowError('PI2 is already used in constant');
+
+  expect(() => {
+    Fcal.UseUnit(new Unit('TEST', 10, 'TEST', ['percent']));
+  }).toThrowError('percent is already used in converter');
 });
 
 test('create function with already used phrases', () => {
@@ -153,6 +171,14 @@ test('create function with already used phrases', () => {
       }),
     );
   }).toThrowError('_ is already used in variable');
+
+  expect(() => {
+    Fcal.UseFunction(
+      new FcalFunction('num', 4, (): number => {
+        return 45;
+      }),
+    );
+  }).toThrowError('num is already used in converter');
 });
 
 test('create constant with already used phrases', () => {
@@ -173,4 +199,23 @@ test('create constant with already used phrases', () => {
   expect(() => {
     Fcal.useConstants({ E: new Decimal(0) });
   }).not.toThrowError('E is already used in variable');
+});
+
+test('create constant with already used phrases', () => {
+  const c = (v: Type): Type => {
+    return v;
+  };
+  expect(() => {
+    Fcal.useConverter('kb', c);
+  }).toThrowError('kb is already used in unit');
+
+  expect(() => {
+    Fcal.useConverter('min', c);
+  }).toThrowError('min is already used in function');
+  expect(() => {
+    Fcal.useConverter('ADD', c);
+  }).toThrowError('ADD is already used in operation phrase');
+  expect(() => {
+    Fcal.useConverter('octal', c);
+  }).toThrowError('octal is already used in number system');
 });

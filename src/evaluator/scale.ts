@@ -3,9 +3,10 @@ import { Type } from '../types/datatype';
 import { EnvInputType } from './environment';
 import { Entity, SymbolTable } from './symboltable';
 
-class Constant {
-  // simple object is used for variables
-  // with key as variable name and value as value
+/**
+ * Scale is used to define scale of number literal
+ */
+class Scale {
   public readonly symbolTable: SymbolTable;
   public readonly values: Map<string, Type>;
 
@@ -14,15 +15,16 @@ class Constant {
     this.symbolTable = symbolTable;
   }
 
+  public get(key: string): Type | undefined {
+    return this.values.get(key);
+  }
   /**
-   * create or assign a constant with value
-   * @param {string} key constatn name
+   * create new scale
+   * @param {string} key scale name
    * @param  {Type | Big.Decimal | number | string} value value
    */
   public set(key: string, value: Type | Decimal | number | string): void {
-    if (!this.values.has(key)) {
-      this.symbolTable.set(key, Entity.VARIABLE);
-    }
+    this.symbolTable.set(key, Entity.SCALE);
     if (value instanceof Type) {
       this.values.set(key, value);
       return;
@@ -31,7 +33,7 @@ class Constant {
   }
 
   /**
-   * import values from Object or map into constants
+   * import values from Object or map into scale
    * @param {Object | Map} values
    */
   public use(values: EnvInputType): void {
@@ -50,4 +52,4 @@ class Constant {
   }
 }
 
-export { Constant };
+export { Scale };

@@ -1,12 +1,15 @@
 import { Decimal } from 'decimal.js';
 import { getDefaultFunctions } from './default/functions';
 import { getDefaultUnits } from './default/units';
-import { Constant } from './interpreter/constants';
-import { EnvInputType, Environment } from './interpreter/environment';
-import { FcalFunction, IUseFunction } from './interpreter/function';
-import { Interpreter } from './interpreter/interpreter';
-import { Entity, SymbolTable } from './interpreter/symboltable';
-import { TT } from './lex/token';
+import { Constant } from './evaluator/constants';
+import { Converter, converterFuncFmt } from './evaluator/converter';
+import { EnvInputType, Environment } from './evaluator/environment';
+import { Evaluator } from './evaluator/evaluator';
+import { FcalFunction, IUseFunction } from './evaluator/function';
+import { Scale } from './evaluator/scale';
+import { Entity, SymbolTable } from './evaluator/symboltable';
+import { JSONParser } from './json/JSONParser';
+import { TT } from './parser/lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { IUseUnit, Unit, UnitMeta } from './types/units';
@@ -97,10 +100,24 @@ class Fcal {
     this.constants.use(constants);
   }
 
+  /**
+   * useScales register new scale in fcal
+   * @param { { [index: string]: Type | Decimal | number | string } } scales
+   */
+  public static useScales(scales: EnvInputType): void {
+    this.scales.use(scales);
+  }
+
+  public static useConverter(id: string, f: converterFuncFmt): void {
+    this.converters.set(id, f);
+  }
+
   public static initialize(): void {
-    this.gst = new SymbolTable();
+    if (!this.gst) {
+      this.gst = new SymbolTable();
+    }
     if (!this.phrases) {
-      this.phrases = this.getdefaultphrases();
+      this.phrases = this.getDefaultPhrases();
     }
     if (!this.units) {
       this.units = new Unit.List(Fcal.gst);
@@ -114,6 +131,14 @@ class Fcal {
       this.constants = new Constant(this.gst);
       this.setDefaultConstants();
     }
+    if (!this.converters) {
+      this.converters = new Converter(this.gst);
+      this.setDefaultConverter();
+    }
+    if (!this.scales) {
+      this.scales = new Scale(this.gst);
+      this.setDefaultScales();
+    }
   }
 
   /*=========================== Private static =================================== */
@@ -123,10 +148,12 @@ class Fcal {
   private static functions: FcalFunction.List;
   private static phrases: Phrases;
   private static constants: Constant;
+  private static converters: Converter;
+  private static scales: Scale;
 
-  private static getdefaultphrases(): Phrases {
+  private static getDefaultPhrases(): Phrases {
     const phrases = new Phrases(this.gst);
-    phrases.push(TT.PLUS, ['PLUS', 'AND', 'WITH', 'ADD']);
+    phrases.push(TT.PLUS, ['PLUS', 'WITH', 'ADD']);
     phrases.push(TT.MINUS, ['MINUS', 'SUBTRACT', 'WITHOUT']);
     phrases.push(TT.TIMES, ['TIMES', 'MULTIPLIEDBY', 'mul']);
     phrases.push(TT.SLASH, ['DIVIDE', 'DIVIDEBY']);
@@ -134,6 +161,9 @@ class Fcal {
     phrases.push(TT.MOD, ['mod']);
     phrases.push(TT.OF, ['of']);
     phrases.push(TT.IN, ['in', 'as']);
+    phrases.push(TT.AND, ['and']);
+    phrases.push(TT.OR, ['or']);
+    phrases.push(TT.NOT, ['not']);
     return phrases;
   }
 
@@ -150,28 +180,70 @@ class Fcal {
       E: Type.BNumber.New('2.718281828459045235360287'),
       PI: Type.BNumber.New('3.141592653589793238462645'),
       PI2: Type.BNumber.New('6.2831853071795864769'),
-      _: Type.BNumber.ZERO,
+      false: Type.FcalBoolean.FALSE,
+      true: Type.FcalBoolean.TRUE,
     });
+  }
+
+  private static setDefaultScales(): void {
+    const thousand = 1000;
+    const million = 10_00_000;
+    const billion = 1_00_00_000;
+    this.useScales({ k: thousand, M: million, B: billion, thousand, million, billion });
+  }
+
+  private static setDefaultConverter() {
+    const num = (v: Type): Type => {
+      return Type.BNumber.New((v as Type.Numeric).n);
+    };
+    const per = (v: Type): Type => {
+      return Type.Percentage.New((v as Type.Numeric).n);
+    };
+    this.useConverter('number', num);
+    this.useConverter('num', num);
+    this.useConverter('percentage', per);
+    this.useConverter('percent', per);
   }
 
   /* ========================= Class attributes ===============================  */
 
   private environment: Environment;
   private lst: SymbolTable;
+  private strict: boolean;
 
   constructor() {
     this.lst = Fcal.gst.clone();
+    this.strict = false;
     this.environment = new Environment(Fcal.functions, this.lst, Fcal.constants);
   }
 
   /**
    * Evaluates given expression
+   * it appends new line character if not present
    * @param {string} expression Math expression
    * @returns {Type} result of expression
    */
   public evaluate(source: string): Type {
     source = prefixNewLIne(source);
-    return new Interpreter(source, Fcal.phrases, Fcal.units, this.environment).evaluateExpression();
+    return this.rawEvaluate(source);
+  }
+
+  /**
+   * rawEvaluates given expression
+   * it does not appends new line character if not present
+   * @param {string} expression Math expression
+   * @returns {Type} result of expression
+   */
+  public rawEvaluate(source: string): Type {
+    return new Evaluator(
+      source,
+      Fcal.phrases,
+      Fcal.units,
+      this.environment,
+      Fcal.converters,
+      Fcal.scales,
+      this.strict,
+    ).evaluateExpression();
   }
 
   /**
@@ -184,7 +256,17 @@ class Fcal {
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, env));
+    return new Expression(
+      new Evaluator(
+        source /* expression */,
+        Fcal.phrases,
+        Fcal.units,
+        env /* environment */,
+        Fcal.converters /* converters */,
+        Fcal.scales,
+        this.strict,
+      ),
+    );
   }
 
   /**
@@ -194,15 +276,48 @@ class Fcal {
    */
   public expressionSync(source: string): Expression {
     source = prefixNewLIne(source);
-    return new Expression(new Interpreter(source, Fcal.phrases, Fcal.units, this.environment));
+    return new Expression(
+      new Evaluator(
+        source /* expression */,
+        Fcal.phrases /* environment */,
+        Fcal.units,
+        this.environment,
+        Fcal.converters /* converters */,
+        Fcal.scales,
+        this.strict,
+      ),
+    );
   }
 
   /**
    * create a new variable with value or assign value to variable
-   * @param {Object | EnvInputType} values vairbles
+   * @param {Object | EnvInputType} values variables
    */
   public setValues(values: EnvInputType) {
     this.environment.use(values);
+  }
+
+  /**
+   * Import expression from JSON
+   * @param {string} source json
+   * @returns {Expression}
+   */
+  public fromJSON(source: string): Expression {
+    const parser = new JSONParser(source, Fcal.units, Fcal.converters);
+    const symbolTable = this.lst.clone();
+    const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
+    env.values = new Map<string, Type>(this.environment.values);
+    source = prefixNewLIne(source);
+    return new Expression(
+      new Evaluator(parser.parse(), Fcal.phrases, Fcal.units, env, Fcal.converters, Fcal.scales, this.strict),
+    );
+  }
+  /**
+   * Set strict mode
+   * @param v
+   */
+  public setStrict(v: boolean): void {
+    this.strict = v;
   }
 }
 
@@ -218,10 +333,10 @@ function prefixNewLIne(source: string): string {
  * evaluate AST with its state
  */
 class Expression {
-  private readonly interpreter: Interpreter;
+  private readonly evaluator: Evaluator;
 
-  constructor(interpeter: Interpreter) {
-    this.interpreter = interpeter;
+  constructor(evaluator: Evaluator) {
+    this.evaluator = evaluator;
   }
 
   /**
@@ -229,7 +344,7 @@ class Expression {
    * @returns {Type}  result of Math expression
    */
   public evaluate(): Type {
-    return this.interpreter.evaluateExpression();
+    return this.evaluator.evaluateExpression();
   }
 
   /**
@@ -238,11 +353,23 @@ class Expression {
    * @param {Object | Map} values variables
    */
   public setValues(values: EnvInputType): void {
-    this.interpreter.setValues(values);
+    this.evaluator.environment.use(values);
   }
 
   public getAST(): string {
-    return this.interpreter.getAST();
+    return this.evaluator.getAST();
+  }
+
+  public toJSON(): string {
+    return this.evaluator.toJSON();
+  }
+
+  public toObj(): object {
+    return this.evaluator.toObj();
+  }
+
+  public toString(): string {
+    return this.getAST();
   }
 }
 
@@ -250,6 +377,10 @@ class Expression {
  * FcalError represents Error in Fcal
  */
 class FcalError extends Error {
+  private static mark(start: number, end: number): string {
+    return '^'.repeat(start === end ? 1 : end - start).padStart(end, '.');
+  }
+  public source?: string;
   public start?: number;
   public end?: number;
 
@@ -266,6 +397,18 @@ class FcalError extends Error {
       this.end = start;
     }
     this.name = `FcalError [${this.start}, ${this.end}]`;
+  }
+  /**
+   * info gets more information about FcalError
+   */
+  public info(): string {
+    const values: string[] = Array<string>();
+    values.push(`err: ${this.message}\n`);
+    if (this.source !== undefined && this.start !== undefined && this.end !== undefined) {
+      values.push(`| ${this.source}`);
+      values.push(`| ${FcalError.mark(this.start, this.end)}\n`);
+    }
+    return values.join('');
   }
 }
 

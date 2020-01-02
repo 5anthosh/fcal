@@ -40,7 +40,7 @@ fcal.evaluate('23 % of 1023'); // 235.29
 
 fcal.evaluate('200 sec + 120 %'); // 440 Seconds
 
-// Unit convertion
+// Unit conversion
 fcal.evaluate('20 minutes + 34 day in sec'); // 2938800 Seconds
 
 fcal.evaluate('sin(PI)'); // -1.6167204971158028306e-24
@@ -106,6 +106,88 @@ You can perform general percentage operation with `+` , `-`
 ```js
 var value = fcal.evaluate('1024 m + 6.1%');
 console.log(value); // 1086.464 Meters
+```
+
+If type of left and right hand side of `of` is same, then operation will return percentage
+
+```js
+var value = fcal.evaluate('10 of 10.100');
+console.log(value); // % 99.009900990099009901
+```
+
+### Scales
+
+You can use Thousand `k`, million `M` and billion `B` scales.
+
+```js
+var value = Fcal.eval('-0x14 M');
+console.log(value); //-20000000
+```
+
+### Equality and comparison
+
+```js
+console.log(Fcal.eval('100 == 1230')); // true
+console.log(Fcal.eval('20 cm < 1 m')); // true
+console.log(Fcal.eval('100 cm != 100 m')); // false
+```
+
+You can use `===` to compare irrespective type of value
+
+```js
+console.log(Fcal.eval('100 C === 100 F')); // true
+```
+
+#### Ternary operator
+
+```js
+var value = Fcal.eval('234 cm > 1 m and true ? 34: 100');
+console.log(value); // 34
+```
+
+### Syntax errors
+
+Fcal will throw exception if there is error with expression
+
+For more error context, use _info_ method in _FcalError_
+
+```js
+try {
+  var value = Fcal.eval('343 + 23.45E+*34');
+} catch (e) {
+  if (e instanceof FcalError) {
+    console.log(e.info());
+  }
+}
+
+/*
+err: Expecting number after + but got '*'
+| 343 + 23.45E+*34
+| ......^^^^^^^
+*/
+```
+
+#### Strict mode
+
+By default, fcal will not throw exception if you try to use operations between different types or different units
+
+But with strict mode
+
+```js
+const fcal = new Fcal();
+fcal.setStrict(true)
+try {
+  var value = fcal.evaluate('23% + 34 cm + 1');
+} catch (e) {
+  if (e instanceof FcalError) {
+    console.log(e.info());
+  }
+
+/*
+err: Unexpected '+' operation between different types (unit, number)
+| 23% + 34 cm + 1
+| ^^^^^^^^^^^^^^^
+*/
 ```
 
 ### Using expression

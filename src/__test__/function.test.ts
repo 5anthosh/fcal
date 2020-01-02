@@ -1,7 +1,7 @@
 import { Fcal } from '../fcal';
-import { Environment } from '../interpreter/environment';
-import { FcalFunction } from '../interpreter/function';
 import { Type } from '../types/datatype';
+import { FcalFunction } from '../evaluator/function';
+import { Environment } from '../evaluator/environment';
 
 test('Default functions', () => {
   const expression =
@@ -12,17 +12,17 @@ test('Default functions', () => {
     expect(Fcal.eval(expression)).toStrictEqual(new Type.UnitNumber('49.390359524782034541', unit));
   }
 
-  const trigno =
+  const trigonometry =
     'cos(23 km) + acos(-0.5) sec + cosh(34cm) * acosh(1) ^ sin(0.23) \
     - asin(0.12341234) + sinh(0 mps) - asinh(8) + tan(45) - atan(45) ^ tanh(0.23 cm ) * atanh(0.7) cm';
   const unit2 = Fcal.getUnit('cm');
   expect(unit2).not.toEqual(null);
   if (unit2 != null) {
-    expect(Fcal.eval(trigno)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
+    expect(Fcal.eval(trigonometry)).toStrictEqual(new Type.UnitNumber('-0.67627697424654781499', unit2));
   }
 
-  const sigexpr = 'sigma(1,100)';
-  expect(Fcal.eval(sigexpr)).toStrictEqual(new Type.BNumber(5050));
+  const sigmaExpr = 'sigma(1,100)';
+  expect(Fcal.eval(sigmaExpr)).toStrictEqual(new Type.BNumber(5050));
 
   expect(Fcal.eval('max() + min()')).toStrictEqual(Type.BNumber.New(0));
   if (unit2) {
@@ -35,7 +35,7 @@ test('Default functions', () => {
 test('Register new function', () => {
   // tslint:disable-next-line: only-arrow-functions variable-name
   const func = new FcalFunction('asdfasdf123', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
+    const value = param[0] as Type.Numeric;
     return value.New(value.n.sinh());
   });
   const error = new Error('asdfasdf123 is already registered');
@@ -106,7 +106,7 @@ test('Register function with number return ', () => {
 test('Function already registered', () => {
   // tslint:disable-next-line: only-arrow-functions variable-name
   const func = new FcalFunction('abs', 1, function(_environment: Environment, param: Type[]): Type {
-    const value = param[0] as Type.Numberic;
+    const value = param[0] as Type.Numeric;
     return value.New(value.n.abs());
   });
   const error = new Error('abs is already used in function');
@@ -142,7 +142,7 @@ test('function call from another function', () => {
   expect(() => Fcal.eval('sudoSin1(23)')).toThrowError('Function sin123 is not found');
 });
 
-test('function call with differenct args', () => {
+test('function call with different args', () => {
   expect(() => Fcal.eval('sigma(1)')).toThrowError('function sigma expected 2 args but got 1');
   expect(() => Fcal.eval('log(1,2,3)')).toThrowError('function log expected 1 args but got 3');
   expect(() => Fcal.eval('sinh()')).toThrowError('function sinh expected 1 args but got 0');
@@ -156,6 +156,8 @@ test('Not callable', () => {
   expect(() => {
     fcal.evaluate('23*PI(45)*23%');
   }).toThrowError(error);
+
+  expect(() => Fcal.eval('67()')).toThrowError('Not callable');
 });
 
 test('Registered function return null value`', () => {

@@ -62,7 +62,7 @@ err: ${errorMessage}
 });
 
 test('Modulus with Infinity is indeterminate', () => {
-  const expression = '(0B10010 % of Infinity) mod(2.2323E-3 ^ Infinity)';
+  const expression = '(0B1_00_10 % of Infinity) mod(2.2323E-3 ^ Infinity)';
   const errorMessage = 'Modulus with Infinity is indeterminate';
   expect(() => {
     Fcal.eval(expression);
@@ -75,7 +75,7 @@ test('Modulus with Infinity is indeterminate', () => {
       expect(e.info()).toStrictEqual(`\
 err: ${errorMessage}
 | ${expression}
-| ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+| ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 `);
     }
   }
@@ -400,6 +400,135 @@ test('Percentage value with different units', () => {
 err: ${errorMessage}
 | ${expression}
 | ...............^^^^^^^^^^^^^
+`);
+    }
+  }
+});
+
+test('Improper number system numbers', () => {
+  let expression = ' 34 + 4 + 5 * 3O10 + 5';
+  let errorMessage = `Unexpected token O10`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...............^^^
+`);
+    }
+  }
+
+  expression = ' 34 + 4 + 5 * 3x34 + 5';
+  errorMessage = `Unexpected token x34`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...............^^^
+`);
+    }
+  }
+
+  expression = ' 34 + 4 + 5 * 9B10 + 5';
+  errorMessage = `Unexpected token B10`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...............^^^
+`);
+    }
+  }
+});
+test('_ in unexpected places', () => {
+  let expression = ' 34 + 4 + 5 * 0B101_ + 5';
+  let errorMessage = `Unexpected token _`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...................^
+`);
+    }
+  }
+
+  expression = ' 34 + 4 + 5 * 0xA_C_ + 5';
+  errorMessage = `Unexpected token _`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...................^
+`);
+    }
+  }
+
+  expression = ' 34 + 4 + 5 * 0O3_1_ + 5';
+  errorMessage = `Unexpected token _`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...................^
+`);
+    }
+  }
+
+  expression = ' 34 + 4 + 5 * 0_3_1_ + 5';
+  errorMessage = `Unexpected token _`;
+  expect(() => {
+    Fcal.eval(expression);
+  }).toThrowError(errorMessage);
+  try {
+    Fcal.eval(expression);
+  } catch (e) {
+    expect(e).toBeInstanceOf(FcalError);
+    if (e instanceof FcalError) {
+      expect(e.info()).toStrictEqual(`\
+err: ${errorMessage}
+| ${expression}
+| ...................^
 `);
     }
   }

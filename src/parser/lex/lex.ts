@@ -255,53 +255,72 @@ class Lexer {
   }
 
   private number(): Token {
-    if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+    if (this.previous() === '0' && (this.peek(0) === 'b' || this.peek(0) === 'B')) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isBinaryDigit(this.peek(0))) {
           throw new FcalError(`Unexpected '${this.peek(0)}' in binary number`, this.current);
         }
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isBinaryDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.bin);
       return this.TTWithLiteral(TT.Number, value);
     }
 
-    if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+    if (this.previous() === '0' && (this.peek(0) === 'o' || this.peek(0) === 'O')) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         if (!Lexer.isOctalDigit(this.peek(0))) {
           throw new FcalError(`Unexpected '${this.peek(0)}' in Octal number`, this.current);
         }
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isOctalDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.oct);
       return this.TTWithLiteral(TT.Number, value);
     }
 
-    if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+    if (this.previous() === '0' && (this.peek(0) === 'x' || this.peek(0) === 'X')) {
       this.eat();
       if (!Lexer.isHexDigit(this.peek(0))) {
         throw new FcalError(`Unexpected '${this.peek(0)}' in Hexadecimal`, this.current);
       }
       while (Lexer.isHexDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isHexDigit(this.peek(1))) {
+          this.eat();
+        }
       }
-      const value = new Type.BNumber(this.lexeme());
+      const value = new Type.BNumber(this.lexeme().replace(/_/g, ''));
       value.setSystem(NumberSystem.hex);
       return this.TTWithLiteral(TT.Number, value);
     }
 
+    if (this.peek(0) === '_') {
+      this.eat();
+    }
+
     while (Lexer.isDigit(this.peek(0))) {
       this.eat();
+      if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+        this.eat();
+      }
     }
 
     if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
       this.eat();
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+          this.eat();
+        }
       }
     }
 
@@ -321,10 +340,13 @@ class Lexer {
       }
       while (Lexer.isDigit(this.peek(0))) {
         this.eat();
+        if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+          this.eat();
+        }
       }
     }
 
-    return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme()));
+    return this.TTWithLiteral(TT.Number, new Type.BNumber(this.lexeme().replace(/_/g, '')));
   }
 
   private TT(type: TT): Token {
@@ -349,6 +371,13 @@ class Lexer {
       char = this.eat();
     }
     return char;
+  }
+
+  private previous(): string {
+    if (this.current > 0) {
+      return this.source.charAt(this.current - 1);
+    }
+    return '\0';
   }
 }
 

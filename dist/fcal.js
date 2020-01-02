@@ -2232,7 +2232,109 @@ var Evaluator = /** @class */ (function () {
 }());
 exports.Evaluator = Evaluator;
 
-},{"10":10,"12":12,"16":16,"17":17,"18":18,"19":19,"21":21}],12:[function(require,module,exports){
+},{"10":10,"12":12,"16":16,"17":17,"18":18,"19":19,"21":21}],16:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var TT;
+(function (TT) {
+    TT["PLUS"] = "+";
+    TT["MINUS"] = "-";
+    TT["TIMES"] = "*";
+    TT["MOD"] = "mod";
+    TT["SLASH"] = "/";
+    TT["Number"] = "number";
+    TT["OPEN_PAREN"] = "(";
+    TT["CLOSE_PAREN"] = ")";
+    TT["NEWLINE"] = "\n";
+    TT["EOL"] = "EOL";
+    TT["IN"] = "in";
+    TT["NAME"] = "name";
+    TT["EQUAL"] = "=";
+    TT["COMMA"] = ",";
+    TT["PERCENTAGE"] = "%";
+    TT["OF"] = "of";
+    TT["UNIT"] = "unit";
+    TT["CAP"] = "^";
+    TT["NS"] = "ns";
+    TT["DOUBLE_COLON"] = ":";
+    TT["FLOOR_DIVIDE"] = "//";
+    TT["LESS_EQUAL"] = "<=";
+    TT["GREATER_EQUAL"] = ">=";
+    TT["LESS_EQUAL_EQUAL"] = "<==";
+    TT["GREATER_EQUAL_EQUAL"] = ">==";
+    TT["LESS"] = "<";
+    TT["GREATER"] = ">";
+    TT["EQUAL_EQUAL"] = "==";
+    TT["EQUAL_EQUAL_EQUAL"] = "===";
+    TT["NOT_EQUAL"] = "!=";
+    TT["NOT_EQUAL_EQUAL"] = "!==";
+    TT["NOT"] = "!";
+    TT["AND"] = "&&";
+    TT["OR"] = "||";
+    TT["Q"] = "?";
+    TT["CC"] = "cc";
+    TT["PLUS_EQUAL"] = "+=";
+    TT["MINUS_EQUAL"] = "-=";
+    TT["DIVIDE_EQUAL"] = "/=";
+    TT["FLOOR_DIVIDE_EQUAL"] = "//=";
+    TT["MULTIPLY_EQUAL"] = "*=";
+    TT["POWER_EQUAL"] = "^=";
+    TT["SCALE"] = "scale";
+})(TT || (TT = {}));
+exports.TT = TT;
+var Token = /** @class */ (function () {
+    function Token(type, lexeme, literal, start, end) {
+        this.type = type;
+        this.lexeme = lexeme;
+        this.start = start;
+        this.end = end;
+        this.literal = literal;
+    }
+    Token.EOL = function (end) {
+        return new Token(TT.EOL, 'EOL', null, end, end);
+    };
+    return Token;
+}());
+exports.Token = Token;
+
+},{}],19:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var NumberSystem = /** @class */ (function () {
+    function NumberSystem(name, to) {
+        this.to = to;
+        this.name = name;
+    }
+    NumberSystem.get = function (ns) {
+        return NumberSystem.ns[ns];
+    };
+    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
+        return num.toString();
+    });
+    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
+        return num.toHexadecimal();
+    });
+    NumberSystem.bin = new NumberSystem('Binary', function (num) {
+        return num.toBinary();
+    });
+    NumberSystem.oct = new NumberSystem('Octal', function (num) {
+        return num.toOctal();
+    });
+    NumberSystem.ns = {
+        bin: NumberSystem.bin,
+        binary: NumberSystem.bin,
+        dec: NumberSystem.dec,
+        decimal: NumberSystem.dec,
+        hex: NumberSystem.hex,
+        hexadecimal: NumberSystem.hex,
+        oct: NumberSystem.oct,
+        octal: NumberSystem.oct,
+    };
+    return NumberSystem;
+}());
+exports.NumberSystem = NumberSystem;
+
+},{}],12:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -2340,109 +2442,7 @@ var ToJSON = /** @class */ (function () {
 }());
 exports.ToJSON = ToJSON;
 
-},{"19":19,"21":21}],19:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var NumberSystem = /** @class */ (function () {
-    function NumberSystem(name, to) {
-        this.to = to;
-        this.name = name;
-    }
-    NumberSystem.get = function (ns) {
-        return NumberSystem.ns[ns];
-    };
-    NumberSystem.dec = new NumberSystem('Decimal', function (num) {
-        return num.toString();
-    });
-    NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
-        return num.toHexadecimal();
-    });
-    NumberSystem.bin = new NumberSystem('Binary', function (num) {
-        return num.toBinary();
-    });
-    NumberSystem.oct = new NumberSystem('Octal', function (num) {
-        return num.toOctal();
-    });
-    NumberSystem.ns = {
-        bin: NumberSystem.bin,
-        binary: NumberSystem.bin,
-        dec: NumberSystem.dec,
-        decimal: NumberSystem.dec,
-        hex: NumberSystem.hex,
-        hexadecimal: NumberSystem.hex,
-        oct: NumberSystem.oct,
-        octal: NumberSystem.oct,
-    };
-    return NumberSystem;
-}());
-exports.NumberSystem = NumberSystem;
-
-},{}],16:[function(require,module,exports){
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var TT;
-(function (TT) {
-    TT["PLUS"] = "+";
-    TT["MINUS"] = "-";
-    TT["TIMES"] = "*";
-    TT["MOD"] = "mod";
-    TT["SLASH"] = "/";
-    TT["Number"] = "number";
-    TT["OPEN_PAREN"] = "(";
-    TT["CLOSE_PAREN"] = ")";
-    TT["NEWLINE"] = "\n";
-    TT["EOL"] = "EOL";
-    TT["IN"] = "in";
-    TT["NAME"] = "name";
-    TT["EQUAL"] = "=";
-    TT["COMMA"] = ",";
-    TT["PERCENTAGE"] = "%";
-    TT["OF"] = "of";
-    TT["UNIT"] = "unit";
-    TT["CAP"] = "^";
-    TT["NS"] = "ns";
-    TT["DOUBLE_COLON"] = ":";
-    TT["FLOOR_DIVIDE"] = "//";
-    TT["LESS_EQUAL"] = "<=";
-    TT["GREATER_EQUAL"] = ">=";
-    TT["LESS_EQUAL_EQUAL"] = "<==";
-    TT["GREATER_EQUAL_EQUAL"] = ">==";
-    TT["LESS"] = "<";
-    TT["GREATER"] = ">";
-    TT["EQUAL_EQUAL"] = "==";
-    TT["EQUAL_EQUAL_EQUAL"] = "===";
-    TT["NOT_EQUAL"] = "!=";
-    TT["NOT_EQUAL_EQUAL"] = "!==";
-    TT["NOT"] = "!";
-    TT["AND"] = "&&";
-    TT["OR"] = "||";
-    TT["Q"] = "?";
-    TT["CC"] = "cc";
-    TT["PLUS_EQUAL"] = "+=";
-    TT["MINUS_EQUAL"] = "-=";
-    TT["DIVIDE_EQUAL"] = "/=";
-    TT["FLOOR_DIVIDE_EQUAL"] = "//=";
-    TT["MULTIPLY_EQUAL"] = "*=";
-    TT["POWER_EQUAL"] = "^=";
-    TT["SCALE"] = "scale";
-})(TT || (TT = {}));
-exports.TT = TT;
-var Token = /** @class */ (function () {
-    function Token(type, lexeme, literal, start, end) {
-        this.type = type;
-        this.lexeme = lexeme;
-        this.start = start;
-        this.end = end;
-        this.literal = literal;
-    }
-    Token.EOL = function (end) {
-        return new Token(TT.EOL, 'EOL', null, end, end);
-    };
-    return Token;
-}());
-exports.Token = Token;
-
-},{}],17:[function(require,module,exports){
+},{"19":19,"21":21}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(10);
@@ -8462,49 +8462,67 @@ var Lexer = /** @class */ (function () {
         return this.TT(token_1.TT.NAME);
     };
     Lexer.prototype.number = function () {
-        if (this.peek(0) === 'b' || this.peek(0) === 'B') {
+        if (this.previous() === '0' && (this.peek(0) === 'b' || this.peek(0) === 'B')) {
             this.eat();
             while (Lexer.isDigit(this.peek(0))) {
                 if (!Lexer.isBinaryDigit(this.peek(0))) {
                     throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in binary number", this.current);
                 }
                 this.eat();
+                if (this.peek(0) === '_' && Lexer.isBinaryDigit(this.peek(1))) {
+                    this.eat();
+                }
             }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
+            var value = new datatype_1.Type.BNumber(this.lexeme().replace(/_/g, ''));
             value.setSystem(numberSystem_1.NumberSystem.bin);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
-        if (this.peek(0) === 'o' || this.peek(0) === 'O') {
+        if (this.previous() === '0' && (this.peek(0) === 'o' || this.peek(0) === 'O')) {
             this.eat();
             while (Lexer.isDigit(this.peek(0))) {
                 if (!Lexer.isOctalDigit(this.peek(0))) {
                     throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Octal number", this.current);
                 }
                 this.eat();
+                if (this.peek(0) === '_' && Lexer.isOctalDigit(this.peek(1))) {
+                    this.eat();
+                }
             }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
+            var value = new datatype_1.Type.BNumber(this.lexeme().replace(/_/g, ''));
             value.setSystem(numberSystem_1.NumberSystem.oct);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
-        if (this.peek(0) === 'x' || this.peek(0) === 'X') {
+        if (this.previous() === '0' && (this.peek(0) === 'x' || this.peek(0) === 'X')) {
             this.eat();
             if (!Lexer.isHexDigit(this.peek(0))) {
                 throw new fcal_1.FcalError("Unexpected '" + this.peek(0) + "' in Hexadecimal", this.current);
             }
             while (Lexer.isHexDigit(this.peek(0))) {
                 this.eat();
+                if (this.peek(0) === '_' && Lexer.isHexDigit(this.peek(1))) {
+                    this.eat();
+                }
             }
-            var value = new datatype_1.Type.BNumber(this.lexeme());
+            var value = new datatype_1.Type.BNumber(this.lexeme().replace(/_/g, ''));
             value.setSystem(numberSystem_1.NumberSystem.hex);
             return this.TTWithLiteral(token_1.TT.Number, value);
         }
+        if (this.peek(0) === '_') {
+            this.eat();
+        }
         while (Lexer.isDigit(this.peek(0))) {
             this.eat();
+            if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+                this.eat();
+            }
         }
         if (this.peek(0) === '.' && Lexer.isDigit(this.peek(1))) {
             this.eat();
             while (Lexer.isDigit(this.peek(0))) {
                 this.eat();
+                if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+                    this.eat();
+                }
             }
         }
         if (this.peek(0) === 'E' || this.peek(0) === 'e') {
@@ -8523,9 +8541,12 @@ var Lexer = /** @class */ (function () {
             }
             while (Lexer.isDigit(this.peek(0))) {
                 this.eat();
+                if (this.peek(0) === '_' && Lexer.isDigit(this.peek(1))) {
+                    this.eat();
+                }
             }
         }
-        return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(this.lexeme()));
+        return this.TTWithLiteral(token_1.TT.Number, new datatype_1.Type.BNumber(this.lexeme().replace(/_/g, '')));
     };
     Lexer.prototype.TT = function (type) {
         return this.TTWithLiteral(type, null);
@@ -8546,6 +8567,12 @@ var Lexer = /** @class */ (function () {
             char = this.eat();
         }
         return char;
+    };
+    Lexer.prototype.previous = function () {
+        if (this.current > 0) {
+            return this.source.charAt(this.current - 1);
+        }
+        return '\0';
     };
     Lexer.notAlpha = [
         token_1.TT.PLUS,

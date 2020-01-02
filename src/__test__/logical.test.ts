@@ -10,7 +10,7 @@ test('Decimal number equality', () => {
   expect(Fcal.eval('4 != 343')).toStrictEqual(Type.FcalBoolean.TRUE);
   expect(Fcal.eval('0xe9 == 0o351')).toStrictEqual(Type.FcalBoolean.TRUE);
   expect(Fcal.eval('0xe9 == -0o351')).toStrictEqual(Type.FcalBoolean.FALSE);
-  expect(Fcal.eval('0xe9 != 0o351')).toStrictEqual(Type.FcalBoolean.FALSE);
+  expect(Fcal.eval('0xe9 != 0o3_5_1')).toStrictEqual(Type.FcalBoolean.FALSE);
   expect(Fcal.eval('555 === 0b1000101011')).toStrictEqual(Type.FcalBoolean.TRUE);
   expect(Fcal.eval('555 !== 0b1000101011')).toStrictEqual(Type.FcalBoolean.FALSE);
   expect(Fcal.eval('true == false')).toStrictEqual(Type.FcalBoolean.FALSE);

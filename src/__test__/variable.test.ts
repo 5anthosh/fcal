@@ -41,7 +41,7 @@ test('Set Values decimal', () => {
 });
 
 test('E in number literal', () => {
-  const expression = '1E-8 + 1e+3 * 1.23e00 + 1.223E23';
+  const expression = '1E-8 + 1e+3 * 1.2_3e0_0 + 1.22_3E2_3';
   expect(Fcal.eval(expression)).toStrictEqual(new Type.BNumber('1.223e+23'));
 });
 
@@ -109,6 +109,9 @@ test(' Assignment + operator', () => {
   fcal.setValues({ m3: 2 });
   expect(fcal.evaluate('m3 **= 4')).toStrictEqual(Type.BNumber.New(16));
   expect(fcal.evaluate('m3')).toStrictEqual(Type.BNumber.New(16));
+  fcal.setValues({ m4: 2 });
+  expect(fcal.evaluate('m4 *= 4')).toStrictEqual(Type.BNumber.New(8));
+  expect(fcal.evaluate('m4')).toStrictEqual(Type.BNumber.New(8));
   fcal.setValues({ r: 5, e: 6, k0: 100, k1: 34, k2: 87, k3: 0.5 });
   expect(fcal.evaluate('r += e -= k0 /= k1 //= k2 ^= k3')).toStrictEqual(Type.BNumber.New('-22.333333333333333333'));
   expect(fcal.evaluate('r')).toStrictEqual(Type.BNumber.New('-22.333333333333333333'));

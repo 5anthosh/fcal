@@ -46,15 +46,15 @@ test('New line', () => {
   //   Fcal.eval(expression);
   // }).toThrowError(new Error('Expecting new Line'));
 
-  const expression1 = '1234+12341324123 * 34 \t \n $';
+  const expression1 = '12_34 + 12_341_324_123 * 34 \t \n $';
   expect(Fcal.eval(expression1)).toStrictEqual(new Type.BNumber('419605021416'));
   expect(() => new Fcal().rawEvaluate('1+')).toThrowError('Expect expression but found EOL');
-  expect(() => new Fcal().rawEvaluate('1x')).toThrowError("Unexpected '\0' in Hexadecimal");
+  expect(() => new Fcal().rawEvaluate('0x')).toThrowError("Unexpected '\0' in Hexadecimal");
   expect(() => new Fcal().rawEvaluate('1+2')).toThrowError('Expecting EOL');
 });
 
 test('Parser error Expect expression', () => {
-  const expression = '* 123$';
+  const expression = '* 12_3$';
   const error = new Error('Expect expression but found *');
   error.name = 'FcalError [0, 1]';
   expect(() => {
@@ -138,14 +138,14 @@ test('Temperature', () => {
     expect(Fcal.eval(expression1)).toStrictEqual(new Type.UnitNumber('60', unit));
   }
 
-  const expression2 = '0.233452 F in C';
+  const expression2 = '0.23_34_52 F in C';
   unit = Fcal.getUnit('C');
   expect(unit).not.toEqual(null);
   if (unit != null) {
     expect(Fcal.eval(expression2)).toStrictEqual(new Type.UnitNumber('-17.64808222222224444', unit));
   }
 
-  const expression3 = '273.15 F  + 1 K';
+  const expression3 = '2_73.1_5 F  + 1 K';
   unit = Fcal.getUnit('K');
   expect(unit).not.toEqual(null);
   if (unit != null) {
@@ -162,7 +162,7 @@ test('Infinity', () => {
 test('ToNumber', () => {
   expect(Fcal.eval('3434%').toNumber()).toStrictEqual(3434);
   expect(Fcal.eval('-90cm').toNumber()).toStrictEqual(-90);
-  expect(Fcal.eval('0x1ac in oct').toNumber()).toStrictEqual(428);
+  expect(Fcal.eval('0x1_a_c in oct').toNumber()).toStrictEqual(428);
   expect(Fcal.eval('0.34 + 1').toNumber()).toStrictEqual(1.34);
 });
 

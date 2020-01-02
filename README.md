@@ -108,6 +108,13 @@ var value = fcal.evaluate('1024 m + 6.1%');
 console.log(value); // 1086.464 Meters
 ```
 
+If type of left and right hand side of `of` is same, then operation will return percentage
+
+```js
+var value = fcal.evaluate('10 of 10.100');
+console.log(value); // % 99.009900990099009901
+```
+
 ### Scales
 
 You can use Thousand `k`, million `M` and billion `B` scales.
@@ -117,9 +124,21 @@ var value = Fcal.eval('-0x14 M');
 console.log(value); //-20000000
 ```
 
-### Logical operation
+### Equality and comparison
 
-Fcal support various logical operations
+```js
+console.log(Fcal.eval('100 == 1230')); // true
+console.log(Fcal.eval('20 cm < 1 m')); // true
+console.log(Fcal.eval('100 cm != 100 m')); // false
+```
+
+You can use `===` to compare irrespective type of value
+
+```js
+console.log(Fcal.eval('100 C === 100 F')); // true
+```
+
+#### Ternary operator
 
 ```js
 var value = Fcal.eval('234 cm > 1 m and true ? 34: 100');
@@ -129,6 +148,8 @@ console.log(value); // 34
 ### Syntax errors
 
 Fcal will throw exception if there is error with formula expression
+
+For more error context, use info method in FcalError
 
 ```js
 try {
@@ -149,6 +170,8 @@ err: Expecting number after + but got '*'
 #### Strict mode
 
 By default, fcal will not throw exception if you try to use operations between different types or different units
+
+But with strict mode
 
 ```js
 const fcal = new Fcal();

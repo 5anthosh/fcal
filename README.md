@@ -127,9 +127,9 @@ console.log(value); //-20000000
 ### Equality and comparison
 
 ```js
-console.log(Fcal.eval('100 == 1230')); // true
+console.log(Fcal.eval('100 == 1230')); // false
 console.log(Fcal.eval('20 cm < 1 m')); // true
-console.log(Fcal.eval('100 cm != 100 m')); // false
+console.log(Fcal.eval('100 cm != 100 m')); // true
 ```
 
 You can use `===` to compare irrespective type of value

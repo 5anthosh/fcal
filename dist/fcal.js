@@ -1034,6 +1034,14 @@ function setTimeUnits(units) {
         },
         {
             id: units_1.Unit.TIME_ID,
+            phrases: ['ms', 'millisecond', 'milliseconds'],
+            plural: 'Milliseconds',
+            ratio: 1e-3,
+            singular: 'Millisecond',
+            type: 'ms',
+        },
+        {
+            id: units_1.Unit.TIME_ID,
             phrases: ['sec', 'second', 'seconds'],
             plural: 'Seconds',
             ratio: 1,
@@ -1794,7 +1802,7 @@ var Fcal = /** @class */ (function () {
         phrases.push(token_1.TT.CAP, ['POW']);
         phrases.push(token_1.TT.MOD, ['mod']);
         phrases.push(token_1.TT.OF, ['of']);
-        phrases.push(token_1.TT.IN, ['in', 'as']);
+        phrases.push(token_1.TT.IN, ['in', 'as', 'to']);
         phrases.push(token_1.TT.AND, ['and']);
         phrases.push(token_1.TT.OR, ['or']);
         phrases.push(token_1.TT.NOT, ['not']);
@@ -1850,7 +1858,7 @@ var Fcal = /** @class */ (function () {
      * @returns {Type} result of expression
      */
     Fcal.prototype.rawEvaluate = function (source) {
-        return new evaluator_1.Evaluator(source, Fcal.phrases, Fcal.units, this.environment, Fcal.converters, Fcal.scales, this.strict).evaluateExpression();
+        return new evaluator_1.Evaluator(source /*expression */, Fcal.phrases, Fcal.units, this.environment, Fcal.converters, Fcal.scales, this.strict).evaluateExpression();
     };
     /**
      * Create new expression with copy of Fcal.Environment

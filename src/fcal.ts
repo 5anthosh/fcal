@@ -160,7 +160,7 @@ class Fcal {
     phrases.push(TT.CAP, ['POW']);
     phrases.push(TT.MOD, ['mod']);
     phrases.push(TT.OF, ['of']);
-    phrases.push(TT.IN, ['in', 'as']);
+    phrases.push(TT.IN, ['in', 'as', 'to']);
     phrases.push(TT.AND, ['and']);
     phrases.push(TT.OR, ['or']);
     phrases.push(TT.NOT, ['not']);
@@ -236,7 +236,7 @@ class Fcal {
    */
   public rawEvaluate(source: string): Type {
     return new Evaluator(
-      source,
+      source /*expression */,
       Fcal.phrases,
       Fcal.units,
       this.environment,

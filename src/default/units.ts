@@ -155,6 +155,14 @@ function setTimeUnits(units: IUseUnit[]): void {
       },
       {
         id: Unit.TIME_ID,
+        phrases: ['ms', 'millisecond', 'milliseconds'],
+        plural: 'Milliseconds',
+        ratio: 1e-3,
+        singular: 'Millisecond',
+        type: 'ms',
+      },
+      {
+        id: Unit.TIME_ID,
         phrases: ['sec', 'second', 'seconds'],
         plural: 'Seconds',
         ratio: 1,

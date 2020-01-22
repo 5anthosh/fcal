@@ -178,7 +178,7 @@ test('Mass units', () => {
   expect(mgU).not.toBeNull();
   if (mgU) {
     expect(Fcal.eval('45 kg + 3 tonne in mg')).toStrictEqual(Type.UnitNumber.New(3045000000, mgU));
-    expect(Fcal.eval('1 pound + 2 ounce + 3 USton + 4 stone + 5 imperialton + 6 microgram + 6 g in mg')).toStrictEqual(
+    expect(Fcal.eval('1 pound + 2 ounce + 3 uston + 4 stone + 5 imperialton + 6 microgram + 6 g in mg')).toStrictEqual(
       Type.UnitNumber.New('7827472451.006', mgU),
     );
   }

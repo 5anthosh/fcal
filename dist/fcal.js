@@ -910,7 +910,7 @@ function setDistanceUnits(units) {
     units.push.apply(units, [
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['cm', 'centimeter'],
+            phrases: ['cm', 'centimeter', 'centimeters'],
             plural: 'Centimeters',
             ratio: 1,
             singular: 'Centimeter',
@@ -918,7 +918,7 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['m', 'meter'],
+            phrases: ['m', 'meter', 'meters'],
             plural: 'Meters',
             ratio: 100,
             singular: 'Meter',
@@ -926,15 +926,15 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['mm', 'milimeter'],
-            plural: 'Milimeters',
+            phrases: ['mm', 'millimeter', 'millimeters'],
+            plural: 'Millimeters',
             ratio: 0.1,
-            singular: 'Milimeter',
+            singular: 'Millimeter',
             type: 'mm',
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['km'],
+            phrases: ['km', 'kilometer', 'kilometers'],
             plural: 'Kilometers',
             ratio: 100000,
             singular: 'Kilometer',
@@ -942,7 +942,7 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['inch'],
+            phrases: ['inch', 'inches'],
             plural: 'Inches',
             ratio: 2.54,
             singular: 'Inch',
@@ -950,7 +950,7 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['ft'],
+            phrases: ['ft', 'feet', 'foot'],
             plural: 'Feet',
             ratio: 30.48,
             singular: 'Foot',
@@ -958,7 +958,7 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['yd', 'yard'],
+            phrases: ['yd', 'yard', 'yards'],
             plural: 'Yards',
             ratio: 91.44,
             singular: 'Yard',
@@ -966,7 +966,7 @@ function setDistanceUnits(units) {
         },
         {
             id: units_1.Unit.LENGTH_ID,
-            phrases: ['mi'],
+            phrases: ['mi', 'mile', 'miles'],
             plural: 'Miles',
             ratio: 160934.4,
             singular: 'Mile',
@@ -1093,14 +1093,14 @@ function setTemperatureUnits(units) {
         {
             bias: '255.3722222222222',
             id: units_1.Unit.TEMPERATURE_ID,
-            phrases: ['°F', 'F'],
+            phrases: ['°F', 'F', 'fahrenheit'],
             ratio: '0.55555555555555555556',
             type: '°F',
         },
         {
             bias: 273.15,
             id: units_1.Unit.TEMPERATURE_ID,
-            phrases: ['°C', 'C'],
+            phrases: ['°C', 'C', 'celsius'],
             ratio: 1,
             type: '°C',
         },
@@ -1110,31 +1110,31 @@ function setMassUnits(units) {
     units.push.apply(units, [
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['gram', 'g'],
+            phrases: ['gram', 'g', 'grams'],
             ratio: 1,
             type: 'gram',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['tonne'],
+            phrases: ['tonne', 'tonnes'],
             ratio: 1e6,
             type: 'tonne',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['kg', 'kilogram'],
+            phrases: ['kg', 'kilogram', 'kilograms'],
             ratio: 1000,
             type: 'kilogram',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['milligram', 'mg'],
+            phrases: ['milligram', 'mg', 'milligrams'],
             ratio: 0.001,
             type: 'milligram',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['microgram'],
+            phrases: ['microgram', 'micrograms'],
             ratio: 1e-6,
             type: 'microgram',
         },
@@ -1146,19 +1146,19 @@ function setMassUnits(units) {
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['USton'],
+            phrases: ['uston'],
             ratio: '907185',
-            type: 'USton',
+            type: 'uston',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['stone'],
+            phrases: ['stone', 'stones'],
             ratio: '6350.29',
             type: 'stone',
         },
         {
             id: units_1.Unit.MASS_ID,
-            phrases: ['pound'],
+            phrases: ['pound', 'pounds'],
             ratio: '453.592',
             type: 'pound',
         },
@@ -2317,7 +2317,7 @@ var NumberSystem = /** @class */ (function () {
         return NumberSystem.ns[ns];
     };
     NumberSystem.dec = new NumberSystem('Decimal', function (num) {
-        return num.toString();
+        return num.add(0).toString();
     });
     NumberSystem.hex = new NumberSystem('HexaDecimal', function (num) {
         return num.toHexadecimal();

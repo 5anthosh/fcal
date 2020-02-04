@@ -2,7 +2,7 @@ import { Decimal } from 'decimal.js';
 
 class NumberSystem {
   public static dec = new NumberSystem('Decimal', (num: Decimal) => {
-    return num.toString();
+    return num.add(0).toString();
   });
 
   public static hex = new NumberSystem('HexaDecimal', (num: Decimal) => {

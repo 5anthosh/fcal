@@ -175,6 +175,20 @@ test('Fcal getUnit', () => {
   expect(Fcal.getUnit('hasifh')).toBeNull();
 });
 
+test('Value toString()', () => {
+  expect(
+    Fcal.eval('32184039488888888888888888888882342342344444444444444444888888888888888888888888').toString(),
+  ).toStrictEqual('3.2184039488888888889e+79');
+
+  expect(
+    Fcal.eval('32184039488888888888888888888882342342344444444444444444888888888888888888888888 %').toString(),
+  ).toStrictEqual('% 3.2184039488888888889e+79');
+
+  expect(
+    Fcal.eval('32184039488888888888888888888882342342344444444444444444888888888888888888888888 cm').toString(),
+  ).toStrictEqual('3.2184039488888888889e+79 Centimeters');
+});
+
 test('AST print()', () => {
   const expr = new Fcal().expression(
     '5 && 4 ? ( y = PI * radius cm ^ 2 + sinh(8) as cm + log(23) in hex + (--100)%  + 45% in percent ) : 2',

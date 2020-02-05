@@ -74,3 +74,10 @@ test('Percentage with units 2', () => {
 test('Percentage with percentage values', () => {
   expect(Fcal.eval('100 + 45% of 23.5%')).toStrictEqual(new Type.BNumber('291.48936170212765957'));
 });
+
+test('Percentage operation with sync', () => {
+  const fcal = new Fcal();
+  fcal.setValues({ total: 35 });
+  expect(fcal.evaluate('2% of total')).toStrictEqual(new Type.BNumber(0.7));
+  expect(fcal.evaluate('total')).toStrictEqual(new Type.BNumber(35));
+});

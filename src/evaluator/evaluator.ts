@@ -108,7 +108,7 @@ class Evaluator implements Expr.IVisitor<Type> {
         return Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
       }
       if (expr.to instanceof NumberSystem) {
-        return (value as Type.Numeric).setSystem(expr.to);
+        return value.New(value.n).setSystem(expr.to);
       }
       return expr.to(value);
     }
@@ -205,8 +205,7 @@ class Evaluator implements Expr.IVisitor<Type> {
         }
         if (left instanceof Type.Percentage) {
           const per = left as Type.Percentage;
-          right.n = per.percentageValue(right.n);
-          return right;
+          return right.New(per.percentageValue(right.n));
         }
         throw new FcalError(
           `Expecting Percentage type in left side of percentage operation but got (${Type.typeVsStr[left.TYPE]}, ${

@@ -2163,7 +2163,7 @@ var Evaluator = /** @class */ (function () {
                 return datatype_1.Type.UnitNumber.convertToUnit(value, expr.to).setSystem(value.ns);
             }
             if (expr.to instanceof numberSystem_1.NumberSystem) {
-                return value.setSystem(expr.to);
+                return value.New(value.n).setSystem(expr.to);
             }
             return expr.to(value);
         }
@@ -2252,8 +2252,7 @@ var Evaluator = /** @class */ (function () {
                 }
                 if (left instanceof datatype_1.Type.Percentage) {
                     var per = left;
-                    right.n = per.percentageValue(right.n);
-                    return right;
+                    return right.New(per.percentageValue(right.n));
                 }
                 throw new fcal_1.FcalError("Expecting Percentage type in left side of percentage operation but got (" + datatype_1.Type.typeVsStr[left.TYPE] + ", " + datatype_1.Type.typeVsStr[right.TYPE] + ")");
             default:

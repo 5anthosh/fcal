@@ -48,6 +48,10 @@ class Parser {
     }
   }
 
+  public getScannedTokens(): Token[] {
+    return this.tokens;
+  }
+
   private Stmt(): Expr {
     const expr = this.assignment();
     if (this.match([TT.NEWLINE])) {

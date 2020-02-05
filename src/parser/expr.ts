@@ -39,7 +39,6 @@ abstract class Expr {
   public abstract accept<T>(visitor: Expr.IVisitor<T>): T;
 }
 
-// tslint:disable-next-line: no-namespace
 namespace Expr {
   export class Binary extends Expr {
     public left: Expr;

@@ -9,10 +9,11 @@ import { FcalFunction, IUseFunction } from './evaluator/function';
 import { Scale } from './evaluator/scale';
 import { Entity, SymbolTable } from './evaluator/symboltable';
 import { JSONParser } from './json/JSONParser';
-import { TT } from './parser/lex/token';
+import { TT, Token } from './parser/lex/token';
 import { Type } from './types/datatype';
 import { Phrases } from './types/phrase';
 import { IUseUnit, Unit, UnitMeta } from './types/units';
+import { Lexer } from './parser/lex/lex';
 
 /**
  * Math expression evaluator.
@@ -33,7 +34,7 @@ class Fcal {
    * register new fcal Functions
    * @param {Array<FcalFunction | Object>} functions list of fcal function definitions
    */
-  public static UseFunctions(functions: Array<FcalFunction | IUseFunction>): void {
+  public static UseFunctions(functions: (FcalFunction | IUseFunction)[]): void {
     for (const func of functions) {
       this.UseFunction(func);
     }
@@ -56,7 +57,7 @@ class Fcal {
    * Register new units
    * @param {Array<Unit | Object>} units
    */
-  public static UseUnits(units: Array<Unit | IUseUnit>): void {
+  public static UseUnits(units: (Unit | IUseUnit)[]): void {
     for (const unit of units) {
       this.UseUnit(unit);
     }
@@ -108,8 +109,63 @@ class Fcal {
     this.scales.use(scales);
   }
 
+  /**
+   * Register new converter function
+   * @param {string}id id of the converter function
+   * @param {converterFuncFmt}f function
+   */
   public static useConverter(id: string, f: converterFuncFmt): void {
     this.converters.set(id, f);
+  }
+
+  /**
+   * Get the units list
+   * @returns {Unit.List} units
+   */
+  public static getUnits(): Unit.List {
+    return this.units;
+  }
+
+  /**
+   * Get the constants
+   * @returns {Constant} constants
+   */
+  public static getConstants(): Constant {
+    return this.constants;
+  }
+
+  /**
+   * Get the functions
+   * @returns {FcalFunction.List} functions
+   */
+  public static getFunctions(): FcalFunction.List {
+    return this.functions;
+  }
+
+  /**
+   * Get the scales
+   * @returns {Scale} scales
+   */
+  public static getScales(): Scale {
+    return this.scales;
+  }
+
+  /**
+   * Get the converters
+   * @returns {Converter} converters
+   */
+  public static getConverters(): Converter {
+    return this.converters;
+  }
+
+  /**
+   * Scan the math expression and  gets array of tokens
+   * @param {string} expression math expression
+   * @returns {Token[]} array of tokens
+   */
+  public static getTokensForExpression(expression: string): Token[] {
+    const lexer = new Lexer(expression, this.phrases, this.units, this.converters, this.scales);
+    return lexer.getTokens();
   }
 
   public static initialize(): void {
@@ -252,8 +308,11 @@ class Fcal {
    * @returns {Expression} Expression with parsed AST
    */
   public expression(source: string): Expression {
+    // Cloning fcal session
     const symbolTable = this.lst.clone();
+    // Creating new environment
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
+    // coping values from fcal
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);
     return new Expression(
@@ -295,6 +354,14 @@ class Fcal {
    */
   public setValues(values: EnvInputType) {
     this.environment.use(values);
+  }
+
+  /**
+   * Get the environment of this fcal session
+   * @returns {Environment} env
+   */
+  public getEnvironment(): Environment {
+    return this.environment;
   }
 
   /**
@@ -356,16 +423,43 @@ class Expression {
     this.evaluator.environment.use(values);
   }
 
+  /**
+   * Get the environment of this expression
+   * @returns {Environment} environment
+   */
+  public getValues(): Environment {
+    return this.evaluator.environment;
+  }
+
+  /**
+   * Get the AST tree view of the formula expression
+   * @returns {string}  AST tree view
+   */
   public getAST(): string {
     return this.evaluator.getAST();
   }
 
+  /**
+   * Convert the expression into JSON
+   * @returns {string} JSON
+   */
   public toJSON(): string {
     return this.evaluator.toJSON();
   }
 
+  /**
+   * Convert the expression into an Object
+   */
   public toObj(): object {
     return this.evaluator.toObj();
+  }
+
+  /**
+   * Get scanned tokens
+   * @returns {Token[] | undefined} tokens
+   */
+  public getScannedTokens(): Token[] | undefined {
+    return this.evaluator.getScannedTokens();
   }
 
   public toString(): string {

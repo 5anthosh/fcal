@@ -59,11 +59,10 @@ class FcalFunction implements ICallable {
     return value;
   }
 }
+
 /**
  * List of fcal functions
  */
-
-// tslint:disable-next-line:no-namespace
 namespace FcalFunction {
   export class List {
     public readonly functions: Map<string, FcalFunction>;

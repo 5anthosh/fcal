@@ -83,6 +83,15 @@ class Lexer {
     return this.scan();
   }
 
+  public getTokens(): Token[] {
+    const tokens: Token[] = [];
+    let token: Token;
+    while ((token = this.Next()).type !== TT.EOL) {
+      tokens.push(token);
+    }
+    return tokens;
+  }
+
   private scan(): Token {
     const char = this.space();
     switch (char) {

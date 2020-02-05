@@ -1,7 +1,7 @@
 import { FcalError } from '../fcal';
 import { ToJSON } from '../json/toJSON';
 import { Expr } from '../parser/expr';
-import { TT } from '../parser/lex/token';
+import { TT, Token } from '../parser/lex/token';
 import { Parser } from '../parser/parser';
 import { Type } from '../types/datatype';
 import { NumberSystem } from '../types/numberSystem';
@@ -16,6 +16,7 @@ class Evaluator implements Expr.IVisitor<Type> {
   public readonly environment: Environment;
   private readonly ast: Expr;
   private readonly source?: string;
+  private readonly parser?: Parser;
   private strict: boolean;
   constructor(
     source: string | Expr,
@@ -30,6 +31,7 @@ class Evaluator implements Expr.IVisitor<Type> {
     this.strict = strict;
     if (typeof source === 'string') {
       const parser = new Parser(source, phrases, units, c, scale, environment.symbolTable);
+      this.parser = parser;
       this.ast = parser.parse();
       this.source = source;
       return;
@@ -47,6 +49,10 @@ class Evaluator implements Expr.IVisitor<Type> {
 
   public toObj(): object {
     return new ToJSON(this.ast).toObj();
+  }
+
+  public getScannedTokens(): Token[] | undefined {
+    return this.parser?.getScannedTokens();
   }
 
   public visitCallExpr(expr: Expr.Call): Type {

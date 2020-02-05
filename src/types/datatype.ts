@@ -28,7 +28,6 @@ abstract class Type {
 /**
  * Represents a type of variable or value
  */
-// tslint:disable-next-line:no-namespace
 namespace Type {
   export abstract class Numeric extends Type {
     public n: Decimal;

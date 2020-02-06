@@ -1,11 +1,20 @@
 import { FcalError } from '../fcal';
 
+/**
+ * SymbolTable maintains registry of words with its types
+ */
 class SymbolTable {
+  private parent?: SymbolTable;
   private readonly registry: Map<string, Entity>;
 
-  constructor(entries?: Map<string, Entity>) {
-    if (entries) {
-      this.registry = new Map<string, Entity>(entries);
+  /**
+   * Create new symbol table
+   * @param {SymbolTable | undefined}parent parent of the symbol table
+   */
+  constructor(parent?: SymbolTable) {
+    if (parent) {
+      this.registry = new Map<string, Entity>();
+      this.parent = parent;
       return;
     }
     this.registry = new Map<string, Entity>();
@@ -20,20 +29,31 @@ class SymbolTable {
     this.registry.set('_', Entity.VARIABLE);
   }
 
+  /**
+   * Register new phrase or word in symbol table
+   * @param {string} phrase phrase
+   * @param {Entity} entity type of the phrase
+   * @throws {FcalError} if word is already registered
+   */
   public set(phrase: string, entity: Entity): void {
-    const c = this.registry.get(phrase);
+    const c = this.get(phrase);
     if (c) {
       throw new FcalError(`${phrase} is already used in ${c.toLowerCase()}`);
     }
     this.registry.set(phrase, entity);
   }
 
+  /**
+   * search symbol table whether phrase is already registered
+   * @param {string} phrase phrase or word
+   * @returns {Entity} entity or type of the phrase
+   */
   public get(phrase: string): Entity | undefined {
-    return this.registry.get(phrase);
-  }
-
-  public clone(): SymbolTable {
-    return new SymbolTable(this.registry);
+    const value = this.registry.get(phrase);
+    if (value) {
+      return value;
+    }
+    return this.parent?.get(phrase);
   }
 }
 enum Entity {

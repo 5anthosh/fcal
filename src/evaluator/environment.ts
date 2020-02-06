@@ -21,6 +21,12 @@ class Environment {
   public readonly constants: Constant;
   public values: Map<string, Type>;
 
+  /**
+   * Creates new environment
+   * @param {FcalFunction.List}functions list of functions
+   * @param {SymbolTable} symbolTable symbol table
+   * @param {Constant} constants constants
+   */
   constructor(functions: FcalFunction.List, symbolTable: SymbolTable, constants: Constant) {
     this.values = new Map<string, Type>();
     this.functions = functions;
@@ -44,8 +50,8 @@ class Environment {
 
   /**
    * create or assign a variable with value
-   * @param {} key variable name
-   * @param value value
+   * @param {string} key variable name
+   * @param {ValInputType} value value
    */
   public set(key: string, value: ValInputType): void {
     const en = this.symbolTable.get(key);

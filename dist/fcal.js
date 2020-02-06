@@ -1494,10 +1494,18 @@ exports.Constant = Constant;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fcal_1 = require(10);
+/**
+ * SymbolTable maintains registry of words with its types
+ */
 var SymbolTable = /** @class */ (function () {
-    function SymbolTable(entries) {
-        if (entries) {
-            this.registry = new Map(entries);
+    /**
+     * Create new symbol table
+     * @param {SymbolTable | undefined}parent parent of the symbol table
+     */
+    function SymbolTable(parent) {
+        if (parent) {
+            this.registry = new Map();
+            this.parent = parent;
             return;
         }
         this.registry = new Map();
@@ -1511,18 +1519,31 @@ var SymbolTable = /** @class */ (function () {
         this.registry.set('octal', Entity.NS);
         this.registry.set('_', Entity.VARIABLE);
     }
+    /**
+     * Register new phrase or word in symbol table
+     * @param {string} phrase phrase
+     * @param {Entity} entity type of the phrase
+     * @throws {FcalError} if word is already registered
+     */
     SymbolTable.prototype.set = function (phrase, entity) {
-        var c = this.registry.get(phrase);
+        var c = this.get(phrase);
         if (c) {
             throw new fcal_1.FcalError(phrase + " is already used in " + c.toLowerCase());
         }
         this.registry.set(phrase, entity);
     };
+    /**
+     * search symbol table whether phrase is already registered
+     * @param {string} phrase phrase or word
+     * @returns {Entity} entity or type of the phrase
+     */
     SymbolTable.prototype.get = function (phrase) {
-        return this.registry.get(phrase);
-    };
-    SymbolTable.prototype.clone = function () {
-        return new SymbolTable(this.registry);
+        var _a;
+        var value = this.registry.get(phrase);
+        if (value) {
+            return value;
+        }
+        return (_a = this.parent) === null || _a === void 0 ? void 0 : _a.get(phrase);
     };
     return SymbolTable;
 }());
@@ -1544,14 +1565,31 @@ exports.Entity = Entity;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var symboltable_1 = require(9);
+/**
+ * Converter converts one value into another
+ */
 var Converter = /** @class */ (function () {
+    /**
+     * Create new converter register
+     * @param {SymbolTable} st symbol table
+     */
     function Converter(st) {
         this.st = st;
         this.c = new Map();
     }
+    /**
+     * Get the converter by its ID or phrase
+     * @param {string} id id of the converter or phrase
+     * @returns {converterFuncFmt | undefined} converter function
+     */
     Converter.prototype.get = function (id) {
         return this.c.get(id);
     };
+    /**
+     * Register new converter function
+     * @param id string
+     * @param func converter function
+     */
     Converter.prototype.set = function (id, func) {
         this.st.set(id, symboltable_1.Entity.CONVERTER);
         this.c.set(id, func);
@@ -1571,6 +1609,12 @@ var symboltable_1 = require(9);
  * It represents state of fcal
  */
 var Environment = /** @class */ (function () {
+    /**
+     * Creates new environment
+     * @param {FcalFunction.List}functions list of functions
+     * @param {SymbolTable} symbolTable symbol table
+     * @param {Constant} constants constants
+     */
     function Environment(functions, symbolTable, constants) {
         this.values = new Map();
         this.functions = functions;
@@ -1592,8 +1636,8 @@ var Environment = /** @class */ (function () {
     };
     /**
      * create or assign a variable with value
-     * @param {} key variable name
-     * @param value value
+     * @param {string} key variable name
+     * @param {ValInputType} value value
      */
     Environment.prototype.set = function (key, value) {
         var en = this.symbolTable.get(key);
@@ -1676,7 +1720,7 @@ var lex_1 = require(15);
  */
 var Fcal = /** @class */ (function () {
     function Fcal() {
-        this.lst = Fcal.gst.clone();
+        this.lst = new symboltable_1.SymbolTable(Fcal.gst);
         this.strict = false;
         this.environment = new environment_1.Environment(Fcal.functions, this.lst, Fcal.constants);
     }
@@ -1916,7 +1960,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.expression = function (source) {
         // Cloning fcal session
-        var symbolTable = this.lst.clone();
+        var symbolTable = new symboltable_1.SymbolTable(this.lst);
         // Creating new environment
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         // coping values from fcal
@@ -1954,7 +1998,7 @@ var Fcal = /** @class */ (function () {
      */
     Fcal.prototype.fromJSON = function (source) {
         var parser = new JSONParser_1.JSONParser(source, Fcal.units, Fcal.converters);
-        var symbolTable = this.lst.clone();
+        var symbolTable = new symboltable_1.SymbolTable(this.lst);
         var env = new environment_1.Environment(Fcal.functions, symbolTable, Fcal.constants);
         env.values = new Map(this.environment.values);
         source = prefixNewLIne(source);
@@ -2858,6 +2902,12 @@ var datatype_1 = require(18);
  * FcalFunction represents function in fcal
  */
 var FcalFunction = /** @class */ (function () {
+    /**
+     * Create new Fcal function
+     * @param name name of the function
+     * @param arity number of arguments function can expect, -1 for any number of functions
+     * @param func function implementation
+     */
     function FcalFunction(name, arity, func) {
         this.arity = arity;
         this.function = func;
@@ -7830,10 +7880,19 @@ var symboltable_1 = require(9);
  * Scale is used to define scale of number literal
  */
 var Scale = /** @class */ (function () {
+    /**
+     * Create scale register
+     * @param symbolTable symbol table
+     */
     function Scale(symbolTable) {
         this.values = new Map();
         this.symbolTable = symbolTable;
     }
+    /**
+     * Get the Scale value by its phrase
+     * @param {string} key scale phrase or id
+     * @returns {Type | undefined} scale value
+     */
     Scale.prototype.get = function (key) {
         return this.values.get(key);
     };

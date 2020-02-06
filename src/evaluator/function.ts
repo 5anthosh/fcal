@@ -7,7 +7,7 @@ interface ICallable {
   call(environment: Environment, argument: Type[]): Type | number | Decimal;
 }
 
-export type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
+type FcalFunctionFmt = (environment: Environment, argument: Type[]) => Type | number | Decimal;
 
 /**
  * IUseFunction
@@ -30,6 +30,12 @@ class FcalFunction implements ICallable {
   // function implementation
   public readonly function: FcalFunctionFmt;
 
+  /**
+   * Create new Fcal function
+   * @param name name of the function
+   * @param arity number of arguments function can expect, -1 for any number of functions
+   * @param func function implementation
+   */
   constructor(name: string, arity: number, func: FcalFunctionFmt) {
     this.arity = arity;
     this.function = func;
@@ -118,4 +124,4 @@ namespace FcalFunction {
   }
 }
 
-export { FcalFunction, IUseFunction };
+export { FcalFunction, IUseFunction, FcalFunctionFmt };

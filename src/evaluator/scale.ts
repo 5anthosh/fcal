@@ -10,14 +10,24 @@ class Scale {
   public readonly symbolTable: SymbolTable;
   public readonly values: Map<string, Type>;
 
+  /**
+   * Create scale register
+   * @param symbolTable symbol table
+   */
   constructor(symbolTable: SymbolTable) {
     this.values = new Map<string, Type>();
     this.symbolTable = symbolTable;
   }
 
+  /**
+   * Get the Scale value by its phrase
+   * @param {string} key scale phrase or id
+   * @returns {Type | undefined} scale value
+   */
   public get(key: string): Type | undefined {
     return this.values.get(key);
   }
+
   /**
    * create new scale
    * @param {string} key scale name

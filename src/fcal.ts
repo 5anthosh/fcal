@@ -268,7 +268,7 @@ class Fcal {
   private strict: boolean;
 
   constructor() {
-    this.lst = Fcal.gst.clone();
+    this.lst = new SymbolTable(Fcal.gst);
     this.strict = false;
     this.environment = new Environment(Fcal.functions, this.lst, Fcal.constants);
   }
@@ -309,7 +309,7 @@ class Fcal {
    */
   public expression(source: string): Expression {
     // Cloning fcal session
-    const symbolTable = this.lst.clone();
+    const symbolTable = new SymbolTable(this.lst);
     // Creating new environment
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     // coping values from fcal
@@ -371,7 +371,7 @@ class Fcal {
    */
   public fromJSON(source: string): Expression {
     const parser = new JSONParser(source, Fcal.units, Fcal.converters);
-    const symbolTable = this.lst.clone();
+    const symbolTable = new SymbolTable(this.lst);
     const env = new Environment(Fcal.functions, symbolTable, Fcal.constants);
     env.values = new Map<string, Type>(this.environment.values);
     source = prefixNewLIne(source);

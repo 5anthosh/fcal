@@ -1,3 +1,9 @@
+#### 0.4.2
+
+- Helper functions to get Fcal entities
+- Fix immutable percentage calculation and number system conversion
+- Fix toString of values
+
 #### 0.4.0
 
 - Fix issue [#3](https://github.com/5anthosh/fcal/issues/3)

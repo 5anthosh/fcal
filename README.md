@@ -13,13 +13,15 @@
 > It features a flexible expression parser with a large set of built-in units, functions and constants.
 > Inspired from [Numi](https://numi.app)
 
+![Fcal gui](https://raw.githubusercontent.com/5anthosh/fcal/assets/fcal.png)
+
 ## Features
 
 - Units
 - Variables
 - Functions
 
-> Playground [Codepen](https://codepen.io/5anthosh/full/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
+> Playground [Fcal GUI](https://github.com/5anthosh/fcal-gui), [Codepen](https://codepen.io/5anthosh/full/XWWdyMg) , [CLI](https://github.com/5anthosh/fcal-cli)
 
 ## Example
 

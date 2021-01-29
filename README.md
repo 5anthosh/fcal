@@ -169,6 +169,15 @@ err: Expecting number after + but got '*'
 */
 ```
 
+### Format
+
+Format the results
+
+```js
+var value = Fcal.eval('10345345.3454');
+console.log(value.toFormat()); // 10,345,345.3554
+```
+
 #### Strict mode
 
 By default, fcal will not throw exception if you try to use operations between different types or different units

@@ -1,6 +1,7 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.fcal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDefaultFunctions = void 0;
 var datatype_1 = require(18);
 function getDefaultFunctions() {
     var functions = [
@@ -245,7 +246,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -254,10 +255,16 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Type = exports.TYPE_RANK = exports.DATATYPE = void 0;
 var decimal_js_1 = require(22);
 var fcal_1 = require(10);
 var numberSystem_1 = require(19);
+var toformat_1 = __importDefault(require(23));
+toformat_1.default(decimal_js_1.Decimal);
 var DATATYPE;
 (function (DATATYPE) {
     DATATYPE[DATATYPE["NUMBER"] = 0] = "NUMBER";
@@ -298,6 +305,9 @@ exports.Type = Type;
             _this.lf = false;
             return _this;
         }
+        Numeric.prototype.format = function () {
+            return this.n.toFormat();
+        };
         Numeric.prototype.setSystem = function (numberSys) {
             this.ns = numberSys;
             return this;
@@ -486,6 +496,9 @@ exports.Type = Type;
             _this.TYPE_RANK = TYPE_RANK.NUMBER;
             return _this;
         }
+        BNumber.prototype.toFormat = function () {
+            return this.format();
+        };
         BNumber.New = function (value) {
             return new BNumber(value);
         };
@@ -549,6 +562,9 @@ exports.Type = Type;
             _this.TYPE_RANK = TYPE_RANK.PERCENTAGE;
             return _this;
         }
+        Percentage.prototype.toFormat = function () {
+            return "% " + this.format();
+        };
         Percentage.New = function (value) {
             return new Percentage(value);
         };
@@ -670,6 +686,12 @@ exports.Type = Type;
             _this.TYPE_RANK = TYPE_RANK.UNIT;
             return _this;
         }
+        UnitNumber.prototype.toFormat = function () {
+            if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
+                return this.format() + " " + this.unit.singular;
+            }
+            return this.format() + " " + this.unit.plural;
+        };
         UnitNumber.New = function (value, unit) {
             return new UnitNumber(value, unit);
         };
@@ -876,6 +898,9 @@ exports.Type = Type;
             _this.v = !_this.n.isZero();
             return _this;
         }
+        FcalBoolean.prototype.toFormat = function () {
+            throw new Error('Method not implemented.');
+        };
         FcalBoolean.prototype.print = function () {
             return this.v + '';
         };
@@ -890,9 +915,10 @@ exports.Type = Type;
 })(Type || (Type = {}));
 exports.Type = Type;
 
-},{"10":10,"19":19,"22":22}],2:[function(require,module,exports){
+},{"10":10,"19":19,"22":22,"23":23}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDefaultUnits = void 0;
 var units_1 = require(21);
 function getDefaultUnits() {
     var units = new Array();
@@ -1309,6 +1335,7 @@ function setDigitalStorageUnits(units) {
 },{"21":21}],21:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UnitMeta = exports.Unit = void 0;
 var decimal_js_1 = require(22);
 var symboltable_1 = require(9);
 var UnitMeta = /** @class */ (function () {
@@ -1331,7 +1358,7 @@ var UnitMeta = /** @class */ (function () {
             }
             return new decimal_js_1.Decimal(value);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(UnitMeta.prototype, "bias", {
@@ -1345,7 +1372,7 @@ var UnitMeta = /** @class */ (function () {
             }
             return new decimal_js_1.Decimal(value);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     UnitMeta.prototype.setBias = function (value) {
@@ -1444,6 +1471,7 @@ exports.Unit = Unit;
 },{"22":22,"9":9}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Constant = void 0;
 var datatype_1 = require(18);
 var symboltable_1 = require(9);
 var Constant = /** @class */ (function () {
@@ -1493,6 +1521,7 @@ exports.Constant = Constant;
 },{"18":18,"9":9}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SymbolTable = exports.Entity = void 0;
 var fcal_1 = require(10);
 /**
  * SymbolTable maintains registry of words with its types
@@ -1564,6 +1593,7 @@ exports.Entity = Entity;
 },{"10":10}],4:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Converter = void 0;
 var symboltable_1 = require(9);
 /**
  * Converter converts one value into another
@@ -1601,6 +1631,7 @@ exports.Converter = Converter;
 },{"9":9}],5:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Environment = void 0;
 var fcal_1 = require(10);
 var datatype_1 = require(18);
 var symboltable_1 = require(9);
@@ -1682,7 +1713,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -1692,26 +1723,27 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Decimal = exports.Type = exports.Unit = exports.Environment = exports.FcalFunction = exports.Expression = exports.FcalError = exports.Fcal = void 0;
 var decimal_js_1 = require(22);
-exports.Decimal = decimal_js_1.Decimal;
+Object.defineProperty(exports, "Decimal", { enumerable: true, get: function () { return decimal_js_1.Decimal; } });
 var functions_1 = require(1);
 var units_1 = require(2);
 var constants_1 = require(3);
 var converter_1 = require(4);
 var environment_1 = require(5);
-exports.Environment = environment_1.Environment;
+Object.defineProperty(exports, "Environment", { enumerable: true, get: function () { return environment_1.Environment; } });
 var evaluator_1 = require(6);
 var function_1 = require(7);
-exports.FcalFunction = function_1.FcalFunction;
+Object.defineProperty(exports, "FcalFunction", { enumerable: true, get: function () { return function_1.FcalFunction; } });
 var scale_1 = require(8);
 var symboltable_1 = require(9);
 var JSONParser_1 = require(11);
 var token_1 = require(16);
 var datatype_1 = require(18);
-exports.Type = datatype_1.Type;
+Object.defineProperty(exports, "Type", { enumerable: true, get: function () { return datatype_1.Type; } });
 var phrase_1 = require(20);
 var units_2 = require(21);
-exports.Unit = units_2.Unit;
+Object.defineProperty(exports, "Unit", { enumerable: true, get: function () { return units_2.Unit; } });
 var lex_1 = require(15);
 /**
  * Math expression evaluator.
@@ -2127,6 +2159,7 @@ Fcal.initialize();
 },{"1":1,"11":11,"15":15,"16":16,"18":18,"2":2,"20":20,"21":21,"22":22,"3":3,"4":4,"5":5,"6":6,"7":7,"8":8,"9":9}],6:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Evaluator = void 0;
 var fcal_1 = require(10);
 var toJSON_1 = require(12);
 var token_1 = require(16);
@@ -2375,6 +2408,7 @@ exports.Evaluator = Evaluator;
 },{"10":10,"12":12,"16":16,"17":17,"18":18,"19":19,"21":21}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Token = exports.TT = void 0;
 var TT;
 (function (TT) {
     TT["PLUS"] = "+";
@@ -2440,6 +2474,7 @@ exports.Token = Token;
 },{}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.NumberSystem = void 0;
 var NumberSystem = /** @class */ (function () {
     function NumberSystem(name, to) {
         this.to = to;
@@ -2488,6 +2523,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JSON_TYPES = exports.ToJSON = void 0;
 var numberSystem_1 = require(19);
 var units_1 = require(21);
 var JSON_TYPES;
@@ -2585,6 +2621,7 @@ exports.ToJSON = ToJSON;
 },{"19":19,"21":21}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Parser = void 0;
 var fcal_1 = require(10);
 var numberSystem_1 = require(19);
 var expr_1 = require(14);
@@ -2895,6 +2932,7 @@ exports.Parser = Parser;
 },{"10":10,"14":14,"15":15,"16":16,"19":19}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.FcalFunction = void 0;
 var decimal_js_1 = require(22);
 var fcal_1 = require(10);
 var datatype_1 = require(18);
@@ -2998,10 +3036,10 @@ exports.FcalFunction = FcalFunction;
 
 
   /*
-   *  decimal.js v10.2.0
+   *  decimal.js v10.2.1
    *  An arbitrary-precision Decimal type for JavaScript.
    *  https://github.com/MikeMcl/decimal.js
-   *  Copyright (c) 2019 Michael Mclaughlin <M8ch88l@gmail.com>
+   *  Copyright (c) 2020 Michael Mclaughlin <M8ch88l@gmail.com>
    *  MIT Licence
    */
 
@@ -4723,7 +4761,7 @@ exports.FcalFunction = FcalFunction;
       e = mathfloor((e + 1) / 2) - (e < 0 || e % 2);
 
       if (s == 1 / 0) {
-        n = '1e' + e;
+        n = '5e' + e;
       } else {
         n = s.toExponential();
         n = n.slice(0, n.indexOf('e') + 1) + e;
@@ -7874,6 +7912,7 @@ exports.FcalFunction = FcalFunction;
 },{}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Scale = void 0;
 var datatype_1 = require(18);
 var symboltable_1 = require(9);
 /**
@@ -7935,6 +7974,7 @@ exports.Scale = Scale;
 },{"18":18,"9":9}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Phrases = void 0;
 var symboltable_1 = require(9);
 var Phrases = /** @class */ (function () {
     function Phrases(symbolTable) {
@@ -7958,6 +7998,7 @@ exports.Phrases = Phrases;
 },{"9":9}],15:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Lexer = void 0;
 var fcal_1 = require(10);
 var datatype_1 = require(18);
 var numberSystem_1 = require(19);
@@ -8312,6 +8353,7 @@ exports.Lexer = Lexer;
 },{"10":10,"16":16,"18":18,"19":19}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.JSONParser = void 0;
 var fcal_1 = require(10);
 var expr_1 = require(14);
 var datatype_1 = require(18);
@@ -8444,7 +8486,7 @@ var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
         return extendStatics(d, b);
     };
     return function (d, b) {
@@ -8454,6 +8496,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Expr = void 0;
 var fcal_1 = require(10);
 var astPrinter_1 = require(13);
 var Expr = /** @class */ (function () {
@@ -8660,6 +8703,7 @@ exports.Expr = Expr;
 },{"10":10,"13":13}],13:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ASTPrinter = void 0;
 var numberSystem_1 = require(19);
 var units_1 = require(21);
 var ASTPrinter = /** @class */ (function () {
@@ -8762,5 +8806,208 @@ var ASTPrinter = /** @class */ (function () {
 }());
 exports.ASTPrinter = ASTPrinter;
 
-},{"19":19,"21":21}]},{},[10])(10)
+},{"19":19,"21":21}],23:[function(require,module,exports){
+/*
+ *  toFormat v2.0.0
+ *  Adds a toFormat instance method to big.js or decimal.js
+ *  Copyright (c) 2017 Michael Mclaughlin
+ *  MIT Licence
+ */
+
+ /*
+ * Adds a `toFormat` method to `Ctor.prototype` and a `format` object to `Ctor`, where `Ctor` is
+ * a big number constructor such as `Decimal` (decimal.js) or `Big` (big.js).
+ */
+function toFormat(Ctor) {
+  'use strict';
+
+  /*
+   *  Returns a string representing the value of this big number in fixed-point notation to `dp`
+   *  decimal places using rounding mode `rm`, and formatted according to the properties of the
+   * `fmt`, `this.format` and `this.constructor.format` objects, in that order of precedence.
+   *
+   *  Example:
+   *
+   *  x = new Decimal('123456789.987654321')
+   *
+   *  // Add a format object to the constructor...
+   *  Decimal.format = {
+   *    decimalSeparator: '.',
+   *    groupSeparator: ',',
+   *    groupSize: 3,
+   *    secondaryGroupSize: 0,
+   *    fractionGroupSeparator: '',     // '\xA0' non-breaking space
+   *    fractionGroupSize : 0
+   *  }
+   *
+   *  x.toFormat();                // 123,456,789.987654321
+   *  x.toFormat(2, 1);            // 123,456,789.98
+   *
+   *  // And/or add a format object to the big number itself...
+   *  x.format = {
+   *    decimalSeparator: ',',
+   *    groupSeparator: '',
+   *  }
+   *
+   *  x.toFormat();                // 123456789,987654321
+   *
+   *  format = {
+   *    decimalSeparator: '.',
+   *    groupSeparator: ' ',
+   *    groupSize: 3,
+   *    fractionGroupSeparator: ' ',     // '\xA0' non-breaking space
+   *    fractionGroupSize : 5
+   *  }
+
+   *  // And/or pass a format object to the method call.
+   *  x.toFormat(format);          // 123 456 789.98765 4321
+   *  x.toFormat(4, format);       // 123 456 789.9877
+   *  x.toFormat(2, 1, format);    // 123 456 789.98
+   *
+   *  [dp] {number} Decimal places. Integer.
+   *  [rm] {number} Rounding mode. Integer, 0 to 8. (Ignored if using big.js.)
+   *  [fmt] {Object} A format object.
+   *
+   */
+  Ctor.prototype.toFormat = function toFormat(dp, rm, fmt) {
+
+    if (!this.e && this.e !== 0) return this.toString();   // Infinity/NaN
+
+    var arr, g1, g2, i,
+      u,                             // undefined
+      nd,                            // number of integer digits
+      intd,                          // integer digits
+      intp,                          // integer part
+      fracp,                         // fraction part
+      dsep,                          // decimalSeparator
+      gsep,                          // groupSeparator
+      gsize,                         // groupSize
+      sgsize,                        // secondaryGroupSize
+      fgsep,                         // fractionGroupSeparator
+      fgsize,                        // fractionGroupSize
+      tfmt = this.format || {},
+      cfmt = this.constructor.format || {};
+
+    if (dp != u) {
+      if (typeof dp == 'object') {
+        fmt = dp;
+        dp = u;
+      } else if (rm != u) {
+        if (typeof rm == 'object') {
+          fmt = rm;
+          rm = u;
+        } else if (typeof fmt != 'object') {
+          fmt = {};
+        }
+      } else {
+        fmt = {};
+      }
+    } else {
+      fmt = {};
+    }
+
+    arr = this.toFixed(dp, rm).split('.');
+    intp = arr[0];
+    fracp = arr[1];
+    intd = this.s < 0 ? intp.slice(1) : intp;
+    nd = intd.length;
+
+    dsep = fmt.decimalSeparator;
+    if (dsep == u) {
+      dsep = tfmt.decimalSeparator;
+      if (dsep == u) {
+        dsep = cfmt.decimalSeparator;
+        if (dsep == u) dsep = '.';
+      }
+    }
+
+    gsep = fmt.groupSeparator;
+    if (gsep == u) {
+      gsep = tfmt.groupSeparator;
+      if (gsep == u) gsep = cfmt.groupSeparator;
+    }
+
+    if (gsep) {
+      gsize = fmt.groupSize;
+      if (gsize == u) {
+        gsize = tfmt.groupSize;
+        if (gsize == u) {
+          gsize = cfmt.groupSize;
+          if (gsize == u) gsize = 0;
+        }
+      }
+
+      sgsize = fmt.secondaryGroupSize;
+      if (sgsize == u) {
+        sgsize = tfmt.secondaryGroupSize;
+        if (sgsize == u) {
+          sgsize = cfmt.secondaryGroupSize;
+          if (sgsize == u) sgsize = 0;
+        }
+      }
+
+      if (sgsize) {
+        g1 = +sgsize;
+        g2 = +gsize;
+        nd -= g2;
+      } else {
+        g1 = +gsize;
+        g2 = +sgsize;
+      }
+
+      if (g1 > 0 && nd > 0) {
+        i = nd % g1 || g1;
+        intp = intd.substr(0, i);
+        for (; i < nd; i += g1) intp += gsep + intd.substr(i, g1);
+        if (g2 > 0) intp += gsep + intd.slice(i);
+        if (this.s < 0) intp = '-' + intp;
+      }
+    }
+
+    if (fracp) {
+      fgsep = fmt.fractionGroupSeparator;
+      if (fgsep == u) {
+        fgsep = tfmt.fractionGroupSeparator;
+        if (fgsep == u) fgsep = cfmt.fractionGroupSeparator;
+      }
+
+      if (fgsep) {
+        fgsize = fmt.fractionGroupSize;
+        if (fgsize == u) {
+          fgsize = tfmt.fractionGroupSize;
+          if (fgsize == u) {
+            fgsize = cfmt.fractionGroupSize;
+            if (fgsize == u) fgsize = 0;
+          }
+        }
+
+        fgsize = +fgsize;
+
+        if (fgsize) {
+          fracp = fracp.replace(new RegExp('\\d{' + fgsize + '}\\B', 'g'), '$&' + fgsep);
+        }
+      }
+
+      return intp + dsep + fracp;
+    } else {
+
+      return intp;
+    }
+  };
+
+  Ctor.format = {
+    decimalSeparator: '.',
+    groupSeparator: ',',
+    groupSize: 3,
+    secondaryGroupSize: 0,
+    fractionGroupSeparator: '',
+    fractionGroupSize: 0
+  };
+
+  return Ctor;
+}
+
+if (typeof module !== 'undefined' && module.exports) module.exports = toFormat;
+
+},{}]},{},[10])(10)
 });

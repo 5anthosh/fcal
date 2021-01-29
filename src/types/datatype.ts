@@ -2,6 +2,9 @@ import { Decimal } from 'decimal.js';
 import { FcalError } from '../fcal';
 import { NumberSystem } from './numberSystem';
 import { UnitMeta } from './units';
+import toFormat from 'toformat';
+
+toFormat(Decimal);
 
 export enum DATATYPE {
   NUMBER,
@@ -18,6 +21,7 @@ abstract class Type {
   public abstract TYPE: DATATYPE;
   public abstract TYPE_RANK: TYPE_RANK;
   public abstract print(): string;
+  public abstract toFormat(): string;
   public abstract toNumber(): number;
   public abstract trusty(): boolean;
   public toString(): string {
@@ -43,6 +47,10 @@ namespace Type {
       }
       this.ns = NumberSystem.dec;
       this.lf = false;
+    }
+
+    public format(): string {
+      return (this.n as any).toFormat();
     }
 
     public setSystem(numberSys: NumberSystem): Numeric {
@@ -255,6 +263,10 @@ namespace Type {
    * Basic Number type
    */
   export class BNumber extends Numeric {
+    public toFormat(): string {
+      return this.format();
+    }
+
     public static ZERO = BNumber.New(new Decimal(0));
 
     public static New(value: string | Decimal | number) {
@@ -328,6 +340,9 @@ namespace Type {
    * Percentage type
    */
   export class Percentage extends Numeric {
+    public toFormat(): string {
+      return `% ${this.format()}`;
+    }
     public static New(value: string | Decimal | number): Percentage {
       return new Percentage(value);
     }
@@ -459,6 +474,12 @@ namespace Type {
    * Number with unit
    */
   export class UnitNumber extends Numeric {
+    public toFormat(): string {
+      if (this.n.lessThanOrEqualTo(1) && !this.n.isNegative()) {
+        return `${this.format()} ${this.unit.singular}`;
+      }
+      return `${this.format()} ${this.unit.plural}`;
+    }
     public static New(value: string | Decimal | number, unit: UnitMeta): UnitNumber {
       return new UnitNumber(value, unit);
     }
@@ -684,6 +705,9 @@ namespace Type {
   }
 
   export class FcalBoolean extends BNumber {
+    public toFormat(): string {
+      throw new Error('Method not implemented.');
+    }
     public static TRUE: FcalBoolean = new FcalBoolean(1);
     public static FALSE: FcalBoolean = new FcalBoolean(0);
     private v: boolean;

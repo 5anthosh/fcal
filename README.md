@@ -11,7 +11,7 @@
 > Fcaljs is an extensive math expression evaluator library for JavaScript and Node.js.
 > Using fcal, you can perform basic arithmetic, percentage operations with precision.
 > It features a flexible expression parser with a large set of built-in units, functions and constants.
-> Inspired from [Numi](https://numi.app)
+> Inspired from [Soulver](https://soulver.app/)
 
 ![Fcal gui](https://raw.githubusercontent.com/5anthosh/fcal/assets/fcal.png)
 
